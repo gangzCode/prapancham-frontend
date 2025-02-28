@@ -9,93 +9,149 @@ export default {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {
-      fontFamily: {
-        sans: ["var(--font-inter)", "sans-serif"],
-        poppins: ["var(--font-poppins)", "sans-serif"],
-      },
-      fontSize: {
-        xs: ["12px", { lineHeight: "1.5", letterSpacing: "0.01em" }], // 12px
-        sm: ["14px", { lineHeight: "1.5", letterSpacing: "0.01em" }], // 14px
-        base: ["16px", { lineHeight: "1.5", letterSpacing: "0.01em" }], // 16px
-        lg: ["24px", { lineHeight: "1.5", letterSpacing: "0.01em" }], // 24px
-      },
-      textStyles: {
-        "body-sm": {
-          css: {
-            fontFamily: "var(--font-inter)",
-            fontSize: "14px",
-          },
-        },
-        "body-base": {
-          css: {
-            fontFamily: "var(--font-inter)",
-            fontSize: "16px",
-          },
-        },
-        "heading-base": {
-          css: {
-            fontFamily: "var(--font-poppins)",
-            fontSize: "16px",
-            fontWeight: "700",
-          },
-        },
-        "heading-lg": {
-          css: {
-            fontFamily: "var(--font-poppins)",
-            fontSize: "24px",
-            fontWeight: "700",
-          },
-        },
-      },
-      colors: {
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        primary: {
-          DEFAULT: "var(--primary)",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "var(--secondary)",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        chart: {
-          "1": "hsl(var(--chart-1))",
-          "2": "hsl(var(--chart-2))",
-          "3": "hsl(var(--chart-3))",
-          "4": "hsl(var(--chart-4))",
-          "5": "hsl(var(--chart-5))",
-        },
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
-    },
+  	extend: {
+  		fontFamily: {
+  			sans: [
+  				'var(--font-inter)',
+  				'sans-serif'
+  			],
+  			poppins: [
+  				'var(--font-poppins)',
+  				'sans-serif'
+  			]
+  		},
+  		fontSize: {
+  			xs: [
+  				'12px',
+  				{
+  					lineHeight: '1.5',
+  					letterSpacing: '0.01em'
+  				}
+  			],
+  			sm: [
+  				'14px',
+  				{
+  					lineHeight: '1.5',
+  					letterSpacing: '0.01em'
+  				}
+  			],
+  			base: [
+  				'16px',
+  				{
+  					lineHeight: '1.5',
+  					letterSpacing: '0.01em'
+  				}
+  			],
+  			lg: [
+  				'24px',
+  				{
+  					lineHeight: '1.5',
+  					letterSpacing: '0.01em'
+  				}
+  			]
+  		},
+  		textStyles: {
+  			'body-sm': {
+  				css: {
+  					fontFamily: 'var(--font-inter)',
+  					fontSize: '14px'
+  				}
+  			},
+  			'body-base': {
+  				css: {
+  					fontFamily: 'var(--font-inter)',
+  					fontSize: '16px'
+  				}
+  			},
+  			'heading-base': {
+  				css: {
+  					fontFamily: 'var(--font-poppins)',
+  					fontSize: '16px',
+  					fontWeight: '700'
+  				}
+  			},
+  			'heading-lg': {
+  				css: {
+  					fontFamily: 'var(--font-poppins)',
+  					fontSize: '24px',
+  					fontWeight: '700'
+  				}
+  			}
+  		},
+  		colors: {
+  			background: 'hsl(var(--background))',
+  			foreground: 'hsl(var(--foreground))',
+  			card: {
+  				DEFAULT: 'hsl(var(--card))',
+  				foreground: 'hsl(var(--card-foreground))'
+  			},
+  			popover: {
+  				DEFAULT: 'hsl(var(--popover))',
+  				foreground: 'hsl(var(--popover-foreground))'
+  			},
+  			primary: {
+  				DEFAULT: 'var(--primary)',
+  				foreground: 'hsl(var(--primary-foreground))'
+  			},
+  			secondary: {
+  				DEFAULT: 'var(--secondary)',
+  				foreground: 'hsl(var(--secondary-foreground))'
+  			},
+  			muted: {
+  				DEFAULT: 'hsl(var(--muted))',
+  				foreground: 'hsl(var(--muted-foreground))'
+  			},
+  			accent: {
+  				DEFAULT: 'hsl(var(--accent))',
+  				foreground: 'hsl(var(--accent-foreground))'
+  			},
+  			destructive: {
+  				DEFAULT: 'hsl(var(--destructive))',
+  				foreground: 'hsl(var(--destructive-foreground))'
+  			},
+  			link: {
+  				DEFAULT: 'var(--link)',
+  				hover: 'var(--link-hover)'
+  			},
+  			border: 'hsl(var(--border))',
+  			input: 'hsl(var(--input))',
+  			ring: 'hsl(var(--ring))',
+  			chart: {
+  				'1': 'hsl(var(--chart-1))',
+  				'2': 'hsl(var(--chart-2))',
+  				'3': 'hsl(var(--chart-3))',
+  				'4': 'hsl(var(--chart-4))',
+  				'5': 'hsl(var(--chart-5))'
+  			}
+  		},
+  		borderRadius: {
+  			lg: 'var(--radius)',
+  			md: 'calc(var(--radius) - 2px)',
+  			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		keyframes: {
+  			'accordion-down': {
+  				from: {
+  					height: '0'
+  				},
+  				to: {
+  					height: 'var(--radix-accordion-content-height)'
+  				}
+  			},
+  			'accordion-up': {
+  				from: {
+  					height: 'var(--radix-accordion-content-height)'
+  				},
+  				to: {
+  					height: '0'
+  				}
+  			}
+  		},
+  		animation: {
+  			'accordion-down': 'accordion-down 0.2s ease-out',
+  			'accordion-up': 'accordion-up 0.2s ease-out'
+  		}
+  	}
   },
   plugins: [
     require("tailwindcss-animate"),

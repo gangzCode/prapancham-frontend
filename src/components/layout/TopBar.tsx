@@ -7,7 +7,7 @@ import {
   SelectValue as LanguageSelectValue,
 } from "@/components/ui/language-select";
 
-const TopNav: React.FC = () => {
+const TopBar: React.FC = () => {
   return (
     <div className="flex flex-wrap gap-4 sm:gap-6 md:gap-10 justify-between items-center px-4 sm:px-6 md:px-12 lg:px-32 py-2 sm:py-3 w-full bg-primary shadow-[0px_4px_14px_rgba(0,0,0,0.25)]">
       <div className="flex gap-1 justify-center items-center text-sm sm:text-base text-white whitespace-nowrap">
@@ -66,4 +66,4 @@ const TopNav: React.FC = () => {
   );
 };
 
-export default TopNav;
+export default TopBar;
