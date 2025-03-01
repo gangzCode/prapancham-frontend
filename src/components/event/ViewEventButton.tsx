@@ -1,0 +1,26 @@
+"use client";
+
+interface ViewEventButtonProps {
+  variant?: "teal" | "white";
+  onClick?: () => void;
+}
+
+const ViewEventButton: React.FC<ViewEventButtonProps> = ({
+  variant = "teal",
+  onClick,
+}) => {
+  const baseStyles =
+    "gap-2.5 px-4 py-3.5 w-full text-body-xs rounded border border-solid min-h-10 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]";
+  const variantStyles =
+    variant === "teal"
+      ? "text-teal-900 border-teal-900"
+      : "text-white border-white";
+
+  return (
+    <button onClick={onClick} className={`${baseStyles} ${variantStyles}`}>
+      View Event Details
+    </button>
+  );
+};
+
+export default ViewEventButton;
