@@ -1,5 +1,3 @@
-import React from "react";
-
 import TopBar from "@/components/layout/TopBar";
 import FirstNavbar from "@/components/layout/FirstNavbar";
 import SecondNavbar from "@/components/layout/SecondNavbar";
@@ -7,6 +5,10 @@ import HeroSection from "@/components/hero/HeroSection";
 import AdvertisementBanner from "@/components/advertisement/AdvertisementBanner";
 import { Separator } from "@/components/ui/separator";
 import UpcomingEvents from "@/components/event/UpcomingEvents";
+import TrendingNewsSection from "@/components/trending-news/TrendingNewsSection";
+import HAdCarousel from "@/components/advertisement/HAdCarousel";
+
+import { featuredAds } from "@/data/featured-ads";
 
 const HomePage: React.FC = () => {
   const adImages = [
@@ -34,6 +36,10 @@ const HomePage: React.FC = () => {
         <HeroSection />
         <Separator />
         <UpcomingEvents />
+        <Separator />
+        <TrendingNewsSection />
+        <Separator />
+        <HAdCarousel ads={featuredAds} title="Advertisements" autoSlideInterval={6000} />
       </main>
     </div>
   );
