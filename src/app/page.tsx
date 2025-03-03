@@ -8,6 +8,7 @@ import UpcomingEvents from "@/components/event/UpcomingEvents";
 import TrendingNewsSection from "@/components/trending-news/TrendingNewsSection";
 import HAdCarousel from "@/components/advertisement/HAdCarousel";
 import NewsCategoriesSection from "@/components/news-category/NewsCategoriesSection";
+import VideoNewsSection from "@/components/video-news/VideoNewsSection";
 
 import { featuredAds } from "@/data/featured-ads";
 
@@ -35,6 +36,7 @@ const HomePage: React.FC = () => {
         <TrendingNewsSection />
         <Separator />
         <HAdCarousel ads={featuredAds} title="Advertisements" autoSlideInterval={6000} />
+        <VideoNewsSection />
         <NewsCategoriesSection />
       </main>
     </div>
