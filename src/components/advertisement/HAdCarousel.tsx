@@ -96,7 +96,7 @@ const HAdCarousel = ({
       <div className="container mx-auto">
         <div className="flex justify-between items-center mb-6">
           <div className="relative">
-            <h2 className="text-heading-lg text-left">{title}</h2>
+            <h2 className="text-heading-lg text-[#0B4157] text-left">{title}</h2>
             <div className="absolute -bottom-2 left-0 w-20 h-1 bg-red-600"></div>
           </div>
 
