@@ -7,16 +7,11 @@ import { Separator } from "@/components/ui/separator";
 import UpcomingEvents from "@/components/event/UpcomingEvents";
 import TrendingNewsSection from "@/components/trending-news/TrendingNewsSection";
 import HAdCarousel from "@/components/advertisement/HAdCarousel";
+import NewsCategoriesSection from "@/components/news-category/NewsCategoriesSection";
 
 import { featuredAds } from "@/data/featured-ads";
 
 const HomePage: React.FC = () => {
-  const adImages = [
-    "https://images.pexels.com/photos/518543/pexels-photo-518543.jpeg",
-    "https://images.pexels.com/photos/4057663/pexels-photo-4057663.jpeg",
-    "https://images.pexels.com/photos/3944377/pexels-photo-3944377.jpeg",
-    "https://images.pexels.com/photos/4668537/pexels-photo-4668537.jpeg",
-  ];
 
   // TODO: Replace with images from api and delete the iamge files
   const topAdImages = [
@@ -40,6 +35,7 @@ const HomePage: React.FC = () => {
         <TrendingNewsSection />
         <Separator />
         <HAdCarousel ads={featuredAds} title="Advertisements" autoSlideInterval={6000} />
+        <NewsCategoriesSection />
       </main>
     </div>
   );
