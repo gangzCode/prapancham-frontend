@@ -12,6 +12,7 @@ import VideoNewsSection from "@/components/video-news/VideoNewsSection";
 import HorizontalAdBanner from "@/components/news-category/HorizontalAdBanner";
 import PodcastSection from "@/components/podcast/PodcastSection";
 import QuoteSection from "@/components/quote/QuoteSection";
+import Footer from "@/components/layout/Footer";
 
 import { featuredAds } from "@/data/featured-ads";
 
@@ -51,6 +52,7 @@ const HomePage: React.FC = () => {
         <PodcastSection />
         <QuoteSection />
         <NewsCategoriesSection />
+        <Footer />
       </main>
     </div>
   );
