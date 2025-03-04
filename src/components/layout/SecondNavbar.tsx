@@ -31,7 +31,7 @@ const SecondNavbar: React.FC = () => {
               <Menu className="w-5 h-5 md:w-6 md:h-6" />
             </button>
             <div className="flex flex-wrap gap-2 items-center text-sm md:text-base text-center whitespace-nowrap text-zinc-900 overflow-x-auto scrollbar-hide">
-              {["Home", "Page1", "Page2"].map(
+              {["Home", "Page1", "Page2", "Page3", "Page4", "Page5"].map(
                 (page, index) => (
                   <React.Fragment key={page}>
                     {index > 0 && (
@@ -47,11 +47,10 @@ const SecondNavbar: React.FC = () => {
                   </React.Fragment>
                 )
               )}
-              {/* TODO: Remove commented code if not needed in future for usage */}
-              {/* <button className="flex items-center gap-1 px-2 py-1 hover:bg-stone-100 rounded-md transition-colors">
+              <button className="flex items-center gap-1 px-2 py-1 hover:bg-stone-100 rounded-md transition-colors">
                 <span>More</span>
                 <ChevronDown className="w-4 h-4" />
-              </button> */}
+              </button>
             </div>
           </div>
           <div className="w-full md:w-auto mt-2 md:mt-0">

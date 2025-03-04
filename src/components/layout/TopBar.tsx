@@ -47,44 +47,18 @@ const TopBar: React.FC = () => {
       <div className="hidden sm:block text-sm sm:text-base text-center text-white font-poppins">
         prapancham@gmail.com
       </div>
-<<<<<<< HEAD
       <div className="flex gap-1 justify-center items-center text-sm sm:text-base text-white whitespace-nowrap">
         <LanguageSelect defaultValue="english">
           <LanguageSelectTrigger className="w-[140px] sm:w-[180px] text-white bg-transparent border-none outline-none cursor-pointer">
             <LanguageSelectValue
               className="text-white placeholder:text-white"
-=======
-      <div className="flex gap-1 justify-center items-center text-white whitespace-nowrap">
-        <LanguageSelect defaultValue="english">
-          <LanguageSelectTrigger className="w-[140px] sm:w-[180px] text-white bg-transparent border-none outline-none cursor-pointer text-sm sm:text-base">
-            <LanguageSelectValue
-              className="text-white placeholder:text-white text-sm sm:text-base"
->>>>>>> 688f1f4 (Merge branch 'feature/home')
               placeholder="Language"
             />
           </LanguageSelectTrigger>
           <LanguageSelectContent>
-<<<<<<< HEAD
             <LanguageSelectItem value="english">English</LanguageSelectItem>
             <LanguageSelectItem value="tamil">Tamil</LanguageSelectItem>
             <LanguageSelectItem value="sinhala">Sinhala</LanguageSelectItem>
-=======
-            <LanguageSelectItem
-              value="english"
-              className="text-sm sm:text-base"
-            >
-              English
-            </LanguageSelectItem>
-            <LanguageSelectItem value="tamil" className="text-sm sm:text-base">
-              Tamil
-            </LanguageSelectItem>
-            <LanguageSelectItem
-              value="sinhala"
-              className="text-sm sm:text-base"
-            >
-              Sinhala
-            </LanguageSelectItem>
->>>>>>> 688f1f4 (Merge branch 'feature/home')
           </LanguageSelectContent>
         </LanguageSelect>
       </div>

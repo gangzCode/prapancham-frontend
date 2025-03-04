@@ -91,11 +91,7 @@ const newsCategoriesData = [
 
 const NewsCategoriesSection: React.FC = () => {
   return (
-<<<<<<< HEAD
     <section className="flex flex-col justify-center px-32 max-md:px-5">
-=======
-    <section className="flex flex-col justify-center px-32 py-6 max-md:px-5">
->>>>>>> 688f1f4 (Merge branch 'feature/home')
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left side scrollable news section - 2/3 width on desktop */}
         <div className="md:col-span-2">

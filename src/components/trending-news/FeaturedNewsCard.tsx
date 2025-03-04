@@ -18,17 +18,10 @@ export const FeaturedNewsCard: React.FC<FeaturedNewsCardProps> = ({
   duration,
 }) => {
   return (
-<<<<<<< HEAD
     <article className="self-stretch p-3 sm:p-2 bg-white shadow-[0px_0px_12px_rgba(0,0,0,0.06)] w-full min-w-full md:min-w-full lg:min-w-full xl:min-w-60 md:max-w-full lg:max-w-full xl:max-w-[578px] overflow-hidden">
       <div className="relative w-full text-white overflow-hidden">
         <div
           className="relative aspect-[4/3] sm:aspect-[16/10] bg-cover bg-center h-[380px] w-full"
-=======
-    <article className="p-3 sm:p-2 bg-white shadow-[0px_0px_12px_rgba(0,0,0,0.06)] w-full h-[520px] flex flex-col min-w-full md:min-w-full lg:min-w-full xl:min-w-60 md:max-w-full lg:max-w-full xl:max-w-[578px] overflow-hidden">
-      <div className="relative w-full h-full text-white overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center w-full h-full"
->>>>>>> 688f1f4 (Merge branch 'feature/home')
           style={{ backgroundImage: `url(${imageUrl})` }}
         >
           <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0.5)_50%,rgba(0,0,0,0.5)_100%)]" />

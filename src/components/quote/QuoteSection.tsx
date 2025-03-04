@@ -77,7 +77,6 @@ const QuoteSection: React.FC<QuoteSectionProps> = ({ className }) => {
             />
           </div>
 
-<<<<<<< HEAD
           <div className="w-full md:w-2/3">
             <div className="relative">
               <blockquote className="text-xl md:text-2xl lg:text-3xl font-playfair italic font-medium mb-4 md:mb-6">
@@ -110,38 +109,6 @@ const QuoteSection: React.FC<QuoteSectionProps> = ({ className }) => {
                     <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
                   </button>
                 </div>
-=======
-          <div className="w-full md:w-2/3 flex flex-col justify-between h-[250px] md:h-[300px] pl-0 md:pl-6">
-            <blockquote className="text-2xl md:text-3xl lg:text-4xl font-poppins italic font-medium leading-[2.5rem] md:leading-[3rem] lg:leading-[3.5rem] mb-6">
-              "{quotes[currentIndex].quote}"
-            </blockquote>
-
-            <div className="flex items-center justify-between">
-              <div className="flex flex-col space-y-1">
-                <span className="text-base md:text-lg font-semibold">
-                  {quotes[currentIndex].personName}
-                </span>
-                <span className="text-sm md:text-base text-gray-300">
-                  {quotes[currentIndex].jobTitle}
-                </span>
-              </div>
-
-              <div className="flex gap-3 md:gap-4">
-                <button
-                  onClick={handlePrev}
-                  className="hover:bg-white/10 transition-colors rounded-full p-2"
-                  aria-label="Previous quote"
-                >
-                  <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
-                </button>
-                <button
-                  onClick={handleNext}
-                  className="hover:bg-white/10 transition-colors rounded-full p-2"
-                  aria-label="Next quote"
-                >
-                  <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
-                </button>
->>>>>>> 688f1f4 (Merge branch 'feature/home')
               </div>
             </div>
           </div>
