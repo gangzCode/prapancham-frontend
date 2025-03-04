@@ -95,11 +95,11 @@ const DropMenu: React.FC<DropMenuProps> = ({ onClose }) => {
                 <span className="text-base">{item.title}</span>
               </AccordionTrigger>
               <AccordionContent className="bg-white">
-                <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-2 p-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 p-3">
                   {item.subItems.map((subItem, index) => (
                     <button
                       key={index}
-                      className="text-base py-2 px-3 text-gray-700 rounded transition-colors text-left w-full"
+                      className="text-base py-2 px-3 text-gray-700 rounded transition-colors text-left"
                     >
                       {subItem}
                     </button>

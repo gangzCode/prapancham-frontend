@@ -1,5 +1,3 @@
-import React from "react";
-
 import TopBar from "@/components/layout/TopBar";
 import FirstNavbar from "@/components/layout/FirstNavbar";
 import SecondNavbar from "@/components/layout/SecondNavbar";
@@ -7,15 +5,18 @@ import HeroSection from "@/components/hero/HeroSection";
 import AdvertisementBanner from "@/components/advertisement/AdvertisementBanner";
 import { Separator } from "@/components/ui/separator";
 import UpcomingEvents from "@/components/event/UpcomingEvents";
+import TrendingNewsSection from "@/components/trending-news/TrendingNewsSection";
+import HAdCarousel from "@/components/advertisement/HAdCarousel";
+import NewsCategoriesSection from "@/components/news-category/NewsCategoriesSection";
+import VideoNewsSection from "@/components/video-news/VideoNewsSection";
+import HorizontalAdBanner from "@/components/news-category/HorizontalAdBanner";
+import PodcastSection from "@/components/podcast/PodcastSection";
+import QuoteSection from "@/components/quote/QuoteSection";
+import Footer from "@/components/layout/Footer";
+
+import { featuredAds } from "@/data/featured-ads";
 
 const HomePage: React.FC = () => {
-  const adImages = [
-    "https://images.pexels.com/photos/518543/pexels-photo-518543.jpeg",
-    "https://images.pexels.com/photos/4057663/pexels-photo-4057663.jpeg",
-    "https://images.pexels.com/photos/3944377/pexels-photo-3944377.jpeg",
-    "https://images.pexels.com/photos/4668537/pexels-photo-4668537.jpeg",
-  ];
-
   // TODO: Replace with images from api and delete the iamge files
   const topAdImages = [
     "/images/top-ad-1.png",
@@ -34,6 +35,24 @@ const HomePage: React.FC = () => {
         <HeroSection />
         <Separator />
         <UpcomingEvents />
+        <Separator />
+        <TrendingNewsSection />
+        <Separator />
+        <HAdCarousel
+          ads={featuredAds}
+          title="Advertisements"
+          autoSlideInterval={6000}
+        />
+        <Separator />
+        <VideoNewsSection />
+        <HorizontalAdBanner
+          image="/images/top-ad-2.png"
+          className="flex flex-col justify-center mx-auto  px-32 max-md:px-5 h-[143px]"
+        />
+        <PodcastSection />
+        <QuoteSection />
+        <NewsCategoriesSection />
+        <Footer />
       </main>
     </div>
   );

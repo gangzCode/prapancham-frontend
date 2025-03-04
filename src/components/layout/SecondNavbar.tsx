@@ -20,8 +20,8 @@ const SecondNavbar: React.FC = () => {
 
   return (
     <>
-      <div className="w-full bg-stone-50">
-        <nav className="flex flex-wrap md:flex-nowrap gap-4 md:gap-10 justify-between items-center w-full px-4 sm:px-8 md:px-16 lg:px-32 py-2 mt-4 md:mt-6">
+      <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
+        <nav className="flex flex-wrap md:flex-nowrap gap-4 md:gap-10 justify-between items-center w-full px-8 py-2 mt-4 md:mt-6 bg-[#F8F8F8] rounded-lg">
           <div className="flex flex-wrap md:flex-nowrap gap-4 md:gap-6 items-center w-full md:w-auto">
             <button
               className="flex justify-center items-center p-2 hover:bg-stone-100 rounded-lg transition-colors"

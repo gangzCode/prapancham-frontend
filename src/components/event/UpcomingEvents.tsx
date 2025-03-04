@@ -30,7 +30,7 @@ const UpcomingEvents: React.FC = () => {
   return (
     <section className="flex flex-wrap gap-6 justify-center px-32 mt-6 w-full max-md:px-5 max-md:max-w-full">
       <div className="flex-1 shrink rounded-2xl basis-4 min-w-60 max-md:max-w-full h-[600px]">
-        <header className="w-full max-md:max-w-full">
+        <header className="w-full overflow-hidden">
           <TitleWithUnderline text="Upcoming Events" underlineWidth={64} />
         </header>
         <div className="flex flex-wrap flex-1 gap-2 justify-center mt-4 h-full max-md:max-w-full">
