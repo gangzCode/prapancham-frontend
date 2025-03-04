@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import { Play, ChevronRight } from "lucide-react";
@@ -101,8 +101,8 @@ const PodcastSection = ({
   };
 
   return (
-    <section className="container mx-auto py-8 flex flex-col justify-center mx-auto  px-32 max-md:px-5">
-      <div className="flex justify-between items-center border-b border-primary/10 pb-2 mb-6">
+    <section className="container mx-auto px-4 space-y-8 py-8">
+      <div className="flex justify-between items-center">
         <h2 className="text-2xl font-playfair font-bold">
           {title}
           <div className="h-1 w-20 bg-secondary mt-2"></div>
@@ -117,7 +117,7 @@ const PodcastSection = ({
         )}
       </div>
 
-      <div className="bg-gray-100 p-4 rounded-md mb-6 overflow-x-auto">
+      <div className="bg-gray-100 p-4 rounded-md overflow-x-auto">
         <div className="flex justify-start md:justify-center items-center min-w-max px-2">
           {categories.map((category, index) => (
             <React.Fragment key={category}>
@@ -141,7 +141,7 @@ const PodcastSection = ({
         </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {filteredPodcasts.map((podcast) => (
           <div
             key={podcast.id}
