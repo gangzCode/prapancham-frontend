@@ -62,7 +62,7 @@ const VideoNewsSection: React.FC = () => {
   };
 
   return (
-    <section className="container mx-auto py-8 px-4">
+    <section className="flex flex-col justify-center mx-auto py-8 px-32 max-md:px-5">
       <div className="flex justify-between items-center mb-6">
         <div className="relative">
           <h2 className="text-heading-lg text-[#0B4157]">Video News</h2>

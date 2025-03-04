@@ -9,6 +9,8 @@ import TrendingNewsSection from "@/components/trending-news/TrendingNewsSection"
 import HAdCarousel from "@/components/advertisement/HAdCarousel";
 import NewsCategoriesSection from "@/components/news-category/NewsCategoriesSection";
 import VideoNewsSection from "@/components/video-news/VideoNewsSection";
+import HorizontalAdBanner from "@/components/news-category/HorizontalAdBanner";
+import PodcastSection from "@/components/podcast/PodcastSection";
 
 import { featuredAds } from "@/data/featured-ads";
 
@@ -36,7 +38,10 @@ const HomePage: React.FC = () => {
         <TrendingNewsSection />
         <Separator />
         <HAdCarousel ads={featuredAds} title="Advertisements" autoSlideInterval={6000} />
+        <Separator />
         <VideoNewsSection />
+        <HorizontalAdBanner image="/images/top-ad-2.png" className="flex flex-col justify-center mx-auto  px-32 max-md:px-5 h-[143px]"/>
+        <PodcastSection />
         <NewsCategoriesSection />
       </main>
     </div>
