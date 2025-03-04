@@ -91,12 +91,38 @@ const HAdCarousel = ({
     };
   }, [isAutoPlaying]);
 
+<<<<<<< HEAD
   return (
     <div className="w-full my-10 px-32 max-md:px-5">
       <div className="container mx-auto">
         <div className="flex justify-between items-center mb-6">
           <div className="relative">
             <h2 className="text-heading-lg text-[#0B4157] text-left">{title}</h2>
+=======
+  const [activeScaleIndex, setActiveScaleIndex] = useState(currentIndex);
+
+  useEffect(() => {
+    let scaleTimer: NodeJS.Timeout;
+    if (isAutoPlaying) {
+      scaleTimer = setInterval(() => {
+        setActiveScaleIndex((prev) => {
+          const nextIndex = prev + 1;
+          return nextIndex < currentIndex + 3 ? nextIndex : currentIndex;
+        });
+      }, autoSlideInterval / 3);
+    }
+    return () => clearInterval(scaleTimer);
+  }, [isAutoPlaying, currentIndex, autoSlideInterval]);
+
+  return (
+    <div className="w-full my-10 px-32 max-md:px-5">
+      <div className="container mx-auto">
+        <div className="flex justify-between items-center mb-12">
+          <div className="relative">
+            <h2 className="text-heading-lg text-[#0B4157] text-left">
+              {title}
+            </h2>
+>>>>>>> 688f1f4 (Merge branch 'feature/home')
             <div className="absolute -bottom-2 left-0 w-20 h-1 bg-red-600"></div>
           </div>
 
@@ -118,7 +144,11 @@ const HAdCarousel = ({
           </div>
         </div>
 
+<<<<<<< HEAD
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+=======
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 w-full">
+>>>>>>> 688f1f4 (Merge branch 'feature/home')
           {ads.map((ad, index) => {
             const isVisible = index >= currentIndex && index < currentIndex + 3;
             if (!isVisible && !isMobile) return null;
@@ -127,7 +157,21 @@ const HAdCarousel = ({
             return (
               <div
                 key={ad.id}
+<<<<<<< HEAD
                 className="relative overflow-hidden transition-transform duration-300 group w-full h-full"
+=======
+                className={cn(
+                  "relative overflow-hidden transition-all duration-500 ease-in-out group w-full h-full",
+                  isVisible
+                    ? `${index === activeScaleIndex ? "scale-110 z-10" : "scale-90 z-0"} ${index === currentIndex ? "" : index === currentIndex + 1 ? "delay-100" : "delay-200"} ${index === activeScaleIndex ? "" : index === activeScaleIndex - 1 ? "-translate-x-4 opacity-75" : index === activeScaleIndex + 1 ? "translate-x-4 opacity-75" : ""}`
+                    : "scale-100"
+                )}
+                style={{
+                  transformOrigin: "center center",
+                  transition:
+                    "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease-in-out",
+                }}
+>>>>>>> 688f1f4 (Merge branch 'feature/home')
               >
                 <div className="aspect-video w-full h-full relative">
                   <Image
@@ -136,11 +180,19 @@ const HAdCarousel = ({
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
                     className={cn(
+<<<<<<< HEAD
                       "object-cover w-full h-full transition-all duration-300",
                       imageStates[ad.id]?.isLoading
                         ? "scale-110 blur-sm"
                         : "scale-100",
                       !imageStates[ad.id]?.error && "group-hover:scale-105"
+=======
+                      "object-cover w-full h-full transition-transform duration-500 ease-in-out",
+                      imageStates[ad.id]?.isLoading
+                        ? "scale-110 blur-sm"
+                        : "scale-100",
+                      !imageStates[ad.id]?.error && "hover:scale-105"
+>>>>>>> 688f1f4 (Merge branch 'feature/home')
                     )}
                     onLoad={() => {
                       setImageStates((prev) => ({

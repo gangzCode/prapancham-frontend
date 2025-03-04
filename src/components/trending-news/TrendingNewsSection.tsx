@@ -78,7 +78,11 @@ const TrendingNewsSection = () => {
           ) : index % 2 === 1 ? (
             <div
               key={index}
+<<<<<<< HEAD
               className="flex flex-col flex-1 shrink justify-center self-stretch my-auto text-sm basis-4 min-w-60"
+=======
+              className="flex flex-col flex-1 shrink justify-center self-stretch h-[520px] text-sm basis-4 min-w-60 gap-2"
+>>>>>>> 688f1f4 (Merge branch 'feature/home')
             >
               <SmallNewsCard
                 imageUrl={news.imageUrl}
@@ -88,6 +92,7 @@ const TrendingNewsSection = () => {
                 duration={news.duration}
               />
               {newsData[index + 1] && (
+<<<<<<< HEAD
                 <div className="mt-2">
                   <SmallNewsCard
                     imageUrl={newsData[index + 1].imageUrl}
@@ -97,6 +102,15 @@ const TrendingNewsSection = () => {
                     duration={newsData[index + 1].duration}
                   />
                 </div>
+=======
+                <SmallNewsCard
+                  imageUrl={newsData[index + 1].imageUrl}
+                  title={newsData[index + 1].title}
+                  editorName={newsData[index + 1].editorName}
+                  category={newsData[index + 1].category}
+                  duration={newsData[index + 1].duration}
+                />
+>>>>>>> 688f1f4 (Merge branch 'feature/home')
               )}
             </div>
           ) : null

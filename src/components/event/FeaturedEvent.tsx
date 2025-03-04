@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import ViewEventButton from "./ViewEventButton";
 
 interface FeaturedEventProps {
@@ -17,10 +18,11 @@ const FeaturedEvent: React.FC<FeaturedEventProps> = ({
   date,
 }) => {
   return (
-    <article className="flex relative flex-col justify-center p-2 my-auto bg-white min-w-60 shadow-[0px_0px_12px_rgba(0,0,0,0.06)] w-full md:w-[573px] h-[600px] max-w-full">
-      <img
+    <article className="flex relative flex-col justify-center p-2 my-auto bg-white min-w-60 shadow-[0px_0px_12px_rgba(0,0,0,0.06)] w-full md:w-[573px] h-[560px] max-w-full mt-4">
+      <Image
         src={imageUrl}
         alt={eventName}
+        fill
         className="object-cover absolute inset-0 z-0 w-full h-full max-md:max-w-full"
       />
       <div className="flex relative z-10 flex-col items-center p-4 w-full h-full bg-gradient-to-t from-black/90 via-black/50 to-transparent">
