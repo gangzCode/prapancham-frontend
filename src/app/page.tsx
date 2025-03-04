@@ -24,6 +24,7 @@ const HomePage: React.FC = () => {
     "/images/top-ad-3.png",
     "/images/top-ad-4.png",
   ];
+  
 
   return (
     <div className="flex flex-col">
