@@ -31,7 +31,7 @@ const newsCategoriesData = [
         timeAgo: "2 minutes ago",
       },
     ],
-    adImage: "https://images.unsplash.com/photo-1518640467707-6811f4a6ab73",
+    adImage: "https://images.unsplash.com/photo-1560769629-975ec94e6a86",
   },
   {
     title: "Category 2",
@@ -85,31 +85,33 @@ const newsCategoriesData = [
         timeAgo: "2 minutes ago",
       },
     ],
-    adImage: "https://images.unsplash.com/photo-1518640467707-6811f4a6ab73",
+    adImage: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
   },
 ];
 
 const NewsCategoriesSection: React.FC = () => {
   return (
-    <section className="flex flex-col justify-center px-32 py-6 max-md:px-5">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <section className="flex flex-wrap gap-6 justify-center px-32 py-6 my-6 mt-6 w-full mx-auto max-md:px-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
         {/* Left side scrollable news section - 2/3 width on desktop */}
-        <div className="md:col-span-2">
-          <ScrollArea className="h-[1400px] pr-4">
-            {newsCategoriesData.map((category, index) => (
-              <NewsCategoryBlock
-                key={index}
-                title={category.title}
-                news={category.news}
-                adImage={category.adImage}
-              />
-            ))}
+        <div className="lg:col-span-2 h-[600px] md:h-[800px] lg:h-[1200px] relative">
+          <ScrollArea className="h-full pr-4 overflow-auto">
+            <div className="space-y-8">
+              {newsCategoriesData.map((category, index) => (
+                <NewsCategoryBlock
+                  key={index}
+                  title={category.title}
+                  news={category.news}
+                  adImage={category.adImage}
+                />
+              ))}
+            </div>
           </ScrollArea>
         </div>
 
         {/* Right side advertisement section - 1/3 width on desktop */}
-        <div className="md:col-span-1">
-          <AdvertisementSidebar />
+        <div className="lg:col-span-1 h-[600px] md:h-[800px] lg:h-[1200px] overflow-hidden">
+          <AdvertisementSidebar className="h-full overflow-y-auto" />
         </div>
       </div>
     </section>

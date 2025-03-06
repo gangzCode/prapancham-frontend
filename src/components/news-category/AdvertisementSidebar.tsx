@@ -1,8 +1,7 @@
 import React from "react";
-import { Youtube } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
+import { Headphones, Youtube } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ContactCardProps {
   title: string;
@@ -15,26 +14,22 @@ interface AdBannerProps {
 
 const ContactCard: React.FC<ContactCardProps> = ({ title, phone }) => (
   <div className="mb-4">
-    <h3 className="text-center text-heading-base text-secondary mb-2">
-      {title}
-    </h3>
-    <button className="w-full bg-[#0A3F51] text-white text-body-base py-3 px-4 text-center rounded hover:bg-[#0c4c62] transition-colors">
+    <h3 className="text-center font-medium text-red-600 mb-2">{title}</h3>
+    <button className="w-full bg-[#0A3F51] text-white py-3 px-4 text-center rounded hover:bg-[#0c4c62] transition-colors">
       {phone}
     </button>
   </div>
 );
 
 const AdBanner: React.FC<AdBannerProps> = ({ image }) => (
-  <div className="mb-2 overflow-hidden rounded">
-    <div className="aspect-[21/9] relative">
-      <Image
-        src={image}
-        alt="Advertisement"
-        fill
-        className="object-cover"
-        sizes="(max-width: 768px) 100vw, 33vw"
-      />
-    </div>
+  <div className="mb-4 overflow-hidden rounded relative aspect-[16/9]">
+    <Image
+      src={image}
+      alt="Advertisement"
+      fill
+      className="object-cover"
+      sizes="(max-width: 768px) 100vw, 300px"
+    />
   </div>
 );
 
@@ -48,38 +43,37 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
   return (
     <div
       className={cn(
-        "w-full bg-white p-6 rounded shadow-sm min-h-[800px] flex flex-col justify-between h-[1400px] border border-gray-200",
+        "w-full bg-white p-4 rounded shadow-sm flex flex-col",
         className
       )}
     >
-      <ContactCard
-        title="Contact Us For Advertisements"
-        phone="+94 77 002 33 23"
-      />
+      <div className="flex flex-col">
+        <ContactCard
+          title="Contact Us For Advertisements"
+          phone="+94 77 002 33 23"
+        />
 
-      <Separator />
+        <ContactCard
+          title="Contact Us For Obituary News"
+          phone="+94 77 002 33 23"
+        />
+      </div>
 
-      <ContactCard
-        title="Contact Us For Obituary News"
-        phone="+94 77 002 33 23"
-      />
-
-      <div className="space-y-4 mt-6">
+      <div className="space-y-4 mt-6 flex-1 overflow-hidden">
         <AdBanner image="https://images.unsplash.com/photo-1649972904349-6e44c42644a7" />
         <AdBanner image="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b" />
         <AdBanner image="https://images.unsplash.com/photo-1518770660439-4636190af475" />
-        <AdBanner image="https://images.unsplash.com/photo-1461749280684-dccba630e2f6" />
       </div>
 
       <div className="mt-6">
-        <h3 className="text-heading-base text-secondary mb-2">
+        <h3 className="text-center font-medium text-red-600 mb-2">
           For More Details Contact Us
         </h3>
         <div className="space-y-2">
-          {[1, 2, 3, 4, 5].map((_, index) => (
+          {[1, 2, 3, 4].map((_, index) => (
             <button
               key={index}
-              className="w-full bg-[#0A3F51] text-white text-body-base py-2 px-4 text-center rounded hover:bg-[#0c4c62] transition-colors"
+              className="w-full bg-[#0A3F51] text-white py-2 px-4 text-center rounded hover:bg-[#0c4c62] transition-colors"
             >
               +94 77 002 33 23
             </button>
@@ -90,21 +84,16 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
       <div className="mt-6 space-y-2">
         <a
           href="#"
-          className="flex items-center gap-2 text-secondary text-body-base hover:underline py-2 px-4 bg-white rounded shadow-md hover:shadow-lg hover:bg-gray-100 transition-all duration-200"
+          className="flex items-center gap-2 text-red-600 hover:underline py-2 px-4 bg-gray-50 rounded"
         >
-          <Image
-            src="/icons/podcast.svg"
-            alt="Podcast"
-            width={32}
-            height={32}
-          />
+          <Headphones className="h-5 w-5" />
           <span>Listen To Our Podcast Now</span>
         </a>
         <a
           href="#"
-          className="flex items-center gap-2 text-secondary text-body-base hover:underline py-2 px-4 bg-white rounded shadow-md hover:shadow-lg hover:bg-gray-100 transition-all duration-200"
+          className="flex items-center gap-2 text-red-600 hover:underline py-2 px-4 bg-gray-50 rounded"
         >
-          <Youtube className="h-8 w-8" />
+          <Youtube className="h-5 w-5" />
           <span>Visit our YouTube Now</span>
         </a>
       </div>
