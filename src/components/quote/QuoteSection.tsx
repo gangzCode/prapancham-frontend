@@ -82,6 +82,8 @@ const QuoteSection: React.FC<QuoteSectionProps> = ({ className }) => {
               "{quotes[currentIndex].quote}"
             </blockquote>
 
+            <div className="border-t border-[#737373] mb-6"></div>
+
             <div className="flex items-center justify-between">
               <div className="flex flex-col space-y-1">
                 <span className="text-base md:text-lg font-semibold">
