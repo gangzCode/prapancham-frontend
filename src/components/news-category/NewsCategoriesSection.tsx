@@ -95,7 +95,7 @@ const NewsCategoriesSection: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left side scrollable news section - 2/3 width on desktop */}
         <div className="md:col-span-2">
-          <ScrollArea className="h-[1400px] pr-4">
+          <ScrollArea className="h-[1400px] lg:h-[1570px] pr-4 p-3 sm:p-4 md:p-6 md:border-r-[10px] md:border-gray-200">
             {newsCategoriesData.map((category, index) => (
               <NewsCategoryBlock
                 key={index}
