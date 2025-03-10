@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { Headphones, Youtube } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Separator } from "@radix-ui/react-select";
 
 interface ContactCardProps {
   title: string;
