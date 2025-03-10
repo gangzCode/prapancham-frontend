@@ -17,7 +17,7 @@ const countries = [
   "Sri Lanka",
   "India",
   "USA",
-  "India",
+  "China",
   "Australia",
   "Canada",
   "UK",
