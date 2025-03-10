@@ -31,7 +31,7 @@ const newsCategoriesData = [
         timeAgo: "2 minutes ago",
       },
     ],
-    adImage: "https://images.unsplash.com/photo-1560769629-975ec94e6a86",
+    adImage: "https://images.unsplash.com/photo-1518640467707-6811f4a6ab73",
   },
   {
     title: "Category 2",
@@ -85,14 +85,14 @@ const newsCategoriesData = [
         timeAgo: "2 minutes ago",
       },
     ],
-    adImage: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
+    adImage: "https://images.unsplash.com/photo-1518640467707-6811f4a6ab73",
   },
 ];
 
 const NewsCategoriesSection: React.FC = () => {
   return (
-    <section className="flex flex-wrap gap-6 justify-center px-32 py-6 my-6 mt-6 w-full mx-auto max-md:px-5">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
+    <section className="flex flex-col justify-center px-32 py-6 max-md:px-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left side scrollable news section - 2/3 width on desktop */}
         <div className="md:col-span-2">
           <ScrollArea className="h-[1400px] lg:h-[1570px] pr-4 p-3 sm:p-4 md:p-6 md:border-r-[10px] md:border-gray-200">
@@ -108,8 +108,8 @@ const NewsCategoriesSection: React.FC = () => {
         </div>
 
         {/* Right side advertisement section - 1/3 width on desktop */}
-        <div className="lg:col-span-1 h-[600px] md:h-[800px] lg:h-[1200px] overflow-hidden">
-          <AdvertisementSidebar className="h-full overflow-y-auto" />
+        <div className="md:col-span-1">
+          <AdvertisementSidebar />
         </div>
       </div>
     </section>
