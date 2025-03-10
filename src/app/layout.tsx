@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { poppins, inter } from "@/styles/fonts";
 import "./globals.css";
+import TopBar from "@/components/layout/TopBar";
+import FirstNavbar from "@/components/layout/FirstNavbar";
+import SecondNavbar from "@/components/layout/SecondNavbar";
+import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,10 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.variable} ${poppins.variable} antialiased`}
-      >
+      <body className={`${inter.variable} ${poppins.variable} antialiased`}>
+        <TopBar />
+        <FirstNavbar />
+        <SecondNavbar />
         {children}
+        <Footer />
       </body>
     </html>
   );

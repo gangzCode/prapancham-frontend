@@ -1,6 +1,3 @@
-import TopBar from "@/components/layout/TopBar";
-import FirstNavbar from "@/components/layout/FirstNavbar";
-import SecondNavbar from "@/components/layout/SecondNavbar";
 import HeroSection from "@/components/hero/HeroSection";
 import AdvertisementBanner from "@/components/advertisement/AdvertisementBanner";
 import { Separator } from "@/components/ui/separator";
@@ -12,7 +9,6 @@ import VideoNewsSection from "@/components/video-news/VideoNewsSection";
 import HorizontalAdBanner from "@/components/news-category/HorizontalAdBanner";
 import PodcastSection from "@/components/podcast/PodcastSection";
 import QuoteSection from "@/components/quote/QuoteSection";
-import Footer from "@/components/layout/Footer";
 
 import { featuredAds } from "@/data/featured-ads";
 
@@ -29,9 +25,6 @@ const HomePage: React.FC = () => {
   return (
     <div className="flex flex-col">
       <main className="flex flex-col mt-0 w-full bg-white min-h-[5543px] max-md:mt-0 max-md:max-w-full gap-[24px]">
-        <TopBar />
-        <FirstNavbar />
-        <SecondNavbar />
         <AdvertisementBanner images={topAdImages} />
         <HeroSection />
         <Separator />
@@ -53,7 +46,6 @@ const HomePage: React.FC = () => {
         <PodcastSection />
         <QuoteSection />
         <NewsCategoriesSection />
-        <Footer />
       </main>
     </div>
   );

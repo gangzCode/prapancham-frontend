@@ -94,18 +94,16 @@ const NewsCategoriesSection: React.FC = () => {
     <section className="flex flex-wrap gap-6 justify-center px-32 py-6 my-6 mt-6 w-full mx-auto max-md:px-5">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
         {/* Left side scrollable news section - 2/3 width on desktop */}
-        <div className="lg:col-span-2 h-[600px] md:h-[800px] lg:h-[1200px] relative">
-          <ScrollArea className="h-full pr-4 overflow-auto">
-            <div className="space-y-8">
-              {newsCategoriesData.map((category, index) => (
-                <NewsCategoryBlock
-                  key={index}
-                  title={category.title}
-                  news={category.news}
-                  adImage={category.adImage}
-                />
-              ))}
-            </div>
+        <div className="md:col-span-2">
+          <ScrollArea className="h-[1400px] lg:h-[1570px] pr-4 p-3 sm:p-4 md:p-6 md:border-r-[10px] md:border-gray-200">
+            {newsCategoriesData.map((category, index) => (
+              <NewsCategoryBlock
+                key={index}
+                title={category.title}
+                news={category.news}
+                adImage={category.adImage}
+              />
+            ))}
           </ScrollArea>
         </div>
 
