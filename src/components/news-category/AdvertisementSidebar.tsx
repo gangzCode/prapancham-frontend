@@ -1,8 +1,8 @@
 import React from "react";
-import Image from "next/image";
-import { Headphones, Youtube } from "lucide-react";
+import { Youtube } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Separator } from "@radix-ui/react-select";
+import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
 
 interface ContactCardProps {
   title: string;
@@ -73,6 +73,7 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
         <AdBanner image="https://images.unsplash.com/photo-1649972904349-6e44c42644a7" />
         <AdBanner image="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b" />
         <AdBanner image="https://images.unsplash.com/photo-1518770660439-4636190af475" />
+        <AdBanner image="https://images.unsplash.com/photo-1461749280684-dccba630e2f6" />
       </div>
 
       <div className="mt-4 sm:mt-5 md:mt-6">
