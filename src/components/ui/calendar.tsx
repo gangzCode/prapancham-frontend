@@ -2,20 +2,14 @@
 
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { DayPicker, DayPickerProps, DefaultComponents } from "react-day-picker"
+import { DayPicker, DayPickerProps, Components } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
-// Define a custom type for the components prop
-interface CustomComponents extends DefaultComponents {
-  IconLeft: React.ComponentType<React.SVGProps<SVGSVGElement> & { className?: string }>;
-  IconRight: React.ComponentType<React.SVGProps<SVGSVGElement> & { className?: string }>;
-}
-
 export type CalendarProps = DayPickerProps & {
-  components?: CustomComponents;
-}
+  components?: Partial<Components>;
+};
 
 function Calendar({
   className,
@@ -23,21 +17,6 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
-
-    const defaultComponents = {
-        IconLeft: React.memo((props: React.SVGProps<SVGSVGElement> & { className?: string }) => (
-          <ChevronLeft {...props} className={cn("h-4 w-4", props.className)} />
-        )),
-        IconRight: React.memo((props: React.SVGProps<SVGSVGElement> & { className?: string }) => (
-          <ChevronRight {...props} className={cn("h-4 w-4", props.className)} />
-        )),
-      };
-
-    const mergedComponents = {
-        ...defaultComponents,
-        ...props.components,
-    }
-
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -81,7 +60,14 @@ function Calendar({
         day_hidden: "invisible",
         ...classNames,
       }}
-      components={mergedComponents}
+      components={{
+        IconLeft: (props) => (
+          <ChevronLeft {...props} className={cn("h-4 w-4", props.className)} />
+        ),
+        IconRight: (props) => (
+          <ChevronRight {...props} className={cn("h-4 w-4", props.className)} />
+        ),
+      }}
       {...props}
     />
   )
