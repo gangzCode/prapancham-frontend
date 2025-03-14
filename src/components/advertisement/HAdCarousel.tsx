@@ -21,12 +21,14 @@ interface HAdCarouselProps {
   ads: AdItem[];
   title?: string;
   autoSlideInterval?: number;
+  className?: string;
 }
 
 const HAdCarousel = ({
   ads,
   title = "Advertisements",
   autoSlideInterval = 5000,
+  className,
 }: HAdCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
@@ -107,7 +109,7 @@ const HAdCarousel = ({
   }, [isAutoPlaying, currentIndex, autoSlideInterval]);
 
   return (
-    <div className="w-full my-10 px-32 max-md:px-5">
+    <div className={cn("w-full my-10", className)}>
       <div className="container mx-auto">
         <div className="flex justify-between items-center mb-12">
           <div className="relative">

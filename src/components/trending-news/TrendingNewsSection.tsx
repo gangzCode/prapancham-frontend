@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
 
 interface TrendingNewsItem {
   id: number;
@@ -15,7 +16,13 @@ interface TrendingNewsItem {
   featured?: boolean;
 }
 
-const TrendingNewsSection: React.FC = () => {
+interface TrendingNewsSectionProps {
+  className?: string;
+}
+
+const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
+  className,
+}) => {
   const [expandedItems, setExpandedItems] = useState<number[]>([]);
 
   const toggleExpand = (id: number) => {
@@ -89,7 +96,12 @@ const TrendingNewsSection: React.FC = () => {
   const regularNews = trendingNews.filter((item) => !item.featured).slice(0, 4);
 
   return (
-    <section className="flex flex-wrap gap-6 justify-center px-32 mt-6 w-full mx-auto max-md:px-5">
+    <section
+      className={cn(
+        "flex flex-wrap gap-6 justify-center px-4 mt-6 w-full mx-auto max-md:px-5",
+        className
+      )}
+    >
       <div className="flex justify-between items-center mb-6 w-full">
         <div className="relative">
           <h2 className="text-2xl font-bold text-[#004057]">Trending News</h2>
