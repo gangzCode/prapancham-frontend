@@ -30,11 +30,12 @@ const HomePage: React.FC = () => {
         <Separator />
         <UpcomingEvents />
         <Separator />
-        <TrendingNewsSection />
+        <TrendingNewsSection className="px-32"/>
         <Separator />
         <HAdCarousel
           ads={featuredAds}
           title="Advertisements"
+          className="px-32 max-md:px-5"
           autoSlideInterval={6000}
         />
         <Separator />
