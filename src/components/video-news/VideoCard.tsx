@@ -7,7 +7,7 @@ export interface VideoCardProps {
   title: string;
   excerpt: string;
   image: string;
-  editorName: string;
+  editorName?: string;
   category: string;
   duration: string;
   variant?: "small" | "large";
@@ -78,26 +78,28 @@ const VideoCard: React.FC<VideoCardProps> = ({
         </a>
 
         <div className="flex items-center text-sm text-gray-500 gap-3 mt-auto">
-          <div className="flex items-center gap-1">
-            <span className="text-gray-400 inline-flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="mr-1"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 6v6l4 2" />
-              </svg>
-              {editorName}
-            </span>
-          </div>
+          {editorName && (
+            <div className="flex items-center gap-1">
+              <span className="text-gray-400 inline-flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="mr-1"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 6v6l4 2" />
+                </svg>
+                {editorName}
+              </span>
+            </div>
+          )}
           <span className="font-medium text-secondary">{category}</span>
           <span className="text-gray-500">{duration}</span>
         </div>
