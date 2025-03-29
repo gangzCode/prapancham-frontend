@@ -18,7 +18,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
 }) => {
   return (
     <div className={containerClassName}>
-      <h3 className={cn("text-heading-base text-[#880002] mb-6", titleClassName)}>
+      <h3 className={cn("text-heading-base font-semibold text-[#880002] mb-6", titleClassName)}>
         {title}
       </h3>
       <div className="space-y-3">

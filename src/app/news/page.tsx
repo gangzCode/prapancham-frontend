@@ -65,7 +65,7 @@ const NewsPage: React.FC = () => {
   const currentNews = breakingNewsItems[currentIndex];
 
   return (
-    <div className="flex flex-col px-4 sm:px-8 md:px-16 lg:px-32">
+    <div className="flex flex-col px-4 sm:px-8 md:px-16 lg:px-16">
       <main className="flex flex-col mt-0 w-full bg-white max-md:mt-0 max-md:max-w-full gap-[24px]">
         {/* Breaking News Banner */}
         <BreakingNewsHCard

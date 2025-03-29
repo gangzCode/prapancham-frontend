@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-
+import { TitleWithUnderline } from "../ui/title-with-underline";
 interface TrendingNewsItem {
   id: number;
   title: string;
@@ -98,21 +98,21 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
   return (
     <section
       className={cn(
-        "flex flex-wrap gap-6 justify-center px-4 mt-6 w-full mx-auto max-md:px-5",
+        "flex flex-wrap gap-6 justify-center px-4 md:px-8 lg:px-16  mt-6 w-full mx-auto max-md:px-5",
         className
       )}
     >
       <div className="flex justify-between items-center mb-6 w-full">
-        <div className="relative">
-          <h2 className="text-2xl font-bold text-[#004057]">Trending News</h2>
-          <div className="absolute -bottom-2 left-0 h-1 w-24 bg-[#ea384c]"></div>
+        
+        <div className="flex-shrink min-w-0">
+          <TitleWithUnderline text="Trending News" underlineWidth={64} />
         </div>
-        <a
-          href="#"
-          className="text-[#ea384c] font-medium text-sm flex items-center gap-1 hover:underline"
-        >
-          View more <ChevronRight className="w-4 h-4" />
-        </a>
+        <button className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors">
+          <span className="text-sm sm:text-base md:text-heading-base">
+            View more
+          </span>
+          <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 w-full">

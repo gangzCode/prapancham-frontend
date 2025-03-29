@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Play, ChevronRight } from "lucide-react";
+import { Play, ChevronRight, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { TitleWithUnderline } from "../ui/title-with-underline";
 
 interface PodcastEpisode {
   id: number;
@@ -72,8 +73,8 @@ const PodcastSection = ({
     activeCategory === "All"
       ? podcastEpisodes
       : podcastEpisodes.filter(
-          (podcast) => podcast.category === activeCategory
-        );
+        (podcast) => podcast.category === activeCategory
+      );
 
   const togglePlay = (id: number) => {
     if (currentPodcast === id && isPlaying) {
@@ -101,19 +102,18 @@ const PodcastSection = ({
   };
 
   return (
-    <section className="container mx-auto px-4 space-y-8 py-8">
+    <section className=" px-4 md:px-8 lg:px-16  space-y-8 py-8">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-playfair font-bold">
-          {title}
-          <div className="h-1 w-20 bg-secondary mt-2"></div>
-        </h2>
+        <div className="flex-shrink min-w-0">
+          <TitleWithUnderline text={title} underlineWidth={64} />
+        </div>
         {showViewMore && (
-          <a
-            href="#"
-            className="text-secondary font-medium flex items-center gap-1 hover:underline"
-          >
-            View more <ChevronRight className="w-4 h-4" />
-          </a>
+          <button className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors">
+            <span className="text-sm sm:text-base md:text-heading-base">
+              View more
+            </span>
+            <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+          </button>
         )}
       </div>
 

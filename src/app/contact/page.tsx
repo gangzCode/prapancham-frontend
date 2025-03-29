@@ -7,7 +7,14 @@ import { Button } from "@/components/ui/button";
 import ContactSection from "@/components/contact/ContactSection";
 import AdvertisementBanner from "@/components/advertisement/AdvertisementBanner";
 import HorizontalAdBanner from "@/components/news-category/HorizontalAdBanner";
-
+import {
+  Select as CountrySelect,
+  SelectContent as CountrySelectContent,
+  SelectItem as CountrySelectItem,
+  SelectTrigger as CountrySelectTrigger,
+  SelectValue as CountrySelectValue,
+  SelectSeparator
+} from "@/components/ui/country-select";
 export const metadata: Metadata = {
   title: "Contact Us - Prapancham News",
   description: "Contact Prapancham News for inquiries, feedback, or support.",
@@ -43,7 +50,7 @@ const ContactPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="relative">
-        <div className="w-full h-[280px] px-4 sm:px-8 md:px-16 lg:px-32 py-4 md:py-6 relative">
+        <div className="w-full h-[280px] px-4 sm:px-8 md:px-16 lg:px-16 py-4 md:py-6 relative">
           <img
             src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7"
             alt="Contact Us"
@@ -65,13 +72,13 @@ const ContactPage: React.FC = () => {
       <CountryMenu countries={countries} />
 
       {/* Quick Contact Form Section */}
-      <div className="py-6 bg-white px-4 lg:px-32 sm:py-8 md:py-10">
+      <div className="py-6 bg-white px-4 lg:px-16 sm:py-8 md:py-10">
         <div className="container mx-auto">
           <div className="grid md:grid-cols-3 gap-8">
             {/* Left side - Form */}
-            <div className="md:col-span-2">
+            <div className="md:col-span-2 ">
               <div className="text-center mb-4">
-                <p className="text-[#1A1D1F] text-body-base">
+                <p className="text-[#880002] text-body-base">
                   Disclaimer about the country selection
                 </p>
               </div>
@@ -89,26 +96,96 @@ const ContactPage: React.FC = () => {
                   type="email"
                   className="w-full placeholder:text-body-sm px-6 py-4 h-[48px]"
                 />
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <Input
+                      placeholder="Phone Number"
+                      type="text"
+                      className="w-full placeholder:text-body-sm px-6 py-4 h-[48px]"
+                    />
+                  </div>
+
+                  <div className="flex-2">
+                    <div className="flex gap-4 justify-center  h-[48px] text-gray-400   items-center text-body-sm whitespace-nowrap border border-gray-300 rounded-md">
+                      <CountrySelect defaultValue="srilanka">
+                        <CountrySelectTrigger className="text-body-sm bg-transparent border-none outline-none cursor-pointer text-sm sm:text-base w-full">
+                          <CountrySelectValue
+                            className="text-body-sm placeholder:text-body-sm text-sm sm:text-base"
+                            placeholder="Language"
+                          />
+                        </CountrySelectTrigger>
+                        <CountrySelectContent className="border-t border-gray-300 rounded-b-md">
+                          <CountrySelectItem
+                            value="srilanka"
+                            className="text-sm sm:text-base"
+                          >
+                            <span>Sri Lanka</span>
+                            <img
+                              src="/svg/srilanka.svg"
+                              alt="Sri Lanka"
+                              className="ml-4 w-7 h-7 inline-block "
+                            />
+                          </CountrySelectItem>
+                          <SelectSeparator />
+                          <CountrySelectItem
+                            value="canada"
+                            className="text-sm sm:text-base"
+                          >
+                            <span>Canada</span>
+                            <img
+                              src="/svg/canada.svg"
+                              alt="Canada"
+                              className="ml-4 w-7 h-7 inline-block "
+                            />
+                          </CountrySelectItem>
+                          <SelectSeparator />
+                          <CountrySelectItem
+                            value="australia"
+                            className="text-sm sm:text-base"
+                          >
+                            <span>Australia</span>
+                            <img
+                              src="/svg/australia.svg"
+                              alt="Australia"
+                              className="ml-4 w-7 h-7 inline-block "
+                            />
+                          </CountrySelectItem>
+                        </CountrySelectContent>
+                      </CountrySelect>
+                    </div>
+                  </div>
+                </div>
+
+
                 <Textarea
                   placeholder="Description"
                   className="w-full placeholder:text-body-sm"
                   rows={5}
                 />
 
-                <div className="pt-2">
-                  <Button className="w-full bg-primary hover:bg-[#00506f] text-white font-bold text-sm">
+                <div className="pt-2 flex justify-center">
+                  <Button className="w-64 bg-primary hover:bg-[#00506f] text-white font-bold text-sm">
                     Submit
                   </Button>
                 </div>
+
               </form>
 
-              <div className="mt-8 bg-gray-200 h-[280px] w-full rounded flex items-center justify-center">
-                <span className="text-gray-500">Advertisement Space</span>
+              <div className="mt-8  h-[280px] w-full rounded flex items-center justify-center border border-black">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153162.457570069!2d-125.0!3d37.09024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x87d2f3b7bc742d77%3A0xc02a9463c47629fc!2sUnited%20States!5e0!3m2!1sen!2sus!4v1617815733460!5m2!1sen!2sus"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  className="p-2 "
+                  // allowFullScreen=""
+                  loading="lazy"
+                ></iframe>
               </div>
             </div>
 
             {/* Right side - Contact details */}
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center border-l border-gray-300 pl-8">
               <ContactSection
                 title="For More Details Contact Us"
                 contacts={phoneContacts}
@@ -131,9 +208,14 @@ const ContactPage: React.FC = () => {
       </div>
 
       {/* Horizontal advertisement Section */}
-      <HorizontalAdBanner
+      {/* <HorizontalAdBanner
         image="/images/top-ad-2.png"
-        className="mx-auto  px-32 max-md:px-5 h-[143px]"
+        className="mx-auto  px-16 max-md:px-5 h-[143px]"
+      /> */}
+      <img
+        src="https://images.unsplash.com/photo-1627384113743-6bd5a479fffd"
+        alt="Black Friday Sale"
+        className="w-full max-h-[232px] object-cover px-4 md:px-8 lg:px-16 mb-4"
       />
     </div>
   );

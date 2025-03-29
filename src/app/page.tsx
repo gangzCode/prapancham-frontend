@@ -20,29 +20,34 @@ const HomePage: React.FC = () => {
     "/images/top-ad-3.png",
     "/images/top-ad-4.png",
   ];
-  
+
 
   return (
     <div className="flex flex-col">
-      <main className="flex flex-col mt-0 w-full bg-white min-h-[5543px] max-md:mt-0 max-md:max-w-full gap-[24px]">
+      <main className="flex flex-col mt-0 w-full bg-white max-md:mt-0 max-md:max-w-full gap-[24px]">
         <AdvertisementBanner images={topAdImages} />
         <HeroSection />
         <Separator />
         <UpcomingEvents />
         <Separator />
-        <TrendingNewsSection className="px-32"/>
+        <TrendingNewsSection className="px-16" />
         <Separator />
         <HAdCarousel
           ads={featuredAds}
           title="Advertisements"
-          className="px-32 max-md:px-5"
+          className="px-4 md:px-8 lg:px-16   max-md:px-5"
           autoSlideInterval={6000}
         />
         <Separator />
         <VideoNewsSection />
-        <HorizontalAdBanner
+        {/* <HorizontalAdBanner
           image="/images/top-ad-2.png"
           className="flex flex-col justify-center mx-auto  px-32 max-md:px-5 h-[143px]"
+        /> */}
+        <img
+          src="https://images.unsplash.com/photo-1627384113743-6bd5a479fffd"
+          alt="Black Friday Sale"
+          className="w-full max-h-[232px] object-cover px-4 md:px-8 lg:px-16 "
         />
         <PodcastSection />
         <QuoteSection />

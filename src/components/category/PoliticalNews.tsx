@@ -62,7 +62,7 @@ const PoliticalNewsSection: React.FC = () => {
   };
 
   return (
-    <section className="flex flex-col justify-center mx-auto py-8 px-32 max-md:px-5">
+    <section className="flex flex-col justify-center mx-auto py-8 px-16 max-md:px-5">
       <div className="flex justify-between items-center mb-6">
         <div className="relative">
           <h2 className="text-heading-lg text-[#0B4157]">Political News</h2>

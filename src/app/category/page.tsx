@@ -101,7 +101,7 @@ const CategoryPage = () => {
       <HAdCarousel
         ads={featuredAds}
         title="Advertisements"
-        className="px-32 max-md:px-5"
+        className="px-16 max-md:px-5"
         autoSlideInterval={6000}
       />
       <VideoNewsSection />

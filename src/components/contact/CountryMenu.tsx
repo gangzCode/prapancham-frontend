@@ -20,8 +20,8 @@ const CountryMenu: React.FC<CountryMenuProps> = ({ countries }) => {
             <Button
               variant="ghost"
               className={cn(
-                "rounded-none border-none whitespace-nowrap text-white font-poppins text-base",
-                activeCountry === country ? "font-bold" : "font-normal"
+                " border-none whitespace-nowrap text-white font-poppins text-base",
+                activeCountry === country ? "font-bold bg-white rounded-lg text-[#1D94C5]" : "font-normal"
               )}
               onClick={() => setActiveCountry(country)}
             >

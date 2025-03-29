@@ -87,19 +87,19 @@ const DropMenu: React.FC<DropMenuProps> = ({ onClose }) => {
             <AccordionItem
               key={item.value}
               value={item.value}
-              className={`rounded-lg shadow-md overflow-hidden border-none ${
-                openItem === item.value ? "bg-stone-300" : "bg-[#F8F8F8]"
+              className={` overflow-hidden border-none ${
+                openItem === item.value ? "bg-black-300" : "bg-[#F8F8F8]"
               }`}
             >
-              <AccordionTrigger className="flex justify-between items-center p-3 transition-colors no-underline data-[state=open]:bg-stone-300">
-                <span className="text-base">{item.title}</span>
+              <AccordionTrigger className="flex justify-between items-center p-3 transition-colors no-underline data-[state=open]:bg-stone-400 data-[state=open]:text-white">
+                <span className="text-base ">{item.title}</span>
               </AccordionTrigger>
-              <AccordionContent className="bg-white">
+              <AccordionContent className="bg-primary">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2 p-3">
                   {item.subItems.map((subItem, index) => (
                     <button
                       key={index}
-                      className="text-base py-2 px-3 text-gray-700 rounded transition-colors text-left"
+                      className="text-base py-2 px-3 text-white  transition-colors text-left hover:bg-white rounded-lg hover:text-primary"
                     >
                       {subItem}
                     </button>

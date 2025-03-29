@@ -11,7 +11,7 @@ export const TitleWithUnderline: React.FC<TitleWithUnderlineProps> = ({
   underlineWidth = 64,
   textColor = "#0B4157",
   underlineColor = "#880002",
-  fontSize = 24,
+  fontSize = 2,
 }) => {
   return (
     <div className="relative">
@@ -21,8 +21,8 @@ export const TitleWithUnderline: React.FC<TitleWithUnderlineProps> = ({
         viewBox="0 0 574 46"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="title"
-        style={{ width: "573px", height: "44px" }}
+        className="title max-w-[22rem]"
+        style={{ height: "44px" }}
       >
         <text
           fill={textColor}
@@ -30,7 +30,7 @@ export const TitleWithUnderline: React.FC<TitleWithUnderlineProps> = ({
           style={{
             whiteSpace: "pre",
             fontFamily: "Poppins",
-            fontSize: `${fontSize}px`,
+            fontSize: `${fontSize}rem`,
             fontWeight: "bold",
           }}
           letterSpacing="0em"

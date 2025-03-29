@@ -45,7 +45,7 @@ const UpcomingEvents: React.FC = () => {
   const currentEvent = events[currentEventIndex];
 
   return (
-    <section className="flex flex-wrap gap-6 justify-center px-32 mt-6 w-full max-md:px-5 max-md:max-w-full">
+    <section className="flex flex-wrap gap-6 justify-center px-4 md:px-8 lg:px-16  mt-6 w-full max-md:px-5 max-md:max-w-full">
       <header className="flex flex-row items-center justify-between w-full gap-4 sm:gap-6 md:gap-10 overflow-hidden">
         <div className="flex-shrink min-w-0">
           <TitleWithUnderline text="Upcoming Events" underlineWidth={64} />
@@ -59,7 +59,7 @@ const UpcomingEvents: React.FC = () => {
       </header>
       <div className="flex-1 shrink rounded-2xl basis-4 min-w-60 max-md:max-w-full h-[600px]">
         <div className="flex flex-wrap flex-1 gap-2 justify-center mt-4 h-full max-md:max-w-full">
-          <ScrollArea className="overflow-hidden flex-1 shrink p-2 basis-0 min-w-60 max-md:max-w-full h-[calc(100%-40px)]">
+          <ScrollArea className="overflow-hidden flex-1 shrink basis-0 min-w-60 max-md:max-w-full h-[calc(100%-40px)]">
             <div className="flex flex-col gap-1">
               {events.map((event, index) => (
                 <EventCard

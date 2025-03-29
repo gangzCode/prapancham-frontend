@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight, AlertCircle } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { TitleWithUnderline } from "../ui/title-with-underline";
 
 interface AdItem {
   id: number;
@@ -110,14 +111,14 @@ const HAdCarousel = ({
 
   return (
     <div className={cn("w-full my-10", className)}>
-      <div className="container mx-auto">
+      <div className="max-w-full">
         <div className="flex justify-between items-center mb-12">
-          <div className="relative">
-            <h2 className="text-heading-lg text-[#0B4157] text-left">
-              {title}
-            </h2>
-            <div className="absolute -bottom-2 left-0 w-20 h-1 bg-red-600"></div>
+
+          <div className="flex-shrink min-w-0">
+            <TitleWithUnderline text={title} underlineWidth={64} />
           </div>
+
+
 
           <div className="flex gap-2">
             <button
@@ -212,12 +213,11 @@ const HAdCarousel = ({
             <button
               key={index}
               onClick={() => handleNavigation(() => goToSlide(index))}
-              className={`w-3 h-3 rounded-full transition-colors ${
-                Math.floor(currentIndex / 3) * 3 <= index &&
+              className={`w-3 h-3 rounded-full transition-colors ${Math.floor(currentIndex / 3) * 3 <= index &&
                 index < (Math.floor(currentIndex / 3) + 1) * 3
-                  ? "bg-teal-600"
-                  : "bg-gray-300"
-              }`}
+                ? "bg-teal-600"
+                : "bg-gray-300"
+                }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}

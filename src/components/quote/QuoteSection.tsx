@@ -64,7 +64,7 @@ const QuoteSection: React.FC<QuoteSectionProps> = ({ className }) => {
         className
       )}
     >
-      <div className="container mx-auto">
+      <div className="px-4 md:px-16 lg:px-16 pb-6">
         <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
           <div className="w-full md:w-1/3 relative h-[250px] md:h-[300px]">
             <Image
@@ -77,7 +77,7 @@ const QuoteSection: React.FC<QuoteSectionProps> = ({ className }) => {
             />
           </div>
 
-          <div className="w-full md:w-2/3 flex flex-col justify-between h-[250px] md:h-[300px] pl-0 md:pl-6">
+          <div className="w-full md:w-2/3 flex flex-col justify-between  md:h-[300px] pl-0 md:pl-6">
             <blockquote className="text-2xl md:text-3xl lg:text-4xl font-poppins italic font-medium leading-[2.5rem] md:leading-[3rem] lg:leading-[3.5rem] mb-6">
               "{quotes[currentIndex].quote}"
             </blockquote>

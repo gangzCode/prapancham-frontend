@@ -1,6 +1,7 @@
 import React from "react";
-import { ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import VideoCard from "./VideoCard";
+import { TitleWithUnderline } from "../ui/title-with-underline";
 
 interface VideoNewsItem {
   id: number;
@@ -62,18 +63,21 @@ const VideoNewsSection: React.FC = () => {
   };
 
   return (
-    <section className="flex flex-col justify-center mx-auto py-8 px-32 max-md:px-5">
-      <div className="flex justify-between items-center mb-6">
-        <div className="relative">
-          <h2 className="text-heading-lg text-[#0B4157]">Video News</h2>
-          <div className="absolute -bottom-2 left-0 h-1 w-20 bg-secondary"></div>
+    <section
+      className={
+        "flex flex-wrap gap-6 justify-center px-4 md:px-8 lg:px-16  mt-6 w-full mx-auto max-md:px-5"}
+    >
+      <div className="flex justify-between items-center mb-6 w-full">
+
+        <div className="flex-shrink min-w-0">
+          <TitleWithUnderline text="Video News" underlineWidth={64} />
         </div>
-        <a
-          href="#"
-          className="text-secondary text-heading-base flex items-center gap-1 hover:underline"
-        >
-          View more <ChevronRight className="w-4 h-4" />
-        </a>
+        <button className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors">
+          <span className="text-sm sm:text-base md:text-heading-base">
+            View more
+          </span>
+          <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+        </button>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8">

@@ -3,6 +3,7 @@ import NewsCard, { NewsCardProps } from "./NewsCard";
 import HorizontalAdBanner from "./HorizontalAdBanner";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TitleWithUnderline } from "../ui/title-with-underline";
 
 interface NewsCategoryBlockProps {
   title: string;
@@ -20,8 +21,9 @@ const NewsCategoryBlock: React.FC<NewsCategoryBlockProps> = ({
   return (
     <div className={cn("mb-8", className)}>
       <h2 className="text-xl font-playfair font-bold mb-4 relative pb-2">
-        {title}
-        <div className="h-1 w-16 bg-red-600 absolute bottom-0 left-0"></div>
+        <div className="flex-shrink min-w-0">
+          <TitleWithUnderline text={title} underlineWidth={64} />
+        </div>
       </h2>
 
       <div className="space-y-4">

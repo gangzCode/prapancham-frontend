@@ -11,7 +11,7 @@ const AdvertisementBanner: React.FC<AdvertisementBannerProps> = ({
 }) => {
   return (
     <section
-      className={`flex flex-col justify-center px-32 py-6 w-full rounded-lg max-md:px-5 max-md:max-w-full ${className}`}
+      className={`flex flex-col justify-center px-4 md:px-8 lg:px-16  py-6 w-full rounded-lg max-md:px-5 max-md:max-w-full ${className}`}
     >
       <div className="flex flex-wrap gap-3 justify-center items-center w-full max-md:max-w-full">
         {images.map((image, index) => (

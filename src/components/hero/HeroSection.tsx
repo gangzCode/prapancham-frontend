@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import Image from "next/image";
-
+import { TitleWithUnderline } from "../ui/title-with-underline";
 import { NewsItem, ObituaryEntry } from "./types";
 import BreakingNewsCard from "./BreakingNewsCard";
 import ObituaryCard from "./ObituaryCard";
@@ -108,7 +108,7 @@ const HeroSection = () => {
   const hasNext = currentIndex < newsDataList.length - 1;
 
   return (
-    <section className="flex flex-wrap gap-6 justify-center items-center px-32 mt-6 w-full max-md:px-5 max-md:max-w-full">
+    <section className="flex flex-wrap gap-6 justify-center items-center px-4 md:px-8 lg:px-16  mt-6 w-full max-md:px-5 max-md:max-w-full">
       <article className="flex-1 shrink self-stretch my-auto basis-0 min-w-60 shadow-[0px_0px_12px_rgba(0,0,0,0.06)] max-md:max-w-full">
         <div className="flex relative flex-col justify-end w-full min-h-[516px] max-md:max-w-full">
           <Image
@@ -129,10 +129,9 @@ const HeroSection = () => {
       </article>
 
       <aside className="self-stretch my-auto rounded-2xl min-h-[516px] min-w-60 w-[375px]">
-        <h2 className="w-full text-heading-lg text-center text-[#0B4157]">
-          Obituary Updates
-        </h2>
-
+        <div className="flex-shrink min-w-0 max-w-full">
+          <TitleWithUnderline text="Obituary Updates" underlineWidth={64} />
+        </div>
         <div className="flex flex-1 gap-2 justify-center px-1 py-2 mt-4 h-full">
           <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[456px]">
             <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-4">

@@ -5,7 +5,14 @@ import Link from "next/link";
 import DropMenu from "./DropMenu";
 import { Menu, Minus, ChevronDown } from "lucide-react";
 import SearchBox from "./SearchBox";
-
+import {
+  Select as CountrySelect,
+  SelectContent as CountrySelectContent,
+  SelectItem as CountrySelectItem,
+  SelectTrigger as CountrySelectTrigger,
+  SelectValue as CountrySelectValue,
+  SelectSeparator
+} from "@/components/ui/country-select";
 const SecondNavbar: React.FC = () => {
   const [isDropMenuOpen, setIsDropMenuOpen] = useState(false);
   const [selectedPage, setSelectedPage] = useState("Home");
@@ -20,7 +27,7 @@ const SecondNavbar: React.FC = () => {
 
   return (
     <>
-      <div className="flex flex-col px-4 sm:px-8 md:px-16 lg:px-32">
+      <div className="flex flex-col px-4 md:px-8 lg:px-16 ">
         <nav className="flex flex-wrap md:flex-nowrap gap-4 md:gap-10 justify-between items-center w-full px-2 sm:px-4 lg:px-8 py-2 mt-4 md:mt-6 bg-[#F8F8F8] rounded-lg">
           <div className="flex flex-wrap md:flex-nowrap gap-4 md:gap-6 items-center w-full md:w-auto">
             <button
@@ -31,7 +38,7 @@ const SecondNavbar: React.FC = () => {
               <Menu className="w-5 h-5 md:w-6 md:h-6" />
             </button>
             <div className="flex flex-wrap gap-2 items-center text-sm md:text-base text-center whitespace-nowrap text-zinc-900 overflow-x-auto scrollbar-hide">
-              {["Home", "Page1", "Page2"].map(
+              {["Home", "Youtube", "Podcast", "Events", "Advertisement"].map(
                 (page, index) => (
                   <React.Fragment key={page}>
                     {index > 0 && (
@@ -56,6 +63,55 @@ const SecondNavbar: React.FC = () => {
           </div>
           <div className="w-full md:w-auto mt-2 md:mt-0">
             <SearchBox />
+          </div>
+
+          <div className="flex gap-1 justify-center items-left text-[#1A1D1F] whitespace-nowrap">
+            <CountrySelect defaultValue="srilanka">
+              <CountrySelectTrigger className="md:w-[10rem] text-[#1A1D1F] bg-transparent border-none outline-none cursor-pointer text-sm sm:text-base">
+                <CountrySelectValue
+                  className="text-[#1A1D1F] placeholder:text-[#1A1D1F] text-sm sm:text-base"
+                  placeholder="Language"
+                />
+              </CountrySelectTrigger>
+              <CountrySelectContent>
+                <CountrySelectItem
+                  value="srilanka"
+                  className="text-sm sm:text-base"
+                >
+                  <span>Sri Lanka</span>
+                  <img
+                    src="/svg/srilanka.svg"
+                    alt="Sri Lanka"
+                    className="ml-4 w-7 h-7 inline-block "
+                  />
+                </CountrySelectItem>
+                <SelectSeparator />
+                <CountrySelectItem
+                  value="canada"
+                  className="text-sm sm:text-base"
+                >
+                  <span>Canada</span>
+                  <img
+                    src="/svg/canada.svg"
+                    alt="Sri Lanka"
+                    className="ml-4 w-7 h-7 inline-block "
+                  />
+                </CountrySelectItem>
+                <SelectSeparator />
+
+                <CountrySelectItem
+                  value="australia"
+                  className="text-sm sm:text-base"
+                >
+                  <span>Australia</span>
+                  <img
+                    src="/svg/australia.svg"
+                    alt="Sri Lanka"
+                    className="ml-4 w-7 h-7 inline-block "
+                  />
+                </CountrySelectItem>
+              </CountrySelectContent>
+            </CountrySelect>
           </div>
         </nav>
       </div>
