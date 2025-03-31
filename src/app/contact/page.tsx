@@ -1,4 +1,7 @@
-import React from "react";
+"use client"
+import 'react-phone-input-2/lib/style.css';
+import React, { useState, useEffect } from "react";
+import PhoneInput from 'react-phone-input-2';
 import { Metadata } from "next";
 import CountryMenu from "@/components/contact/CountryMenu";
 import { Input } from "@/components/ui/input";
@@ -15,10 +18,10 @@ import {
   SelectValue as CountrySelectValue,
   SelectSeparator
 } from "@/components/ui/country-select";
-export const metadata: Metadata = {
-  title: "Contact Us - Prapancham News",
-  description: "Contact Prapancham News for inquiries, feedback, or support.",
-};
+// export const metadata: Metadata = {
+//   title: "Contact Us - Prapancham News",
+//   description: "Contact Prapancham News for inquiries, feedback, or support.",
+// };
 
 const countries = [
   "Sri Lanka",
@@ -47,6 +50,9 @@ const ContactPage: React.FC = () => {
     "admin@prapancham.com",
   ];
 
+  const [activeCountry, setActiveCountry] = useState(countries[0]);
+  const [value, setValue] = useState('');
+
   return (
     <div className="min-h-screen bg-background">
       <div className="relative">
@@ -69,7 +75,11 @@ const ContactPage: React.FC = () => {
         </div>
       </div>
 
-      <CountryMenu countries={countries} />
+      <CountryMenu
+        countries={countries}
+        activeCountry={activeCountry}
+        setActiveCountry={setActiveCountry}
+      />
 
       {/* Quick Contact Form Section */}
       <div className="py-6 bg-white px-4 lg:px-16 sm:py-8 md:py-10">
@@ -98,11 +108,17 @@ const ContactPage: React.FC = () => {
                 />
                 <div className="flex gap-4">
                   <div className="flex-1">
-                    <Input
+                    <PhoneInput
+                      country={'lk'}
+                      placeholder="Phone Number"
+                      containerClass="phone-input"
+                      inputClass="form-control"
+                    />
+                     {/* <Input
                       placeholder="Phone Number"
                       type="text"
                       className="w-full placeholder:text-body-sm px-6 py-4 h-[48px]"
-                    />
+                    /> */}
                   </div>
 
                   <div className="flex-2">
@@ -171,7 +187,7 @@ const ContactPage: React.FC = () => {
 
               </form>
 
-              <div className="mt-8  h-[280px] w-full rounded flex items-center justify-center border border-black">
+              <div className="mt-8  h-[260px] w-full rounded flex items-center justify-center border border-black">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153162.457570069!2d-125.0!3d37.09024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x87d2f3b7bc742d77%3A0xc02a9463c47629fc!2sUnited%20States!5e0!3m2!1sen!2sus!4v1617815733460!5m2!1sen!2sus"
                   width="100%"
@@ -185,7 +201,7 @@ const ContactPage: React.FC = () => {
             </div>
 
             {/* Right side - Contact details */}
-            <div className="flex flex-col items-center border-l border-gray-300 pl-8">
+            <div className="flex flex-col items-center md:border-l md:border-gray-300 md:pl-8">
               <ContactSection
                 title="For More Details Contact Us"
                 contacts={phoneContacts}

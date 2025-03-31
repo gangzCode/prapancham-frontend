@@ -60,6 +60,7 @@ const CategoryPage = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [activeCountry, setActiveCountry] = useState(countries[0]);
 
   useEffect(() => {
     setMounted(true);
@@ -95,7 +96,11 @@ const CategoryPage = () => {
         hasPrevious={currentIndex > 0}
         hasNext={currentIndex < breakingNewsItems.length - 1}
       />
-      <CountryMenu countries={countries} />
+      <CountryMenu
+        countries={countries}
+        activeCountry={activeCountry}
+        setActiveCountry={setActiveCountry}
+      />
       <PoliticalNews />
 
       <HAdCarousel

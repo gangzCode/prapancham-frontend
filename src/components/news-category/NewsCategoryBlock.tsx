@@ -1,7 +1,7 @@
 import React from "react";
 import NewsCard, { NewsCardProps } from "./NewsCard";
 import HorizontalAdBanner from "./HorizontalAdBanner";
-import { ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TitleWithUnderline } from "../ui/title-with-underline";
 
@@ -38,12 +38,15 @@ const NewsCategoryBlock: React.FC<NewsCategoryBlockProps> = ({
         ))}
       </div>
 
-      <div className="flex justify-end mb-4 mt-2">
+      <div className="flex justify-end mb-4 mt-2 mr-4">
         <a
           href="#"
           className="text-sm font-medium text-red-600 flex items-center hover:underline"
         >
-          View more <ChevronRight className="h-4 w-4 ml-1" />
+          <span className="text-sm sm:text-base md:text-heading-base">
+            View more
+          </span>
+          <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
         </a>
       </div>
 

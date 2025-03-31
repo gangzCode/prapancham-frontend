@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { ArrowRight, UserRound, ChevronRight } from "lucide-react";
 
 interface NewsCardProps {
   id: number;
@@ -20,7 +21,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
 }) => {
   return (
     <div className="group relative overflow-hidden bg-white rounded-sm shadow-sm hover:shadow transition-all duration-300">
-      <div className="relative">
+      {/* <div className="relative">
         <img src={image} alt={title} className="w-full h-44 object-cover" />
         <div className="absolute top-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded-sm">
           <span>{editorName}</span>
@@ -43,6 +44,29 @@ const NewsCard: React.FC<NewsCardProps> = ({
         >
           Read more
         </Link>
+      </div> */}
+      <div className="bg-white overflow-hidden">
+        <div className="relative">
+          <img alt={title} className="w-full h-64 object-cover filter " height="500" src={image} width="600" />
+          <div className="absolute inset-0 bg-black bg-opacity-50 p-4 flex flex-col justify-between">
+            <div className="flex items-center text-white text-sm mb-2">
+              <UserRound />
+              <span>{editorName}</span>
+            </div>
+            <p className="text-white mb-4">
+              {title.length > 50 ? `${title.slice(0, 50)}...` : title}
+              <Link
+                href={`/news/${id}`}
+              ><span className=" font-semibold">Read more</span>
+              </Link>
+            </p>
+          </div>
+        </div>
+        <div className="p-4 flex items-center text-gray-500 text-sm">
+          <span className="text-red-500">{category}</span>
+          <span className="mx-2">•</span>
+          <span>{duration}</span>
+        </div>
       </div>
     </div>
   );

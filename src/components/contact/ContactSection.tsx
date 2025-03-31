@@ -21,7 +21,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
       <h3 className={cn("text-heading-base font-semibold text-[#880002] mb-6", titleClassName)}>
         {title}
       </h3>
-      <div className="space-y-3">
+      <div className="">
         {contacts.map((contact, index) => (
           <button
             key={index}

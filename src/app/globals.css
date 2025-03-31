@@ -93,3 +93,8 @@
     @apply bg-background text-foreground;
   }
 }
+.phone-input input {
+  width: 100% !important;
+  height: 48px !important;
+  /* padding: 0 24px !important;  */
+}

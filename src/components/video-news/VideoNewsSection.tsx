@@ -65,7 +65,7 @@ const VideoNewsSection: React.FC = () => {
   return (
     <section
       className={
-        "flex flex-wrap gap-6 justify-center px-4 md:px-8 lg:px-16  mt-6 w-full mx-auto max-md:px-5"}
+        "flex flex-wrap gap-6 justify-center px-4 md:px-8 lg:px-16  mt-6 w-full mx-auto max-md:px-5 mb-4"}
     >
       <div className="flex justify-between items-center mb-6 w-full">
 

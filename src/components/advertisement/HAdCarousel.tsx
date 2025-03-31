@@ -111,7 +111,7 @@ const HAdCarousel = ({
 
   return (
     <div className={cn("w-full my-10", className)}>
-      <div className="max-w-full">
+      <div className="max-w-full ">
         <div className="flex justify-between items-center mb-12">
 
           <div className="flex-shrink min-w-0">

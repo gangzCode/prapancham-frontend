@@ -12,15 +12,19 @@ const navItems = [
 
 const FirstNavbar: React.FC = () => {
   const pathname = usePathname();
-  const [selectedMenu, setSelectedMenu] = useState("news");
+  const [selectedMenu, setSelectedMenu] = useState("");
   useEffect(() => {
     const pathSegments = pathname.split("/").filter(Boolean);
     if (pathSegments.length > 0) {
       setSelectedMenu(
         pathSegments[0]
       );
+     if( pathSegments[0]=='news-individual'){
+      setSelectedMenu('news');
+     }
+
     } else {
-      setSelectedMenu("Dashboard");
+      setSelectedMenu("");
     }
   }, [pathname]);
 
@@ -36,7 +40,7 @@ const FirstNavbar: React.FC = () => {
           priority
           className="max-w-[200px] sm:max-w-none"
         />
-        <span className="px-1 -mt-2 text-xs text-white bg-[#F65050] ">
+        <span className={`px-1 -mt-2 text-xs text-white bg-[#F65050] ${selectedMenu === "news" ? "block" : selectedMenu === "news-individual" ? "block" : "hidden"}`}>
           News
         </span>
       </h1>

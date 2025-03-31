@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import NewsCard from "./NewsCard";
+import { TitleWithUnderline } from "../ui/title-with-underline";
 
 interface NewsItem {
   id: number;
@@ -27,7 +28,7 @@ const NewsCategorySection: React.FC<NewsCategorySectionProps> = ({
 }) => {
   return (
     <section className="mb-12">
-      <div className="flex justify-between items-center mb-4">
+      {/* <div className="flex justify-between items-center mb-4">
         <div className="relative">
           <h2 className="text-xl font-bold text-primary">{title}</h2>
           <div className="absolute -bottom-2 left-0 h-0.5 w-24 bg-accent"></div>
@@ -38,6 +39,17 @@ const NewsCategorySection: React.FC<NewsCategorySectionProps> = ({
         >
           View more <ChevronRight className="w-4 h-4" />
         </Link>
+      </div> */}
+      <div className="flex justify-between items-center mb-6 w-full">
+        <div className="flex-shrink min-w-0">
+          <TitleWithUnderline text={title} underlineWidth={64} />
+        </div>
+        <button className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors">
+          <span className="text-sm sm:text-base md:text-heading-base">
+            View more
+          </span>
+          <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+        </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">

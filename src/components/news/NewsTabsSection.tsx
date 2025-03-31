@@ -4,6 +4,7 @@ import NewsCard, { NewsCardProps } from "./NewsCard";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import ObituaryCard from "../hero/ObituaryCard";
+import { TitleWithUnderline } from "../ui/title-with-underline";
 
 // Sample data for news items
 const recentNews: NewsCardProps[] = [
@@ -123,16 +124,16 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
   const [activeTab, setActiveTab] = useState<"recent" | "important">("recent");
 
   return (
-    <div className={cn("container mx-auto px-4 py-6", className)}>
+    <div className={cn("px-4 md:px-8 lg:px-16 py-6", className)}>
       <div className="grid md:grid-cols-3 gap-6">
         {/* Left Column - News Tabs */}
         <div className="md:col-span-2">
-          <div className="flex border-b border-gray-200 mb-4">
+          <div className="flex border border-primary p-2 rounded-lg mb-4 w-[20rem] justify-center items-center mx-auto">
             <button
               className={cn(
-                "py-2 px-4 font-medium text-sm mr-4 border-b-2 -mb-px",
+                "py-2 w-full font-medium text-sm border-b-2 -mb-px",
                 activeTab === "recent"
-                  ? "border-red-600 text-red-600"
+                  ? "bg-primary text-white font-bold"
                   : "border-transparent text-[#0B4157] hover:text-gray-900"
               )}
               onClick={() => setActiveTab("recent")}
@@ -141,9 +142,9 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
             </button>
             <button
               className={cn(
-                "py-2 px-4 font-medium text-sm border-b-2 -mb-px",
+                "py-2 w-full font-medium text-sm border-b-2 -mb-px",
                 activeTab === "important"
-                  ? "border-red-600 text-red-600"
+                  ? "bg-primary text-white font-bold"
                   : "border-transparent text-gray-700 hover:text-gray-900"
               )}
               onClick={() => setActiveTab("important")}
@@ -207,10 +208,9 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
         {/* Right Column - Obituary Updates */}
         <div className="md:col-span-1 border border-gray-200 rounded-lg p-4">
           <h2 className="text-2xl font-playfair font-bold mb-4 border-b border-gray-200 pb-2">
-            <span className="relative">
-              Obituary Updates
-              <span className="absolute bottom-[-8px] left-0 w-12 h-1 bg-red-600"></span>
-            </span>
+          <div className="flex-shrink min-w-0 max-w-full">
+                    <TitleWithUnderline text="Obituary Updates" underlineWidth={64} />
+                  </div>
           </h2>
 
           <ScrollArea className="h-[790px] pr-4">

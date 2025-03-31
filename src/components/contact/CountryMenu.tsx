@@ -7,10 +7,14 @@ import { cn } from "@/lib/utils";
 
 interface CountryMenuProps {
   countries: string[];
+  activeCountry: string;
+  setActiveCountry: (country: string) => void;
 }
 
-const CountryMenu: React.FC<CountryMenuProps> = ({ countries }) => {
-  const [activeCountry, setActiveCountry] = useState(countries[0]);
+
+const CountryMenu: React.FC<CountryMenuProps> = ({ countries, activeCountry, setActiveCountry }) => {
+
+  // const [activeCountry, setActiveCountry] = useState(countries[0]);
 
   return (
     <div className="bg-primary p-4 overflow-x-auto h-[72px]">

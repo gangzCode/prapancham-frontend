@@ -6,6 +6,7 @@ import {
   SelectTrigger as LanguageSelectTrigger,
   SelectValue as LanguageSelectValue,
 } from "@/components/ui/language-select";
+import { Calendar } from "lucide-react";
 
 const TopBar: React.FC = () => {
   const formatDate = () => {
@@ -50,6 +51,9 @@ const TopBar: React.FC = () => {
   return (
     <div className="flex flex-wrap gap-4 sm:gap-6 md:gap-10 justify-between items-center px-4 md:px-8 lg:px-16  py-2 sm:py-3 w-full bg-primary shadow-[0px_4px_14px_rgba(0,0,0,0.25)]">
       <div className="flex gap-2 sm:gap-3.5 justify-center items-center">
+        <div className="bg-[#880002] rounded-full p-2">
+          <Calendar className="text-white h-4" />
+        </div>
         <time className="w-full sm:w-auto text-center text-white text-link order-2 sm:order-2 text-sm sm:text-base font-poppins">
           {formatDate()}
         </time>

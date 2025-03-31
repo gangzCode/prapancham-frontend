@@ -1,11 +1,12 @@
 import React from "react";
 import { Clock, Headphones, Youtube } from "lucide-react";
 import RelevantNewsSection from "@/components/news-individual/RelevantNewsSection";
+import { Separator } from "@/components/ui/separator";
 
 const NewsIndividual: React.FC = () => {
   return (
     <div className="bg-white min-h-screen">
-      <div className="container mx-auto py-8 px-4">
+      <div className=" py-8 px-4 md:px-8 lg:px-16">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Main Content Section */}
           <div className="w-full lg:w-2/3">
@@ -14,15 +15,17 @@ const NewsIndividual: React.FC = () => {
               <img
                 src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81"
                 alt="Medical workers in PPE"
-                className="w-full h-auto object-cover rounded-sm"
+                className="w-full h-auto max-h-[450px] object-cover rounded-sm"
               />
-              <div className="flex items-center gap-2 mt-2">
-                <span className="text-red-600 font-semibold text-sm uppercase">
-                  Breaking News
-                </span>
-                <span className="text-gray-500 text-xs flex items-center">
-                  • <Clock className="w-3 h-3 ml-1 mr-1" /> 2 minutes ago
-                </span>
+              <div className="flex items-center gap-2 mt-4 justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-red-600 font-semibold text-sm uppercase">
+                    Breaking News
+                  </span>
+                  <span className="text-gray-500 text-xs flex items-center">
+                    • <Clock className="w-3 h-3 ml-1 mr-1" /> 2 minutes ago
+                  </span>
+                </div>
                 <span className="text-sm text-gray-500">14th Feb 2025</span>
               </div>
             </div>
@@ -131,22 +134,45 @@ const NewsIndividual: React.FC = () => {
                 ipsum vulputate diam.
               </p>
               <p className="mb-4">
-                Ullamcorper fames diam eget nisl faucibus massa ante. Nec magna
-                purus vitae adipiscing gravida in vulputate mauris. Volutpat
-                integer aliquam mattis tincidunt dui sodales viverra. Vestibulum
-                pellentesque dolor ipsum aliquam pretium morbi mauris. Erat
-                pellentesque lectus nulla auctor. Faucibus malesuada vulputate
-                quisque cras volutpat pretium. Augue tempus ut aliquam sem elit.
+                Sed in viverra risus eros non nisl elit adipiscing praesent. Amet vel turpis et dis eget.
+                Vel lectus tincidunt et mattis etiam. Posuere massa et risus praesent vehicula
+                viverra gravida arcu. Quam fermentum nisi nulla donec orci aliquam. Sagittis dignissim
+                aliquet commodo eu sed. Aliquam nec purus pellentesque lorem augue. Nulla pellentesque
+                nullam nulla augue nunc nec purus. Et enim mus ut tincidunt. Auctor auctor diam nulla
+                scelerisque arcu metus vitae eget. Non in in nec ipsum. Volutpat arcu aliquet nulla pretium
+                tellus morbi ornare nullam velit. Id facilisis risus sit eros facilisis sapien in orci.
+                Aliquam vel ipsum vulputate diam.
               </p>
+              <p className="mb-4">
+                Ullamcorper fames diam eget nisl faucibus massa ante. Nec magna purus vitae adipiscing gravida in vulputate mauris.
+                Volutpat integer aliquam mattis tincidunt dui sodales viverra. Vestibulum pellentesque dolor ipsum aliquam pretium
+                morbi mauris. Erat pellentesque lectus nulla auctor. Faucibus malesuada vulputate quisque cras volutpat pretium.
+                Augue tempus ut aliquam sem elit.morbi ornare nullam velit. Id facilisis risus sit eros facilisis sapien in orci.
+                Aliquam vel ipsum vulputate diam.
+                Ullamcorper fames diam eget nisl faucibus massa ante. Nec magna purus vitae adipiscing gravida in vulputate mauris.
+                Volutpat integer aliquam mattis tincidunt dui sodales viverra. Vestibulum pellentesque
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-8">
+              <img
+                src="https://images.unsplash.com/photo-1607083206968-13611e3d76db"
+                alt="Healthcare innovation"
+                className="w-full h-[336px] object-cover rounded-sm"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1607082350899-7e105aa886ae"
+                alt="Medical technology"
+                className="w-full h-[336px] object-cover rounded-sm"
+              />
             </div>
           </div>
 
           {/* Sidebar - Ads and Contact Information */}
-          <div className="w-full lg:w-1/3 space-y-6">
+          <div className="w-full lg:w-1/3 space-y-2">
             {/* Contact Sections */}
             <div className="bg-white rounded-md shadow-sm border border-gray-100">
               <div className="bg-white p-4 text-center">
-                <h3 className="text-primary font-bold">
+                <h3 className="text-[#880002] font-bold">
                   Contact Us For Advertisements
                 </h3>
                 <div className="mt-3 mb-2">
@@ -156,10 +182,11 @@ const NewsIndividual: React.FC = () => {
                 </div>
               </div>
             </div>
+            <div className="border-b border-gray-300 ml-4 mr-4"></div>
 
             <div className="bg-white rounded-md shadow-sm border border-gray-100">
               <div className="bg-white p-4 text-center">
-                <h3 className="text-primary font-bold">
+                <h3 className="text-[#880002] font-bold">
                   Contact Us For Obituary News
                 </h3>
                 <div className="mt-3 mb-2">
@@ -169,6 +196,21 @@ const NewsIndividual: React.FC = () => {
                 </div>
               </div>
             </div>
+            <div className="border-b border-gray-300 ml-4 mr-4"></div>
+
+            <div className="bg-white rounded-md shadow-sm border border-gray-100">
+              <div className="bg-white p-4 text-center">
+                <h3 className="text-[#880002] font-bold">
+                  Contact Us For Event Notices
+                </h3>
+                <div className="mt-3 mb-2">
+                  <button className="w-full bg-[#0A3F51] text-white py-3 rounded-md hover:bg-[#0A3F51]/90 transition-colors">
+                    +94 77 002 33 23
+                  </button>
+                </div>
+              </div>
+            </div>
+            {/* <div className="border-b border-gray-300 ml-4 mr-4"></div> */}
 
             {/* Advertisement Banners */}
             <div className="space-y-4">
@@ -224,7 +266,7 @@ const NewsIndividual: React.FC = () => {
             {/* Contact Details Section */}
             <div className="bg-white rounded-md shadow-sm border border-gray-100">
               <div className="bg-white p-4 text-center">
-                <h3 className="text-primary font-bold mb-4">
+                <h3 className="text-[#880002] font-bold mb-4">
                   For More Details Contact Us
                 </h3>
                 <div className="space-y-3">
@@ -247,7 +289,7 @@ const NewsIndividual: React.FC = () => {
                 className="flex items-center justify-center gap-2 py-3 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
               >
                 <Headphones className="w-5 h-5 text-gray-700" />
-                <span className="text-primary">Listen To Our Podcast Now</span>
+                <span className="text-[#880002]">Listen To Our Podcast Now</span>
               </a>
 
               <a
@@ -255,7 +297,7 @@ const NewsIndividual: React.FC = () => {
                 className="flex items-center justify-center gap-2 py-3 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
               >
                 <Youtube className="w-5 h-5 text-red-600" />
-                <span className="text-primary">Visit our YouTube Now</span>
+                <span className="text-[#880002]">Visit our YouTube Now</span>
               </a>
             </div>
           </div>

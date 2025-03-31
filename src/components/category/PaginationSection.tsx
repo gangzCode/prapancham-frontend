@@ -87,7 +87,7 @@ const PaginationSection = () => {
   ];
 
   return (
-    <section className="container mx-auto py-8">
+    <section className="px-4 md:px-8 lg:px-16  py-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
         {/* Left side scrollable news section - 2/3 width on desktop */}
         <div className="lg:col-span-2 h-[600px] md:h-[800px] lg:h-[1600px] relative bg-white rounded-md shadow-sm overflow-hidden">
