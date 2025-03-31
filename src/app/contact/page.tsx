@@ -107,72 +107,14 @@ const ContactPage: React.FC = () => {
                   className="w-full placeholder:text-body-sm px-6 py-4 h-[48px]"
                 />
                 <div className="flex gap-4">
-                  <div className="flex-1">
-                    <PhoneInput
-                      country={'lk'}
-                      placeholder="Phone Number"
-                      containerClass="phone-input"
-                      inputClass="form-control"
-                    />
-                     {/* <Input
-                      placeholder="Phone Number"
-                      type="text"
-                      className="w-full placeholder:text-body-sm px-6 py-4 h-[48px]"
-                    /> */}
-                  </div>
-
-                  <div className="flex-2">
-                    <div className="flex gap-4 justify-center  h-[48px] text-gray-400   items-center text-body-sm whitespace-nowrap border border-gray-300 rounded-md">
-                      <CountrySelect defaultValue="srilanka">
-                        <CountrySelectTrigger className="text-body-sm bg-transparent border-none outline-none cursor-pointer text-sm sm:text-base w-full">
-                          <CountrySelectValue
-                            className="text-body-sm placeholder:text-body-sm text-sm sm:text-base"
-                            placeholder="Language"
-                          />
-                        </CountrySelectTrigger>
-                        <CountrySelectContent className="border-t border-gray-300 rounded-b-md">
-                          <CountrySelectItem
-                            value="srilanka"
-                            className="text-sm sm:text-base"
-                          >
-                            <span>Sri Lanka</span>
-                            <img
-                              src="/svg/srilanka.svg"
-                              alt="Sri Lanka"
-                              className="ml-4 w-7 h-7 inline-block "
-                            />
-                          </CountrySelectItem>
-                          <SelectSeparator />
-                          <CountrySelectItem
-                            value="canada"
-                            className="text-sm sm:text-base"
-                          >
-                            <span>Canada</span>
-                            <img
-                              src="/svg/canada.svg"
-                              alt="Canada"
-                              className="ml-4 w-7 h-7 inline-block "
-                            />
-                          </CountrySelectItem>
-                          <SelectSeparator />
-                          <CountrySelectItem
-                            value="australia"
-                            className="text-sm sm:text-base"
-                          >
-                            <span>Australia</span>
-                            <img
-                              src="/svg/australia.svg"
-                              alt="Australia"
-                              className="ml-4 w-7 h-7 inline-block "
-                            />
-                          </CountrySelectItem>
-                        </CountrySelectContent>
-                      </CountrySelect>
-                    </div>
-                  </div>
+                  <PhoneInput
+                    country={'lk'}
+                    placeholder="Phone Number"
+                    containerClass="phone-input"
+                    inputClass="form-control"
+                  />
                 </div>
-
-
+                
                 <Textarea
                   placeholder="Description"
                   className="w-full placeholder:text-body-sm"

@@ -1,7 +1,9 @@
-import React from "react";
-import { Calendar, ChevronRight } from "lucide-react";
-import VideoCard from "../video-news/VideoCard";
+import React, { useState, useEffect, useRef } from "react";
+import Calendar from "react-calendar";
+import { Calendar as CalendarIcon } from "lucide-react";
+import PhotoCard from "../video-news/PhotoCard";
 import { TitleWithUnderline } from "../ui/title-with-underline";
+import { ChevronLeft, ChevronRight, Pencil } from "lucide-react";
 
 interface VideoNewsItem {
   id: number;
@@ -14,7 +16,26 @@ interface VideoNewsItem {
 }
 
 const PoliticalNewsSection: React.FC = () => {
-  const smallVideos: VideoNewsItem[] = [
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const calendarRef = useRef(null);
+
+  // Close calendar when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+        setShowCalendar(false);
+      }
+    }
+    if (showCalendar) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showCalendar]);
+
+  const smallPhotos: VideoNewsItem[] = [
     {
       id: 1,
       title:
@@ -102,9 +123,9 @@ const PoliticalNewsSection: React.FC = () => {
   };
   return (
     <section className="flex flex-col justify-center mx-auto py-8 px-16 max-md:px-5">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex-row md:flex justify-between items-center mb-6 ">
         <div className="relative">
-          
+
           <div className="flex-shrink min-w-0 max-w-full">
             <TitleWithUnderline text="Political News" underlineWidth={64} />
           </div>
@@ -117,18 +138,80 @@ const PoliticalNewsSection: React.FC = () => {
         </a> */}
 
         <div className="flex gap-2 sm:gap-3.5 justify-center items-center">
-          <time className="w-full hidden md:block sm:w-auto text-center text-primary y order-2 sm:order-2 text-sm sm:text-base font-poppins">
+          <time className="w-full  sm:w-auto text-center text-primary y order-2 sm:order-2 text-sm sm:text-base font-poppins">
             {formatDate()}
           </time>
-          <div className="bg-[#880002] rounded p-2">
-            <Calendar className="text-white h-4" />
+          <div className="bg-[#880002] rounded p-2" onClick={() => setShowCalendar(!showCalendar)}>
+            <CalendarIcon className="text-white h-4" />
           </div>
+          {showCalendar && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div
+                ref={calendarRef}
+                className="bg-white rounded-lg shadow-lg p-4 w-80 relative"
+              >
+                <div className="text-gray-600 text-sm mb-2">Select date</div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="text-2xl font-semibold">{date.toDateString()}</div>
+                  <Pencil className="text-gray-600" />
+                </div>
+                <div className="border-t border-b py-2 mb-4">
+                  <div className="flex items-center justify-between">
+                    <div className="text-gray-600">{date.toLocaleString('default', { month: 'long', year: 'numeric' })}</div>
+                    <div className="flex items-center space-x-2">
+                      <ChevronLeft
+                        className="text-gray-600 cursor-pointer"
+                        onClick={() => setDate(new Date(date.setMonth(date.getMonth() - 1)))}
+                      />
+                      <ChevronRight
+                        className="text-gray-600 cursor-pointer"
+                        onClick={() => setDate(new Date(date.setMonth(date.getMonth() + 1)))}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-7 text-center text-gray-600 mb-2">
+                  {["S", "M", "T", "W", "T", "F", "S"].map((d) => (
+                    <div
+                    // key={d}
+                    >
+                      {d}
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-7 text-center text-gray-800">
+                  {[...Array(31)].map((_, i) => (
+                    <div
+                      // key={i}
+                      className={`py-2 cursor-pointer ${date.getDate() === i + 1
+                          ? "bg-primary text-white rounded-full"
+                          : ""
+                        }`}
+                      onClick={() => setDate(new Date(date.getFullYear(), date.getMonth(), i + 1))}
+                    >
+                      {i + 1}
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-end space-x-4 mt-4">
+                  <button className="text-gray-600" onClick={() => setShowCalendar(false)}>
+                    Cancel
+                  </button>
+                  <button className="text-primary" onClick={() => setShowCalendar(false)}>
+                    OK
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
+
+
       <div className="grid md:grid-cols-2 gap-8">
         <div>
-          <VideoCard
+          <PhotoCard
             title={featuredVideo.title}
             excerpt={featuredVideo.excerpt}
             image={featuredVideo.image}
@@ -140,8 +223,8 @@ const PoliticalNewsSection: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-6">
-          {smallVideos.map((video) => (
-            <VideoCard
+          {smallPhotos.map((video) => (
+            <PhotoCard
               key={video.id}
               title={video.title}
               excerpt={video.excerpt}

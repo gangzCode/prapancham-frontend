@@ -1,6 +1,6 @@
 import React from "react";
 import AdvertisementSidebar from "../news-category/AdvertisementSidebar";
-import VideoCard from "../video-news/VideoCard";
+import PhotoCard from "../video-news/PhotoCard";
 import PaginationBar from "./PaginationBar";
 
 interface VideoNewsItem {
@@ -94,7 +94,7 @@ const PaginationSection = () => {
           {/* Small vdieo card section */}
           <div className="grid grid-cols-1 gap-6">
             {smallVideos.map((video) => (
-              <VideoCard
+              <PhotoCard
                 key={video.id}
                 title={video.title}
                 excerpt={video.excerpt}
@@ -108,7 +108,7 @@ const PaginationSection = () => {
           </div>
           {/* Large video card section */}
           <div>
-            <VideoCard
+            <PhotoCard
               title={featuredVideo.title}
               excerpt={featuredVideo.excerpt}
               image={featuredVideo.image}
@@ -121,7 +121,7 @@ const PaginationSection = () => {
             {/* 2 video card in a row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               {featuredVideos.map((video) => (
-                <VideoCard
+                <PhotoCard
                   key={video.id}
                   title={video.title}
                   excerpt={video.excerpt}

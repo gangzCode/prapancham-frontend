@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import NewsCard, { NewsCardProps } from "./NewsCard";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import ObituaryCard from "../hero/ObituaryCard";
 import { TitleWithUnderline } from "../ui/title-with-underline";
+import { ObituaryEntry } from "../hero/types";
 
 // Sample data for news items
 const recentNews: NewsCardProps[] = [
@@ -76,42 +77,53 @@ const importantNews: NewsCardProps[] = [
   },
 ];
 
-// Sample data for obituaries
-const obituaryUpdates = [
+const obituaryData: ObituaryEntry[] = [
   {
-    id: 1,
     title: "31st day ceremony after death",
     name: "Mr. Nadesh Rasathurai",
-    date: "DD/MM/YYYY",
-    address: "h2z, masufd, sddd,sddsdffd",
-    imageUrl: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952",
+    date: "15/02/2025",
+    address: "42, Jalan Tun Razak, Brickfields, Kuala Lumpur",
+    imageUrl: "https://randomuser.me/api/portraits/men/75.jpg",
     condolences: 4,
   },
   {
-    id: 2,
     title: "31st day ceremony after death",
     name: "Mr. Nadesh Rasathurai",
-    date: "DD/MM/YYYY",
-    address: "h2z, masufd, sddd,sddsdffd",
-    imageUrl: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952",
+    date: "18/02/2025",
+    address: "15, Temple Road, Wellawatte, Colombo",
+    imageUrl: "https://randomuser.me/api/portraits/men/82.jpg",
     condolences: 4,
   },
   {
-    id: 3,
     title: "31st day ceremony after death",
     name: "Mr. Nadesh Rasathurai",
-    date: "DD/MM/YYYY",
-    address: "h2z, masufd, sddd,sddsdffd",
-    imageUrl: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952",
+    date: "20/02/2025",
+    address: "28, Serangoon Road, Little India, Singapore",
+    imageUrl: "https://randomuser.me/api/portraits/men/91.jpg",
     condolences: 4,
   },
   {
-    id: 4,
     title: "31st day ceremony after death",
     name: "Mr. Nadesh Rasathurai",
-    date: "DD/MM/YYYY",
-    address: "h2z, masufd, sddd,sddsdffd",
-    imageUrl: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952",
+    date: "22/02/2025",
+    address: "63, Lebuh Ampang, George Town, Penang",
+    imageUrl: "https://randomuser.me/api/portraits/men/85.jpg",
+    condolences: 4,
+  },
+  {
+    title: "31st day ceremony after death",
+    name: "Mr. Nadesh Rasathurai",
+    date: "25/02/2025",
+    address: "89, Jalan Masjid India, Kuala Lumpur",
+    imageUrl: "https://randomuser.me/api/portraits/men/92.jpg",
+    condolences: 4,
+  },
+  {
+    title: "31st day ceremony after death",
+    name: "Mr. Nadesh Rasathurai",
+    date: "28/02/2025",
+    address: "37, Race Course Road, Little India, Singapore",
+    imageUrl: "https://randomuser.me/api/portraits/men/95.jpg",
     condolences: 4,
   },
 ];
@@ -162,14 +174,14 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
                     className="relative group bg-white p-4 shadow-sm"
                   >
                     <div className="flex flex-col sm:flex-row gap-4">
-                      <div className="sm:w-1/3 w-full">
+                      <div className="w-60">
                         <img
                           src={news.image}
                           alt={news.title}
-                          className="w-full h-40 object-cover"
+                          className="w-full aspect-[1/1] object-cover"
                         />
                       </div>
-                      <div className="sm:w-2/3 w-full">
+                      <div className="w-full">
                         <h3 className="font-bold">{news.title}</h3>
                         <p className="text-gray-600 mt-2 text-sm line-clamp-3">
                           Lorem ipsum dolor sit amet consectetur. Tellus nisi
@@ -206,21 +218,23 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
         </div>
 
         {/* Right Column - Obituary Updates */}
-        <div className="md:col-span-1 border border-gray-200 rounded-lg p-4">
-          <h2 className="text-2xl font-playfair font-bold mb-4 border-b border-gray-200 pb-2">
-          <div className="flex-shrink min-w-0 max-w-full">
-                    <TitleWithUnderline text="Obituary Updates" underlineWidth={64} />
-                  </div>
-          </h2>
-
-          <ScrollArea className="h-[790px] pr-4">
-            <div className="space-y-4">
-              {obituaryUpdates.map((obituary) => (
-                <ObituaryCard key={obituary.id} entry={obituary} />
+        <aside className="self-stretch  rounded-2xl min-h-[516px] min-w-60 w-[375px]">
+        <div className="flex-shrink min-w-0 max-w-full">
+          <TitleWithUnderline text="Obituary Updates" underlineWidth={64} />
+        </div>
+        <div className="flex flex-1 gap-2 justify-center px-1 py-2 mt-4 h-full">
+          <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[800px]">
+            <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-4">
+              {obituaryData.map((entry, index) => (
+                <div key={index} className={index > 0 ? "mt-2" : ""}>
+                  <ObituaryCard entry={entry} />
+                </div>
               ))}
             </div>
+            <ScrollBar orientation="vertical" />
           </ScrollArea>
         </div>
+      </aside>
       </div>
     </div>
   );

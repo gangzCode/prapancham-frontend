@@ -13,6 +13,15 @@ interface AdBannerProps {
   image: string;
 }
 
+const adImages = [
+  "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
+  "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+  "https://images.unsplash.com/photo-1518770660439-4636190af475",
+  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
+  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
+  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
+];
+
 const ContactCard: React.FC<ContactCardProps> = ({ title, phone }) => (
   <div className="mb-2 sm:mb-3 md:mb-4">
     <h3 className="text-center text-sm sm:text-base md:text-heading-base text-secondary mb-1 sm:mb-2">
@@ -40,10 +49,12 @@ const AdBanner: React.FC<AdBannerProps> = ({ image }) => (
 
 interface AdvertisementSidebarProps {
   className?: string;
+  numberOfAds?:number;
 }
 
 const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
   className,
+  numberOfAds
 }) => {
   return (
     <div
@@ -69,11 +80,18 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
         />
       </div>
 
-      <div className="space-y-2 sm:space-y-3 md:space-y-4 mt-4 sm:mt-5 md:mt-6">
+      {/* <div className="space-y-2 sm:space-y-3 md:space-y-4 mt-4 sm:mt-5 md:mt-6">        
         <AdBanner image="https://images.unsplash.com/photo-1649972904349-6e44c42644a7" />
         <AdBanner image="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b" />
         <AdBanner image="https://images.unsplash.com/photo-1518770660439-4636190af475" />
         <AdBanner image="https://images.unsplash.com/photo-1461749280684-dccba630e2f6" />
+      </div> */}
+
+      <div className="space-y-2 sm:space-y-3 md:space-y-4 mt-4 sm:mt-5 md:mt-6">
+        {adImages.slice(0,  numberOfAds || 4).map((_, index) => (
+
+          <AdBanner image="https://images.unsplash.com/photo-1649972904349-6e44c42644a7" />
+        ))}
       </div>
 
       <div className="mt-4 sm:mt-5 md:mt-6">

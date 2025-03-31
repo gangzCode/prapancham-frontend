@@ -1,9 +1,9 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import Link from "next/link";
 import DropMenu from "./DropMenu";
 import { Menu, Minus, ChevronDown } from "lucide-react";
+import { usePathname } from "next/navigation";
 import SearchBox from "./SearchBox";
 import {
   Select as CountrySelect,
@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/country-select";
 const SecondNavbar: React.FC = () => {
   const [isDropMenuOpen, setIsDropMenuOpen] = useState(false);
-  const [selectedPage, setSelectedPage] = useState("Home");
+  const [selectedPage, setSelectedPage] = useState("");
+  const pathname = usePathname();
 
   const toggleDropMenu = () => {
     setIsDropMenuOpen(!isDropMenuOpen);
@@ -24,6 +25,17 @@ const SecondNavbar: React.FC = () => {
   const handlePageClick = (page: string) => {
     setSelectedPage(page);
   };
+   useEffect(() => {
+      const pathSegments = pathname.split("/").filter(Boolean);
+      if (pathSegments.length > 0) {
+        setSelectedPage(
+          pathSegments[0]
+        );    
+        
+      } else {
+        setSelectedPage("Home");
+      }
+    }, [pathname]);
 
   return (
     <>
