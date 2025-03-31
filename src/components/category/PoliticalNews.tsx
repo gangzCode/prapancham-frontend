@@ -18,22 +18,25 @@ interface VideoNewsItem {
 const PoliticalNewsSection: React.FC = () => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [date, setDate] = useState(new Date());
-  const calendarRef = useRef(null);
+  const calendarRef = useRef<HTMLDivElement>(null);
 
-  // Close calendar when clicking outside
+
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+    function handleClickOutside(event: MouseEvent) {
+      if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
         setShowCalendar(false);
       }
     }
+  
     if (showCalendar) {
       document.addEventListener("mousedown", handleClickOutside);
     }
+  
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showCalendar]);
+  
 
   const smallPhotos: VideoNewsItem[] = [
     {
