@@ -33,7 +33,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
         className={cn(
           "relative overflow-hidden rounded-sm",
           variant === "small"
-            ? "sm:w-[120px] w-full sm:h-[90px] aspect-video sm:flex-shrink-0"
+            ? "sm:w-[130px] w-full sm:h-[130px] aspect-square sm:flex-shrink-0"
             : "w-full aspect-video mb-4"
         )}
       >
@@ -77,11 +77,11 @@ const VideoCard: React.FC<VideoCardProps> = ({
           <ChevronRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
         </a>
 
-        <div className="flex items-center text-sm text-gray-500 gap-3 mt-auto">
+        <div className="flex items-center text-sm text-gray-500 gap-3  justify-between">
           {editorName && (
             <div className="flex items-center gap-1">
               <span className="text-gray-400 inline-flex items-center">
-                <svg
+                {/* <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="14"
                   height="14"
@@ -95,13 +95,16 @@ const VideoCard: React.FC<VideoCardProps> = ({
                 >
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 6v6l4 2" />
-                </svg>
-                {editorName}
+                </svg> */}
+                {/* {editorName} */}
               </span>
             </div>
           )}
-          <span className="font-medium text-secondary">{category}</span>
-          <span className="text-gray-500">{duration}</span>
+          <div className="flex gap-2">
+            {/* <span className="font-medium text-secondary">{category}</span>
+            <span>•</span> */}
+            <span className="text-gray-500">{duration}</span>
+          </div>
         </div>
       </div>
     </div>

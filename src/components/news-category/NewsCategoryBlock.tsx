@@ -4,6 +4,7 @@ import HorizontalAdBanner from "./HorizontalAdBanner";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TitleWithUnderline } from "../ui/title-with-underline";
+import { Separator } from "@/components/ui/separator";
 
 interface NewsCategoryBlockProps {
   title: string;
@@ -19,7 +20,7 @@ const NewsCategoryBlock: React.FC<NewsCategoryBlockProps> = ({
   className,
 }) => {
   return (
-    <div className={cn("mb-8", className)}>
+    <div className={cn("mb-8 md:mr-8", className)}>
       <h2 className="text-xl font-playfair font-bold mb-4 relative pb-2">
         <div className="flex-shrink min-w-0">
           <TitleWithUnderline text={title} underlineWidth={64} />
@@ -51,6 +52,8 @@ const NewsCategoryBlock: React.FC<NewsCategoryBlockProps> = ({
       </div>
 
       <HorizontalAdBanner image={adImage} />
+      <Separator className="!w-full" />
+
     </div>
   );
 };

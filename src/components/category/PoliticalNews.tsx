@@ -27,16 +27,16 @@ const PoliticalNewsSection: React.FC = () => {
         setShowCalendar(false);
       }
     }
-  
+
     if (showCalendar) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-  
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showCalendar]);
-  
+
 
   const smallPhotos: VideoNewsItem[] = [
     {
@@ -48,7 +48,7 @@ const PoliticalNewsSection: React.FC = () => {
       image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
       editorName: "Editor's name",
       category: "Category1",
-      duration: "15 minutes video",
+      duration: "15 minutes ago",
     },
     {
       id: 2,
@@ -59,7 +59,7 @@ const PoliticalNewsSection: React.FC = () => {
       image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0",
       editorName: "Editor's name",
       category: "Category1",
-      duration: "15 minutes video",
+      duration: "15 minutes ago",
     },
     {
       id: 3,
@@ -70,7 +70,7 @@ const PoliticalNewsSection: React.FC = () => {
       image: "https://images.unsplash.com/photo-1519741497674-611481863552",
       editorName: "Editor's name",
       category: "Category1",
-      duration: "15 minutes video",
+      duration: "15 minutes ago",
     },
   ];
 
@@ -83,7 +83,7 @@ const PoliticalNewsSection: React.FC = () => {
     image: "https://images.unsplash.com/photo-1529390079861-591de354faf5",
     editorName: "Editor's name",
     category: "Category1",
-    duration: "15 minutes video",
+    duration: "15 minutes ago",
   };
   const formatDate = () => {
     const date = new Date();
@@ -187,8 +187,8 @@ const PoliticalNewsSection: React.FC = () => {
                     <div
                       // key={i}
                       className={`py-2 cursor-pointer ${date.getDate() === i + 1
-                          ? "bg-primary text-white rounded-full"
-                          : ""
+                        ? "bg-primary text-white rounded-full"
+                        : ""
                         }`}
                       onClick={() => setDate(new Date(date.getFullYear(), date.getMonth(), i + 1))}
                     >

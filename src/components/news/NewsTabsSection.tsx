@@ -14,35 +14,35 @@ const recentNews: NewsCardProps[] = [
       "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisldhgteg convallis.",
     image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952",
     category: "Category1",
-    timeAgo: "15 minutes video",
+    timeAgo: "15 minutes ago",
   },
   {
     title:
       "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisldhgteg convallis.",
     image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952",
     category: "Category1",
-    timeAgo: "15 minutes video",
+    timeAgo: "15 minutes ago",
   },
   {
     title:
       "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisldhgteg convallis.",
     image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952",
     category: "Category1",
-    timeAgo: "15 minutes video",
+    timeAgo: "15 minutes ago",
   },
   {
     title:
       "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisldhgteg convallis.",
     image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952",
     category: "Category1",
-    timeAgo: "15 minutes video",
+    timeAgo: "15 minutes ago",
   },
   {
     title:
       "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisldhgteg convallis.",
     image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952",
     category: "Category1",
-    timeAgo: "15 minutes video",
+    timeAgo: "15 minutes ago",
   },
 ];
 
@@ -52,28 +52,28 @@ const importantNews: NewsCardProps[] = [
       "Important: Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit.",
     image: "https://images.unsplash.com/photo-1557804506-669a67965ba0",
     category: "Category1",
-    timeAgo: "15 minutes video",
+    timeAgo: "15 minutes ago",
   },
   {
     title:
       "Important: Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit.",
     image: "https://images.unsplash.com/photo-1557804506-669a67965ba0",
     category: "Category1",
-    timeAgo: "15 minutes video",
+    timeAgo: "15 minutes ago",
   },
   {
     title:
       "Important: Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit.",
     image: "https://images.unsplash.com/photo-1557804506-669a67965ba0",
     category: "Category1",
-    timeAgo: "15 minutes video",
+    timeAgo: "15 minutes ago",
   },
   {
     title:
       "Important: Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit.",
     image: "https://images.unsplash.com/photo-1557804506-669a67965ba0",
     category: "Category1",
-    timeAgo: "15 minutes video",
+    timeAgo: "15 minutes ago",
   },
 ];
 
@@ -171,28 +171,31 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
                 (news, index) => (
                   <div
                     key={index}
-                    className="relative group bg-white p-4 shadow-sm"
+                    className="relative group bg-white p-4 shadow-sm md:mr-5 hover:shadow-md"
                   >
                     <div className="flex flex-col sm:flex-row gap-4">
-                      <div className="w-60">
+                      <div className="w-full md:w-48">
                         <img
                           src={news.image}
                           alt={news.title}
                           className="w-full aspect-[1/1] object-cover"
                         />
                       </div>
-                      <div className="w-full">
-                        <h3 className="font-bold">{news.title}</h3>
-                        <p className="text-gray-600 mt-2 text-sm line-clamp-3">
-                          Lorem ipsum dolor sit amet consectetur. Tellus nisi
-                          risus tellus ac hendrerit nisldhgteg...
-                          <a
-                            href="#"
-                            className="text-red-600 ml-1 hover:underline"
-                          >
-                            Read more
-                          </a>
-                        </p>
+                      <div className="w-full flex flex-col justify-between">
+                        <div>
+                          <h3 className="font-bold">{news.title}</h3>
+                          <p className="text-gray-600 mt-2 text-sm line-clamp-3">
+                            Lorem ipsum dolor sit amet consectetur. Tellus nisi
+                            risus tellus ac hendrerit nisldhgteg...
+                            <a
+                              href="#"
+                              className="text-red-600 ml-1 hover:underline"
+                            >
+                              Read more
+                            </a>
+                          </p>
+                        </div>
+
 
                         <div className="flex items-center justify-between mt-4">
                           <div className="flex items-center text-gray-500 text-xs">
@@ -219,22 +222,22 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
 
         {/* Right Column - Obituary Updates */}
         <aside className="self-stretch  rounded-2xl min-h-[516px] min-w-60 w-[375px]">
-        <div className="flex-shrink min-w-0 max-w-full">
-          <TitleWithUnderline text="Obituary Updates" underlineWidth={64} />
-        </div>
-        <div className="flex flex-1 gap-2 justify-center px-1 py-2 mt-4 h-full">
-          <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[800px]">
-            <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-4">
-              {obituaryData.map((entry, index) => (
-                <div key={index} className={index > 0 ? "mt-2" : ""}>
-                  <ObituaryCard entry={entry} />
-                </div>
-              ))}
-            </div>
-            <ScrollBar orientation="vertical" />
-          </ScrollArea>
-        </div>
-      </aside>
+          <div className="flex-shrink min-w-0 max-w-full">
+            <TitleWithUnderline text="Obituary Updates" underlineWidth={64} />
+          </div>
+          <div className="flex flex-1 gap-2 justify-center px-1 py-2 mt-4 h-full">
+            <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[800px]">
+              <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-4">
+                {obituaryData.map((entry, index) => (
+                  <div key={index} className={index > 0 ? "mt-2" : ""}>
+                    <ObituaryCard entry={entry} />
+                  </div>
+                ))}
+              </div>
+              <ScrollBar orientation="vertical" />
+            </ScrollArea>
+          </div>
+        </aside>
       </div>
     </div>
   );

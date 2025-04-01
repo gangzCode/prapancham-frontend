@@ -77,7 +77,7 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
           <ChevronRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
         </a>
 
-        <div className="flex items-center text-sm text-gray-500 gap-3 mt-auto">
+        <div className="flex items-center text-sm text-gray-500 gap-3 mt-auto justify-between">
           {editorName && (
             <div className="flex items-center gap-1">
               <span className="text-gray-400 inline-flex items-center">
@@ -100,8 +100,11 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
               </span>
             </div>
           )}
-          <span className="font-medium text-secondary">{category}</span>
-          <span className="text-gray-500">{duration}</span>
+          <div>
+            <span className="font-medium text-secondary">{category}</span>
+            <span className="text-gray-500 mx-1">•</span>
+            <span className="text-gray-500">{duration}</span>
+          </div>
         </div>
       </div>
     </div>

@@ -18,7 +18,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
   className,
 }) => {
   return (
-    <div className={cn("flex gap-4 mb-4", className)}>
+    <div className={cn("flex gap-4 mb-4 shadow-md p-4 hover:shadow-lg", className)}>
       <div className="w-24 h-24 flex-shrink-0 relative">
         <Image
           src={image}
@@ -28,9 +28,9 @@ const NewsCard: React.FC<NewsCardProps> = ({
           sizes="96px"
         />
       </div>
-      <div className="flex-1">
+      <div className="flex-1 flex flex-col">
         <p className="text-sm font-medium line-clamp-3">{title}</p>
-        <div className="flex items-center mt-2 text-xs">
+        <div className="flex items-center mt-auto self-end text-xs mr-2">
           <span className="text-red-600">{category}</span>
           <span className="text-gray-500 mx-1">•</span>
           <span className="text-gray-500">{timeAgo}</span>

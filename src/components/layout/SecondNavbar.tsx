@@ -28,12 +28,11 @@ const SecondNavbar: React.FC = () => {
    useEffect(() => {
       const pathSegments = pathname.split("/").filter(Boolean);
       if (pathSegments.length > 0) {
-        setSelectedPage(
-          pathSegments[0]
+        setSelectedPage(pathSegments[0]
         );    
         
       } else {
-        setSelectedPage("Home");
+        setSelectedPage("home");
       }
     }, [pathname]);
 
@@ -59,7 +58,8 @@ const SecondNavbar: React.FC = () => {
                     <Link
                       href={page === "Home" ? "/" : `/${page.toLowerCase()}`}
                       onClick={() => handlePageClick(page)}
-                      className={`flex justify-center items-center px-2 py-1 rounded-md transition-colors duration-200 hover:text-link-hover font-poppins ${selectedPage === page ? "text-link-hover font-bold" : "text-link"}`}
+                      className={`flex justify-center items-center px-2 py-1 rounded-md transition-colors duration-200 hover:text-link-hover font-poppins 
+                        ${selectedPage === page.toLowerCase() ? "text-link-hover font-bold" : "text-link"}`}
                     >
                       {page}
                     </Link>

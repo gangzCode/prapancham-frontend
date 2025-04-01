@@ -45,7 +45,7 @@ const HomePage: React.FC = () => {
           className="flex flex-col justify-center mx-auto  px-32 max-md:px-5 h-[143px]"
         /> */}
         <img
-          src="https://images.unsplash.com/photo-1627384113743-6bd5a479fffd"
+          src="https://images.unsplash.com/photo-1538688423619-a81d3f23454b"
           alt="Black Friday Sale"
           className="w-full max-h-[232px] object-cover px-4 md:px-8 lg:px-16 "
         />
