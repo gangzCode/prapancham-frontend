@@ -1,9 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import React, { useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import AdvertisementTypeMenu from "@/components/advertisement/advertismentType";
+import CountryMenu from "@/components/contact/CountryMenu";
+import PaginationBar from "@/components/category/PaginationBar";
+
 
 const ads = {
     banners: {
@@ -31,6 +34,15 @@ const Advertisement = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const totalPages = 3;
     const [activeAdtype, setActiveAdtype] = useState(adTypes[0]);
+    const [activeCountry, setActiveCountry] = useState('All');
+    const categories = [
+        "All",
+        "Politics",
+        "Sports",
+        "Category1",
+        "Category2",
+        "Category3",];
+
 
     const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
@@ -38,94 +50,124 @@ const Advertisement = () => {
 
     return (
         <div className="mt-8">
-            <AdvertisementTypeMenu
-                types={adTypes}
-                activeType={activeAdtype}
-                setActiveType={setActiveAdtype}
+
+            <CountryMenu
+                countries={categories}
+                activeCountry={activeCountry}
+                setActiveCountry={setActiveCountry}
             />
-            <div className="py-8 px-4 md:px-8 lg:px-16">
 
-                <div className="flex justify-center mb-4">
-                    <Image
-                        src={ads.banners.top}
-                        alt="NEW ARRIVAL SUPER SALE"
-                        width={1200}
-                        height={200}
+            <div className="py-8 px-4 md:px-8 lg:px-16 space-y-4">
+                <div className="bg-slate-50 shadow-lg p-4 ">
+                    <img
+                        src="https://images.unsplash.com/photo-1538688423619-a81d3f23454b"
+                        alt="Black Friday Sale"
                         className="w-full max-h-[232px] object-cover"
                     />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
                     {ads.gridAds.map((src, index) => (
-                        <Image key={index} src={src} alt="Sale Banner" width={400} height={200} className="w-full" />
+                        <div key={index} className="bg-slate-50 shadow-lg p-4 ">
+                            <img
+                                src={src}
+                                alt="Black Friday Sale"
+                                className="w-full max-h-[232px] object-cover"
+                            />
+                        </div>
                     ))}
                 </div>
 
-                <div className="flex justify-center mb-4">
-                    <Image
-                        src={ads.banners.bottom}
-                        alt="Large Black Friday banner"
-                        width={1200}
-                        height={300}
+                <div className="bg-slate-50 shadow-lg p-4 ">
+                    <img
+                        src="https://images.unsplash.com/photo-1538688423619-a81d3f23454b"
+                        alt="Black Friday Sale"
                         className="w-full max-h-[232px] object-cover"
                     />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="col-span-1 md:col-span-2">
-                        <Image src="/images/top-ad-1.png" alt="Black Friday" width={800} height={400} className="w-full h-[232px] object-cover border border-gray-400 p-2" />
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-4">
+                    <div className="bg-slate-50 shadow-lg p-4 flex items-stretch md:col-span-2">
+                        <img
+                            src={ads.gridAds[0]}
+                            alt="Top Image"
+                            className="w-full h-full object-cover max-h-[232px]"
+                        />
                     </div>
-                    <div className="col-span-1">
-                        <Image src="/images/top-ad-1.png" alt="Black Friday" width={400} height={200} className="w-full h-[232px] object-cover border border-gray-400 p-2" />
-                    </div>
-                    <div className="col-span-1">
-                        <Image src="/images/top-ad-1.png" alt="Black Friday" width={400} height={200} className="w-full h-[232px] object-cover border border-gray-400 p-2" />
-                    </div>
-                    <div className="col-span-1">
-                        <Image src="/images/top-ad-1.png" alt="Black Friday" width={400} height={200} className="w-full h-[232px] object-cover border  border-gray-400 p-2" />
-                    </div>
-                    <div className="col-span-1">
-                        <Image src="/images/top-ad-1.png" alt="Black Friday" width={400} height={200} className="w-full h-[232px] object-cover border  border-gray-400 p-2" />
-                    </div>
-                    <div className="col-span-1 md:col-span-2">
-                        <Image src="/images/top-ad-1.png" alt="Black Friday" width={800} height={400} className="w-full h-[232px] object-cover border  border-gray-400 p-2" />
-                    </div>
-                    <div className="col-span-1 md:col-span-2">
-                        <Image src="/images/top-ad-1.png" alt="Black Friday" width={800} height={400} className="w-full h-[232px] object-cover border border-gray-400 p-2" />
-                    </div>
-                    <div className="col-span-1">
-                        <Image src="/images/top-ad-1.png" alt="Black Friday" width={400} height={200} className="w-full h-[232px] object-cover border border-gray-400 p-2" />
-                    </div>
-                    <div className="col-span-1">
-                        <Image src="/images/top-ad-1.png" alt="Black Friday" width={400} height={200} className="w-full h-[232px] object-cover border border-gray-400 p-2" />
+
+                    <div className="grid grid-cols-2 gap-2 md:grid-cols-2 md:col-span-2">
+                        {ads.gridAds.slice(1, 3).map((src, index) => (
+                            <div key={index} className="bg-slate-50 shadow-lg p-4 flex items-stretch">
+                                <img
+                                    src={src}
+                                    alt={`Image ${index + 2}`}
+                                    className="w-full h-full object-cover max-h-[232px]"
+                                />
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                <div className="pagination flex justify-center mt-4">
-                    <button
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="px-4 py-2 text-primary"
-                    >
-                        <ArrowLeft />
-                    </button>
-                    {[...Array(totalPages)].map((_, index) => (
-                        <button
-                            key={index}
-                            onClick={() => handlePageChange(index + 1)}
-                            className={`px-4 py-2 mx-1 font-bold ${currentPage === index + 1 ? ' text-[#880002]' : 'text-primary border border-primary rounded-full'}`}
-                        >
-                            {index + 1}
-                        </button>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4">
+                    {ads.gridAds.slice(0, 2).map((src, index) => (
+                        <div key={index} className="bg-slate-50 shadow-lg p-4 ">
+                            <img
+                                src={src}
+                                alt="Black Friday Sale"
+                                className="w-full md:h-[464px]  h-auto object-cover"
+                            />
+                        </div>
                     ))}
-                    <button
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="px-4 py-2 text-primary"
-                    >
-                        <ArrowRight />
-                    </button>
                 </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4">
+                    {ads.gridAds.slice(0, 2).map((src, index) => (
+                        <div key={index} className="bg-slate-50 shadow-lg p-4 ">
+                            <img
+                                src={src}
+                                alt="Black Friday Sale"
+                                className="w-full max-h-[232px] h-auto object-cover"
+                            />
+                        </div>
+                    ))}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-4">
+                    <div className="bg-slate-50 shadow-lg p-4 flex items-stretch md:col-span-2">
+                        <img
+                            src={ads.gridAds[0]}
+                            alt="Top Image"
+                            className="w-full h-full object-cover max-h-[232px]"
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 md:grid-cols-2 md:col-span-2">
+                        {ads.gridAds.slice(1, 3).map((src, index) => (
+                            <div key={index} className="bg-slate-50 shadow-lg p-4 flex items-stretch">
+                                <img
+                                    src={src}
+                                    alt={`Image ${index + 2}`}
+                                    className="w-full h-full object-cover max-h-[232px]"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className="grid grid-cols-1 gap-2 mb-4">
+                    {ads.gridAds.slice(2, 3).map((src, index) => (
+                        <div key={index} className="bg-slate-50 shadow-lg p-4 ">
+                            <img
+                                src={src}
+                                alt="Black Friday Sale"
+                                className="w-full md:h-[648px]  h-auto object-cover"
+                            />
+                        </div>
+                    ))}
+                </div>
+
+                <div>
+                    <PaginationBar />
+                </div>
+
             </div>
         </div>
     );

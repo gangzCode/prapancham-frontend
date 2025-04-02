@@ -49,17 +49,17 @@ const EventSlider = () => {
           alt={currentEvent.name}
           width={800}
           height={400}
-          className="w-full h-auto filter brightness-50"
+          className="w-full h-96 md:h-auto filter brightness-50"
         />
         <div className="absolute inset-0 flex items-center justify-between px-4">
           <button
-            className="bg-white bg-opacity-50 rounded-full p-2"
+            className="bg-white bg-opacity-50 rounded-full p-2 mb-16 md:mb-0"
             onClick={prevImage}
           >
             <ChevronLeft className="text-gray-700" />
           </button>
           <button
-            className="bg-white bg-opacity-50 rounded-full p-2"
+            className="bg-white bg-opacity-50 rounded-full p-2 mb-16 md:mb-0"
             onClick={nextImage}
           >
             <ChevronRight className="text-gray-700" />

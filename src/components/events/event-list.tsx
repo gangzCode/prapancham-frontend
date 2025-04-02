@@ -28,7 +28,11 @@ const EventCard: React.FC<EventCardProps> = ({
 }) => {
     return (
         <div className="bg-white mb-6 p-4 flex flex-col md:flex-row items-start shadow-[0_4px_6px_0_rgba(0,0,0,0.1),0_2px_3px_0_rgba(0,0,0,0.08)]">
-            <img alt="People attending the event" className="w-32 h-32 rounded-md mr-4" src={eventImage} />
+            <img
+                alt="People attending the event"
+                className="w-full md:w-32 aspect-[1/1] mr-4 mb-4 md:mb-0"
+                src={eventImage}
+            />
             <div className="flex-1">
                 <h2 className="text-xl font-bold mb-2">{title}</h2>
                 <p className="text-gray-600 mb-1 text-sm">{date}</p>
@@ -45,9 +49,9 @@ const EventCard: React.FC<EventCardProps> = ({
                     <span className="ml-2">{`${attendees.length} people have registered`}</span>
                 </div>
             </div>
-            <div className="flex flex-col items-end">
+            <div className="flex flex-col items-end w-full md:w-auto">
                 <span className="mb-2  text-sm"><span className="text-green-500">●</span> {organizer}</span>
-                <button className="mb-2 px-8 py-2 border border-[#0A3F51] text-[#0A3F51] rounded-md bg-transparent hover:bg-primary hover:text-white transition-colors">
+                <button className="mb-2 px-8 py-2 border border-[#0A3F51] text-[#0A3F51]  w-full sm:w-auto rounded-md bg-transparent hover:bg-primary hover:text-white transition-colors">
                     View more
                 </button>
                 <button className="bg-[#0A3F51] text-white py-2 px-8 rounded-lg w-full sm:w-auto hover:bg-[#0A3F51]/80 transition-colors">

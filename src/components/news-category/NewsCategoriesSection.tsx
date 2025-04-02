@@ -15,6 +15,7 @@ const newsCategoriesData = [
         image: "https://images.unsplash.com/photo-1538688423619-a81d3f23454b",
         category: "Category 1",
         timeAgo: "2 minutes ago",
+        editor: "John Doe",
       },
       {
         title:
@@ -22,6 +23,7 @@ const newsCategoriesData = [
         image: "https://images.unsplash.com/photo-1538688423619-a81d3f23454b",
         category: "Category 1",
         timeAgo: "2 minutes ago",
+        editor: "Jane Smith",
       },
       {
         title:
@@ -29,6 +31,7 @@ const newsCategoriesData = [
         image: "https://images.unsplash.com/photo-1538688423619-a81d3f23454b",
         category: "Category 1",
         timeAgo: "2 minutes ago",
+        editor: "Alice Johnson",
       },
     ],
     adImage: "https://images.unsplash.com/photo-1518640467707-6811f4a6ab73",
@@ -40,22 +43,25 @@ const newsCategoriesData = [
         title:
           "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisldihteg convallis.",
         image: "https://images.unsplash.com/photo-1538688423619-a81d3f23454b",
-        category: "Category 1",
+        category: "Category 2",
         timeAgo: "2 minutes ago",
+        editor: "Michael Brown",
       },
       {
         title:
           "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisldihteg convallis.",
         image: "https://images.unsplash.com/photo-1538688423619-a81d3f23454b",
-        category: "Category 1",
+        category: "Category 2",
         timeAgo: "2 minutes ago",
+        editor: "Emily White",
       },
       {
         title:
           "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisldihteg convallis.",
         image: "https://images.unsplash.com/photo-1538688423619-a81d3f23454b",
-        category: "Category 1",
+        category: "Category 2",
         timeAgo: "2 minutes ago",
+        editor: "David Wilson",
       },
     ],
     adImage: "https://images.unsplash.com/photo-1518640467707-6811f4a6ab73",
@@ -67,28 +73,30 @@ const newsCategoriesData = [
         title:
           "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisldihteg convallis.",
         image: "https://images.unsplash.com/photo-1538688423619-a81d3f23454b",
-        category: "Category 1",
+        category: "Category 3",
         timeAgo: "2 minutes ago",
+        editor: "Chris Martin",
       },
       {
         title:
           "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisldihteg convallis.",
         image: "https://images.unsplash.com/photo-1538688423619-a81d3f23454b",
-        category: "Category 1",
+        category: "Category 3",
         timeAgo: "2 minutes ago",
+        editor: "Sophia Davis",
       },
       {
         title:
           "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisldihteg convallis.",
         image: "https://images.unsplash.com/photo-1538688423619-a81d3f23454b",
-        category: "Category 1",
+        category: "Category 3",
         timeAgo: "2 minutes ago",
+        editor: "Daniel Garcia",
       },
     ],
     adImage: "https://images.unsplash.com/photo-1518640467707-6811f4a6ab73",
   },
 ];
-
 const NewsCategoriesSection: React.FC = () => {
   return (
     <section className="flex flex-col justify-center px-4 md:px-8 lg:px-16  py-6 max-md:px-5">

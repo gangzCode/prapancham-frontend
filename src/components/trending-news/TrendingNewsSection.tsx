@@ -43,7 +43,7 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
       image: "https://images.unsplash.com/photo-1516731415730-0c607149933a",
       editorName: "Editor's name",
       category: "Category1",
-      duration: "15 minutes video",
+      duration: "15 minutes ago",
       featured: true,
     },
     {
@@ -55,7 +55,7 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
       image: "https://images.unsplash.com/photo-1540479859555-17af45c78602",
       editorName: "Editor's name",
       category: "Category1",
-      duration: "15 minutes video",
+      duration: "15 minutes ago",
     },
     {
       id: 3,
@@ -66,7 +66,7 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
       image: "https://images.unsplash.com/photo-1518091043644-c1d4457512c6",
       editorName: "Editor's name",
       category: "Category1",
-      duration: "15 minutes video",
+      duration: "15 minutes ago",
     },
     {
       id: 4,
@@ -77,7 +77,7 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
       image: "https://images.unsplash.com/photo-1520869309377-88c9961a0a2b",
       editorName: "Editor's name",
       category: "Category1",
-      duration: "15 minutes video",
+      duration: "15 minutes ago",
     },
     {
       id: 5,
@@ -88,7 +88,7 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
       image: "https://images.unsplash.com/photo-1547347298-4074fc3086f0",
       editorName: "Editor's name",
       category: "Category1",
-      duration: "15 minutes video",
+      duration: "15 minutes ago",
     },
   ];
 
@@ -103,7 +103,7 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
       )}
     >
       <div className="flex justify-between items-center mb-6 w-full">
-        
+
         <div className="flex-shrink min-w-0">
           <TitleWithUnderline text="Trending News" underlineWidth={64} />
         </div>
@@ -117,16 +117,16 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 w-full">
         {featuredNews && (
-          <div className="md:col-span-6 relative group overflow-hidden">
+          <div className="md:col-span-6 relative group overflow-hidden p-2 shadow-md">
             <div className="relative h-[420px] overflow-hidden">
               <img
                 src={featuredNews.image}
                 alt={featuredNews.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                className="w-full h-full object-cover "
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent">
                 <div className="absolute bottom-0 p-6 text-white">
-                  <h3 className="text-xl md:text-2xl font-bold leading-tight mb-2">
+                  <h3 className="text-xl hover:text-[#ea384c] md:text-2xl font-bold leading-tight mb-2">
                     {featuredNews.title}
                   </h3>
                   <p className="text-sm text-gray-200 mb-2">
@@ -142,40 +142,47 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
                       </button>
                     )}
                   </p>
-                  <div className="flex items-center text-sm gap-4">
-                    <span className="flex items-center text-gray-300">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 mr-1"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      {featuredNews.editorName}
-                    </span>
-                    <span className="text-[#ea384c]">
-                      {featuredNews.category}
-                    </span>
-                    <span className="text-gray-300">
-                      {featuredNews.duration}
-                    </span>
-                  </div>
+
                 </div>
               </div>
+            </div>
+            <div className="flex items-center text-sm mt-2 justify-between">
+              <span className="flex items-center text-[#737373]">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 16a4 4 0 0 1 4 4H8a4 4 0 0 1 4-4z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                {featuredNews.editorName}
+              </span>
+              <div className="flex item-center gap-4">
+                <span className="text-[#ea384c]">
+                  {featuredNews.category}
+                </span>
+                <span>•</span>
+                <span className="text-[#737373]">
+                  {featuredNews.duration}
+                </span>
+              </div>
+
             </div>
           </div>
         )}
 
-        <div className="md:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="md:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-2">
           {regularNews.map((news) => (
             <div
               key={news.id}
-              className="relative group overflow-hidden bg-white rounded-sm shadow-sm h-[200px] flex flex-col"
+              className="relative group overflow-hidden bg-white shadow-sm flex flex-col p-2"
             >
               <div className="relative h-full overflow-hidden">
                 <img
@@ -189,18 +196,21 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-3 w-3 mr-1"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                          clipRule="evenodd"
-                        />
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 16a4 4 0 0 1 4 4H8a4 4 0 0 1 4-4z" />
+                        <circle cx="12" cy="10" r="3" />
                       </svg>
                       {news.editorName}
                     </span>
                   </div>
+
                   <div className="p-3 absolute bottom-0 left-0 right-0 text-white z-20">
                     <h3 className="text-sm font-bold line-clamp-2 mb-2 group-hover:text-[#ea384c] transition-colors">
                       {news.title}
@@ -217,14 +227,14 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
                         Read more
                       </button>
                     </p>
-                    <div className="flex justify-between items-center mt-2">
-                      <div className="flex items-center gap-2 text-xs">
-                        <span className="text-[#ea384c]">{news.category}</span>
-                        <span className="text-gray-300">•</span>
-                        <span className="text-gray-300">{news.duration}</span>
-                      </div>
-                    </div>
                   </div>
+                </div>
+              </div>
+              <div className="flex justify-between items-center mt-2">
+                <div className="flex items-center gap-2 text-xs">
+                  <span className="text-[#ea384c]">{news.category}</span>
+                  <span className="text-[#737373]">•</span>
+                  <span className="text-[#737373]">{news.duration}</span>
                 </div>
               </div>
             </div>
