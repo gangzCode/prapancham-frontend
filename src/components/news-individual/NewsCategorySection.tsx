@@ -66,7 +66,7 @@ const NewsCategorySection: React.FC<NewsCategorySectionProps> = ({
         ))}
       </div>
 
-      <div className="w-full overflow-hidden rounded-sm">
+      <div className="w-full overflow-hidden ">
         <img
           src={bannerImage}
           alt={bannerAlt}

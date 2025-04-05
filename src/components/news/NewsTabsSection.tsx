@@ -199,7 +199,20 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
 
                         <div className="flex items-center justify-between mt-4">
                           <div className="flex items-center text-gray-500 text-xs">
-                            <span className="mr-2">📝</span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4 mr-1"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <circle cx="12" cy="12" r="10" />
+                              <path d="M12 16a4 4 0 0 1 4 4H8a4 4 0 0 1 4-4z" />
+                              <circle cx="12" cy="10" r="3" />
+                            </svg>
                             <span>Editor's name</span>
                           </div>
                           <div className="flex items-center justify-between">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -41,9 +41,17 @@ const EventSlider = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + events.length) % events.length);
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextImage();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="bg-gray-100 flex items-center justify-center">
-      <div className="relative w-full max-w-4xl">
+      <div className="relative w-full">
         <Image
           src={currentEvent.imageUrl}
           alt={currentEvent.name}

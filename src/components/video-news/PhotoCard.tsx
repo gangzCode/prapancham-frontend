@@ -25,13 +25,13 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
   return (
     <div
       className={cn(
-        "group flex bg-white rounded-md shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1",
+        "group flex bg-white rounded-md shadow-sm hover:shadow-md ",
         variant === "small" ? "sm:flex-row flex-col gap-4 p-3" : "flex-col p-4"
       )}
     >
       <div
         className={cn(
-          "relative overflow-hidden rounded-sm",
+          "relative overflow-hidden ",
           variant === "small"
             ? "sm:max-w-[10rem] w-full aspect-[1/1] sm:flex-shrink-0"
             : "w-full aspect-video mb-4 "
@@ -41,7 +41,7 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
           src={image}
           alt={title}
           fill
-          className="object-cover transform group-hover:scale-105 transition-transform duration-300"
+          className="object-cover transform "
         />
         {/* <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
           <div className="bg-white/90 rounded-full p-2 flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform duration-300 video-play-button">
@@ -83,18 +83,17 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
               <span className="text-gray-400 inline-flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
+                  className="h-4 w-4 mr-1"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="mr-1"
                 >
                   <circle cx="12" cy="12" r="10" />
-                  <path d="M12 6v6l4 2" />
+                  <path d="M12 16a4 4 0 0 1 4 4H8a4 4 0 0 1 4-4z" />
+                  <circle cx="12" cy="10" r="3" />
                 </svg>
                 {editorName}
               </span>

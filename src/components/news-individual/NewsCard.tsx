@@ -20,7 +20,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
   editorName,
 }) => {
   return (
-    <div className="group relative overflow-hidden bg-white rounded-sm shadow-sm hover:shadow transition-all duration-300">
+    <div className="group relative overflow-hidden bg-white  shadow-sm hover:shadow transition-all duration-300">
       {/* <div className="relative">
         <img src={image} alt={title} className="w-full h-44 object-cover" />
         <div className="absolute top-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded-sm">

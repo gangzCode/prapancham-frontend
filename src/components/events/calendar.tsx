@@ -64,11 +64,11 @@ const Calendar = () => {
     };
 
     return (
-        <div className="px-0">
+        <div className="px-0 mb-5">
             <div className="text-gray-500 text-md mb-2">
                 {currentDate.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </div>
-            <Separator />
+            <Separator className='!w-full' />
             <div className="bg-white mt-2">
                 <div className="flex items-center gap-10 p-4 border-b  bg-[#F8F8F8] rounded-lg">
                     <div className="relative">
@@ -100,7 +100,7 @@ const Calendar = () => {
                                     </select>
                                 </div>
                                 <div className="p-2">
-                                    <button onClick={handleApply} className="w-full bg-blue-600 text-white p-2 rounded">
+                                    <button onClick={handleApply} className="w-full bg-primary text-white p-2 rounded">
                                         Apply
                                     </button>
                                 </div>
@@ -137,7 +137,7 @@ const Calendar = () => {
                     </button>
                 </div>
             </div>
-            <Separator />
+            <Separator className='!w-full' />
         </div>
     );
 };

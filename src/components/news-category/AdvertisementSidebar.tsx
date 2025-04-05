@@ -34,7 +34,7 @@ const ContactCard: React.FC<ContactCardProps> = ({ title, phone }) => (
 );
 
 const AdBanner: React.FC<AdBannerProps> = ({ image }) => (
-  <div className="mb-2 overflow-hidden rounded">
+  <div className="mb-2 overflow-hidden ">
     <div className="aspect-[21/9] sm:aspect-[16/9] md:aspect-[21/9] relative">
       <Image
         src={image}

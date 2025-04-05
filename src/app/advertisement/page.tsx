@@ -34,14 +34,12 @@ const Advertisement = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const totalPages = 3;
     const [activeAdtype, setActiveAdtype] = useState(adTypes[0]);
-    const [activeCountry, setActiveCountry] = useState('All');
     const categories = [
-        "All",
-        "Politics",
-        "Sports",
-        "Category1",
-        "Category2",
-        "Category3",];
+        "Commercial (50 Posts)",
+        "House for rent and sales (10 Posts)",
+        "Job vacancies (15 Posts)",
+    ];
+    const [activeCountry, setActiveCountry] = useState(categories[0]);
 
 
     const handlePageChange = (pageNumber: number) => {
@@ -62,7 +60,7 @@ const Advertisement = () => {
                     <img
                         src="https://images.unsplash.com/photo-1538688423619-a81d3f23454b"
                         alt="Black Friday Sale"
-                        className="w-full max-h-[232px] object-cover"
+                        className="w-full md:max-h-[232px] max-h-[116px] object-cover"
                     />
                 </div>
 
@@ -72,7 +70,7 @@ const Advertisement = () => {
                             <img
                                 src={src}
                                 alt="Black Friday Sale"
-                                className="w-full max-h-[232px] object-cover"
+                                className="w-full max-h-[232px] object-fit"
                             />
                         </div>
                     ))}
@@ -82,7 +80,7 @@ const Advertisement = () => {
                     <img
                         src="https://images.unsplash.com/photo-1538688423619-a81d3f23454b"
                         alt="Black Friday Sale"
-                        className="w-full max-h-[232px] object-cover"
+                        className="w-full md:max-h-[232px] max-h-[116px] object-cover"
                     />
                 </div>
 
@@ -91,7 +89,7 @@ const Advertisement = () => {
                         <img
                             src={ads.gridAds[0]}
                             alt="Top Image"
-                            className="w-full h-full object-cover max-h-[232px]"
+                            className="w-full h-full object-fit md:max-h-[232px] max-h-[116px]"
                         />
                     </div>
 
@@ -101,7 +99,7 @@ const Advertisement = () => {
                                 <img
                                     src={src}
                                     alt={`Image ${index + 2}`}
-                                    className="w-full h-full object-cover max-h-[232px]"
+                                    className="w-full h-full object-fit max-h-[232px]"
                                 />
                             </div>
                         ))}
@@ -114,7 +112,7 @@ const Advertisement = () => {
                             <img
                                 src={src}
                                 alt="Black Friday Sale"
-                                className="w-full md:h-[464px]  h-auto object-cover"
+                                className="w-full md:h-[464px]  h-auto object-fit"
                             />
                         </div>
                     ))}
@@ -125,7 +123,7 @@ const Advertisement = () => {
                             <img
                                 src={src}
                                 alt="Black Friday Sale"
-                                className="w-full max-h-[232px] h-auto object-cover"
+                                className="w-full md:max-h-[232px] max-h-[116px] h-auto object-fit"
                             />
                         </div>
                     ))}
@@ -136,7 +134,7 @@ const Advertisement = () => {
                         <img
                             src={ads.gridAds[0]}
                             alt="Top Image"
-                            className="w-full h-full object-cover max-h-[232px]"
+                            className="w-full h-full object-fit md:max-h-[232px] max-h-[116px]"
                         />
                     </div>
 
@@ -146,7 +144,7 @@ const Advertisement = () => {
                                 <img
                                     src={src}
                                     alt={`Image ${index + 2}`}
-                                    className="w-full h-full object-cover max-h-[232px]"
+                                    className="w-full h-full object-fit max-h-[232px]"
                                 />
                             </div>
                         ))}
@@ -158,7 +156,7 @@ const Advertisement = () => {
                             <img
                                 src={src}
                                 alt="Black Friday Sale"
-                                className="w-full md:h-[648px]  h-auto object-cover"
+                                className="w-full md:h-[648px]  h-[400px] object-fit"
                             />
                         </div>
                     ))}

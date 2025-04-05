@@ -16,7 +16,7 @@ const NewsIndividual: React.FC = () => {
               <img
                 src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81"
                 alt="Medical workers in PPE"
-                className="w-full h-auto max-h-[450px] object-cover rounded-sm"
+                className="w-full h-auto max-h-[450px] object-cover "
               />
               <div className="flex items-center gap-2 mt-4 justify-between">
                 <div className="flex items-center gap-2">
@@ -69,17 +69,17 @@ const NewsIndividual: React.FC = () => {
               <img
                 src="https://images.unsplash.com/photo-1584036561566-baf8f5f1b144"
                 alt="Medical research"
-                className="w-full h-[320px] object-cover rounded-sm"
+                className="w-full h-[320px] object-cover "
               />
               <img
                 src="https://images.unsplash.com/photo-1576091160550-2173dba999ef"
                 alt="Healthcare workers"
-                className="w-full h-[320px] object-cover rounded-sm"
+                className="w-full h-[320px] object-cover "
               />
               <img
                 src="https://images.unsplash.com/photo-1584036561566-baf8f5f1b144"
                 alt="Medical facilities"
-                className="w-full h-[320px] object-cover rounded-sm"
+                className="w-full h-[320px] object-cover "
               />
             </div>
 
@@ -110,12 +110,12 @@ const NewsIndividual: React.FC = () => {
               <img
                 src="https://images.unsplash.com/photo-1584036561566-baf8f5f1b144"
                 alt="Healthcare innovation"
-                className="w-full h-[336px] object-cover rounded-sm"
+                className="w-full h-[336px] object-cover "
               />
               <img
                 src="https://images.unsplash.com/photo-1576091160550-2173dba999ef"
                 alt="Medical technology"
-                className="w-full h-[336px] object-cover rounded-sm"
+                className="w-full h-[336px] object-cover "
               />
             </div> */}
 
@@ -158,12 +158,12 @@ const NewsIndividual: React.FC = () => {
               <img
                 src="https://images.unsplash.com/photo-1607083206968-13611e3d76db"
                 alt="Healthcare innovation"
-                className="w-full h-[336px] object-cover rounded-sm"
+                className="w-full h-[336px] object-cover "
               />
               <img
                 src="https://images.unsplash.com/photo-1607082350899-7e105aa886ae"
                 alt="Medical technology"
-                className="w-full h-[336px] object-cover rounded-sm"
+                className="w-full h-[336px] object-cover "
               />
             </div>
           </div>

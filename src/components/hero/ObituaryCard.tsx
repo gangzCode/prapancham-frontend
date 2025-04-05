@@ -18,7 +18,7 @@ const ObituaryCard: React.FC<ObituaryCardProps> = ({ entry }) => {
         <img
           src={entry.imageUrl}
           alt={entry.name}
-          className="object-contain shrink-0 my-auto rounded-lg aspect-square w-[100px]"
+          className="object-contain shrink-0 my-auto  aspect-square w-[100px]"
         />
         <div className="flex flex-col flex-1 shrink justify-center basis-0">
           <p className="text-body-sm text-secondary">{entry.name}</p>

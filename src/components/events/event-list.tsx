@@ -64,7 +64,7 @@ const EventCard: React.FC<EventCardProps> = ({
 
 const EventList: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const eventsPerPage = 9;
+    const eventsPerPage = 7;
 
     const events = [
         {

@@ -31,9 +31,9 @@ const VideoCard: React.FC<VideoCardProps> = ({
     >
       <div
         className={cn(
-          "relative overflow-hidden rounded-sm",
+          "relative overflow-hidden ",
           variant === "small"
-            ? "sm:w-[130px] w-full sm:h-[130px] aspect-square sm:flex-shrink-0"
+            ? "md:w-[160px] sm:h-full aspect-square sm:flex-shrink-0"
             : "w-full aspect-video mb-4"
         )}
       >
