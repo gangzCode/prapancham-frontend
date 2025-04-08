@@ -136,10 +136,10 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
   const [activeTab, setActiveTab] = useState<"recent" | "important">("recent");
 
   return (
-    <div className={cn("px-4 md:px-8 lg:px-16 py-6", className)}>
-      <div className="grid md:grid-cols-3 gap-6">
+    <div className={cn("px-4 md:px-8 lg:px-16 py-6 ", className)}>
+      <div className="flex flex-col md:flex-row w-full gap-6">
         {/* Left Column - News Tabs */}
-        <div className="md:col-span-2">
+        <div className="min-w-60 w-full">
           <div className="flex border border-primary p-2 rounded-lg mb-4 w-[20rem] justify-center items-center mx-auto">
             <button
               className={cn(
@@ -165,7 +165,7 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
             </button>
           </div>
 
-          <ScrollArea className="h-[790px] pr-4">
+          <ScrollArea className="h-[790px] pr-0 md:pr-4">
             <div className="space-y-6">
               {(activeTab === "recent" ? recentNews : importantNews).map(
                 (news, index) => (
@@ -234,23 +234,25 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
         </div>
 
         {/* Right Column - Obituary Updates */}
-        <aside className="self-stretch  rounded-2xl min-h-[516px] min-w-60 w-[375px]">
-          <div className="flex-shrink min-w-0 max-w-full">
-            <TitleWithUnderline text="Obituary Updates" underlineWidth={64} />
-          </div>
-          <div className="flex flex-1 gap-2 justify-center px-1 py-2 mt-4 h-full">
-            <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[800px]">
-              <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-4">
-                {obituaryData.map((entry, index) => (
-                  <div key={index} className={index > 0 ? "mt-2" : ""}>
-                    <ObituaryCard entry={entry} />
-                  </div>
-                ))}
-              </div>
-              <ScrollBar orientation="vertical" />
-            </ScrollArea>
-          </div>
-        </aside>
+        <div>
+          <aside className=" self-stretch  rounded-2xl min-h-[516px] min-w-60 w-[355px] md:w-[375px]">
+            <div className="flex-shrink min-w-0 max-w-full">
+              <TitleWithUnderline text="Obituary Updates" underlineWidth={64} />
+            </div>
+            <div className="flex flex-1 gap-2 justify-center px-1 py-2 mt-4 h-full">
+              <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[800px]">
+                <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-4">
+                  {obituaryData.map((entry, index) => (
+                    <div key={index} className={index > 0 ? "mt-2" : ""}>
+                      <ObituaryCard entry={entry} />
+                    </div>
+                  ))}
+                </div>
+                <ScrollBar orientation="vertical" />
+              </ScrollArea>
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   );

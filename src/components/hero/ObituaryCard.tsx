@@ -32,11 +32,11 @@ const ObituaryCard: React.FC<ObituaryCardProps> = ({ entry }) => {
       <hr className="mt-2 w-full min-h-0 border border-solid border-neutral-400" />
 
       <div className="flex gap-10 justify-between items-center py-1 mt-2 w-full text-xs rounded">
-        <p className="self-stretch my-auto text-body-xs text-secondary">
+        <p className="self-stretch shrink-0 my-auto text-body-xs text-secondary">
           {entry.condolences} Condolences
         </p>
         <div className="flex gap-2 items-center self-stretch my-auto">
-          <button className="gap-2.5 self-stretch px-4 py-1.5 my-auto text-body-xs text-[#0B4157] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+          <button className="gap-2.5 self-stretch shrink-0 px-4 py-1.5 my-auto text-body-xs text-[#0B4157] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
             Post Tribute
           </button>
           <button className="gap-2.5 self-stretch px-4 py-1.5 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">

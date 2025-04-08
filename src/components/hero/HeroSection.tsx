@@ -128,13 +128,13 @@ const HeroSection = () => {
         </div>
       </article>
 
-      <aside className="self-stretch my-auto rounded-2xl min-h-[516px] min-w-60 w-[375px]">
+      <aside className="self-stretch rounded-2xl min-h-[516px] min-w-60 w-[375px]">
         <div className="flex-shrink min-w-0 max-w-full">
           <TitleWithUnderline text="Obituary Updates" underlineWidth={64} />
         </div>
         <div className="flex flex-1 gap-2 justify-center px-1 py-2 mt-4 h-full">
           <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[456px]">
-            <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-4">
+            <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-0 md:pr-4">
               {obituaryData.map((entry, index) => (
                 <div key={index} className={index > 0 ? "mt-2" : ""}>
                   <ObituaryCard entry={entry} />

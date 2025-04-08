@@ -89,8 +89,10 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
 
       <div className="space-y-2 sm:space-y-3 md:space-y-4 mt-4 sm:mt-5 md:mt-6">
         {adImages.slice(0,  numberOfAds || 4).map((_, index) => (
-
-          <AdBanner image="https://images.unsplash.com/photo-1649972904349-6e44c42644a7" />
+          <AdBanner
+            key={index}
+            image="https://images.unsplash.com/photo-1649972904349-6e44c42644a7"
+          />
         ))}
       </div>
 

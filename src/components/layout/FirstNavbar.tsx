@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import SignupModal from "../siginin/SignupModal ";
 const navItems = [
   { id: "news", label: "News", href: "/news" },
   { id: "obituary", label: "Obituary", href: "/obituary" },
@@ -11,6 +12,7 @@ const navItems = [
 ];
 
 const FirstNavbar: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const pathname = usePathname();
   const [selectedMenu, setSelectedMenu] = useState("");
   useEffect(() => {
@@ -19,9 +21,9 @@ const FirstNavbar: React.FC = () => {
       setSelectedMenu(
         pathSegments[0]
       );
-     if( pathSegments[0]=='news-individual'){
-      setSelectedMenu('news');
-     }
+      if (pathSegments[0] == 'news-individual') {
+        setSelectedMenu('news');
+      }
 
     } else {
       setSelectedMenu("");
@@ -43,6 +45,9 @@ const FirstNavbar: React.FC = () => {
         <span className={`px-1 -mt-2 text-xs text-white bg-[#F65050] ${selectedMenu === "news" ? "block" : selectedMenu === "news-individual" ? "block" : "hidden"}`}>
           News
         </span>
+        <span className={`px-1 -mt-2 text-xs text-white bg-black ${selectedMenu === "obituary" ? "block" : selectedMenu === "news-individual" ? "block" : "hidden"}`}>
+          Samaathi
+        </span>
       </h1>
 
       <nav className="w-full sm:w-auto flex flex-wrap sm:flex-nowrap gap-2 sm:gap-1 justify-center items-center text-center text-link order-3 mt-4 sm:mt-0">
@@ -57,7 +62,13 @@ const FirstNavbar: React.FC = () => {
             <span className="px-3 sm:px-4 py-2 sm:py-1">{item.label}</span>
           </Link>
         ))}
-        <button className="border border-primary text-primary  md:ml-8 px-4 py-2 rounded">Sign in / Sign up</button>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="border border-primary text-primary  md:ml-8 px-4 py-2 rounded"
+        >
+          Sign in / Sign up
+        </button>
+        <SignupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       </nav>
     </header>
   );

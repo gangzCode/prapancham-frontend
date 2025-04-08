@@ -146,7 +146,7 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
                 </div>
               </div>
             </div>
-            <div className="flex items-center text-sm mt-2 justify-between">
+            <div className="flex items-center text-xs md:text-sm  mt-2 justify-between">
               <span className="flex items-center text-[#737373]">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -188,7 +188,7 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
                 <img
                   src={news.image}
                   alt={news.title}
-                  className="w-full h-full object-cover absolute inset-0 z-0"
+                  className="w-full h-full object-cover md:absolute inset-0 z-0"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30 z-10">
                   <div className="absolute top-2 left-2 bg-black/60 px-2 py-1 rounded-sm">

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import PaginationBar from '../category/PaginationBar';
 
 interface Attendee {
     id: number;
@@ -266,7 +267,7 @@ const EventList: React.FC = () => {
             </div>
 
             {/* Pagination Controls */}
-            <div className="pagination flex justify-center mt-4">
+            {/* <div className="pagination flex justify-center mt-4">
                 <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
@@ -290,6 +291,9 @@ const EventList: React.FC = () => {
                 >
                     <ArrowRight />
                 </button>
+            </div> */}
+            <div>
+                <PaginationBar />
             </div>
         </div>
     );

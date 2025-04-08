@@ -1,5 +1,5 @@
 "use client";
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import DropMenu from "./DropMenu";
 import { Menu, Minus, ChevronDown } from "lucide-react";
@@ -25,16 +25,16 @@ const SecondNavbar: React.FC = () => {
   const handlePageClick = (page: string) => {
     setSelectedPage(page);
   };
-   useEffect(() => {
-      const pathSegments = pathname.split("/").filter(Boolean);
-      if (pathSegments.length > 0) {
-        setSelectedPage(pathSegments[0]
-        );    
-        
-      } else {
-        setSelectedPage("home");
-      }
-    }, [pathname]);
+  useEffect(() => {
+    const pathSegments = pathname.split("/").filter(Boolean);
+    if (pathSegments.length > 0) {
+      setSelectedPage(pathSegments[0]
+      );
+
+    } else {
+      setSelectedPage("home");
+    }
+  }, [pathname]);
 
   return (
     <>
@@ -78,9 +78,9 @@ const SecondNavbar: React.FC = () => {
               <SearchBox />
             </div>
 
-            <div className="w-[10rem] flex gap-1 justify-center items-left text-[#1A1D1F] whitespace-nowrap">
+            <div className="w-[12rem] flex gap-1 justify-center items-left text-[#1A1D1F] whitespace-nowrap">
               <CountrySelect defaultValue="srilanka">
-                <CountrySelectTrigger className="md:w-[10rem] text-[#1A1D1F] bg-transparent border-none outline-none cursor-pointer text-sm sm:text-base">
+                <CountrySelectTrigger className="md:w-[12rem] text-[#1A1D1F] bg-transparent border-none outline-none cursor-pointer text-sm sm:text-base">
                   <CountrySelectValue
                     className="text-[#1A1D1F] placeholder:text-[#1A1D1F] text-sm sm:text-base"
                     placeholder="Language"
@@ -91,24 +91,29 @@ const SecondNavbar: React.FC = () => {
                     value="srilanka"
                     className="text-sm sm:text-base"
                   >
-                    <span>Sri Lanka</span>
-                    <img
-                      src="/svg/srilanka.svg"
-                      alt="Sri Lanka"
-                      className="ml-4 w-7 h-7 inline-block "
-                    />
+                    <div className="flex justify-between w-36">
+                      <span>Sri Lanka</span>
+                      <img
+                        src="/svg/srilanka.svg"
+                        alt="Sri Lanka"
+                        className="ml-4 w-7 h-7 inline-block "
+                      />
+                    </div>
                   </CountrySelectItem>
                   <SelectSeparator />
+
                   <CountrySelectItem
                     value="canada"
                     className="text-sm sm:text-base"
                   >
-                    <span>Canada</span>
-                    <img
-                      src="/svg/canada.svg"
-                      alt="Sri Lanka"
-                      className="ml-4 w-7 h-7 inline-block "
-                    />
+                    <div className="flex justify-between w-36">
+                      <span>Canada</span>
+                      <img
+                        src="/svg/canada.svg"
+                        alt="Sri Lanka"
+                        className="ml-4 w-7 h-7 inline-block "
+                      />
+                    </div>
                   </CountrySelectItem>
                   <SelectSeparator />
 
@@ -116,12 +121,178 @@ const SecondNavbar: React.FC = () => {
                     value="australia"
                     className="text-sm sm:text-base"
                   >
-                    <span>Australia</span>
-                    <img
-                      src="/svg/australia.svg"
-                      alt="Sri Lanka"
-                      className="ml-4 w-7 h-7 inline-block "
-                    />
+                    <div className="flex justify-between w-36">
+                      <span>Australia</span>
+                      <img
+                        src="/svg/australia.svg"
+                        alt="Sri Lanka"
+                        className="ml-4 w-7 h-7 inline-block "
+                      />
+                    </div>
+                  </CountrySelectItem>
+                  <SelectSeparator />
+
+                  <CountrySelectItem
+                    value="germany"
+                    className="text-sm sm:text-base"
+                  >
+                    <div className="flex justify-between w-36">
+                      <span>Germany</span>
+                      <img
+                        src="/svg/german.svg"
+                        alt="Sri Lanka"
+                        className="ml-4 w-7 h-7 inline-block "
+                      />
+                    </div>
+                  </CountrySelectItem>
+                  <SelectSeparator />
+
+                  <CountrySelectItem
+                    value="switzerland"
+                    className="text-sm sm:text-base"
+                  >
+                    <div className="flex justify-between w-36">
+                      <span>Switzerland</span>
+                      <img
+                        src="/svg/Switzerland.svg"
+                        alt="Sri Lanka"
+                        className="ml-4 w-7 h-7 inline-block "
+                      />
+                    </div>
+                  </CountrySelectItem>
+                  <SelectSeparator />
+
+                  <CountrySelectItem
+                    value="Sweden"
+                    className="text-sm sm:text-base"
+                  >
+                    <div className="flex justify-between w-36">
+                      <span>Sweden</span>
+                      <img
+                        src="/svg/Sweden.svg"
+                        alt="Sri Lanka"
+                        className="ml-4 w-7 h-7 inline-block "
+                      />
+                    </div>
+                  </CountrySelectItem>
+
+                  <CountrySelectItem
+                    value="uk"
+                    className="text-sm sm:text-base"
+                  >
+                    <div className="flex justify-between w-36">
+                      <span>UK</span>
+                      <img
+                        src="/svg/uk.svg"
+                        alt="Sri Lanka"
+                        className="ml-4 w-7 h-7 inline-block "
+                      />
+                    </div>
+                  </CountrySelectItem>
+                  <SelectSeparator />
+
+                  <CountrySelectItem
+                    value="denmark"
+                    className="text-sm sm:text-base"
+                  >
+                    <div className="flex justify-between w-36">
+                      <span>Denmark</span>
+                      <img
+                        src="/svg/denmark.svg"
+                        alt="Sri Lanka"
+                        className="ml-4 w-7 h-7 inline-block "
+                      />
+                    </div>
+                  </CountrySelectItem>
+                  <SelectSeparator />
+
+                  <CountrySelectItem
+                    value="india"
+                    className="text-sm sm:text-base"
+                  >
+                    <div className="flex justify-between w-36">
+                      <span>India</span>
+                      <img
+                        src="/svg/india.svg"
+                        alt="Sri Lanka"
+                        className="ml-4 w-7 h-7 inline-block "
+                      />
+                    </div>
+                  </CountrySelectItem>
+                  <SelectSeparator />
+
+                  <CountrySelectItem
+                    value="newzeland"
+                    className="text-sm sm:text-base"
+                  >
+                    <div className="flex justify-between w-36">
+                      <span>New zealand</span>
+                      <img
+                        src="/svg/newzealand.svg"
+                        alt="Sri Lanka"
+                        className="ml-4 w-7 h-7 inline-block "
+                      />
+                    </div>
+                  </CountrySelectItem>
+                  <SelectSeparator />
+
+                  <CountrySelectItem
+                    value="france"
+                    className="text-sm sm:text-base"
+                  >
+                    <div className="flex justify-between w-36">
+                      <span>France</span>
+                      <img
+                        src="/svg/france.svg"
+                        alt="Sri Lanka"
+                        className="ml-4 w-7 h-7 inline-block "
+                      />
+                    </div>
+                  </CountrySelectItem>
+                  <SelectSeparator />
+
+                  <CountrySelectItem
+                    value="malaysia"
+                    className="text-sm sm:text-base"
+                  >
+                    <div className="flex justify-between w-36">
+                      <span>Malaysia</span>
+                      <img
+                        src="/svg/malaysia.svg"
+                        alt="Sri Lanka"
+                        className="ml-4 w-7 h-7 inline-block "
+                      />
+                    </div>
+                  </CountrySelectItem>
+                  <SelectSeparator />
+
+                  <CountrySelectItem
+                    value="singapore"
+                    className="text-sm sm:text-base"
+                  >
+                    <div className="flex justify-between w-36">
+                      <span>Singapore</span>
+                      <img
+                        src="/svg/singapore.svg"
+                        alt="Sri Lanka"
+                        className="ml-4 w-7 h-7 inline-block "
+                      />
+                    </div>
+                  </CountrySelectItem>
+                  <SelectSeparator />
+
+                  <CountrySelectItem
+                    value="usa"
+                    className="text-sm sm:text-base"
+                  >
+                    <div className="flex justify-between w-36">
+                      <span>USA</span>
+                      <img
+                        src="/svg/usa.svg"
+                        alt="Sri Lanka"
+                        className="ml-4 w-7 h-7 inline-block "
+                      />
+                    </div>
                   </CountrySelectItem>
                 </CountrySelectContent>
               </CountrySelect>
