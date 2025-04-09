@@ -19,7 +19,6 @@ const CountrySection = () => {
         { name: "Singapore", posts: 7, flag: "/svg/singapore.svg" },
     ];
 
-    const [search, setSearch] = useState("");
     const [currentIndex, setCurrentIndex] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(6);
 
@@ -33,62 +32,32 @@ const CountrySection = () => {
 
         return () => window.removeEventListener('resize', updateItemsPerPage);
     }, []);
-    const filteredCountries = countries.filter(country =>
-        country.name.toLowerCase().includes(search.toLowerCase())
-    );
+
 
     let visibleCountries = [];
 
-    if (currentIndex + itemsPerPage > filteredCountries.length) {
+    if (currentIndex + itemsPerPage > countries.length) {
         visibleCountries = [
-            ...filteredCountries.slice(currentIndex),
-            ...filteredCountries.slice(0, (currentIndex + itemsPerPage) % filteredCountries.length),
+            ...countries.slice(currentIndex),
+            ...countries.slice(0, (currentIndex + itemsPerPage) % countries.length),
         ];
     } else {
-        visibleCountries = filteredCountries.slice(currentIndex, currentIndex + itemsPerPage);
+        visibleCountries = countries.slice(currentIndex, currentIndex + itemsPerPage);
     }
     const handlePrev = () => {
-        setCurrentIndex((prev) => (filteredCountries.length + prev - 1) % filteredCountries.length);
+        setCurrentIndex((prev) => (countries.length + prev - 1) % countries.length);
     };
 
     const handleNext = () => {
-        setCurrentIndex((prev) => (prev + 1) % filteredCountries.length);
+        setCurrentIndex((prev) => (prev + 1) % countries.length);
     };
 
 
     return (
         <div className="">
-            <div className="container mx-auto p-4">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-4">
-                    <div className="flex md:w-96 items-center gap-2">
-                        <button className="bg-[#880002] text-white p-3 rounded">
-                            <Filter size={24} />
-                        </button>
-                        <div className="relative flex-1">
-                            <input
-                                type="text"
-                                placeholder="Search by name"
-                                value={search}
-                                onChange={(e) => {
-                                    setSearch(e.target.value);
-                                    setCurrentIndex(0);
-                                }}
-                                className="border border-gray-900 rounded py-3 px-4 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-[#880002]"
-                            />
-                            <Search
-                                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-black"
-                                strokeWidth={3}
-                                size={20}
-                            />
-                        </div>
-                    </div>
+            <div className="container mx-auto p-4 ">
 
-                    <button className="bg-[#880002] text-white py-3 px-6 rounded shadow w-full sm:w-auto">
-                        Create Memorial
-                    </button>
-                </div>
-
-                <div className="bg-white p-4 rounded shadow flex items-center gap-4">
+                <div className="bg-white p-6   shadow flex items-center gap-4">
                     <button className="text-gray-500" onClick={handlePrev}>
                         <ChevronLeft size={24} />
                     </button>

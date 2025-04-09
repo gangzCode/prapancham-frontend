@@ -2,9 +2,10 @@ import React from "react";
 import AdvertisementSidebar from "@/components/news-category/AdvertisementSidebar";
 import { Separator } from "@/components/ui/separator";
 import CountrySection from "@/components/obituary/CountrySection";
-import TributeCard from "./TributeCard";
+import TributeCard from "../../components/obituary/TributeCard";
 import { Pagination } from "@/components/ui/pagination";
 import PaginationBar from "@/components/category/PaginationBar";
+import OrbituaryNavbar from "@/components/obituary/OrbituaryNavbar";
 
 const tributeData = Array.from({ length: 10 }).map((_, index) => ({
     id: index,
@@ -20,6 +21,7 @@ const Events: React.FC = () => {
     return (
         <section className="flex flex-col justify-center px-4 md:px-8 lg:px-16  py-6 max-md:px-5">
             <Separator className="mb-4" />
+            <OrbituaryNavbar />
             <CountrySection />
             <Separator className="mb-4" />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

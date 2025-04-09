@@ -154,6 +154,7 @@ export default {
   	}
   },
   plugins: [
+    require('tailwind-scrollbar-hide'),
     require("tailwindcss-animate"),
     require("@tailwindcss/typography"),
     function ({
