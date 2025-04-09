@@ -43,7 +43,7 @@ const DonateModal: React.FC<DonateModalProps> = ({ isOpen, onClose }) => {
             ></div>
 
 
-            <div className="relative bg-white p-8  shadow-lg  max-w-full z-50">
+            <div className="relative bg-white p-8  shadow-lg  max-w-full z-50 overflow-y-auto  overflow-x-hidden thin-scrollbar">
                 <button
                     onClick={handleClose}
                     className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 rounded-full p-2 border-2 border-black w-8 h-8 flex items-center justify-center"
@@ -53,7 +53,7 @@ const DonateModal: React.FC<DonateModalProps> = ({ isOpen, onClose }) => {
 
 
                 {activeTab === "donate" &&
-                    <div className="max-h-[80vh] w-auto md:w-[40rem]  lg:w-[60rem] overflow-y-auto scrollbar-hide">
+                    <div className="max-h-[80vh] w-auto md:w-[40rem]  lg:w-[60rem] ">
                         <div className="flex flex-col md:flex-row bg-gray-100 w-full p-4 mt-8">
                             <div className="w-full md:w-48 h-48 md:h-24 relative">
                                 <Image
