@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import { TitleWithUnderline } from "../ui/title-with-underline";
 import { Separator } from "@/components/ui/separator";
+import PaymentModal from "./PaymentModal";
 
 type DonateModalProps = {
     isOpen: boolean;
@@ -30,12 +31,16 @@ const DonateModal: React.FC<DonateModalProps> = ({ isOpen, onClose }) => {
         setActiveTab("donate");
         onClose();
     };
+    const handlePay = () => {
+        setActiveTab("success");
+      };
+
 
 
     if (!isOpen) return null;
 
     return createPortal(
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 ">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 ">
 
             <div
                 className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -86,7 +91,7 @@ const DonateModal: React.FC<DonateModalProps> = ({ isOpen, onClose }) => {
                             </div>
                         </div>
 
-                        <form className="bg-white shadow-lg md:p-8 mt-8" >
+                        <form className="bg-white shadow-lg md:p-8 pb-8 mt-8" >
                             <div className="flex-shrink min-w-0 max-w-full mt-4 mb-10">
                                 <TitleWithUnderline text="Donor's Details" underlineWidth={64} fontSize={3} />
                             </div>
@@ -189,8 +194,8 @@ const DonateModal: React.FC<DonateModalProps> = ({ isOpen, onClose }) => {
                         </form>
                     </div>
                 }
-                {activeTab === "payment" &&
-                    <div className="bg-white shadow-lg p-4 md:p-6 w-full mx-auto mt-0 md:mt-16">
+                {/* {activeTab === "payment" &&
+                    <div className="bg-white shadow-lg p-2 md:p-6 w-full mx-auto mt-6 md:mt-16">
                         <div className="flex space-x-4 mb-6 flex-wrap justify-center">
                             <div className="flex-1 w-40 p-4 border-2 border-gray-300 rounded-lg flex flex-col items-start justify-center mb-4 sm:mb-0">
                                 <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -315,9 +320,16 @@ const DonateModal: React.FC<DonateModalProps> = ({ isOpen, onClose }) => {
                             </button>
                         </div>
                     </div>
-                }
+                } */}
+                {activeTab === "payment" && (
+                    <PaymentModal
+                        isOpen={true}
+                        onClose={() => setActiveTab("donate")}
+                          onPay={handlePay}
+                    />
+                )}
                 {activeTab === "success" &&
-                    <div className="bg-white shadow-lg p-4 md:p-6 w-full mx-auto mt-0 md:mt-8">
+                    <div className="bg-white shadow-lg p-2 md:p-6 w-full mx-auto mt-4 md:mt-8">
                         <h2 className="text-center text-2xl my-4">Payment Successful!</h2>
                         <Separator className="!w-full" />
                         <div className="flex flex-col md:flex-row w-full mt-4">

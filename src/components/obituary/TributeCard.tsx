@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import DonateModal from "./DonateModal";
+import TributeModal from "./TributeModal";
 interface TributeCardProps {
   condolencesCount: number;
   timeAgo: string;
@@ -25,6 +26,7 @@ const TributeCard: React.FC<TributeCardProps> = ({
   onDonate,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTributeModalOpen, setIsTributeModalOpen] = useState(false);
   return (
     <div className="w-full  mx-auto bg-white  shadow-md overflow-hidden p-2">
       <div className="flex justify-between w-full items-center border-b">
@@ -54,11 +56,12 @@ const TributeCard: React.FC<TributeCardProps> = ({
 
       <div className="flex justify-between pt-2 border-t gap-2">
         <button
-          // onClick={onPostTribute}
+          onClick={() => setIsTributeModalOpen(true)}
           className="w-4/5 py-2 border border-primary rounded text-primary "
         >
           Post Tribute
         </button>
+        <TributeModal isOpen={isTributeModalOpen} onClose={() => setIsTributeModalOpen(false)} />
         <button
           onClick={() => setIsModalOpen(true)}
           className="w-1/5 py-2 bg-primary text-white rounded"

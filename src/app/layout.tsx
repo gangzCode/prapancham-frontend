@@ -5,6 +5,7 @@ import TopBar from "@/components/layout/TopBar";
 import FirstNavbar from "@/components/layout/FirstNavbar";
 import SecondNavbar from "@/components/layout/SecondNavbar";
 import Footer from "@/components/layout/Footer";
+import ScrollToTop from "@/components/ui/ScrollToTop";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,9 +21,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${poppins.variable} antialiased`}>
         <TopBar />
-        <FirstNavbar />
-        <SecondNavbar />
+        <div className="md:sticky top-0 z-50 bg-white">
+          <FirstNavbar />
+          <SecondNavbar />
+        </div>
         {children}
+        <ScrollToTop />
         <Footer />
       </body>
     </html>

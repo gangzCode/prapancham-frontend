@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { Filter, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 const OrbituaryNavbar = () => {
-   
+
 
     const [search, setSearch] = useState("");
-    
+
     return (
         <div className="">
             <div className="container mx-auto pt-4">
@@ -23,7 +24,7 @@ const OrbituaryNavbar = () => {
                                 value={search}
                                 onChange={(e) => {
                                     setSearch(e.target.value);
-                                    
+
                                 }}
                                 className="border border-gray-900 rounded py-3 px-4 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-[#880002]"
                             />
@@ -35,12 +36,17 @@ const OrbituaryNavbar = () => {
                         </div>
                     </div>
 
-                    <button className="bg-[#880002] text-white py-4 px-6 rounded shadow w-full sm:w-auto">
-                        Create Memorial
+                    <button
+                        className="bg-[#880002] text-white py-4 px-6 rounded shadow w-full sm:w-auto"
+                    >
+                        <Link
+                            href={"/create-memorial"}>
+                            Create Memorial
+                        </Link>
                     </button>
                 </div>
 
-               
+
             </div>
         </div>
     );

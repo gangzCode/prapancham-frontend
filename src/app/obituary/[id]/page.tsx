@@ -9,7 +9,7 @@ import { TitleWithUnderline } from "@/components/ui/title-with-underline";
 
 
 
-const Events: React.FC = () => {
+const ObituaryDetail: React.FC = () => {
     return (
         <section className="flex flex-col justify-center px-4 md:px-8 lg:px-16  py-6 max-md:px-5">
             <Separator className="mb-4" />
@@ -196,4 +196,4 @@ const Events: React.FC = () => {
     );
 };
 
-export default Events;
+export default ObituaryDetail;
