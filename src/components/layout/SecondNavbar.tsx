@@ -13,7 +13,10 @@ import {
   SelectValue as CountrySelectValue,
   SelectSeparator
 } from "@/components/ui/country-select";
+import SignupModal from "../siginin/SignupModal ";
 const SecondNavbar: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [isDropMenuOpen, setIsDropMenuOpen] = useState(false);
   const [selectedPage, setSelectedPage] = useState("");
   const pathname = usePathname();
@@ -77,8 +80,15 @@ const SecondNavbar: React.FC = () => {
             <div className="w-full md:w-auto mt-2 md:mt-0">
               <SearchBox />
             </div>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="border border-primary text-primary  md:ml-8 px-4 py-2 rounded min-w-[8rem] "
+            >
+              Sign in / Sign up
+            </button>
+            <SignupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
-            <div className="w-[12rem] flex gap-1 justify-center items-left text-[#1A1D1F] whitespace-nowrap">
+            {/* <div className="w-[12rem] flex gap-1 justify-center items-left text-[#1A1D1F] whitespace-nowrap">
               <CountrySelect defaultValue="srilanka">
                 <CountrySelectTrigger className="md:w-[12rem] text-[#1A1D1F] bg-transparent border-none outline-none cursor-pointer text-sm sm:text-base">
                   <CountrySelectValue
@@ -175,6 +185,7 @@ const SecondNavbar: React.FC = () => {
                       />
                     </div>
                   </CountrySelectItem>
+                  <SelectSeparator />
 
                   <CountrySelectItem
                     value="uk"
@@ -296,7 +307,7 @@ const SecondNavbar: React.FC = () => {
                   </CountrySelectItem>
                 </CountrySelectContent>
               </CountrySelect>
-            </div>
+            </div> */}
           </div>
         </nav>
       </div>

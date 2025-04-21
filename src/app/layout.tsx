@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${poppins.variable} antialiased`}>
         <TopBar />
         <div className="md:sticky top-0 z-50 bg-white">
-          <FirstNavbar />
+          {/* <FirstNavbar /> */}
           <SecondNavbar />
         </div>
         {children}
