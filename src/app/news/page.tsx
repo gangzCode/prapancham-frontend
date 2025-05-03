@@ -80,7 +80,7 @@ const NewsPage: React.FC = () => {
     <div className="flex flex-col ">
       <main className="flex flex-col mt-0 w-full bg-white max-md:mt-0  gap-[24px]">
 
-        <AdvertisementBanner images={topAdImages} />
+        {/* <AdvertisementBanner images={topAdImages} /> */}
         {/* Breaking News Banner */}
         <BreakingNewsHCard
           title={currentNews.title}

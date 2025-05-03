@@ -192,7 +192,7 @@ const TopBar: React.FC = () => {
               setSelectedCountry(selected);
             }}
           >
-            <CountrySelectTrigger className="md:w-[12rem] text-[#1A1D1F] bg-transparent border-none outline-none cursor-pointer text-sm sm:text-base">
+            <CountrySelectTrigger className="md:w-[12rem] text-white bg-transparent border-none outline-none cursor-pointer text-sm sm:text-base">
               {selectedCountry && (
                 <img
                   src={selectedCountry.flag}

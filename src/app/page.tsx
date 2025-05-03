@@ -25,7 +25,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="flex flex-col">
       <main className="flex flex-col mt-0 w-full bg-white max-md:mt-0 max-md:max-w-full gap-[24px]">
-        <AdvertisementBanner images={topAdImages} />
+        {/* <AdvertisementBanner images={topAdImages} /> */}
         <HeroSection />
         <Separator />
         <UpcomingEvents />
@@ -56,6 +56,5 @@ const HomePage: React.FC = () => {
     </div>
   );
 };
-
 
 export default HomePage;

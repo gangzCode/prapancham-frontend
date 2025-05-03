@@ -41,53 +41,31 @@ const About = () => {
     const offerings = [
         {
             description:
-                `Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est.Diam natoque scelerisque netus tellus.Est mus
-                                potenti dictum augue.Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing.Convallis facilisis
-                                adipiscing odio ac.Pharetra vitae ultricies sit vel.Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique.Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.`,
+                `Funeral Fundraising: We help families 
+                raise funds quickly and respectfully during times of loss.`,
             imageSrc:
                 "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
         },
         {
             description:
-                `Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est.Diam natoque scelerisque netus tellus.Est mus
-                                potenti dictum augue.Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing.Convallis facilisis
-                                adipiscing odio ac.Pharetra vitae ultricies sit vel.Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique.Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.`,
+                `Local Partnerships: We collaborate with florists and service 
+                providers to offer meaningful, affordable support options.`,
             imageSrc:
                 "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
         },
         {
             description:
-                `Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est.Diam natoque scelerisque netus tellus.Est mus
-                                potenti dictum augue.Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing.Convallis facilisis
-                                adipiscing odio ac.Pharetra vitae ultricies sit vel.Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique.Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.`,
+                `Digital Platform: Our website simplifies the process of
+                 giving and receiving help, connecting people
+                  through compassion and purpose.`,
             imageSrc:
                 "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
         },
         {
             description:
-                `Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est.Diam natoque scelerisque netus tellus.Est mus
-                                potenti dictum augue.Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing.Convallis facilisis
-                                adipiscing odio ac.Pharetra vitae ultricies sit vel.Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique.Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.`,
+                `Ongoing Initiatives: From awareness campaigns to 
+                support drives, we are always working to meet emerging 
+                community needs with grace and care.`,
             imageSrc:
                 "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
         },
@@ -119,30 +97,22 @@ const About = () => {
                             <div className="flex-shrink min-w-0">
                                 <TitleWithUnderline text="About" underlineWidth={64} />
                             </div>
-                            <p className="mb-4">Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est. Diam natoque scelerisque netus tellus. Est mus
-                                potenti dictum augue. Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing. Convallis facilisis
-                                adipiscing odio ac. Pharetra vitae ultricies sit vel. Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique. Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.</p>
-                            <p className="mb-4">Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est. Diam natoque scelerisque netus tellus. Est mus
-                                potenti dictum augue. Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing. Convallis facilisis
-                                adipiscing odio ac. Pharetra vitae ultricies sit vel. Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique. Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.</p>
-                            <p className="mb-4">Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est. Diam natoque scelerisque netus tellus. Est mus
-                                potenti dictum augue. Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing. Convallis facilisis
-                                adipiscing odio ac. Pharetra vitae ultricies sit vel. Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique. Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.</p>
+                            <p className="mb-4">Prapancham is more than just a non- profit— it’s a global mindset
+                                grounded in purpose, integrity, and innovation.
+                                Rooted in
+                                the ancient Sanskrit word for "world" or "universe,"
+                                Prapancham represents our vision to create meaningful
+                                impact across industries, communities, and cultures.</p>
+                            <p className="mb-4">Prapancham is a purpose-driven charitable organization committed to
+                                supporting communities with empathy, dignity, and innovation. Rooted in the belief
+                                that compassion can be a catalyst for change, we aim to
+                                build a trustworthy and sustainable platform that
+                                responds to real-life needs—especially during life’s
+                                most vulnerable moments.</p>
+                            <p className="mb-4">We focus on creating accessible and
+                                lasting impact by combining heartfelt support with
+                                smart technology, meaningful partnerships, and a deep
+                                understanding of our community's challenges.</p>
                         </div>
                     </div>
                 </div>
@@ -171,30 +141,29 @@ const About = () => {
                             <div className="flex-shrink min-w-0">
                                 <TitleWithUnderline text="How Do We Work?" underlineWidth={64} />
                             </div>
-                            <p className="mb-4">Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est. Diam natoque scelerisque netus tellus. Est mus
-                                potenti dictum augue. Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing. Convallis facilisis
-                                adipiscing odio ac. Pharetra vitae ultricies sit vel. Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique. Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.</p>
-                            <p className="mb-4">Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est. Diam natoque scelerisque netus tellus. Est mus
-                                potenti dictum augue. Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing. Convallis facilisis
-                                adipiscing odio ac. Pharetra vitae ultricies sit vel. Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique. Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.</p>
-                            <p className="mb-4">Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est. Diam natoque scelerisque netus tellus. Est mus
-                                potenti dictum augue. Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing. Convallis facilisis
-                                adipiscing odio ac. Pharetra vitae ultricies sit vel. Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique. Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.</p>
+                            <p className="mb-4">At Prapancham, we believe that every act of
+                                kindness counts, and every contribution can change a
+                                life. Our approach is:</p>
+                            <ul className="list-disc pl-5 space-y-2">
+                                <li>Community-Centered: We start by listening
+                                    to the needs of the people we serve and
+                                    co-creating solutions that reflect their
+                                    realities.</li>
+                                <li>Collaborative: We work alongside
+                                    local businesses, service providers,
+                                    and volunteers to deliver personalized,
+                                    impactful support.</li>
+                                <li>
+                                    Tech-Enabled: Our easy-to-use web platform
+                                    streamlines fundraising and community
+                                    support, making help more accessible when
+                                    it’s needed most.
+                                </li>
+                                <li>Transparent & Accountable: We prioritize trust,
+                                    providing clear information, reliable processes,
+                                    and consistent communication.</li>
+                            </ul>
+
                         </div>
                         <div className="flex items-center mx-auto mr-10">
                             <div className="relative h-[280px] md:h-[400px] pr-8">
@@ -228,6 +197,7 @@ const About = () => {
                     </h2>
 
                     <div className="text-justify">
+                        <p>Prapancham provides a range of charitable services and tools designed to support families and inspire community giving:</p>
                         {offerings.map((offer, index) => (
                             <div key={index} className="flex md:items-center space-x-4 mb-6">
                                 <div className="w-16 h-16 relative m-4 flex-shrink-0">
@@ -270,11 +240,17 @@ const About = () => {
                         </div>
                         <div className="mt-4 ">
                             <p>
-                                Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac
-                                hendrerit nisl convallis. Lorem ipsum dolor sit amet consectetur.
-                                Tellus nisi risus tellus ac hendrerit nisl convallis Lorem ipsum dolor
-                                sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisl
-                                convallis Lorem ipsum dolor sit amet consectetur.
+                                We are a forward-thinking charitable organization
+                                committed to building a sustainable, trustworthy
+                                platform that meets the evolving needs of our community.
+                                Our goal is to create meaningful, accessible, and
+                                lasting impact by leveraging innovative solutions,
+                                strategic partnerships, and community engagement.
+                                Through initiatives like funeral fundraising,
+                                collaborations with local florists, and a user-friendly
+                                web platform, we aim to support families in need,
+                                foster compassion, and inspire collective action
+                                for good.
                             </p>
                         </div>
                     </div>
@@ -310,30 +286,11 @@ const About = () => {
                             <div className="flex-shrink min-w-0">
                                 <TitleWithUnderline text="Our Mission" underlineWidth={64} />
                             </div>
-                            <p className="mb-4">Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est. Diam natoque scelerisque netus tellus. Est mus
-                                potenti dictum augue. Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing. Convallis facilisis
-                                adipiscing odio ac. Pharetra vitae ultricies sit vel. Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique. Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.</p>
-                            <p className="mb-4">Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est. Diam natoque scelerisque netus tellus. Est mus
-                                potenti dictum augue. Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing. Convallis facilisis
-                                adipiscing odio ac. Pharetra vitae ultricies sit vel. Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique. Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.</p>
-                            <p className="mb-4">Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est. Diam natoque scelerisque netus tellus. Est mus
-                                potenti dictum augue. Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing. Convallis facilisis
-                                adipiscing odio ac. Pharetra vitae ultricies sit vel. Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique. Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.</p>
+                            <p className="mb-4">To support community needs through innovative,
+                                sustainable, and inclusive charitable initiatives that
+                                foster trust, encourage participation, and create
+                                lasting social impact.</p>
+
                         </div>
                     </div>
                 </div>
@@ -346,30 +303,10 @@ const About = () => {
                             <div className="flex-shrink min-w-0">
                                 <TitleWithUnderline text="Our Vision" underlineWidth={64} />
                             </div>
-                            <p className="mb-4">Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est. Diam natoque scelerisque netus tellus. Est mus
-                                potenti dictum augue. Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing. Convallis facilisis
-                                adipiscing odio ac. Pharetra vitae ultricies sit vel. Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique. Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.</p>
-                            <p className="mb-4">Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est. Diam natoque scelerisque netus tellus. Est mus
-                                potenti dictum augue. Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing. Convallis facilisis
-                                adipiscing odio ac. Pharetra vitae ultricies sit vel. Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique. Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.</p>
-                            <p className="mb-4">Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales
-                                quisque nibh est. Diam natoque scelerisque netus tellus. Est mus
-                                potenti dictum augue. Fringilla scelerisque sed ultrices
-                                dignissim nisl integer adipiscing. Convallis facilisis
-                                adipiscing odio ac. Pharetra vitae ultricies sit vel. Massa
-                                purus nibh auctor eros sollicitudin sollicitudin pharetra
-                                tristique. Arcu accumsan consectetur lobortis ut vel
-                                pellentesque quis libero nullam.</p>
+                            <p className="mb-4">To be a trusted leader in charitable giving,
+                                empowering communities through technology,
+                                partnerships, and heartfelt support—especially
+                                during life’s most emotionally significant moments.</p>
                         </div>
                         <div className="flex items-center mx-auto">
                             <div className="relative w-full h-[280px] md:h-[400px]">
