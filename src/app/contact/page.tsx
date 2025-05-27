@@ -8,20 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import ContactSection from "@/components/contact/ContactSection";
-import AdvertisementBanner from "@/components/advertisement/AdvertisementBanner";
-import HorizontalAdBanner from "@/components/news-category/HorizontalAdBanner";
-import {
-  Select as CountrySelect,
-  SelectContent as CountrySelectContent,
-  SelectItem as CountrySelectItem,
-  SelectTrigger as CountrySelectTrigger,
-  SelectValue as CountrySelectValue,
-  SelectSeparator
-} from "@/components/ui/country-select";
-// export const metadata: Metadata = {
-//   title: "Contact Us - Prapancham News",
-//   description: "Contact Prapancham News for inquiries, feedback, or support.",
-// };
 
 const countries = [
   "Sri Lanka",
@@ -51,7 +37,63 @@ const ContactPage: React.FC = () => {
   ];
 
   const [activeCountry, setActiveCountry] = useState(countries[0]);
-  const [value, setValue] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [description, setDescription] = useState("");
+  const [errors, setErrors] = useState<any>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const validate = () => {
+    const newErrors: any = {};
+    if (!firstName) newErrors.firstName = "First name is required";
+    if (!lastName) newErrors.lastName = "Last name is required";
+    if (!email) newErrors.email = "Email is required";
+    if (!phoneNumber) newErrors.phoneNumber = "Phone number is required";
+    if (!activeCountry) newErrors.country = "Country is required";
+    if (!description) newErrors.description = "Description is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSuccess(false);
+    if (!validate()) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contact-us`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          phoneNumber: `+${phoneNumber}`,
+          country: activeCountry,
+          description,
+        }),
+      });
+      if (res.ok) {
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPhoneNumber("");
+        setDescription("");
+        setSuccess(true);
+        setErrors({});
+      } else {
+        const data = await res.json();
+        setErrors({ api: data.message || "Failed to submit" });
+      }
+    } catch (err) {
+      setErrors({ api: "Failed to submit" });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -92,41 +134,63 @@ const ContactPage: React.FC = () => {
                   Disclaimer about the country selection
                 </p>
               </div>
-              <form className="space-y-4">
-                <Input
-                  placeholder="First Name"
-                  className="w-full placeholder:text-body-sm px-6 py-4 h-[48px]"
-                />
-                <Input
-                  placeholder="Last Name"
-                  className="w-full placeholder:text-body-sm px-6 py-4 h-[48px]"
-                />
-                <Input
-                  placeholder="Email"
-                  type="email"
-                  className="w-full placeholder:text-body-sm px-6 py-4 h-[48px]"
-                />
-                <div className="flex gap-4">
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                <div>
+                  <Input
+                    placeholder="First Name"
+                    className="w-full placeholder:text-body-sm px-6 py-4 h-[48px]"
+                    value={firstName}
+                    onChange={e => setFirstName(e.target.value)}
+                  />
+                  {errors.firstName && <span className="text-red-500 text-xs">{errors.firstName}</span>}
+                </div>
+                <div>
+                  <Input
+                    placeholder="Last Name"
+                    className="w-full placeholder:text-body-sm px-6 py-4 h-[48px]"
+                    value={lastName}
+                    onChange={e => setLastName(e.target.value)}
+                  />
+                  {errors.lastName && <span className="text-red-500 text-xs">{errors.lastName}</span>}
+                </div>
+                <div>
+                  <Input
+                    placeholder="Email"
+                    type="email"
+                    className="w-full placeholder:text-body-sm px-6 py-4 h-[48px]"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                  />
+                  {errors.email && <span className="text-red-500 text-xs">{errors.email}</span>}
+                </div>
+                <div>
                   <PhoneInput
                     country={'lk'}
                     placeholder="Phone Number"
                     containerClass="phone-input"
                     inputClass="form-control"
+                    value={phoneNumber}
+                    onChange={setPhoneNumber}
                   />
+                  {errors.phoneNumber && <span className="text-red-500 text-xs">{errors.phoneNumber}</span>}
                 </div>
-                
-                <Textarea
-                  placeholder="Description"
-                  className="w-full placeholder:text-body-sm"
-                  rows={5}
-                />
-
+                <div>
+                  <Textarea
+                    placeholder="Description"
+                    className="w-full placeholder:text-body-sm"
+                    rows={5}
+                    value={description}
+                    onChange={e => setDescription(e.target.value)}
+                  />
+                  {errors.description && <span className="text-red-500 text-xs">{errors.description}</span>}
+                </div>
+                {errors.api && <div className="text-red-500 text-xs text-center">{errors.api}</div>}
+                {success && <div className="text-green-600 text-xs text-center">Submitted successfully!</div>}
                 <div className="pt-2 flex justify-center">
-                  <Button className="w-64 bg-primary hover:bg-[#00506f] text-white font-bold text-sm">
-                    Submit
+                  <Button className="w-64 bg-primary hover:bg-[#00506f] text-white font-bold text-sm" type="submit" disabled={submitting}>
+                    {submitting ? "Submitting..." : "Submit"}
                   </Button>
                 </div>
-
               </form>
 
               <div className="mt-8  h-[260px] w-full rounded flex items-center justify-center border border-black">
@@ -136,7 +200,6 @@ const ContactPage: React.FC = () => {
                   height="100%"
                   style={{ border: 0 }}
                   className="p-2 "
-                  // allowFullScreen=""
                   loading="lazy"
                 ></iframe>
               </div>
@@ -166,10 +229,6 @@ const ContactPage: React.FC = () => {
       </div>
 
       {/* Horizontal advertisement Section */}
-      {/* <HorizontalAdBanner
-        image="/images/top-ad-2.png"
-        className="mx-auto  px-16 max-md:px-5 h-[143px]"
-      /> */}
       <img
         src="https://images.unsplash.com/photo-1627384113743-6bd5a479fffd"
         alt="Black Friday Sale"

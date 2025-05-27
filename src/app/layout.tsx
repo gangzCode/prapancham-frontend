@@ -10,7 +10,8 @@ import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 import MobileNavbar from "@/components/layout/MobileNavbar";
 import { useEffect, useState } from "react";
-
+import { LanguageProvider } from "@/components/ui/LanguageProvider";
+import { CountryProvider } from "@/components/ui/CountryProvider";
 
 export default function RootLayout({
   children,
@@ -33,15 +34,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${poppins.variable} antialiased`}>
-        {isMobile ? <MobileNavbar /> : <TopBar />}
-        <div className="md:sticky top-0 z-50 bg-white">
-          {/* <FirstNavbar /> */}
-          {!isMobile ? <SecondNavbar /> : ""}
-
-        </div>
-        {children}
-        <ScrollToTop />
-        <Footer />
+        <CountryProvider>
+          <LanguageProvider>
+            {isMobile ? <MobileNavbar /> : <TopBar />}
+            <div className="md:sticky top-0 z-50 bg-white">
+              {/* <FirstNavbar /> */}
+              {!isMobile ? <SecondNavbar /> : ""}
+            </div>
+            {children}
+            <ScrollToTop />
+            <Footer />
+          </LanguageProvider>
+        </CountryProvider>
       </body>
     </html>
   );

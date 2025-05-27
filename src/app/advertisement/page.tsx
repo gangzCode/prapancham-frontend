@@ -163,7 +163,11 @@ const Advertisement = () => {
                 </div>
 
                 <div>
-                    <PaginationBar />
+                     <PaginationBar
+                            currentPage={1}
+                            totalPages={10}
+                            onPageChange={setCurrentPage}
+                        />
                 </div>
 
             </div>

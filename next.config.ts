@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
         pathname: '/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'prapanchamtest-asset.s3.eu-north-1.amazonaws.com',
+        pathname: '/**'
       }
     ]
   }

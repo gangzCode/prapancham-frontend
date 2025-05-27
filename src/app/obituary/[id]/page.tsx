@@ -53,6 +53,20 @@ const ObituaryDetail: React.FC = () => {
                         Lorem ipsum dolor sit amet consectetur. Vestibulum ut sodales quisque nibh est. Diam natoque scelerisque netus tellus. Est mus potenti dictum augue. Fringilla scelerisque sed ultricies dignissim nisi integer adipiscing. Convallis facilisis adipiscing odio ac. Pharetra vitae ultricies sit vel. Massa purus nibh auctor eros sollicitudin sollicitudin pharetra tristique. Arcu accumsan consectetur lobortis ut vel pellentesque quis libero nullam.
                         Sed in viverra risus eros non nisl elit adipiscing praesent. Amet vel turpis et dis eget. Vel lectus tincidunt et mattis etiam.
                     </p>
+                    <div className="w-full flex justify-center mt-6">
+                        <iframe
+                            width="560"
+                            height="315"
+                            
+                            src="https://www.youtube.com/embed/MNCWzMtv8Pc?si=aYq3bXLNRSlxhach&autoplay=1&mute=1"
+                            title="Prapancham"
+                            style={{ border: 0 }}
+                            allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allowFullScreen
+                            className="max-w-full"
+                        ></iframe>
+                    </div>
                     <div className="flex justify-end gap-2 items-center self-stretch mt-4">
                         <button className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0B4157] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                             Post Tribute

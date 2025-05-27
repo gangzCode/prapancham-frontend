@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import AdvertisementSidebar from "@/components/news-category/AdvertisementSidebar";
 import { Separator } from "@/components/ui/separator";
@@ -18,6 +19,10 @@ const tributeData = Array.from({ length: 10 }).map((_, index) => ({
 }));
 
 const Obituary: React.FC = () => {
+    function setCurrentPage(page: number): void {
+        throw new Error("Function not implemented.");
+    }
+
     return (
         <section className="flex flex-col justify-center px-4 md:px-8 lg:px-16  py-6 max-md:px-5">
             <Separator className="mb-4" />
@@ -40,7 +45,11 @@ const Obituary: React.FC = () => {
                         ))}
                     </div>
                     <div className="flex justify-center md:mt-12">
-                        <PaginationBar />
+                        <PaginationBar
+                            currentPage={1}
+                            totalPages={10}
+                            onPageChange={setCurrentPage}
+                        />
                     </div>
                 </div>
 

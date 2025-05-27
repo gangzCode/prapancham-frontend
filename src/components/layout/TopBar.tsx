@@ -20,6 +20,8 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { useLanguage } from "@/components/ui/LanguageProvider";
+import { useCountry } from "@/components/ui/CountryProvider";
 
 const navItems = [
   { id: "news", label: "News", href: "/news" },
@@ -49,10 +51,53 @@ const countries = [
 const TopBar: React.FC = () => {
 
   const pathname = usePathname();
+  const { language, setLanguage } = useLanguage();
+  const { country, setCountry } = useCountry();
   const [selectedMenu, setSelectedMenu] = useState("");
   const [selectedCountry, setSelectedCountry] = React.useState(
-    countries.find((c) => c.value === "srilanka")
+    countries.find((c) => c.value === (country || "srilanka"))
   );
+  const [languageSelectValue, setLanguageSelectValue] = useState("english");
+  const [countrySelectValue, setCountrySelectValue] = useState(country || "srilanka");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedLang = localStorage.getItem("language");
+      if (!storedLang) {
+        localStorage.setItem("language", "english");
+        setLanguage("english");
+        setLanguageSelectValue("english");
+      } else {
+        setLanguageSelectValue(storedLang);
+        setLanguage(storedLang);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    setLanguageSelectValue(language);
+  }, [language]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedCountry = localStorage.getItem("country");
+      if (!storedCountry) {
+        localStorage.setItem("country", "srilanka");
+        setCountry("srilanka");
+        setCountrySelectValue("srilanka");
+        setSelectedCountry(countries.find((c) => c.value === "srilanka"));
+      } else {
+        setCountrySelectValue(storedCountry);
+        setCountry(storedCountry);
+        setSelectedCountry(countries.find((c) => c.value === storedCountry));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    setCountrySelectValue(country);
+    setSelectedCountry(countries.find((c) => c.value === country));
+  }, [country]);
 
   useEffect(() => {
     const pathSegments = pathname.split("/").filter(Boolean);
@@ -157,7 +202,13 @@ const TopBar: React.FC = () => {
       </div>
       <div className="flex  justify-center items-center text-white">
         <div className="flex gap-1 justify-center items-center text-white whitespace-nowrap">
-          <LanguageSelect defaultValue="english">
+          <LanguageSelect
+            value={languageSelectValue}
+            onValueChange={(value) => {
+              setLanguage(value);
+              setLanguageSelectValue(value);
+            }}
+          >
             <LanguageSelectTrigger className="md:w-[7rem] text-white bg-transparent border-none outline-none cursor-pointer text-sm sm:text-base">
               <LanguageSelectValue
                 className="text-white placeholder:text-white text-sm sm:text-base"
@@ -165,19 +216,13 @@ const TopBar: React.FC = () => {
               />
             </LanguageSelectTrigger>
             <LanguageSelectContent>
-              <LanguageSelectItem
-                value="english"
-                className="text-sm sm:text-base"
-              >
+              <LanguageSelectItem value="english" className="text-sm sm:text-base">
                 English
               </LanguageSelectItem>
               <LanguageSelectItem value="tamil" className="text-sm sm:text-base">
                 Tamil
               </LanguageSelectItem>
-              <LanguageSelectItem
-                value="sinhala"
-                className="text-sm sm:text-base"
-              >
+              <LanguageSelectItem value="sinhala" className="text-sm sm:text-base">
                 Sinhala
               </LanguageSelectItem>
             </LanguageSelectContent>
@@ -186,10 +231,11 @@ const TopBar: React.FC = () => {
         <Minus className="h-5 w-[1px] bg-white" />
         <div className=" flex gap-1 justify-center items-left text-[#1A1D1F] whitespace-nowrap">
           <CountrySelect
-            defaultValue="srilanka"
+            value={countrySelectValue}
             onValueChange={(value) => {
-              const selected = countries.find((c) => c.value === value);
-              setSelectedCountry(selected);
+              setCountry(value);
+              setCountrySelectValue(value);
+              setSelectedCountry(countries.find((c) => c.value === value));
             }}
           >
             <CountrySelectTrigger className="md:w-[12rem] text-white bg-transparent border-none outline-none cursor-pointer text-sm sm:text-base">
@@ -202,7 +248,7 @@ const TopBar: React.FC = () => {
               )}
             </CountrySelectTrigger>
             <CountrySelectContent>
-              {countries.map((country, index) => (
+              {countries.map((country, idx) => (
                 <React.Fragment key={country.value}>
                   <CountrySelectItem value={country.value} className="text-sm sm:text-base">
                     <div className="flex justify-between w-36">
@@ -214,11 +260,10 @@ const TopBar: React.FC = () => {
                       />
                     </div>
                   </CountrySelectItem>
-                  {index !== countries.length - 1 && <SelectSeparator />}
+                  {idx !== countries.length - 1 && <SelectSeparator />}
                 </React.Fragment>
               ))}
             </CountrySelectContent>
-
           </CountrySelect>
         </div>
       </div>

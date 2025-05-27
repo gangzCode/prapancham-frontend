@@ -13,6 +13,11 @@ import NewsCategoriesSection from "@/components/news-category/NewsCategoriesSect
 import { Separator } from "@/components/ui/separator";
 import PoliticalNews from "@/components/category/PoliticalNews";
 import PaginationSection from "@/components/category/PaginationSection";
+import useSWR from 'swr';
+import { useLanguage } from "@/components/ui/LanguageProvider";
+
+
+const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const NewsPage: React.FC = () => {
   const topAdImages = [
@@ -21,7 +26,6 @@ const NewsPage: React.FC = () => {
     "/images/top-ad-3.png",
     "/images/top-ad-4.png",
   ];
-  // Sample breaking news data array
   const breakingNewsItems = [
     {
       title:
@@ -51,20 +55,41 @@ const NewsPage: React.FC = () => {
     },
   ];
 
-  // const categories = [
 
-
-  // ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeCountry, setActiveCountry] = useState('All');
-  const categories = [
-    "All",
-    "Politics",
-    "Sports",
-    "Category1",
-    "Category2",
-    "Category3",];
+  const { language } = useLanguage();
+
+
+  const { data, error, isLoading } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/news/news-category/active?page=1&limit=10`,
+    fetcher
+  );
+
+  const allLabels: Record<string, string> = {
+    en: "All",
+    ta: "அனைத்து",
+    si: "සියල්ල",
+  };
+
+
+
+  let langKey = language;
+  if (langKey === "english") langKey = "en";
+  if (langKey === "tamil") langKey = "ta";
+  if (langKey === "sinhala") langKey = "si";
+
+
+  const categories: string[] = [
+    allLabels[langKey] || allLabels["en"],
+    ...(data?.newsCategory?.map((cat: any) => {
+      const langObj = cat.name[langKey]?.[0] || cat.name["en"]?.[0];
+      return langObj?.name || "";
+    }) || []),
+  ];
+
+
 
   const handlePrevious = () => {
     setCurrentIndex((prev) => Math.max(0, prev - 1));
@@ -99,14 +124,13 @@ const NewsPage: React.FC = () => {
           activeCountry={activeCountry}
           setActiveCountry={setActiveCountry}
         />
-        {/* News Tabs and Obituary Updates Section */}
-
-        {activeCountry !== "Politics" && <NewsTabsSection />}
-        {activeCountry == "Politics" && <PoliticalNews />}
+       
+        {(activeCountry !== "Politics" && activeCountry !== "அரசியல்" && activeCountry !== "දේශපාලන") && <NewsTabsSection />}
+        {(activeCountry === "Politics" || activeCountry === "அரசியல்" || activeCountry === "දේශපාලන") && <PoliticalNews />}
 
         <Separator />
-        {activeCountry == "Politics" && <PaginationSection />}
-        {activeCountry !== "Politics" && <TrendingNewsSection />}
+        {(activeCountry === "Politics" || activeCountry === "அரசியல்" || activeCountry === "දේශපාලන") && <PaginationSection />}
+        {(activeCountry !== "Politics" && activeCountry !== "அரசியல்" && activeCountry !== "දේශපාලන") && <TrendingNewsSection />}
         <Separator />
         <HAdCarousel
           ads={featuredAds}
@@ -115,9 +139,9 @@ const NewsPage: React.FC = () => {
           className="px-4 md:px-8 lg:px-16   max-md:px-5"
         />
         <Separator />
-        {activeCountry !== "Politics" && <NewsCategoriesSection />}
+        {(activeCountry !== "Politics" && activeCountry !== "அரசியல்" && activeCountry !== "දේශපාලන") && <NewsCategoriesSection />}
         <Separator className="mb-8" />
-        {activeCountry == "Politics" && <VideoNewsSection />}
+        {(activeCountry === "Politics" || activeCountry === "அரசியல்" || activeCountry === "දේශපාලන") && <VideoNewsSection />}
       </main>
     </div>
   );

@@ -11,8 +11,39 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function Footer() {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setSuccess("");
+    setError("");
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news-letters`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        setSuccess("Subscribed successfully!");
+        setEmail("");
+      } else {
+        const data = await res.json();
+        setError(data?.message || "Subscription failed.");
+      }
+    } catch (err) {
+      setError("Subscription failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <footer className="bg-primary text-white">
       <div className="container mx-auto py-12 px-6 lg:px-8">
@@ -151,17 +182,25 @@ export default function Footer() {
             <p className="text-sm mb-6">
               Lorem ipsum dolor sit amet consectetur. Tellus nisi
             </p>
-
-            <div className="flex gap-2 mb-8">
+            <form onSubmit={handleSubscribe} className="flex gap-2 mb-8 w-full">
               <Input
                 type="email"
                 placeholder="Email"
-                className="bg-transparent border-[#6ec1e4] text-white placeholder:text-gray-400"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                className="bg-transparent border-[#6ec1e4] text-white placeholder:text-gray-400 flex-1"
+                required
               />
-              <Button className="bg-[#6ec1e4] hover:bg-[#5db1d4] text-white">
-                Subscribe
+              <Button
+                className="bg-[#6ec1e4] hover:bg-[#5db1d4] text-white"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? "Subscribing..." : "Subscribe"}
               </Button>
-            </div>
+            </form>
+            {success && <span className="text-green-400 ml-2">{success}</span>}
+            {error && <span className="text-red-400 ml-2">{error}</span>}
 
             <div className="flex flex-wrap gap-6 text-sm">
               <a href="#" className="hover:text-[#6ec1e4] transition-colors">

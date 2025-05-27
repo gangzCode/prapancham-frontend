@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import PaginationBar from '../category/PaginationBar';
+import useSWR from 'swr';
+import { useLanguage } from "@/components/ui/LanguageProvider";
 
 interface Attendee {
     id: number;
@@ -63,237 +65,63 @@ const EventCard: React.FC<EventCardProps> = ({
     );
 };
 
+const fetcher = (url: string) => fetch(url).then(res => res.json());
+
 const EventList: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const eventsPerPage = 7;
+    const { language } = useLanguage();
 
-    const events = [
-        {
-            title: 'Event 1',
-            date: 'Tuesday - Feb 07, 2025 - 9:00 PM',
-            description: 'no2. masdd, sddd, sdsdddffd',
-            attendees: [
-                { id: 1, name: 'Attendee 1', imageUrl: 'https://storage.googleapis.com/a1aa/image/WpYM3R-C69SiR3u0ZBVgoaVLPpaAzd4Mgx7zxGqR30M.jpg' },
-                { id: 2, name: 'Attendee 2', imageUrl: 'https://storage.googleapis.com/a1aa/image/bcA1oIydlhkWJJ7Jlwm22KMwQiLVNZQinDmq-I6R6MA.jpg' },
-                { id: 3, name: 'Attendee 3', imageUrl: 'https://storage.googleapis.com/a1aa/image/eWz3K9uN30e2uNXszdWk_d5aJkwnQSQu8Sm-Aswsv7o.jpg' },
-                { id: 4, name: 'Attendee 4', imageUrl: 'https://storage.googleapis.com/a1aa/image/DQimsrnpYjVqF_WDtYqxHIsbmW0I2R6HrQw6RA5bs10.jpg' },
-                { id: 5, name: 'Attendee 5', imageUrl: 'https://storage.googleapis.com/a1aa/image/b-2uUEe6r0ZYDFtA8csYUgtfY1F_DlQznQEAfczFTs4.jpg' },
-            ],
-            organizer: 'Event organizer',
-            eventImage: 'https://storage.googleapis.com/a1aa/image/eacgDKnntV8qXLLjEJCo2MaE3ipiN_Vvn48FHDJvyg4.jpg',
-        },
-        {
-            title: 'Event 2',
-            date: 'Tuesday - Feb 07, 2025 - 9:00 PM',
-            description: 'no2. masdd, sddd, sdsdddffd',
-            attendees: [
-                { id: 1, name: 'Attendee 1', imageUrl: 'https://storage.googleapis.com/a1aa/image/WpYM3R-C69SiR3u0ZBVgoaVLPpaAzd4Mgx7zxGqR30M.jpg' },
-                { id: 2, name: 'Attendee 2', imageUrl: 'https://storage.googleapis.com/a1aa/image/bcA1oIydlhkWJJ7Jlwm22KMwQiLVNZQinDmq-I6R6MA.jpg' },
-                { id: 3, name: 'Attendee 3', imageUrl: 'https://storage.googleapis.com/a1aa/image/eWz3K9uN30e2uNXszdWk_d5aJkwnQSQu8Sm-Aswsv7o.jpg' },
-                { id: 4, name: 'Attendee 4', imageUrl: 'https://storage.googleapis.com/a1aa/image/DQimsrnpYjVqF_WDtYqxHIsbmW0I2R6HrQw6RA5bs10.jpg' },
-                { id: 5, name: 'Attendee 5', imageUrl: 'https://storage.googleapis.com/a1aa/image/b-2uUEe6r0ZYDFtA8csYUgtfY1F_DlQznQEAfczFTs4.jpg' },
-            ],
-            organizer: 'Event organizer',
-            eventImage: 'https://storage.googleapis.com/a1aa/image/eacgDKnntV8qXLLjEJCo2MaE3ipiN_Vvn48FHDJvyg4.jpg',
-        },
-        {
-            title: 'Event 3',
-            date: 'Tuesday - Feb 07, 2025 - 9:00 PM',
-            description: 'no2. masdd, sddd, sdsdddffd',
-            attendees: [
-                { id: 1, name: 'Attendee 1', imageUrl: 'https://storage.googleapis.com/a1aa/image/WpYM3R-C69SiR3u0ZBVgoaVLPpaAzd4Mgx7zxGqR30M.jpg' },
-                { id: 2, name: 'Attendee 2', imageUrl: 'https://storage.googleapis.com/a1aa/image/bcA1oIydlhkWJJ7Jlwm22KMwQiLVNZQinDmq-I6R6MA.jpg' },
-                { id: 3, name: 'Attendee 3', imageUrl: 'https://storage.googleapis.com/a1aa/image/eWz3K9uN30e2uNXszdWk_d5aJkwnQSQu8Sm-Aswsv7o.jpg' },
-                { id: 4, name: 'Attendee 4', imageUrl: 'https://storage.googleapis.com/a1aa/image/DQimsrnpYjVqF_WDtYqxHIsbmW0I2R6HrQw6RA5bs10.jpg' },
-                { id: 5, name: 'Attendee 5', imageUrl: 'https://storage.googleapis.com/a1aa/image/b-2uUEe6r0ZYDFtA8csYUgtfY1F_DlQznQEAfczFTs4.jpg' },
-            ],
-            organizer: 'Event organizer',
-            eventImage: 'https://storage.googleapis.com/a1aa/image/eacgDKnntV8qXLLjEJCo2MaE3ipiN_Vvn48FHDJvyg4.jpg',
-        },
-        {
-            title: 'Event 4',
-            date: 'Tuesday - Feb 07, 2025 - 9:00 PM',
-            description: 'no2. masdd, sddd, sdsdddffd',
-            attendees: [
-                { id: 1, name: 'Attendee 1', imageUrl: 'https://storage.googleapis.com/a1aa/image/WpYM3R-C69SiR3u0ZBVgoaVLPpaAzd4Mgx7zxGqR30M.jpg' },
-                { id: 2, name: 'Attendee 2', imageUrl: 'https://storage.googleapis.com/a1aa/image/bcA1oIydlhkWJJ7Jlwm22KMwQiLVNZQinDmq-I6R6MA.jpg' },
-                { id: 3, name: 'Attendee 3', imageUrl: 'https://storage.googleapis.com/a1aa/image/eWz3K9uN30e2uNXszdWk_d5aJkwnQSQu8Sm-Aswsv7o.jpg' },
-                { id: 4, name: 'Attendee 4', imageUrl: 'https://storage.googleapis.com/a1aa/image/DQimsrnpYjVqF_WDtYqxHIsbmW0I2R6HrQw6RA5bs10.jpg' },
-                { id: 5, name: 'Attendee 5', imageUrl: 'https://storage.googleapis.com/a1aa/image/b-2uUEe6r0ZYDFtA8csYUgtfY1F_DlQznQEAfczFTs4.jpg' },
-            ],
-            organizer: 'Event organizer',
-            eventImage: 'https://storage.googleapis.com/a1aa/image/eacgDKnntV8qXLLjEJCo2MaE3ipiN_Vvn48FHDJvyg4.jpg',
-        },
-        {
-            title: 'Event 5',
-            date: 'Tuesday - Feb 07, 2025 - 9:00 PM',
-            description: 'no2. masdd, sddd, sdsdddffd',
-            attendees: [
-                { id: 1, name: 'Attendee 1', imageUrl: 'https://storage.googleapis.com/a1aa/image/WpYM3R-C69SiR3u0ZBVgoaVLPpaAzd4Mgx7zxGqR30M.jpg' },
-                { id: 2, name: 'Attendee 2', imageUrl: 'https://storage.googleapis.com/a1aa/image/bcA1oIydlhkWJJ7Jlwm22KMwQiLVNZQinDmq-I6R6MA.jpg' },
-                { id: 3, name: 'Attendee 3', imageUrl: 'https://storage.googleapis.com/a1aa/image/eWz3K9uN30e2uNXszdWk_d5aJkwnQSQu8Sm-Aswsv7o.jpg' },
-                { id: 4, name: 'Attendee 4', imageUrl: 'https://storage.googleapis.com/a1aa/image/DQimsrnpYjVqF_WDtYqxHIsbmW0I2R6HrQw6RA5bs10.jpg' },
-                { id: 5, name: 'Attendee 5', imageUrl: 'https://storage.googleapis.com/a1aa/image/b-2uUEe6r0ZYDFtA8csYUgtfY1F_DlQznQEAfczFTs4.jpg' },
-            ],
-            organizer: 'Event organizer',
-            eventImage: 'https://storage.googleapis.com/a1aa/image/eacgDKnntV8qXLLjEJCo2MaE3ipiN_Vvn48FHDJvyg4.jpg',
-        },
-        {
-            title: 'Event 6',
-            date: 'Tuesday - Feb 07, 2025 - 9:00 PM',
-            description: 'no2. masdd, sddd, sdsdddffd',
-            attendees: [
-                { id: 1, name: 'Attendee 1', imageUrl: 'https://storage.googleapis.com/a1aa/image/WpYM3R-C69SiR3u0ZBVgoaVLPpaAzd4Mgx7zxGqR30M.jpg' },
-                { id: 2, name: 'Attendee 2', imageUrl: 'https://storage.googleapis.com/a1aa/image/bcA1oIydlhkWJJ7Jlwm22KMwQiLVNZQinDmq-I6R6MA.jpg' },
-                { id: 3, name: 'Attendee 3', imageUrl: 'https://storage.googleapis.com/a1aa/image/eWz3K9uN30e2uNXszdWk_d5aJkwnQSQu8Sm-Aswsv7o.jpg' },
-                { id: 4, name: 'Attendee 4', imageUrl: 'https://storage.googleapis.com/a1aa/image/DQimsrnpYjVqF_WDtYqxHIsbmW0I2R6HrQw6RA5bs10.jpg' },
-                { id: 5, name: 'Attendee 5', imageUrl: 'https://storage.googleapis.com/a1aa/image/b-2uUEe6r0ZYDFtA8csYUgtfY1F_DlQznQEAfczFTs4.jpg' },
-            ],
-            organizer: 'Event organizer',
-            eventImage: 'https://storage.googleapis.com/a1aa/image/eacgDKnntV8qXLLjEJCo2MaE3ipiN_Vvn48FHDJvyg4.jpg',
-        },
-        {
-            title: 'Event 1',
-            date: 'Tuesday - Feb 07, 2025 - 9:00 PM',
-            description: 'no2. masdd, sddd, sdsdddffd',
-            attendees: [
-                { id: 1, name: 'Attendee 1', imageUrl: 'https://storage.googleapis.com/a1aa/image/WpYM3R-C69SiR3u0ZBVgoaVLPpaAzd4Mgx7zxGqR30M.jpg' },
-                { id: 2, name: 'Attendee 2', imageUrl: 'https://storage.googleapis.com/a1aa/image/bcA1oIydlhkWJJ7Jlwm22KMwQiLVNZQinDmq-I6R6MA.jpg' },
-                { id: 3, name: 'Attendee 3', imageUrl: 'https://storage.googleapis.com/a1aa/image/eWz3K9uN30e2uNXszdWk_d5aJkwnQSQu8Sm-Aswsv7o.jpg' },
-                { id: 4, name: 'Attendee 4', imageUrl: 'https://storage.googleapis.com/a1aa/image/DQimsrnpYjVqF_WDtYqxHIsbmW0I2R6HrQw6RA5bs10.jpg' },
-                { id: 5, name: 'Attendee 5', imageUrl: 'https://storage.googleapis.com/a1aa/image/b-2uUEe6r0ZYDFtA8csYUgtfY1F_DlQznQEAfczFTs4.jpg' },
-            ],
-            organizer: 'Event organizer',
-            eventImage: 'https://storage.googleapis.com/a1aa/image/eacgDKnntV8qXLLjEJCo2MaE3ipiN_Vvn48FHDJvyg4.jpg',
-        },
-        {
-            title: 'Event 2',
-            date: 'Tuesday - Feb 07, 2025 - 9:00 PM',
-            description: 'no2. masdd, sddd, sdsdddffd',
-            attendees: [
-                { id: 1, name: 'Attendee 1', imageUrl: 'https://storage.googleapis.com/a1aa/image/WpYM3R-C69SiR3u0ZBVgoaVLPpaAzd4Mgx7zxGqR30M.jpg' },
-                { id: 2, name: 'Attendee 2', imageUrl: 'https://storage.googleapis.com/a1aa/image/bcA1oIydlhkWJJ7Jlwm22KMwQiLVNZQinDmq-I6R6MA.jpg' },
-                { id: 3, name: 'Attendee 3', imageUrl: 'https://storage.googleapis.com/a1aa/image/eWz3K9uN30e2uNXszdWk_d5aJkwnQSQu8Sm-Aswsv7o.jpg' },
-                { id: 4, name: 'Attendee 4', imageUrl: 'https://storage.googleapis.com/a1aa/image/DQimsrnpYjVqF_WDtYqxHIsbmW0I2R6HrQw6RA5bs10.jpg' },
-                { id: 5, name: 'Attendee 5', imageUrl: 'https://storage.googleapis.com/a1aa/image/b-2uUEe6r0ZYDFtA8csYUgtfY1F_DlQznQEAfczFTs4.jpg' },
-            ],
-            organizer: 'Event organizer',
-            eventImage: 'https://storage.googleapis.com/a1aa/image/eacgDKnntV8qXLLjEJCo2MaE3ipiN_Vvn48FHDJvyg4.jpg',
-        },
-        {
-            title: 'Event 3',
-            date: 'Tuesday - Feb 07, 2025 - 9:00 PM',
-            description: 'no2. masdd, sddd, sdsdddffd',
-            attendees: [
-                { id: 1, name: 'Attendee 1', imageUrl: 'https://storage.googleapis.com/a1aa/image/WpYM3R-C69SiR3u0ZBVgoaVLPpaAzd4Mgx7zxGqR30M.jpg' },
-                { id: 2, name: 'Attendee 2', imageUrl: 'https://storage.googleapis.com/a1aa/image/bcA1oIydlhkWJJ7Jlwm22KMwQiLVNZQinDmq-I6R6MA.jpg' },
-                { id: 3, name: 'Attendee 3', imageUrl: 'https://storage.googleapis.com/a1aa/image/eWz3K9uN30e2uNXszdWk_d5aJkwnQSQu8Sm-Aswsv7o.jpg' },
-                { id: 4, name: 'Attendee 4', imageUrl: 'https://storage.googleapis.com/a1aa/image/DQimsrnpYjVqF_WDtYqxHIsbmW0I2R6HrQw6RA5bs10.jpg' },
-                { id: 5, name: 'Attendee 5', imageUrl: 'https://storage.googleapis.com/a1aa/image/b-2uUEe6r0ZYDFtA8csYUgtfY1F_DlQznQEAfczFTs4.jpg' },
-            ],
-            organizer: 'Event organizer',
-            eventImage: 'https://storage.googleapis.com/a1aa/image/eacgDKnntV8qXLLjEJCo2MaE3ipiN_Vvn48FHDJvyg4.jpg',
-        },
-        {
-            title: 'Event 4',
-            date: 'Tuesday - Feb 07, 2025 - 9:00 PM',
-            description: 'no2. masdd, sddd, sdsdddffd',
-            attendees: [
-                { id: 1, name: 'Attendee 1', imageUrl: 'https://storage.googleapis.com/a1aa/image/WpYM3R-C69SiR3u0ZBVgoaVLPpaAzd4Mgx7zxGqR30M.jpg' },
-                { id: 2, name: 'Attendee 2', imageUrl: 'https://storage.googleapis.com/a1aa/image/bcA1oIydlhkWJJ7Jlwm22KMwQiLVNZQinDmq-I6R6MA.jpg' },
-                { id: 3, name: 'Attendee 3', imageUrl: 'https://storage.googleapis.com/a1aa/image/eWz3K9uN30e2uNXszdWk_d5aJkwnQSQu8Sm-Aswsv7o.jpg' },
-                { id: 4, name: 'Attendee 4', imageUrl: 'https://storage.googleapis.com/a1aa/image/DQimsrnpYjVqF_WDtYqxHIsbmW0I2R6HrQw6RA5bs10.jpg' },
-                { id: 5, name: 'Attendee 5', imageUrl: 'https://storage.googleapis.com/a1aa/image/b-2uUEe6r0ZYDFtA8csYUgtfY1F_DlQznQEAfczFTs4.jpg' },
-            ],
-            organizer: 'Event organizer',
-            eventImage: 'https://storage.googleapis.com/a1aa/image/eacgDKnntV8qXLLjEJCo2MaE3ipiN_Vvn48FHDJvyg4.jpg',
-        },
-        {
-            title: 'Event 5',
-            date: 'Tuesday - Feb 07, 2025 - 9:00 PM',
-            description: 'no2. masdd, sddd, sdsdddffd',
-            attendees: [
-                { id: 1, name: 'Attendee 1', imageUrl: 'https://storage.googleapis.com/a1aa/image/WpYM3R-C69SiR3u0ZBVgoaVLPpaAzd4Mgx7zxGqR30M.jpg' },
-                { id: 2, name: 'Attendee 2', imageUrl: 'https://storage.googleapis.com/a1aa/image/bcA1oIydlhkWJJ7Jlwm22KMwQiLVNZQinDmq-I6R6MA.jpg' },
-                { id: 3, name: 'Attendee 3', imageUrl: 'https://storage.googleapis.com/a1aa/image/eWz3K9uN30e2uNXszdWk_d5aJkwnQSQu8Sm-Aswsv7o.jpg' },
-                { id: 4, name: 'Attendee 4', imageUrl: 'https://storage.googleapis.com/a1aa/image/DQimsrnpYjVqF_WDtYqxHIsbmW0I2R6HrQw6RA5bs10.jpg' },
-                { id: 5, name: 'Attendee 5', imageUrl: 'https://storage.googleapis.com/a1aa/image/b-2uUEe6r0ZYDFtA8csYUgtfY1F_DlQznQEAfczFTs4.jpg' },
-            ],
-            organizer: 'Event organizer',
-            eventImage: 'https://storage.googleapis.com/a1aa/image/eacgDKnntV8qXLLjEJCo2MaE3ipiN_Vvn48FHDJvyg4.jpg',
-        },
-        {
-            title: 'Event 6',
-            date: 'Tuesday - Feb 07, 2025 - 9:00 PM',
-            description: 'no2. masdd, sddd, sdsdddffd',
-            attendees: [
-                { id: 1, name: 'Attendee 1', imageUrl: 'https://storage.googleapis.com/a1aa/image/WpYM3R-C69SiR3u0ZBVgoaVLPpaAzd4Mgx7zxGqR30M.jpg' },
-                { id: 2, name: 'Attendee 2', imageUrl: 'https://storage.googleapis.com/a1aa/image/bcA1oIydlhkWJJ7Jlwm22KMwQiLVNZQinDmq-I6R6MA.jpg' },
-                { id: 3, name: 'Attendee 3', imageUrl: 'https://storage.googleapis.com/a1aa/image/eWz3K9uN30e2uNXszdWk_d5aJkwnQSQu8Sm-Aswsv7o.jpg' },
-                { id: 4, name: 'Attendee 4', imageUrl: 'https://storage.googleapis.com/a1aa/image/DQimsrnpYjVqF_WDtYqxHIsbmW0I2R6HrQw6RA5bs10.jpg' },
-                { id: 5, name: 'Attendee 5', imageUrl: 'https://storage.googleapis.com/a1aa/image/b-2uUEe6r0ZYDFtA8csYUgtfY1F_DlQznQEAfczFTs4.jpg' },
-            ],
-            organizer: 'Event organizer',
-            eventImage: 'https://storage.googleapis.com/a1aa/image/eacgDKnntV8qXLLjEJCo2MaE3ipiN_Vvn48FHDJvyg4.jpg',
-        },
-    ];
+    const { data, error, isLoading } = useSWR(
+        `${process.env.NEXT_PUBLIC_API_URL}/event/active?page=${currentPage}&limit=${eventsPerPage}`,
+        fetcher
+    );
 
-    // Pagination Logic
-    const indexOfLastEvent = currentPage * eventsPerPage;
-    const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
-    const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent);
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Failed to load events</div>;
 
-    // Handle page change
-    const handlePageChange = (pageNumber: number) => {
-        setCurrentPage(pageNumber);
-    };
-
-    const totalPages = Math.ceil(events.length / eventsPerPage);
+    const events = data?.events || [];
+    const totalPages = data?.pagination?.totalPages || 1;
 
     return (
         <div className='mt-10'>
             <div className="event-list">
-                {currentEvents.map((event, index) => (
-                    <EventCard
-                        key={index}
-                        title={event.title}
-                        date={event.date}
-                        description={event.description}
-                        attendees={event.attendees}
-                        organizer={event.organizer}
-                        eventImage={event.eventImage}
-                    />
-                ))}
+                {(() => {
+                    let langKey = language;
+                    if (langKey === "english") langKey = "en";
+                    if (langKey === "tamil") langKey = "ta";
+                    if (langKey === "sinhala") langKey = "si";
+                    return events.map((event: any) => {
+                        const eventDate = new Date(event.eventDate);
+                        const formattedDate = eventDate.toLocaleString('en-US', {
+                            weekday: 'long',
+                            month: 'short',
+                            day: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true,
+                        }).replace(',', ' -').replace(',', ' -');
+                        return (
+                            <EventCard
+                                key={event._id}
+                                title={event.name[langKey]?.[0]?.value || ''}
+                                date={formattedDate}
+                                description={event.description[langKey]?.[0]?.value || ''}
+                                attendees={[]} 
+                                organizer={event.organizer || ''}
+                                eventImage={event.image}
+                            />
+                        );
+                    });
+                })()}
             </div>
-
-            {/* Pagination Controls */}
-            {/* <div className="pagination flex justify-center mt-4">
-                <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="px-4 py-2 text-primary"
-                >
-                    <ArrowLeft />
-                </button>
-                {[...Array(totalPages)].map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => handlePageChange(index + 1)}
-                        className={`px-4 py-2 mx-1 font-bold ${currentPage === index + 1 ? ' text-[#880002]' : 'text-primary border border-primary rounded-full'}`}
-                    >
-                        {index + 1}
-                    </button>
-                ))}
-                <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className="px-4 py-2 text-primary"
-                >
-                    <ArrowRight />
-                </button>
-            </div> */}
             <div>
-                <PaginationBar />
+                <PaginationBar
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                />
             </div>
         </div>
     );
