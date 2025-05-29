@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import ContactSection from "@/components/contact/ContactSection";
+import toast from "react-hot-toast";
 
 const countries = [
   "Sri Lanka",
@@ -84,12 +85,15 @@ const ContactPage: React.FC = () => {
         setDescription("");
         setSuccess(true);
         setErrors({});
+        toast.success("Submitted successfully!");
       } else {
         const data = await res.json();
         setErrors({ api: data.message || "Failed to submit" });
+        toast.error(data.message || "Failed to submit");
       }
     } catch (err) {
       setErrors({ api: "Failed to submit" });
+      toast.error("Failed to submit");
     } finally {
       setSubmitting(false);
     }

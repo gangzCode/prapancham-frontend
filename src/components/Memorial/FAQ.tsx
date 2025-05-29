@@ -21,12 +21,12 @@ export default function FAQ() {
         setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
     };
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-    if (error) {
-        return <div>Failed to load FAQs.</div>;
-    }
+    // if (isLoading) {
+    //     return <div>Loading...</div>;
+    // }
+    // if (error) {
+    //     return <div>Failed to load FAQs.</div>;
+    // }
 
     const faqs = data?.faqs || [];
 

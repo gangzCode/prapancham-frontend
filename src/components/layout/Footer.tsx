@@ -12,13 +12,114 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { useLanguage } from "@/components/ui/LanguageProvider";
 
 export default function Footer() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+  const { language } = useLanguage();
 
+
+
+  type LanguageKey = 'en' | 'ta' | 'si';
+  const translations: Record<LanguageKey, { [key: string]: string }> = {
+    en: {
+      news: "News",
+      politics: "Politics",
+      business: "Business",
+      technology: "Technology",
+      sports: "Sports",
+      entertainment: "Entertainment",
+      health: "Health",
+      quickLink: "Quick Link",
+      privacyPolicy: "Privacy Policy",
+      termsConditions: "Terms & Conditions",
+      editorialPolicy: "Editorial Policy",
+      rssFeeds: "RSS Feeds",
+      stayTuned: "Stay Tuned",
+      subscribe: "Subscribe",
+      subscribing: "Subscribing...",
+      placeholder: "Email",
+      address: "Address",
+      email: "Email",
+      phone: "Phone",
+      newsNav: "News",
+      obituary: "Obituary",
+      aboutUs: "About Us",
+      contactUs: "Contact Us",
+      subscribeSuccess: "Subscribed successfully!",
+      subscribeFail: "Subscription failed.",
+      copyright: "© 2025 Prapancham. All rights reserved.",
+    },
+    ta: {
+      news: "செய்திகள்",
+      politics: "அரசியல்",
+      business: "வணிகம்",
+      technology: "தொழில்நுட்பம்",
+      sports: "விளையாட்டு",
+      entertainment: "வினோதம்",
+      health: "ஆரோக்கியம்",
+      quickLink: "விரைவு இணைப்புகள்",
+      privacyPolicy: "தனியுரிமைக் கொள்கை",
+      termsConditions: "விதிமுறைகள் மற்றும் நிபந்தனைகள்",
+      editorialPolicy: "தொகுப்புப் கொள்கை",
+      rssFeeds: "RSS ஊட்டங்கள்",
+      stayTuned: "தொடர்பில் இருங்கள்",
+      subscribe: "சந்தா எடுக்கவும்",
+      subscribing: "சந்தா எடுக்கப்படுகிறது...",
+      placeholder: "மின்னஞ்சல்",
+      address: "முகவரி",
+      email: "மின்னஞ்சல்",
+      phone: "தொலைபேசி",
+      newsNav: "செய்திகள்",
+      obituary: "இறுதிக் குறிப்புகள்",
+      aboutUs: "எங்களை பற்றி",
+      contactUs: "தொடர்பு கொள்ள",
+      subscribeSuccess: "சந்தா எடுக்கப்பட்டது!",
+      subscribeFail: "சந்தா செய்ய முடியவில்லை.",
+      copyright: "© 2025 ப்ரபஞ்சம். எல்லா உரிமைகளும் பாதுகாக்கப்பட்டவை.",
+    },
+    si: {
+      news: "ප්‍රවෘත්ති",
+      politics: "දේශපාලනය",
+      business: "ව්‍යාපාරය",
+      technology: "තාක්‍ෂණය",
+      sports: "ක්‍රීඩා",
+      entertainment: "විනෝදාංශය",
+      health: "සෞඛ්‍යය",
+      quickLink: "ඉක්මන් සබැඳි",
+      privacyPolicy: "පෞද්ගලිකත්ව ප්‍රතිපත්තිය",
+      termsConditions: "නියමයන් සහ කොන්දේසි",
+      editorialPolicy: "සංස්කරණ ප්‍රතිපත්තිය",
+      rssFeeds: "RSS පෝෂණය",
+      stayTuned: "සම්බන්ධව සිටින්න",
+      subscribe: "දායක වන්න",
+      subscribing: "දායක වෙමින්...",
+      placeholder: "ඊ-තැපැල්",
+      address: "ලිපිනය",
+      email: "ඊ-තැපැල්",
+      phone: "දුරකථනය",
+      newsNav: "ප්‍රවෘත්ති",
+      obituary: "නිවන් සන්සුන්",
+      aboutUs: "අපි ගැන",
+      contactUs: "අපව අමතන්න",
+      subscribeSuccess: "දායක වීම සාර්ථකයි!",
+      subscribeFail: "දායක වීම අසාර්ථකයි.",
+      copyright: "© 2025 ප්‍රපංචම්. සියලුම හිමිකම් ඇවිරිණි.",
+    },
+  };
+
+  let langKey: LanguageKey;
+
+  if (language === "tamil") langKey = "ta";
+  else if (language === "sinhala") langKey = "si";
+  else langKey = "en";
+
+  const t = translations[langKey];
+  
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -31,14 +132,14 @@ export default function Footer() {
         body: JSON.stringify({ email }),
       });
       if (res.ok) {
-        setSuccess("Subscribed successfully!");
+        toast.success(t.subscribeSuccess);
         setEmail("");
       } else {
         const data = await res.json();
-        setError(data?.message || "Subscription failed.");
+        toast.error(data?.message || t.subscribeFail);
       }
     } catch (err) {
-      setError("Subscription failed.");
+      toast.error(t.subscribeFail);
     } finally {
       setLoading(false);
     }
@@ -114,62 +215,63 @@ export default function Footer() {
           </div>
 
           <div className="md:col-span-2">
-            <h3 className="font-bold text-lg mb-6">News</h3>
+            <h3 className="font-bold text-lg mb-6">{t.news}</h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                  Politics
+                  {t.politics}
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                  Business
+                  {t.business}
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                  Technology
+                  {t.technology}
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                  Sports
+                  {t.sports}
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                  Entertainment
+                  {t.entertainment}
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                  Health
+                  {t.health}
                 </a>
               </li>
             </ul>
           </div>
 
           <div className="md:col-span-3">
-            <h3 className="font-bold text-lg mb-6">Quick Link</h3>
+            <h3 className="font-bold text-lg mb-6">{t.quickLink}</h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                  Privacy Policy
+                  {t.privacyPolicy}
                 </a>
               </li>
               <li>
                 <a href="terms" className="hover:text-[#6ec1e4] transition-colors">
-                  Terms & Conditions
+                  {t.termsConditions}
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                  Editorial Policy
+
+                  {t.editorialPolicy}
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                  RSS Feeds
+                  {t.rssFeeds}
                 </a>
               </li>
             </ul>
@@ -177,7 +279,7 @@ export default function Footer() {
 
           <div className="md:col-span-4">
             <h2 className="text-4xl font-playfair font-bold text-[#6ec1e4] mb-6">
-              Stay Tuned
+              {t.stayTuned}
             </h2>
             <p className="text-sm mb-6">
               Lorem ipsum dolor sit amet consectetur. Tellus nisi
@@ -185,7 +287,7 @@ export default function Footer() {
             <form onSubmit={handleSubscribe} className="flex gap-2 mb-8 w-full">
               <Input
                 type="email"
-                placeholder="Email"
+                placeholder={t.placeholder}
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 className="bg-transparent border-[#6ec1e4] text-white placeholder:text-gray-400 flex-1"
@@ -196,7 +298,7 @@ export default function Footer() {
                 type="submit"
                 disabled={loading}
               >
-                {loading ? "Subscribing..." : "Subscribe"}
+                {loading ? t.subscribing : t.subscribe}
               </Button>
             </form>
             {success && <span className="text-green-400 ml-2">{success}</span>}
@@ -204,19 +306,19 @@ export default function Footer() {
 
             <div className="flex flex-wrap gap-6 text-sm">
               <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                News
+                {t.newsNav}
               </a>
               <span className="text-gray-400">|</span>
               <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                Obituary
+                {t.obituary}
               </a>
               <span className="text-gray-400">|</span>
               <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                About Us
+                {t.aboutUs}
               </a>
               <span className="text-gray-400">|</span>
               <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                Contact Us
+                {t.contactUs}
               </a>
             </div>
           </div>
@@ -225,7 +327,7 @@ export default function Footer() {
         <Separator className="my-8 bg-[#6ec1e4]/30" />
 
         <div className="text-center text-sm text-gray-400">
-          <p>© 2025 Prapancham. All rights reserved.</p>
+          <p>{t.copyright}</p>
         </div>
       </div>
     </footer>

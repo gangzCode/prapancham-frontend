@@ -12,6 +12,7 @@ import MobileNavbar from "@/components/layout/MobileNavbar";
 import { useEffect, useState } from "react";
 import { LanguageProvider } from "@/components/ui/LanguageProvider";
 import { CountryProvider } from "@/components/ui/CountryProvider";
+import { Toaster } from "react-hot-toast";
 
 export default function RootLayout({
   children,
@@ -36,6 +37,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${poppins.variable} antialiased`}>
         <CountryProvider>
           <LanguageProvider>
+            <Toaster position="top-right" />
             {isMobile ? <MobileNavbar /> : <TopBar />}
             <div className="md:sticky top-0 z-50 bg-white">
               {/* <FirstNavbar /> */}

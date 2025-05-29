@@ -116,7 +116,6 @@ const SearchBox: React.FC = () => {
                 key={result.id}
                 className="p-3 hover:bg-gray-50 active:bg-gray-100 rounded-md cursor-pointer transition-all duration-150 group"
                 onClick={() => {
-                  // Handle result click - e.g., navigate to result page
                   console.log("Selected result:", result);
                 }}
               >

@@ -65,7 +65,7 @@ const DropMenu: React.FC<DropMenuProps> = ({ onClose }) => {
   ];
 
   return (
-    <div className="flex flex-col py-4 bg-primary shadow-[0px_4px_16px_rgba(0,0,0,0.25)] relative rounded-lg overflow-hidden font-poppins">
+    <div className="flex flex-col py-4 bg-primary shadow-[0px_4px_16px_rgba(0,0,0,0.25)] relative   overflow-hidden font-poppins">
       <div className="flex justify-between items-center px-4 w-full mb-4">
         <button
           onClick={onClose}

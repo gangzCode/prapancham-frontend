@@ -7,6 +7,7 @@ import { TitleWithUnderline } from '@/components/ui/title-with-underline';
 import OrbituaryCard from '@/components/obituary/OrbituaryCard';
 import SignupModal from "../../components/siginin/SignupModal ";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const tributeData = Array.from({ length: 10 }).map((_, index) => ({
     id: index,
@@ -108,6 +109,7 @@ const Events: React.FC = () => {
         const userStr = localStorage.getItem("user");
         if (!userStr) {
             setLoading(false);
+            toast.error("User not found. Please log in again.");
             return;
         }
         const user = JSON.parse(userStr);
@@ -120,18 +122,25 @@ const Events: React.FC = () => {
         if (profile.imageFile) {
             formData.append('image', profile.imageFile);
         }
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/update/${user._id}`, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`,
-            },
-        });
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/update/${user._id}`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`,
+                },
+            });
 
-        if (response.ok) {
-            const updatedUser = await response.json();
-            localStorage.setItem('user', JSON.stringify(updatedUser));
-            alert('Profile updated successfully!');
+            if (response.ok) {
+                const updatedUser = await response.json();
+                localStorage.setItem('user', JSON.stringify(updatedUser));
+                toast.success('Profile updated successfully!');
+            } else {
+                const data = await response.json();
+                toast.error(data?.message || "Failed to update profile.");
+            }
+        } catch (err) {
+            toast.error("Failed to update profile.");
         }
         setLoading(false);
     };

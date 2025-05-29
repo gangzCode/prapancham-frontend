@@ -14,6 +14,7 @@ import {
   SelectSeparator
 } from "@/components/ui/country-select";
 import SignupModal from "../siginin/SignupModal ";
+import { useLanguage } from "@/components/ui/LanguageProvider";
 
 const SecondNavbar: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,6 +26,53 @@ const SecondNavbar: React.FC = () => {
   const router = useRouter();
   const [showPopup, setShowPopup] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
+  const { language } = useLanguage();
+
+  type LanguageKey = 'en' | 'ta' | 'si';
+  const translations: Record<LanguageKey, { [key: string]: string }> = {
+    en: {
+      home: "Home",
+      youtube: "Youtube",
+      podcast: "Podcast",
+      events: "Events",
+      advertisement: "Advertisement",
+      setting: "Setting",
+      logout: "Log Out",
+      signIn: "Sign In",
+      signUp: "Sign Up",
+
+    },
+    ta: {
+      home: "முகப்பு",
+      youtube: "யூடியூப்",
+      podcast: "பாட்காஸ்ட்",
+      events: "நிகழ்வுகள்",
+      advertisement: "விளம்பரம்",
+      setting: "அமைப்பு",
+      logout: "வெளியேறு",
+      signIn: "உள்நுழைய",
+      signUp: "பதிவுசெய்ய",
+    },
+    si: {
+      home: "මුල් පිටුව",
+      youtube: "යූටියුබ්",
+      podcast: "පොඩ්කාස්ට්",
+      events: "සිදුවීම්",
+      advertisement: "ප්‍රචාරණය",
+      setting: "සැකසීම",
+      logout: "පිටවීම",
+      signIn: "ඇතුල් වන්න",
+      signUp: "ලියාපදිංචි වන්න",
+    }
+  };
+  let langKey: LanguageKey;
+
+  if (language === "tamil") langKey = "ta";
+  else if (language === "sinhala") langKey = "si";
+  else langKey = "en";
+
+  const t = translations[langKey];
+
 
   const toggleDropMenu = () => {
     setIsDropMenuOpen(!isDropMenuOpen);
@@ -86,7 +134,7 @@ const SecondNavbar: React.FC = () => {
 
   return (
     <>
-      <div className="flex flex-col px-4 md:px-8 lg:px-16 ">
+      <div className="relative flex flex-col px-4 md:px-8 lg:px-16 ">
         <nav className="flex flex-wrap md:flex-nowrap gap-4 md:gap-10 justify-between items-center w-full px-2 sm:px-4 lg:px-8 py-2 mt-4 md:mt-6 bg-[#F8F8F8] rounded-lg">
           <div className="flex flex-wrap md:flex-nowrap gap-4 md:gap-6 items-center w-full md:w-auto">
             <button
@@ -109,7 +157,7 @@ const SecondNavbar: React.FC = () => {
                       className={`flex justify-center items-center px-2 py-1 rounded-md transition-colors duration-200 hover:text-link-hover font-poppins 
                         ${selectedPage === page.toLowerCase() ? "text-link-hover font-bold" : "text-link"}`}
                     >
-                      {page}
+                      {t[page.toLowerCase() as keyof typeof t]}
                     </Link>
                   </React.Fragment>
                 )
@@ -189,7 +237,7 @@ const SecondNavbar: React.FC = () => {
                             router.push("/profile");
                           }}
                         >
-                          Setting
+                          {t.setting}
                         </div>
                         <hr className="border-gray-300 mb-4" />
                         <button
@@ -206,7 +254,7 @@ const SecondNavbar: React.FC = () => {
                             }}
                             className="cursor-pointer"
                           >
-                            Log Out
+                            {t.logout}
                           </span>
                         </button>
                       </div>
@@ -218,7 +266,7 @@ const SecondNavbar: React.FC = () => {
                   onClick={() => setIsModalOpen(true)}
                   className="border border-primary text-primary  md:ml-8 px-4 py-2 rounded min-w-[8rem] "
                 >
-                  Sign in / Sign up
+                  {t.signIn} / {t.signUp}
                 </button>
               ))}
               <SignupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
@@ -227,12 +275,21 @@ const SecondNavbar: React.FC = () => {
         </nav>
       </div>
       {isDropMenuOpen && (
-        <div className="fixed inset-0 flex items-start md:pt-40 justify-center bg-black bg-opacity-50 z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-lg shadow-lg w-[calc(100%-2rem)] sm:w-[calc(100%-4rem)] md:w-[calc(100%-8rem)] lg:w-[calc(100%-16rem)] max-w-[1400px] mt-16 md:mt-0">
+        <div>
+          <div
+            onClick={toggleDropMenu}
+            className="fixed inset-0 z-30 bg-black bg-opacity-50"
+          />
+
+          <div className="absolute left-1/2 transform -translate-x-1/2 z-40 bg-white w-[calc(100%-2rem)] sm:w-[calc(100%-4rem)] md:w-[calc(100%-8rem)] lg:w-[calc(100%-16rem)] max-w-[1400px]">
             <DropMenu onClose={toggleDropMenu} />
           </div>
+
         </div>
       )}
+
+
+
     </>
   );
 };
