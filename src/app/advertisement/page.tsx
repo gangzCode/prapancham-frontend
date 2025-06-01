@@ -6,6 +6,9 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import AdvertisementTypeMenu from "@/components/advertisement/advertismentType";
 import CountryMenu from "@/components/contact/CountryMenu";
 import PaginationBar from "@/components/category/PaginationBar";
+import useSWR from 'swr';
+import { useLanguage } from "@/components/ui/LanguageProvider";
+
 
 
 const ads = {
@@ -29,16 +32,49 @@ const adTypes = [
     "Job vacancies (15 Posts)",
 ];
 
+const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const Advertisement = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const totalPages = 3;
-    const [activeAdtype, setActiveAdtype] = useState(adTypes[0]);
-    const categories = [
-        "Commercial (50 Posts)",
-        "House for rent and sales (10 Posts)",
-        "Job vacancies (15 Posts)",
+    const { language } = useLanguage();
+    let langKey: LanguageKey;
+
+    if (language === "tamil") langKey = "ta";
+    else if (language === "sinhala") langKey = "si";
+    else langKey = "en";
+    type LanguageKey = 'en' | 'ta' | 'si';
+    const translations: Record<LanguageKey, { [key: string]: string }> = {
+        en: {
+            posts: "Posts",
+        },
+        ta: {
+            posts: "பதிவுகள்",
+        },
+        si: {
+            posts: "පිටු",
+        },
+    };
+    const t = translations[langKey];
+
+    const { data, error, isLoading } = useSWR(
+        `${process.env.NEXT_PUBLIC_API_URL}/advertistment/ad-categories-with-count`,
+        fetcher
+    );
+
+
+    const categories: string[] = [
+        ...(data?.map((cat: any) => {
+            const langObj = cat.name[langKey]?.[0] || cat.name["en"]?.[0];
+            return `${langObj?.value} (${cat.adCount} ${t.posts})` || "";
+        }) || []),
     ];
+
+    // const categories = [
+    //     "Commercial (50 Posts)",
+    //     "House for rent and sales (10 Posts)",
+    //     "Job vacancies (15 Posts)",
+    // ];
     const [activeCountry, setActiveCountry] = useState(categories[0]);
 
 
@@ -163,11 +199,11 @@ const Advertisement = () => {
                 </div>
 
                 <div>
-                     <PaginationBar
-                            currentPage={1}
-                            totalPages={10}
-                            onPageChange={setCurrentPage}
-                        />
+                    <PaginationBar
+                        currentPage={1}
+                        totalPages={10}
+                        onPageChange={setCurrentPage}
+                    />
                 </div>
 
             </div>

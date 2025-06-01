@@ -28,7 +28,8 @@ export default function FAQ() {
     //     return <div>Failed to load FAQs.</div>;
     // }
 
-    const faqs = data?.faqs || [];
+    const faqs = (data?.faqs || []).sort((a: { listingNumber: number; }, b: { listingNumber: number; }) => a.listingNumber - b.listingNumber);
+
 
     return (
         <div className="">
@@ -47,7 +48,7 @@ export default function FAQ() {
                         const question = questionArr[0]?.value || "";
                         const answer = answerArr[0]?.value || "";
                         return (
-                            <div key={faq._id || index} className={`${openIndex===index?"shadow-md":""} border-b hover:shadow-lg`}>
+                            <div key={faq._id || index} className={`${openIndex === index ? "shadow-md" : ""} border-b hover:shadow-lg`}>
                                 <button
                                     className="w-full text-left py-4 flex justify-start items-center"
                                     onClick={() => toggleIndex(index)}

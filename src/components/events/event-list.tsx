@@ -21,6 +21,7 @@ interface EventCardProps {
     eventImage: string;
     bookEvent?: string;
     peopleHaveRegistered?: string;
+    eventLink?: string;
 }
 interface CalendarProps {
     year: number | null;
@@ -37,6 +38,7 @@ const EventCard: React.FC<EventCardProps> = ({
     organizer,
     eventImage,
     peopleHaveRegistered,
+    eventLink,
     bookEvent,
 
 }) => {
@@ -68,9 +70,15 @@ const EventCard: React.FC<EventCardProps> = ({
                 {/* <button className="mb-2 px-8 py-2 border border-[#0A3F51] text-[#0A3F51]  w-full sm:w-auto rounded-md bg-transparent hover:bg-primary hover:text-white transition-colors">
                     View more
                 </button> */}
-                <button className="bg-[#0A3F51] text-white py-2 px-8 rounded-lg w-full sm:w-auto hover:bg-[#0A3F51]/80 transition-colors">
+                <a
+                    href={eventLink || '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-[#0A3F51] text-white py-2 px-8 rounded-lg w-full sm:w-auto hover:bg-[#0A3F51]/80 transition-colors text-center block sm:inline-block"
+                >
                     {bookEvent || "Book Event"}
-                </button>
+                </a>
+
             </div>
         </div>
     );
@@ -150,6 +158,7 @@ const EventList: React.FC<CalendarProps> = ({ year, month, day }) => {
                                     eventImage={event.image}
                                     bookEvent={t.bookEvent}
                                     peopleHaveRegistered={t.peopleHaveRegistered}
+                                    eventLink={event.eventLink || ''}
                                 />
                             );
                         });

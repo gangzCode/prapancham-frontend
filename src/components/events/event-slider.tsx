@@ -73,13 +73,15 @@ const EventSlider = () => {
   return (
     <div className="bg-gray-100 flex items-center justify-center">
       <div className="relative w-full">
-        <Image
-          src={currentEvent.featuredEventImage || currentEvent.image}
-          alt={getTranslatedField(currentEvent.name, 'value')}
-          width={800}
-          height={400}
-          className="w-full h-96 md:h-auto object-cover filter brightness-50"
-        />
+        <div className="relative w-full min-h-96 aspect-[2/1]">
+          <Image
+            src={currentEvent.featuredEventImage || currentEvent.image}
+            alt={getTranslatedField(currentEvent.name, 'value')}
+            fill
+            className="object-cover filter brightness-50 rounded-lg"
+            sizes="(max-width: 768px) 100vw, 800px"
+          />
+        </div>
         <div className="absolute inset-0 flex items-center justify-between px-4">
           <button
             className="bg-white bg-opacity-50 rounded-full p-2 mb-16 md:mb-0"
@@ -108,7 +110,7 @@ const EventSlider = () => {
           </div>
           <div className="flex flex-col sm:flex-row mt-4 w-full">
             <a
-              // href={currentEvent.eventLink}
+              href={currentEvent.eventLink}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-transparent border border-white text-white py-2 px-4 rounded-lg w-full sm:w-auto sm:flex-grow mr-0 sm:mr-2 mb-2 sm:mb-0 hover:bg-white hover:text-primary transition-colors text-center"

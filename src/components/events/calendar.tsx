@@ -187,7 +187,7 @@ const Calendar: React.FC<CalendarProps> = ({ year, month, day, setYear, setMonth
                         className="flex items-center gap-1 text-sm text-primary hover:text-red-700"
                     >
                         <RotateCcw size={16} />
-                        Reset
+                        {t.reset}
                     </button>
                 </div>
                 <div className="flex items-center justify-between p-2">

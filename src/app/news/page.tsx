@@ -58,7 +58,6 @@ const NewsPage: React.FC = () => {
 
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [activeCountry, setActiveCountry] = useState('All');
   const { language } = useLanguage();
 
 
@@ -88,8 +87,7 @@ const NewsPage: React.FC = () => {
       return langObj?.name || "";
     }) || []),
   ];
-
-
+  const [activeCountry, setActiveCountry] = useState(categories[0]);
 
   const handlePrevious = () => {
     setCurrentIndex((prev) => Math.max(0, prev - 1));
