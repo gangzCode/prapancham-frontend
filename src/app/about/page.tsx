@@ -191,7 +191,7 @@ const About = () => {
                 <Separator className="!w-full !mb-2" />
 
                 <div className="px-4 sm:px-8 lg:px-16">
-                    <h2 className="text-[1.2rem] font-bold text-center text-[#0B4157] mb-8 flex flex-col items-center justify-center font-[Poppins]">
+                    <h2 className="text-[1.2rem] font-bold text-center text-[#0D1322] mb-8 flex flex-col items-center justify-center font-[Poppins]">
                         What Do We Offer?
                         <div className="bg-[#880002] w-16 h-0.5 mt-2"></div>
                     </h2>
@@ -221,7 +221,7 @@ const About = () => {
 
                 <div className="px-4 sm:px-8 lg:px-16">
                     <div className="text-center">
-                        <h2 className="text-[1.2rem] font-bold text-center text-[#0B4157] mb-8 flex flex-col items-center justify-center font-[Poppins]">
+                        <h2 className="text-[1.2rem] font-bold text-center text-[#0D1322] mb-8 flex flex-col items-center justify-center font-[Poppins]">
                             About Our Obituary
                             <div className="bg-[#880002] w-16 h-0.5 mt-2"></div>
                         </h2>

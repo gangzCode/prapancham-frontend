@@ -159,10 +159,10 @@ const Summary: React.FC<SummaryProps> = ({ setActiveStep }) => {
                                 Sed in viverra risus eros non nisl elit adipiscing praesent. Amet vel turpis et dis eget. Vel lectus tincidunt et mattis etiam.
                             </p>
                             <div className="flex justify-end gap-2 items-center self-stretch mt-4">
-                                <button className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0B4157] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                                <button className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                                     Post Tribute
                                 </button>
-                                <button className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                                <button className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                                     Donate
                                 </button>
                             </div>
@@ -178,7 +178,7 @@ const Summary: React.FC<SummaryProps> = ({ setActiveStep }) => {
                                         <p>sddd, sdsdddfd</p>
                                         <p>Son</p>
                                     </div>
-                                    <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                                    <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                                         Request to Contact
                                     </button>
                                 </div>
@@ -189,7 +189,7 @@ const Summary: React.FC<SummaryProps> = ({ setActiveStep }) => {
                                         <p>sddd, sdsdddfd</p>
                                         <p>Son</p>
                                     </div>
-                                    <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                                    <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                                         Request to Contact
                                     </button>
                                 </div>
@@ -200,7 +200,7 @@ const Summary: React.FC<SummaryProps> = ({ setActiveStep }) => {
                                         <p>sddd, sdsdddfd</p>
                                         <p>Son</p>
                                     </div>
-                                    <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                                    <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                                         Request to Contact
                                     </button>
                                 </div>
@@ -231,7 +231,7 @@ const Summary: React.FC<SummaryProps> = ({ setActiveStep }) => {
                                     <p className="text-[#880002]">Mr. Nadesh Rasathurai</p>
                                     <p>no2. masdd,sddd, sdsdddfd</p>
                                 </div>
-                                <button className="w-full gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                                <button className="w-full gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                                     Request to Contact
                                 </button>
                                 <Separator className="mt-8 !w-full mb-4" />
@@ -258,7 +258,7 @@ const Summary: React.FC<SummaryProps> = ({ setActiveStep }) => {
                                             />
                                         </div>
 
-                                        <button className="w-full gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                                        <button className="w-full gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                                             Request to Contact
                                         </button>
                                     </div>
@@ -276,11 +276,11 @@ const Summary: React.FC<SummaryProps> = ({ setActiveStep }) => {
                 <div className="flex justify-end gap-2 items-center self-stretch mt-16">
                     <button
                         onClick={() => setActiveStep(8)}
-                        className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0B4157] rounded border border-teal-900 border-solid min-h-6 ">
+                        className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
                         Back
                     </button>
                     <button
-                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 "
+                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
                         onClick={(e => {
                             e.preventDefault();
                             setActiveTab("payment");

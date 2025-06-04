@@ -202,11 +202,11 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                             <div className="flex justify-end gap-2 items-center self-stretch mt-16">
                                 <button
                                     onClick={handleClose}
-                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0B4157] rounded border border-teal-900 border-solid min-h-6 ">
+                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
                                     Back
                                 </button>
                                 <button
-                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 "
+                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
                                     onClick={(e => {
                                         e.preventDefault();
                                         // setActiveTab("cards");
@@ -301,11 +301,11 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                             <div className="flex justify-end gap-2 items-center self-stretch mt-16">
                                 <button
                                     onClick={handleClose}
-                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0B4157] rounded border border-teal-900 border-solid min-h-6 ">
+                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
                                     Back
                                 </button>
                                 <button
-                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 "
+                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
                                     onClick={(e => {
                                         e.preventDefault();
                                         // setActiveTab("payment");
@@ -400,11 +400,11 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                             <div className="flex justify-end gap-2 items-center self-stretch mt-16">
                                 <button
                                     onClick={handleClose}
-                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0B4157] rounded border border-teal-900 border-solid min-h-6 ">
+                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
                                     Back
                                 </button>
                                 <button
-                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 "
+                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
                                     onClick={(e => {
                                         e.preventDefault();
                                         // setActiveTab("payment");
@@ -511,11 +511,11 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                             <div className="flex justify-end gap-2 items-center self-stretch mt-16">
                                 <button
                                     onClick={handleClose}
-                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0B4157] rounded border border-teal-900 border-solid min-h-6 ">
+                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
                                     Back
                                 </button>
                                 <button
-                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 "
+                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
                                     onClick={(e => {
                                         e.preventDefault();
                                         // setActiveTab("payment");
@@ -602,11 +602,11 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                             <div className="flex justify-end gap-2 items-center self-stretch mt-16">
                                 <button
                                     onClick={handleClose}
-                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0B4157] rounded border border-teal-900 border-solid min-h-6 ">
+                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
                                     Back
                                 </button>
                                 <button
-                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 "
+                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
                                     onClick={(e => {
                                         e.preventDefault();
                                         // setActiveTab("payment");

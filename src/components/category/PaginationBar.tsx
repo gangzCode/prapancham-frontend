@@ -1,9 +1,9 @@
 import React from "react";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationEllipsis,
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationEllipsis,
 } from "@/components/ui/pagination";
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
@@ -49,11 +49,10 @@ const PaginationBar: React.FC<PaginationBarProps> = ({ currentPage, totalPages, 
                                 <button
                                     onClick={() => handlePageChange(num)}
                                     disabled={num === currentPage}
-                                    className={`border border-primary rounded-full px-3 sm:px-4 py-2 min-w-[32px] text-center ${
-                                        num === currentPage
-                                            ? 'bg-[#0A3F51] text-white'
+                                    className={`border border-primary rounded-full px-3 sm:px-4 py-2 min-w-[32px] text-center ${num === currentPage
+                                            ? 'bg-[#0D1322] text-white'
                                             : 'text-gray-600 hover:bg-gray-100'
-                                    }`}
+                                        }`}
                                 >
                                     {num}
                                 </button>

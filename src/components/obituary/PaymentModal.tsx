@@ -113,7 +113,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onPay }) =
       {/* Action Buttons */}
       <div className="flex justify-between w-full mt-8">
         <button
-          className="px-4 py-3 text-[#0B4157] rounded border border-teal-900"
+          className="px-4 py-3 text-[#0D1322] rounded border border-teal-900"
           onClick={onClose}
         >
           Back

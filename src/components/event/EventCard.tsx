@@ -9,6 +9,7 @@ interface EventCardProps {
   location: string;
   eventName: string;
   date: string;
+  eventLink?: string;
 }
 
 const EventCard: React.FC<EventCardProps> = ({
@@ -16,7 +17,14 @@ const EventCard: React.FC<EventCardProps> = ({
   location,
   eventName,
   date,
+  eventLink,
 }) => {
+  const handleClick = () => {
+    if (eventLink) {
+      window.open(eventLink, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
     <article className="flex relative flex-col gap-4 pb-4 w-full bg-white min-h-[212px] shadow-[0px_0px_12px_rgba(0,0,0,0.06)] max-md:max-w-full">
       <div className="relative">
@@ -39,7 +47,7 @@ const EventCard: React.FC<EventCardProps> = ({
           </div>
         </div>
       </div>
-      <ViewEventButton variant="teal" />
+      <ViewEventButton variant="teal" onClick={handleClick} />
     </article>
   );
 };

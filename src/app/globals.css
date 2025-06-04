@@ -15,7 +15,7 @@
     --popover: 0 0% 100%;
 
     --popover-foreground: 240 10% 3.9%;
-    --primary: #0b4157;
+    --primary: #0D1322;
     --primary-foreground: 0 0% 98%;
     --secondary: #880002;
     --secondary-foreground: 0 0% 98%;
@@ -38,9 +38,19 @@
     --radius: 0.5rem;
 
     /* Font variables */
-    --font-inter: ${inter.style.fontFamily};
-    --font-poppins: ${poppins.style.fontFamily};
+    --font-inter: $ {
+      inter.style.fontFamily
+    }
+
+    ;
+
+    --font-poppins: $ {
+      poppins.style.fontFamily
+    }
+
+    ;
   }
+
   .dark {
     --background: 240 10% 3.9%;
 
@@ -53,7 +63,7 @@
     --popover: 240 10% 3.9%;
 
     --popover-foreground: 0 0% 98%;
-    --primary: #0b4157;
+    --primary: #0D1322;
     --primary-foreground: 0 0% 98%;
     --secondary: #50abf6;
     --secondary-foreground: 0 0% 98%;
@@ -78,6 +88,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground font-sans;
   }
@@ -89,18 +100,21 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
+
 .phone-input input {
   width: 100% !important;
   height: 48px !important;
   /* padding: 0 24px !important;  */
 }
+
 .thin-scrollbar::-webkit-scrollbar {
   width: 8px;
-  height: 6px; 
+  height: 6px;
 }
 
 .thin-scrollbar::-webkit-scrollbar-track {
@@ -108,11 +122,10 @@
 }
 
 .thin-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #0b4157; 
+  background-color: #0D1322;
   border-radius: 4px;
 }
 
 .thin-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #555;
 }
-

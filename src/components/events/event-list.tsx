@@ -67,14 +67,14 @@ const EventCard: React.FC<EventCardProps> = ({
             </div>
             <div className="flex flex-col items-end w-full md:w-auto">
                 <span className="mb-2  text-sm"><span className="text-green-500">●</span> {organizer}</span>
-                {/* <button className="mb-2 px-8 py-2 border border-[#0A3F51] text-[#0A3F51]  w-full sm:w-auto rounded-md bg-transparent hover:bg-primary hover:text-white transition-colors">
+                {/* <button className="mb-2 px-8 py-2 border border-[#0D1322] text-[#0D1322]  w-full sm:w-auto rounded-md bg-transparent hover:bg-primary hover:text-white transition-colors">
                     View more
                 </button> */}
                 <a
                     href={eventLink || '#'}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-[#0A3F51] text-white py-2 px-8 rounded-lg w-full sm:w-auto hover:bg-[#0A3F51]/80 transition-colors text-center block sm:inline-block"
+                    className="bg-[#0D1322] text-white py-2 px-8 rounded-lg w-full sm:w-auto hover:bg-[#0D1322]/80 transition-colors text-center block sm:inline-block"
                 >
                     {bookEvent || "Book Event"}
                 </a>

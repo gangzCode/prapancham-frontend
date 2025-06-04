@@ -57,7 +57,7 @@ const ObituaryDetail: React.FC = () => {
                         <iframe
                             width="560"
                             height="315"
-                            
+
                             src="https://www.youtube.com/embed/MNCWzMtv8Pc?si=aYq3bXLNRSlxhach&autoplay=1&mute=1"
                             title="Prapancham"
                             style={{ border: 0 }}
@@ -68,10 +68,10 @@ const ObituaryDetail: React.FC = () => {
                         ></iframe>
                     </div>
                     <div className="flex justify-end gap-2 items-center self-stretch mt-4">
-                        <button className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0B4157] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                        <button className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                             Post Tribute
                         </button>
-                        <button className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                        <button className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                             Donate
                         </button>
                     </div>
@@ -96,10 +96,10 @@ const ObituaryDetail: React.FC = () => {
                         </div>
 
                         <div className="flex justify-end gap-2 items-center self-stretch mt-4">
-                            <button className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0B4157] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                            <button className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                                 Post Tribute
                             </button>
-                            <button className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                            <button className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                                 Read All
                             </button>
                         </div>
@@ -116,7 +116,7 @@ const ObituaryDetail: React.FC = () => {
                                 <p>sddd, sdsdddfd</p>
                                 <p>Son</p>
                             </div>
-                            <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                            <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                                 Request to Contact
                             </button>
                         </div>
@@ -127,7 +127,7 @@ const ObituaryDetail: React.FC = () => {
                                 <p>sddd, sdsdddfd</p>
                                 <p>Son</p>
                             </div>
-                            <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                            <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                                 Request to Contact
                             </button>
                         </div>
@@ -138,7 +138,7 @@ const ObituaryDetail: React.FC = () => {
                                 <p>sddd, sdsdddfd</p>
                                 <p>Son</p>
                             </div>
-                            <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                            <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                                 Request to Contact
                             </button>
                         </div>
@@ -169,7 +169,7 @@ const ObituaryDetail: React.FC = () => {
                             <p className="text-[#880002]">Mr. Nadesh Rasathurai</p>
                             <p>no2. masdd,sddd, sdsdddfd</p>
                         </div>
-                        <button className="w-full gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                        <button className="w-full gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                             Request to Contact
                         </button>
                         <Separator className="mt-8 !w-full mb-4" />
@@ -196,7 +196,7 @@ const ObituaryDetail: React.FC = () => {
                                     />
                                 </div>
 
-                                <button className="w-full gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                                <button className="w-full gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
                                     Request to Contact
                                 </button>
                             </div>

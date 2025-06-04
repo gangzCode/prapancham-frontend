@@ -119,7 +119,7 @@ export default function Footer() {
   else langKey = "en";
 
   const t = translations[langKey];
-  
+
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -152,11 +152,12 @@ export default function Footer() {
           <div className="md:col-span-3">
             <div className="mb-12">
               <Image
-                src="/images/prapancham-footer-logo.svg"
+                // src="/images/prapancham-footer-logo.svg"
+                src="/images/Prapancham-logo.png"
                 alt="Prapancham"
-                className="h-16 w-auto drop-shadow-lg"
-                width={367}
-                height={76}
+                className="max-w-[64px] sm:max-w-none items-center justify-center rounded-md"
+                width={64}
+                height={64}
                 priority
               />
             </div>

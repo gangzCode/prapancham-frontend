@@ -146,7 +146,7 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
                 "py-2 w-full font-medium text-sm border-b-2 -mb-px",
                 activeTab === "recent"
                   ? "bg-primary text-white font-bold"
-                  : "border-transparent text-[#0B4157] hover:text-gray-900"
+                  : "border-transparent text-[#0D1322] hover:text-gray-900"
               )}
               onClick={() => setActiveTab("recent")}
             >

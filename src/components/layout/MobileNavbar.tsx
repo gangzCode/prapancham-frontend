@@ -23,41 +23,130 @@ import React from "react";
 import SignupModal from "../siginin/SignupModal ";
 import SearchBox from "./SearchBox";
 import DropMenu from "./DropMenu";
+import { useLanguage } from "@/components/ui/LanguageProvider";
+import { useCountry } from "@/components/ui/CountryProvider";
+import useSWR from 'swr';
 
-const navItems = [
-    { id: "news", label: "News", href: "/news" },
-    { id: "obituary", label: "Obituary", href: "/obituary" },
-    { id: "about", label: "About Us", href: "/about" },
-    { id: "contact", label: "Contact Us", href: "/contact" },
-];
+type CountryOption = {
+    value: string;
+    label: string;
+    flag: string;
+};
 
-const countries = [
-    { value: "srilanka", label: "Sri Lanka", flag: "/svg/srilanka.svg" },
-    { value: "canada", label: "Canada", flag: "/svg/canada.svg" },
-    { value: "australia", label: "Australia", flag: "/svg/australia.svg" },
-    { value: "germany", label: "Germany", flag: "/svg/german.svg" },
-    { value: "switzerland", label: "Switzerland", flag: "/svg/Switzerland.svg" },
-    { value: "sweden", label: "Sweden", flag: "/svg/Sweden.svg" },
-    { value: "uk", label: "UK", flag: "/svg/uk.svg" },
-    { value: "denmark", label: "Denmark", flag: "/svg/denmark.svg" },
-    { value: "india", label: "India", flag: "/svg/india.svg" },
-    { value: "newzeland", label: "New Zealand", flag: "/svg/newzealand.svg" },
-    { value: "france", label: "France", flag: "/svg/france.svg" },
-    { value: "malaysia", label: "Malaysia", flag: "/svg/malaysia.svg" },
-    { value: "singapore", label: "Singapore", flag: "/svg/singapore.svg" },
-    { value: "usa", label: "USA", flag: "/svg/usa.svg" },
-];
 
 
 const MobileNavbar: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const pathname = usePathname();
+    const { language, setLanguage } = useLanguage();
+    const { country, setCountry } = useCountry();
     const [selectedMenu, setSelectedMenu] = useState("");
     const [isDropMenuOpen, setIsDropMenuOpen] = useState(false);
-
-    const [selectedCountry, setSelectedCountry] = React.useState(
-        countries.find((c) => c.value === "srilanka")
+    const fetcher = (url: string) => fetch(url).then(res => res.json());
+    const { data, error, isLoading } = useSWR(
+        typeof window !== "undefined" && process.env.NEXT_PUBLIC_API_URL
+            ? `${process.env.NEXT_PUBLIC_API_URL}/country/active?page=1&limit=10`
+            : null,
+        fetcher
     );
+
+    let langKey: LanguageKey;
+
+    if (language === "tamil") langKey = "ta";
+    else if (language === "sinhala") langKey = "si";
+    else langKey = "en";
+
+    const countries = (data?.countries || []).map((country: any) => ({
+        value: country.name?.en?.[0]?.value || "Unknown",
+        label:
+            country.name?.[langKey]?.[0]?.value ||
+            country.name?.en?.[0]?.value ||
+            "Unknown",
+        flag: country.image || "",
+    }));
+    const [selectedCountry, setSelectedCountry] = React.useState(
+        countries.find((c: { value: string; }) => c.value === (country || "Sri Lanka"))
+    );
+    const [languageSelectValue, setLanguageSelectValue] = useState("english");
+    const [countrySelectValue, setCountrySelectValue] = useState(country || "Sri Lanka");
+
+    type LanguageKey = 'en' | 'ta' | 'si';
+    const translations: Record<LanguageKey, { [key: string]: string }> = {
+        en: {
+            newsNav: "News",
+            obituary: "Obituary",
+            aboutUs: "About Us",
+            contactUs: "Contact Us",
+            Samaathi: "Samaathi",
+        },
+        ta: {
+            newsNav: "செய்திகள்",
+            obituary: "இறுதிக் குறிப்புகள்",
+            aboutUs: "எங்களை பற்றி",
+            contactUs: "தொடர்பு கொள்ள",
+            Samaathi: "சமாதி",
+        },
+        si: {
+            newsNav: "ප්‍රවෘත්ති",
+            obituary: "නිවන් සන්සුන්",
+            aboutUs: "අපි ගැන",
+            contactUs: "අපව අමතන්න",
+            Samaathi: "සමාති",
+        },
+    };
+    const t = translations[langKey];
+
+    const navItems = [
+        { id: "news", label: t.newsNav, href: "/news" },
+        { id: "obituary", label: t.obituary, href: "/obituary" },
+        { id: "about", label: t.aboutUs, href: "/about" },
+        { id: "contact", label: t.contactUs, href: "/contact" },
+    ];
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const storedLang = localStorage.getItem("language");
+            if (!storedLang) {
+                localStorage.setItem("language", "english");
+                setLanguage("english");
+                setLanguageSelectValue("english");
+            } else {
+                setLanguageSelectValue(storedLang);
+                setLanguage(storedLang);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        setLanguageSelectValue(language);
+    }, [language]);
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const storedCountry = localStorage.getItem("country");
+            if (!storedCountry) {
+                localStorage.setItem("country", "Sri Lanka");
+                setCountry("Sri Lanka");
+                setCountrySelectValue("Sri Lanka");
+                setSelectedCountry(countries.find((c: { value: string; }) => c.value === "Sri Lanka"));
+            } else {
+                setCountrySelectValue(storedCountry);
+                setCountry(storedCountry);
+                setSelectedCountry(countries.find((c: { value: string; }) => c.value === storedCountry));
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        if (countries.length > 0) {
+            const storedCountry = localStorage.getItem("country") || "Sri Lanka";
+            const match = countries.find((c: { value: string; }) => c.value === storedCountry);
+            setSelectedCountry(match || countries[0]);
+            setCountrySelectValue(match?.value || countries[0].value);
+            setCountry(match?.value || countries[0].value);
+        }
+    }, [data]);
+
     const [selectedPage, setSelectedPage] = useState("");
 
 
@@ -90,7 +179,13 @@ const MobileNavbar: React.FC = () => {
             <div className="flex flex-col gap-4 sm:gap-6 md:gap-10 justify-between items-center px-4 md:px-8 lg:px-16  py-1 pb-4 w-full bg-primary shadow-[0px_4px_14px_rgba(0,0,0,0.25)]">
                 <div className="flex  justify-between w-full items-center text-white">
                     <div className="flex gap-1 justify-center items-center text-white whitespace-nowrap">
-                        <LanguageSelect defaultValue="english">
+                        <LanguageSelect
+                            value={languageSelectValue}
+                            onValueChange={(value) => {
+                                setLanguage(value);
+                                setLanguageSelectValue(value);
+                            }}
+                        >
                             <LanguageSelectTrigger className="md:w-[7rem] text-white bg-transparent border-none outline-none cursor-pointer text-sm sm:text-base">
                                 <LanguageSelectValue
                                     className="text-white placeholder:text-white text-sm sm:text-base"
@@ -98,30 +193,26 @@ const MobileNavbar: React.FC = () => {
                                 />
                             </LanguageSelectTrigger>
                             <LanguageSelectContent>
-                                <LanguageSelectItem
-                                    value="english"
-                                    className="text-sm sm:text-base"
-                                >
+                                <LanguageSelectItem value="english" className="text-sm sm:text-base">
                                     English
                                 </LanguageSelectItem>
                                 <LanguageSelectItem value="tamil" className="text-sm sm:text-base">
-                                    Tamil
+                                    தமிழ்
                                 </LanguageSelectItem>
-                                <LanguageSelectItem
-                                    value="sinhala"
-                                    className="text-sm sm:text-base"
-                                >
-                                    Sinhala
+                                <LanguageSelectItem value="sinhala" className="text-sm sm:text-base">
+                                    සිංහල
                                 </LanguageSelectItem>
                             </LanguageSelectContent>
                         </LanguageSelect>
                     </div>
                     <div className=" flex gap-1 justify-center items-left text-[#1A1D1F] whitespace-nowrap -mr-3">
                         <CountrySelect
-                            defaultValue="srilanka"
+                            value={countrySelectValue}
                             onValueChange={(value) => {
-                                const selected = countries.find((c) => c.value === value);
-                                setSelectedCountry(selected);
+                                const selected = countries.find((c: { value: string; }) => c.value === value);
+                                setCountry(value);
+                                setCountrySelectValue(value);
+                                setSelectedCountry(selected || null);
                             }}
                         >
                             <CountrySelectTrigger className="md:w-[12rem] text-white bg-transparent border-none outline-none cursor-pointer text-sm sm:text-base">
@@ -134,10 +225,10 @@ const MobileNavbar: React.FC = () => {
                                 )}
                             </CountrySelectTrigger>
                             <CountrySelectContent>
-                                {countries.map((country, index) => (
+                                {countries.map((country: CountryOption, idx: number) => (
                                     <React.Fragment key={country.value}>
                                         <CountrySelectItem value={country.value} className="text-sm sm:text-base">
-                                            <div className="flex justify-between w-36">
+                                            <div className="flex justify-between w-36 items-center">
                                                 <span>{country.label}</span>
                                                 <img
                                                     src={country.flag}
@@ -146,11 +237,11 @@ const MobileNavbar: React.FC = () => {
                                                 />
                                             </div>
                                         </CountrySelectItem>
-                                        {index !== countries.length - 1 && <SelectSeparator />}
+                                        {idx !== countries.length - 1 && <SelectSeparator />}
                                     </React.Fragment>
                                 ))}
-                            </CountrySelectContent>
 
+                            </CountrySelectContent>
                         </CountrySelect>
                     </div>
                 </div>
@@ -167,12 +258,12 @@ const MobileNavbar: React.FC = () => {
                         <div>
                             <h1 className="w-full sm:w-auto sm:min-w-[200px] md:min-w-[292px] order-1 flex items-center justify-center sm:justify-start ">
                                 <Image
-                                    src="/images/Prapancham-logo-white.svg"
+                                    src="/images/Prapancham-logo.png"
                                     alt="Prapancham Logo"
-                                    width={292}
+                                    width={56}
                                     height={56}
                                     priority
-                                    className="max-w-[200px] sm:max-w-none"
+                                    className="max-w-[56px] sm:max-w-none items-center justify-center rounded-md"
                                 />
                                 <span className={`px-1 -mt-2 text-xs text-white bg-[#F65050] ${selectedMenu === "news" ? "block" : selectedMenu === "news-individual" ? "block" : "hidden"}`}>
                                     News

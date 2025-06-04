@@ -9,9 +9,9 @@ interface TitleWithUnderlineProps {
 export const TitleWithUnderline: React.FC<TitleWithUnderlineProps> = ({
   text,
   underlineWidth = 64,
-  textColor = "#0B4157",
+  textColor = "#0D1322",
   underlineColor = "#880002",
-  fontSize ,
+  fontSize,
 }) => {
   return (
     <div className="relative">
@@ -30,7 +30,7 @@ export const TitleWithUnderline: React.FC<TitleWithUnderlineProps> = ({
           style={{
             whiteSpace: "pre",
             fontFamily: "Poppins",
-            fontSize: `${fontSize ||2}rem`,
+            fontSize: `${fontSize || 2}rem`,
             fontWeight: "bold",
           }}
           letterSpacing="0em"

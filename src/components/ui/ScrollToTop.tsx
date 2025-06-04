@@ -29,7 +29,7 @@ export default function ScrollToTop() {
         isVisible && (
             <button
                 onClick={scrollToTop}
-                className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-primary text-white shadow-lg hover:bg-[#0a3f51]/90 transition-all"
+                className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-primary text-white shadow-lg hover:bg-[#0D1322]/90 transition-all"
             >
                 <ArrowUp className="w-5 h-5" />
             </button>

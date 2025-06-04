@@ -54,7 +54,7 @@ const Frame: React.FC<FrameProps> = ({ setActiveStep }) => {
                                     <img
                                         src={frame.src}
                                         alt={frame.name}
-                                        
+
                                         className="object-cover md:h-48 md:!w-48 aspect-square"
                                     />
                                     {selectedFrame === frame.name && (
@@ -74,13 +74,13 @@ const Frame: React.FC<FrameProps> = ({ setActiveStep }) => {
                 <div className="flex justify-end gap-2 items-center self-stretch mt-16">
                     <button
                         onClick={() => setActiveStep(5)}
-                        className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0B4157] rounded border border-teal-900 border-solid min-h-6"
+                        className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6"
                         type="button"
                     >
                         Back
                     </button>
                     <button
-                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6"
+                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6"
                         type="button"
                         onClick={() => setActiveStep(7)}
                     >

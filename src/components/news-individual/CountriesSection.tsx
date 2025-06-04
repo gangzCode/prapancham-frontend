@@ -22,7 +22,7 @@ const CountriesSection: React.FC<CountriesSectionProps> = ({ countries }) => {
           <Link
             key={index}
             href={`/news/country/${country.toLowerCase()}`}
-            className="block bg-[#0A3F51] text-white p-4 text-center rounded-sm hover:bg-[#0A3F51]/90 transition-colors"
+            className="block bg-[#0D1322] text-white p-4 text-center rounded-sm hover:bg-[#0D1322]/90 transition-colors"
           >
             {country}
           </Link>

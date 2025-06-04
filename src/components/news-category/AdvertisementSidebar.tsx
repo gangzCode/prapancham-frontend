@@ -27,7 +27,7 @@ const ContactCard: React.FC<ContactCardProps> = ({ title, phone }) => (
     <h3 className="text-center text-sm sm:text-base md:text-heading-base text-secondary mb-1 sm:mb-2">
       {title}
     </h3>
-    <button className="w-full bg-[#0A3F51] text-white text-sm sm:text-body-base py-2 sm:py-3 px-2 sm:px-4 text-center rounded hover:bg-[#0c4c62] transition-colors">
+    <button className="w-full bg-[#0D1322] text-white text-sm sm:text-body-base py-2 sm:py-3 px-2 sm:px-4 text-center rounded hover:bg-[#0c4c62] transition-colors">
       {phone}
     </button>
   </div>
@@ -49,7 +49,7 @@ const AdBanner: React.FC<AdBannerProps> = ({ image }) => (
 
 interface AdvertisementSidebarProps {
   className?: string;
-  numberOfAds?:number;
+  numberOfAds?: number;
 }
 
 const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
@@ -88,7 +88,7 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
       </div> */}
 
       <div className="space-y-2 sm:space-y-3 md:space-y-4 mt-4 sm:mt-5 md:mt-6">
-        {adImages.slice(0,  numberOfAds || 4).map((_, index) => (
+        {adImages.slice(0, numberOfAds || 4).map((_, index) => (
           <AdBanner
             key={index}
             image="https://images.unsplash.com/photo-1649972904349-6e44c42644a7"
@@ -104,7 +104,7 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
           {[1, 2, 3, 4, 5].map((_, index) => (
             <button
               key={index}
-              className="w-full bg-[#0A3F51] text-white text-sm sm:text-body-base py-1.5 sm:py-2 px-2 sm:px-4 text-center rounded hover:bg-[#0c4c62] transition-colors"
+              className="w-full bg-[#0D1322] text-white text-sm sm:text-body-base py-1.5 sm:py-2 px-2 sm:px-4 text-center rounded hover:bg-[#0c4c62] transition-colors"
             >
               +94 77 002 33 23
             </button>

@@ -162,12 +162,12 @@ const TopBar: React.FC = () => {
       <div>
         <h1 className="w-full sm:w-auto sm:min-w-[200px] md:min-w-[292px] order-1 flex items-center justify-center sm:justify-start ">
           <Image
-            src="/images/Prapancham-logo-white.svg"
+            src="/images/Prapancham-logo.png"
             alt="Prapancham Logo"
-            width={292}
+            width={56}
             height={56}
             priority
-            className="max-w-[200px] sm:max-w-none"
+            className="max-w-[56px] sm:max-w-none items-center justify-center rounded-md"
           />
           <span className={`px-1 -mt-2 text-xs text-white bg-[#F65050] ${selectedMenu === "news" ? "block" : selectedMenu === "news-individual" ? "block" : "hidden"}`}>
             {t.newsNav}

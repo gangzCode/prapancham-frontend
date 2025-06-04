@@ -141,7 +141,7 @@ const CreateMemorialPage: React.FC = () => {
                             className={
                                 `py-2 px-2 font-medium text-xl border-b-2 -mb-px ${selectedPlan === "Obituary"
                                     ? "bg-primary text-white font-bold rounded"
-                                    : "border-transparent text-[#0B4157] hover:text-gray-900"
+                                    : "border-transparent text-[#0D1322] hover:text-gray-900"
                                 }`
                             }
                             onClick={() => setSelectedPlan("Obituary")}
@@ -221,19 +221,19 @@ const CreateMemorialPage: React.FC = () => {
                     <div className='md:text-end flex items-center justify-end mt-8 break-words whitespace-normal'>
                         <div>
                             I have read and accept the  <span className='text-[#880002] underline'> Terms & Conditions</span>
-                           
+
                         </div>
                         <input
-                                type="checkbox"
-                                className="form-checkbox h-5 w-5 ml-2 "
-                                style={{
-                                    border: "2px solid #0b4157",
-                                    accentColor: "#0b4157",
-                                    color: "#0b4157"
-                                }}
-                                checked={isChecked}
-                                onChange={(e) => setIsChecked(e.target.checked)}
-                            />
+                            type="checkbox"
+                            className="form-checkbox h-5 w-5 ml-2 "
+                            style={{
+                                border: "2px solid #0D1322",
+                                accentColor: "#0D1322",
+                                color: "#0D1322"
+                            }}
+                            checked={isChecked}
+                            onChange={(e) => setIsChecked(e.target.checked)}
+                        />
                     </div>
                     <div className="flex justify-end gap-2 items-center self-stretch mt-16">
                         <button
@@ -242,11 +242,11 @@ const CreateMemorialPage: React.FC = () => {
                                 setActiveStep(1);
                             }
                             )}
-                            className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0B4157] rounded border border-teal-900 border-solid min-h-6 ">
+                            className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
                             Back
                         </button>
                         <button
-                            className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0B4157] rounded min-h-6 "
+                            className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
                             onClick={(e => {
                                 e.preventDefault();
                                 setActiveStep(3);

@@ -428,7 +428,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/verify-otp`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email: forgotEmail, otp:code })
+                body: JSON.stringify({ email: forgotEmail, otp: code })
             });
             if (res.ok) {
                 setOtpSuccess(t.accountCreated);
@@ -518,7 +518,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                             className={
                                 `py-2 w-full font-medium text-sm border-b-2 -mb-px ${activeTab === "signup"
                                     ? "bg-primary text-white font-bold rounded"
-                                    : "border-transparent text-[#0B4157] hover:text-gray-900"
+                                    : "border-transparent text-[#0D1322] hover:text-gray-900"
                                 }`
                             }
                             onClick={() => setActiveTab("signup")}
