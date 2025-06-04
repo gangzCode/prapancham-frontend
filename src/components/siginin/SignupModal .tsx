@@ -81,6 +81,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
             PasswordResetSuccessful: "Password reset successful! Please sign in.",
             failedToResetPassword: "Failed to reset password.",
             signingin: "Signing in...",
+            signupVerification: "Enter OTP"
 
         },
         ta: {
@@ -131,6 +132,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
             PasswordResetSuccessful: "கடவுச்சொல் மீட்டமைப்பு வெற்றிகரமாக! தயவுசெய்து உள்நுழைக.",
             failedToResetPassword: "கடவுச்சொல்லை மீட்டமைப்பதில் தோல்வி.",
             signingin: "உள்நுழைகிறது...",
+            signupVerification: "OTP ஐ உள்ளிடவும்"
         },
         si: {
             signup: "ලියාපදිංචි වන්න",
@@ -180,6 +182,8 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
             PasswordResetSuccessful: "මුරපදය නැවත සකස් කිරීම සාර්ථකයි! කරුණාකර පිවිසෙන්න.",
             failedToResetPassword: "මුරපදය නැවත සකස් කිරීමට අසමත් විය.",
             signingin: "පිවිසෙමින්...",
+            signupVerification: "OTP ඇතුළු කරන්න"
+
         }
     };
 
@@ -205,8 +209,14 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
     };
 
     const handleSignupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSignupData({ ...signupData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setSignupData({ ...signupData, [name]: value });
+
+        if (name === "email") {
+            setForgotEmail(value);
+        }
     };
+
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -229,7 +239,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
         }
         setSignupLoading(true);
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/register`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/start-registration`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -242,7 +252,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                 toast.success(t.accountCreated);
                 setSignupSuccess("");
                 setSignupData({ username: "", email: "", password: "", confirmPassword: "" });
-                setActiveTab("signin");
+                setActiveTab("SignupOtp");
             } else {
                 const data = await res.json();
                 if (data?.code === 11000 || data?.errorResponse?.code === 11000) {
@@ -352,6 +362,32 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
         }
     };
 
+    const handleSignupResendOtp = async () => {
+        setOtpError("");
+        setOtpSuccess("");
+        setOtpLoading(true);
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/resend-code`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: forgotEmail })
+            });
+            if (res.ok) {
+                setOtpSuccess(t.verificationCoderesent);
+                toast.success(t.verificationCoderesent);
+            } else {
+                const data = await res.json();
+                setOtpError(data?.message || t.failedToResendCode);
+                toast.error(data?.message || t.failedToResendCode);
+            }
+        } catch {
+            setOtpError(t.failedToResendCode);
+            toast.error(t.failedToResendCode);
+        } finally {
+            setOtpLoading(false);
+        }
+    };
+
     const handleVerifyOtp = async (e: React.FormEvent) => {
         e.preventDefault();
         setOtpError("");
@@ -368,7 +404,37 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                 setOtpSuccess(t.codeVerifiedSetNewPassword);
                 toast.success(t.codeVerifiedSetNewPassword);
                 setActiveTab("reset-password");
-                setOtp(["", "", "", "", "", ""]); 
+                setOtp(["", "", "", "", "", ""]);
+            } else {
+                const data = await res.json();
+                setOtpError(data?.message || t.invalidCode);
+                toast.error(data?.message || t.invalidCode);
+            }
+        } catch {
+            setOtpError(t.invalidCode);
+            toast.error(t.invalidCode);
+        } finally {
+            setOtpLoading(false);
+        }
+    };
+
+    const handleSignupVerifyOtp = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setOtpError("");
+        setOtpSuccess("");
+        setOtpLoading(true);
+        const code = otp.join("");
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/verify-otp`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: forgotEmail, otp:code })
+            });
+            if (res.ok) {
+                setOtpSuccess(t.accountCreated);
+                toast.success(t.accountCreated);
+                setActiveTab("signin");
+                setOtp(["", "", "", "", "", ""]);
             } else {
                 const data = await res.json();
                 setOtpError(data?.message || t.invalidCode);
@@ -534,6 +600,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                                 type="submit"
                                 className="w-full bg-primary text-white py-2 rounded hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-teal-600"
                                 disabled={signupLoading}
+
                             >
                                 {signupLoading ? "Creating..." : t.createAccount}
                             </button>
@@ -546,8 +613,67 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                         </p>
                     </div>
                 }
+                {activeTab === "SignupOtp" &&
+                    <div className="h-64">
+                        <form onSubmit={handleSignupVerifyOtp}>
+                            <h6 className="text-center text-[1rem] font-bold mb-2 text-primary">
+                                {t.signupVerification}
+                            </h6>
+                            <p className="text-center text-[0.75rem] mb-4 text-gray-600">
+                                {t.codeSentTo} <span className="text-primary font-bold">{forgotEmail}</span>
+                            </p>
+                            <div className="mb-4 mt-4">
+                                <label htmlFor="otp" className="block text-xl mb-2">
+                                    {t.verificationCode} <span className="text-red-500">*</span>
+                                </label>
+                                <div className="flex space-x-2 justify-center">
+                                    {otp.map((digit, idx) => (
+                                        <input
+                                            key={idx}
+                                            type="text"
+                                            maxLength={1}
+                                            className="w-12 md:w-14 h-12 border border-primary rounded-lg text-center text-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={digit}
+                                            onChange={e => {
+                                                const val = e.target.value.replace(/[^0-9]/g, "");
+                                                const newOtp = [...otp];
+                                                newOtp[idx] = val;
+                                                setOtp(newOtp);
+                                                if (val && idx < 5) {
+                                                    const next = document.querySelectorAll<HTMLInputElement>('input[type="text"][maxLength="1"]')[idx + 1];
+                                                    next?.focus();
+                                                }
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                            {otpError && <div className="text-red-500 mb-2 text-center">{otpError}</div>}
+                            {otpSuccess && <div className="text-green-500 mb-2 text-center">{otpSuccess}</div>}
+                            <button
+                                type="submit"
+                                className="w-full bg-primary text-white text-xl py-2 rounded hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                disabled={otpLoading}
+                            >
+                                {otpLoading ? t.verifying : t.verify}
+                            </button>
+                            <p className="mt-4 text-center ">
+                                {t.didNotReceiveCode}{" "}
+                                <button
+                                    className="text-primary font-semibold underline"
+                                    type="button"
+                                    onClick={handleSignupResendOtp}
+                                    disabled={otpLoading}
+                                >
+                                    {otpLoading ? t.resending : t.resendCode}
+                                </button>
+                            </p>
+                        </form>
+                    </div>
+
+                }
                 {activeTab === "signin" &&
-                    <div className="h-[26rem]">
+                    <div className="h-[20rem]">
                         <form onSubmit={handleLogin}>
                             <div className="mb-4">
                                 <label htmlFor="username" className="block ">
@@ -608,14 +734,14 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                                 className="text-primary font-semibold underline"
                                 onClick={() => setActiveTab("signup")}>{t.signup}</button>
                         </p>
-                        <div className="flex items-center my-4">
+                        {/* <div className="flex items-center my-4">
                             <hr className="flex-grow ml-20 border-black" />
                             <span className="mx-2 ">
                                 {t.or}
                             </span>
                             <hr className="flex-grow mr-20 border-black" />
-                        </div>
-                        <button className="w-full py-2 flex items-center justify-center border border-primary rounded-lg">
+                        </div> */}
+                        {/* <button className="w-full py-2 flex items-center justify-center border border-primary rounded-lg">
                             <svg className="w-5 h-5 mr-2" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                                 <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.23 9.22 3.25l6.9-6.9C35.67 2.28 30.18 0 24 0 14.64 0 6.61 5.7 2.68 13.92l8.14 6.32C12.69 13.03 17.9 9.5 24 9.5z" />
                                 <path fill="#4285F4" d="M46.1 24.5c0-1.44-.12-2.83-.34-4.17H24v7.89h12.42c-.54 2.9-2.15 5.36-4.57 7.02v5.84h7.38C43.86 37.43 46.1 31.49 46.1 24.5z" />
@@ -626,7 +752,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                             <span className="text-primary">
                                 {t.continueWithGoogle}
                             </span>
-                        </button>
+                        </button> */}
                     </div>
                 }
                 {activeTab === "forgot-password" &&

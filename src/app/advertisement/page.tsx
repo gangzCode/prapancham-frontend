@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import AdvertisementTypeMenu from "@/components/advertisement/advertismentType";
 import CountryMenu from "@/components/contact/CountryMenu";
@@ -70,13 +70,13 @@ const Advertisement = () => {
         }) || []),
     ];
 
-    // const categories = [
-    //     "Commercial (50 Posts)",
-    //     "House for rent and sales (10 Posts)",
-    //     "Job vacancies (15 Posts)",
-    // ];
-    const [activeCountry, setActiveCountry] = useState(categories[0]);
 
+    const [activeCountry, setActiveCountry] = useState(categories[0]);
+    useEffect(() => {
+        if (categories.length > 0 && !activeCountry) {
+            setActiveCountry(categories[0]);
+        }
+    }, [categories, activeCountry]);
 
     const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
