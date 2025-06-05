@@ -47,7 +47,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
             passwordMismatch: "Passwords do not match.",
             passwordLengthError: "Password must be at least 6 characters.",
             emailAlreadyRegistered: "Email is already registered. Sign in to continue.",
-            name: "Name",
+            name: "Username",
             email: "Email Id",
             password: "Password",
             enterPassword: "Enter Password",
