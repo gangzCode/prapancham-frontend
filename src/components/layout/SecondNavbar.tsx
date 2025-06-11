@@ -190,13 +190,24 @@ const SecondNavbar: React.FC = () => {
                           (() => {
                             try {
                               const user = JSON.parse(localStorage.getItem("user") || "{}");
-                              return user.image || "https://storage.googleapis.com/a1aa/image/6c204b4f-b493-4351-023d-ab911699cf97.jpg";
+                              return user.image || "/icons/user.png";
                             } catch {
-                              return "https://storage.googleapis.com/a1aa/image/6c204b4f-b493-4351-023d-ab911699cf97.jpg";
+                              return "/icons/user.png";
                             }
                           })()
                         }
                       />
+                      <span className="ml-2 text-black font-semibold">
+                        {(() => {
+                          try {
+                            const user = JSON.parse(localStorage.getItem("user") || "{}");
+                            return user.username || "";
+                          } catch {
+                            return "";
+                          }
+                        })()}
+                      </span>
+                      <ChevronDown className="w-6 h-6" />
                     </div>
 
                     {showPopup && (
@@ -212,9 +223,9 @@ const SecondNavbar: React.FC = () => {
                               (() => {
                                 try {
                                   const user = JSON.parse(localStorage.getItem("user") || "{}");
-                                  return user.image || "https://storage.googleapis.com/a1aa/image/6c204b4f-b493-4351-023d-ab911699cf97.jpg";
+                                  return user.image || "/icons/user.png";
                                 } catch {
-                                  return "https://storage.googleapis.com/a1aa/image/6c204b4f-b493-4351-023d-ab911699cf97.jpg";
+                                  return "/icons/user.png";
                                 }
                               })()
                             }

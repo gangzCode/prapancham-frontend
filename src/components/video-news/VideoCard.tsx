@@ -2,32 +2,62 @@ import React from "react";
 import Image from "next/image";
 import { Play, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/components/ui/LanguageProvider";
 
 export interface VideoCardProps {
   title: string;
   excerpt: string;
   image: string;
-  editorName?: string;
+  // editorName?: string;
   category: string;
   duration: string;
   variant?: "small" | "large";
+  youtubeLink?: string;
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({
   title,
   excerpt,
   image,
-  editorName,
+  // editorName,
   category,
+  youtubeLink,
   duration,
   variant = "small",
 }) => {
+  const { language } = useLanguage();
+  let langKey: LanguageKey;
+
+  if (language === "tamil") langKey = "ta";
+  else if (language === "sinhala") langKey = "si";
+  else langKey = "en";
+  type LanguageKey = 'en' | 'ta' | 'si';
+  const translations: Record<LanguageKey, { [key: string]: string }> = {
+    en: {
+      viewmore: "View more",
+      readmore: "Read more",
+    },
+    ta: {
+      viewmore: "மேலும் பார்க்க",
+      readmore: "மேலும் வாசிக்க",
+    },
+    si: {
+      viewmore: "තවත් බලන්න",
+      readmore: "තවත් කියවන්න",
+    },
+  };
+  const t = translations[langKey];
   return (
     <div
       className={cn(
-        "group flex bg-white rounded-md shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1",
+        "group flex bg-white rounded-md shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 cursor-pointer",
         variant === "small" ? "sm:flex-row flex-col gap-4 p-3" : "flex-col p-4"
       )}
+      onClick={() => {
+        if (youtubeLink) {
+          window.open(youtubeLink, "_blank");
+        }
+      }}
     >
       <div
         className={cn(
@@ -73,15 +103,15 @@ const VideoCard: React.FC<VideoCardProps> = ({
           href="#"
           className="text-secondary font-medium text-sm hover:underline mb-2 inline-flex items-center gap-1 group-hover:gap-2 transition-all"
         >
-          Read more
+          {t.readmore}
           <ChevronRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
         </a>
 
         <div className="flex items-center text-sm text-gray-500 gap-3  justify-between">
-          {editorName && (
+          {/* {editorName && (
             <div className="flex items-center gap-1">
-              <span className="text-gray-400 inline-flex items-center">
-                {/* <svg
+              <span className="text-gray-400 inline-flex items-center"> */}
+          {/* <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="14"
                   height="14"
@@ -96,10 +126,10 @@ const VideoCard: React.FC<VideoCardProps> = ({
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 6v6l4 2" />
                 </svg> */}
-                {/* {editorName} */}
-              </span>
+          {/* {editorName} */}
+          {/* </span>
             </div>
-          )}
+          )} */}
           <div className="flex gap-2">
             {/* <span className="font-medium text-secondary">{category}</span>
             <span>•</span> */}

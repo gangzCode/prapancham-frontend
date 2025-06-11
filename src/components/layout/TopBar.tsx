@@ -23,6 +23,7 @@ import React from "react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 import { useCountry } from "@/components/ui/CountryProvider";
 import useSWR from 'swr';
+import router from "next/router";
 
 type CountryOption = {
   value: string;
@@ -161,14 +162,17 @@ const TopBar: React.FC = () => {
 
       <div>
         <h1 className="w-full sm:w-auto sm:min-w-[200px] md:min-w-[292px] order-1 flex items-center justify-center sm:justify-start ">
-          <Image
-            src="/images/Prapancham-logo.png"
-            alt="Prapancham Logo"
-            width={56}
-            height={56}
-            priority
-            className="max-w-[56px] sm:max-w-none items-center justify-center rounded-md"
-          />
+          <Link href="/">
+            <Image
+              src="/images/Prapancham-logo.png"
+              alt="Prapancham Logo"
+              width={56}
+              height={56}
+              priority
+              className="max-w-[56px] sm:max-w-none items-center justify-center rounded-md"
+
+            />
+          </Link>
           <span className={`px-1 -mt-2 text-xs text-white bg-[#F65050] ${selectedMenu === "news" ? "block" : selectedMenu === "news-individual" ? "block" : "hidden"}`}>
             {t.newsNav}
           </span>

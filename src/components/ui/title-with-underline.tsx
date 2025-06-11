@@ -16,9 +16,9 @@ export const TitleWithUnderline: React.FC<TitleWithUnderlineProps> = ({
   return (
     <div className="relative">
       <svg
-        width="574"
+        width="720"
         height="46"
-        viewBox="0 0 574 46"
+        viewBox="0 0 720 46"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="title max-w-[22rem]"
