@@ -75,7 +75,7 @@ export default function Footer() {
       email: "மின்னஞ்சல்",
       phone: "தொலைபேசி",
       newsNav: "செய்திகள்",
-      obituary: "இறுதிக் குறிப்புகள்",
+      obituary: "மரண அறிவிப்பு செய்தி",
       aboutUs: "எங்களை பற்றி",
       contactUs: "தொடர்பு கொள்ள",
       subscribeSuccess: "சந்தா எடுக்கப்பட்டது!",

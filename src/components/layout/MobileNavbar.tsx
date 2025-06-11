@@ -81,7 +81,7 @@ const MobileNavbar: React.FC = () => {
         },
         ta: {
             newsNav: "செய்திகள்",
-            obituary: "இறுதிக் குறிப்புகள்",
+            obituary: "மரண அறிவிப்பு செய்தி",
             aboutUs: "எங்களை பற்றி",
             contactUs: "தொடர்பு கொள்ள",
             Samaathi: "சமாதி",
