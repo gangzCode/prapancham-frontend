@@ -15,10 +15,10 @@ import {
     SelectValue as CountrySelectValue,
     SelectSeparator
 } from "@/components/ui/country-select";
-import { Calendar, Menu, Minus, User } from "lucide-react";
+import { Calendar, ChevronDown, LogOut, Menu, Minus, User } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import SignupModal from "../siginin/SignupModal ";
 import SearchBox from "./SearchBox";
@@ -40,6 +40,11 @@ const MobileNavbar: React.FC = () => {
     const pathname = usePathname();
     const { language, setLanguage } = useLanguage();
     const { country, setCountry } = useCountry();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const router = useRouter();
+    const [isUserLoading, setIsUserLoading] = useState(true);
+    const [showPopup, setShowPopup] = useState(false);
+    const popupRef = useRef<HTMLDivElement>(null);
     const [selectedMenu, setSelectedMenu] = useState("");
     const [isDropMenuOpen, setIsDropMenuOpen] = useState(false);
     const fetcher = (url: string) => fetch(url).then(res => res.json());
@@ -78,6 +83,10 @@ const MobileNavbar: React.FC = () => {
             aboutUs: "About Us",
             contactUs: "Contact Us",
             Samaathi: "Samaathi",
+            setting: "Setting",
+            logout: "Log Out",
+            signIn: "Sign In",
+            signUp: "Sign Up",
         },
         ta: {
             newsNav: "செய்திகள்",
@@ -85,6 +94,10 @@ const MobileNavbar: React.FC = () => {
             aboutUs: "எங்களை பற்றி",
             contactUs: "தொடர்பு கொள்ள",
             Samaathi: "சமாதி",
+            setting: "அமைப்பு",
+            logout: "வெளியேறு",
+            signIn: "உள்நுழைய",
+            signUp: "பதிவுசெய்ய",
         },
         si: {
             newsNav: "ප්‍රවෘත්ති",
@@ -92,6 +105,10 @@ const MobileNavbar: React.FC = () => {
             aboutUs: "අපි ගැන",
             contactUs: "අපව අමතන්න",
             Samaathi: "සමාති",
+            setting: "සැකසීම",
+            logout: "පිටවීම",
+            signIn: "ඇතුල් වන්න",
+            signUp: "ලියාපදිංචි වන්න",
         },
     };
     const t = translations[langKey];
@@ -173,6 +190,48 @@ const MobileNavbar: React.FC = () => {
             setSelectedPage("home");
         }
     }, [pathname]);
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+                setShowPopup(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    useEffect(() => {
+        const checkAuth = () => {
+            const user = localStorage.getItem("user");
+            if (user) {
+                try {
+                    const token = localStorage.getItem("accessToken");
+                    if (token) {
+                        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+                        const currentTime = Math.floor(Date.now() / 1000);
+                        if (decodedToken.exp && decodedToken.exp > currentTime) {
+                            setIsAuthenticated(true);
+                        } else {
+                            setIsAuthenticated(false);
+                        }
+                    } else {
+                        setIsAuthenticated(false);
+                    }
+                } catch (error) {
+                    setIsAuthenticated(false);
+                }
+            } else {
+                setIsAuthenticated(false);
+            }
+            setIsUserLoading(false);
+        };
+
+        checkAuth();
+        const interval = setInterval(checkAuth, 1000);
+        return () => clearInterval(interval);
+    }, [router, isModalOpen]);
 
     return (
         <>
@@ -266,21 +325,124 @@ const MobileNavbar: React.FC = () => {
                                     className="max-w-[56px] sm:max-w-none items-center justify-center rounded-md"
                                 />
                                 <span className={`px-1 -mt-2 text-xs text-white bg-[#F65050] ${selectedMenu === "news" ? "block" : selectedMenu === "news-individual" ? "block" : "hidden"}`}>
-                                    News
+                                    {t.newsNav}
                                 </span>
                                 <span className={`px-1 -mt-2 text-xs text-white bg-black ${selectedMenu === "obituary" ? "block" : selectedMenu === "news-individual" ? "block" : "hidden"}`}>
-                                    Samaathi
+                                    {t.Samaathi}
                                 </span>
                             </h1>
                         </div>
                     </div>
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="border border-white text-white rounded-full "
-                    >
-                        <User />
-                    </button>
-                    <SignupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+                    <div className="flex items-center justify-center">
+                        {!isUserLoading && (isAuthenticated ? (
+                            <div className="flex items-center justify-center ml-4">
+                                {/* <User className="w-7 h-7 text-primary" />
+                   */}
+                                <div className="relative ml-4">
+                                    <div
+                                        onClick={() => setShowPopup(!showPopup)}
+                                        className="flex items-center justify-center cursor-pointer"
+                                    >
+                                        <img
+                                            alt="User avatar"
+                                            className="w-12 h-12 mb-1 rounded-full"
+                                            src={
+                                                (() => {
+                                                    try {
+                                                        const user = JSON.parse(localStorage.getItem("user") || "{}");
+                                                        return user.image || "/icons/user.png";
+                                                    } catch {
+                                                        return "/icons/user.png";
+                                                    }
+                                                })()
+                                            }
+                                        />
+                                        {/* <span className="ml-2 text-black font-semibold">
+                                            {(() => {
+                                                try {
+                                                    const user = JSON.parse(localStorage.getItem("user") || "{}");
+                                                    return user.username || "";
+                                                } catch {
+                                                    return "";
+                                                }
+                                            })()}
+                                        </span> */}
+                                        {/* <ChevronDown className="w-6 h-6" /> */}
+                                    </div>
+
+                                    {showPopup && (
+                                        <div
+                                            ref={popupRef}
+                                            className="absolute right-0 mt-2 bg-white rounded-lg shadow-lg w-64 p-6 z-50"
+                                        >
+                                            <div className="flex flex-col items-center mb-2">
+                                                <img
+                                                    alt="User avatar"
+                                                    className="w-12 h-12 mb-1 rounded-full"
+                                                    src={
+                                                        (() => {
+                                                            try {
+                                                                const user = JSON.parse(localStorage.getItem("user") || "{}");
+                                                                return user.image || "/icons/user.png";
+                                                            } catch {
+                                                                return "/icons/user.png";
+                                                            }
+                                                        })()
+                                                    }
+                                                />
+                                                <h2 className="font-bold leading-tight text-black text-center">
+                                                    {(() => {
+                                                        try {
+                                                            const user = JSON.parse(localStorage.getItem("user") || "{}");
+                                                            return user.username || "Unknown User";
+                                                        } catch {
+                                                            return "Unknown User";
+                                                        }
+                                                    })()}
+                                                </h2>
+                                            </div>
+                                            <div
+                                                className="text-center text-black mb-4 mt-4 cursor-pointer hover:underline"
+                                                onClick={() => {
+                                                    setShowPopup(false);
+                                                    router.push("/profile");
+                                                }}
+                                            >
+                                                {t.setting}
+                                            </div>
+                                            <hr className="border-gray-300 mb-4" />
+                                            <button
+                                                type="button"
+                                                className="flex items-center space-x-2  text-black mx-auto"
+                                            >
+                                                <LogOut className="w-5 h-5" />
+                                                <span
+                                                    onClick={() => {
+                                                        localStorage.removeItem("accessToken");
+                                                        localStorage.removeItem("user");
+                                                        setShowPopup(false);
+                                                        window.location.href = "/";
+                                                    }}
+                                                    className="cursor-pointer"
+                                                >
+                                                    {t.logout}
+                                                </span>
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ) : (
+                            <button
+                                onClick={() => setIsModalOpen(true)}
+                                className="border border-white text-white rounded-full "
+                            >
+                                <User />
+                            </button>
+                        ))}
+                        <SignupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+                    </div>
+
                 </div>
 
 
