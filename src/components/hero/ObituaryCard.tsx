@@ -1,12 +1,34 @@
 "use client";
 
 import type { ObituaryEntry } from "./types";
+import { useLanguage } from "@/components/ui/LanguageProvider";
 
 interface ObituaryCardProps {
   entry: ObituaryEntry;
 }
 
 const ObituaryCard: React.FC<ObituaryCardProps> = ({ entry }) => {
+  const { language } = useLanguage();
+  const langKey: "en" | "ta" | "si" =language === "tamil" ? "ta" : language === "sinhala" ? "si" : "en";
+
+  const localizedText = {
+    condolences: {
+      en: `${entry.condolences} Condolences`,
+      ta: `${entry.condolences} இரங்கல்கள்`,
+      si: `${entry.condolences} සංවේදීතා`,
+    },
+  
+    postTribute: {
+      en: "Post Tribute",
+      ta: "குறிப்பு இடுகை",
+      si: "සම්මානය පළ කරන්න",
+    },
+    donate: {
+      en: "Donate",
+      ta: "நன்கொடை",
+      si: "දන්සැලැස්ම",
+    },
+  };
   return (
     <article className="flex flex-col justify-center p-2 w-full rounded-lg bg-stone-50">
       <h3 className="gap-3.5 self-stretch py-1 w-full text-heading-base text-[#0D1322] rounded">
@@ -33,14 +55,14 @@ const ObituaryCard: React.FC<ObituaryCardProps> = ({ entry }) => {
 
       <div className="flex gap-10 justify-between items-center py-1 mt-2 w-full text-xs rounded">
         <p className="self-stretch shrink-0 my-auto text-body-xs text-secondary">
-          {entry.condolences} Condolences
+          {entry.condolences} {localizedText.condolences[langKey]}
         </p>
         <div className="flex gap-2 items-center self-stretch my-auto">
           <button className="gap-2.5 self-stretch shrink-0 px-4 py-1.5 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
-            Post Tribute
+            {localizedText.postTribute[langKey]}
           </button>
           <button className="gap-2.5 self-stretch px-4 py-1.5 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
-            Donate
+            {localizedText.donate[langKey]}
           </button>
         </div>
       </div>

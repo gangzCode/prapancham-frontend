@@ -174,7 +174,7 @@ const Events: React.FC = () => {
                             </div>
 
 
-                            <div className="flex justify-end ">
+                            <div className="md:flex justify-end hidden ">
                                 <button
                                     className="border border-primary text-primary px-4 py-2 rounded shrink-0"
                                     onClick={() => {

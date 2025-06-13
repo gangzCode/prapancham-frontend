@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { TitleWithUnderline } from "../ui/title-with-underline";
+import useSWR from "swr";
+import { useLanguage } from "@/components/ui/LanguageProvider";
 
 interface PodcastEpisode {
   id: number;
@@ -22,6 +24,8 @@ interface PodcastSectionProps {
   showViewMore?: boolean;
 }
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 const PodcastSection = ({
   title = "Our Podcast",
   showViewMore = true,
@@ -29,52 +33,40 @@ const PodcastSection = ({
   const [activeCategory, setActiveCategory] = useState("All");
   const [currentPodcast, setCurrentPodcast] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const { language } = useLanguage();
 
-  const podcastEpisodes: PodcastEpisode[] = [
-    {
-      id: 1,
-      title: "Title of the podcast",
-      host: "Joe Root",
-      episode: 3,
-      duration: "1hr 25mins",
-      image: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc",
-      category: "Category1",
-    },
-    {
-      id: 2,
-      title: "Title of the podcast",
-      host: "Joe Root",
-      episode: 3,
-      duration: "1hr 25mins",
-      image: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc",
-      category: "Category2",
-    },
-    {
-      id: 3,
-      title: "Title of the podcast",
-      host: "Joe Root",
-      episode: 3,
-      duration: "1hr 25mins",
-      image: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc",
-      category: "Category3",
-    },
-  ];
+  const langKey = language === "tamil" ? "ta" : language === "sinhala" ? "si" : "en";
+
+  const { data: categoryData } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/podcast/categories`,
+    fetcher
+  );
 
   const categories = [
-    "All",
-    "Category1",
-    "Category2",
-    "Category3",
-    "Category4",
-    "Category5",
+    { en: "All", ta: "அனைத்தும்", si: "සියල්ල" },
+    ...(categoryData?.categories || []).map((category: any) => ({
+      en: category.en[0]?.value,
+      ta: category.ta[0]?.value,
+      si: category.si[0]?.value,
+    })),
   ];
 
-  const filteredPodcasts =
+  const { data: podcastData } = useSWR(
     activeCategory === "All"
-      ? podcastEpisodes
-      : podcastEpisodes.filter(
-        (podcast) => podcast.category === activeCategory
-      );
+      ? `${process.env.NEXT_PUBLIC_API_URL}/podcast`
+      : `${process.env.NEXT_PUBLIC_API_URL}/podcast?category=${categories.find((cat) => cat.en === activeCategory)?.en}`,
+    fetcher
+  );
+
+  const podcasts = (podcastData || []).map((podcast: any) => ({
+    id: podcast._id,
+    title: podcast.title[langKey]?.[0]?.value || "",
+    description: podcast.description[langKey]?.[0]?.value || "",
+    host: podcast.creatorName[langKey]?.[0]?.value || "",
+    duration: podcast.podcastRunTime,
+    image: podcast.image,
+    category: podcast.podcastCategory[langKey]?.[0]?.value || "",
+  }));
 
   const togglePlay = (id: number) => {
     if (currentPodcast === id && isPlaying) {
@@ -85,7 +77,6 @@ const PodcastSection = ({
     }
   };
 
-  // Generate waveform bars
   const generateWaveform = () => {
     const bars = [];
     for (let i = 0; i < 30; i++) {
@@ -110,7 +101,7 @@ const PodcastSection = ({
         {showViewMore && (
           <button className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors">
             <span className="text-sm sm:text-base md:text-heading-base">
-              View more
+              {langKey === "ta" ? "மேலும் பார்க்க" : langKey === "si" ? "තවත් බලන්න" : "View more"}
             </span>
             <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
@@ -120,18 +111,18 @@ const PodcastSection = ({
       <div className="bg-gray-100 p-4 rounded-md overflow-x-auto">
         <div className="flex justify-start md:justify-center items-center min-w-max px-2">
           {categories.map((category, index) => (
-            <React.Fragment key={category}>
+            <React.Fragment key={category.en}>
               <Button
                 variant="ghost"
                 className={cn(
                   "rounded-none border-none whitespace-nowrap",
-                  activeCategory === category
+                  activeCategory === category.en
                     ? "text-secondary font-medium"
                     : "text-gray-600"
                 )}
-                onClick={() => setActiveCategory(category)}
+                onClick={() => setActiveCategory(category.en)}
               >
-                {category}
+                {category[langKey]}
               </Button>
               {index < categories.length - 1 && (
                 <Separator orientation="vertical" className="h-6 mx-1" />
@@ -142,7 +133,7 @@ const PodcastSection = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {filteredPodcasts.map((podcast) => (
+        {podcasts.map((podcast: { id: React.Key | null | undefined; host: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; title: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; duration: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; image: string | undefined; }) => (
           <div
             key={podcast.id}
             className="bg-white border border-gray-200 rounded-md overflow-hidden shadow-sm"
@@ -154,7 +145,7 @@ const PodcastSection = ({
                   <h3 className="text-xl font-bold">{podcast.title}</h3>
                 </div>
                 <span className="text-sm text-gray-500">
-                  Episode {podcast.episode} • {podcast.duration}
+                  {podcast.duration}
                 </span>
               </div>
 
@@ -180,7 +171,7 @@ const PodcastSection = ({
 
                   <button
                     className="rounded-full bg-primary text-white p-2 hover:bg-primary/90 transition-colors"
-                    onClick={() => togglePlay(podcast.id)}
+                    onClick={() => togglePlay(podcast._id)}
                     aria-label={
                       isPlaying && currentPodcast === podcast.id
                         ? "Pause"

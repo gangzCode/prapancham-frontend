@@ -5,15 +5,22 @@ import { ArrowRight, ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { TitleWithUnderline } from "../ui/title-with-underline";
-interface TrendingNewsItem {
-  id: number;
-  title: string;
-  excerpt: string;
-  image: string;
-  editorName: string;
-  category: string;
-  duration: string;
-  featured?: boolean;
+import useSWR from "swr";
+import { useLanguage } from "@/components/ui/LanguageProvider";
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+interface NewsItem {
+  _id: string;
+  title: Record<string, { value: string }[]>;
+  description: Record<string, { value: string }[]>;
+  thumbnailImage: string;
+  editorName: Record<string, { value: string }[]>;
+  newsCategory: {
+    name: Record<string, { name: string }[]>;
+  };
+  createdAt: string;
+  isBreakingNews: boolean;
 }
 
 interface TrendingNewsSectionProps {
@@ -23,93 +30,144 @@ interface TrendingNewsSectionProps {
 const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
   className,
 }) => {
-  const [expandedItems, setExpandedItems] = useState<number[]>([]);
+  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const { language } = useLanguage();
 
-  const toggleExpand = (id: number) => {
+  const langKey = language === "tamil" ? "ta" : language === "sinhala" ? "si" : "en";
+
+  const { data, error, isLoading } = useSWR<NewsItem[]>(
+    `${process.env.NEXT_PUBLIC_API_URL}/news/recent/5`,
+    fetcher
+  );
+
+  const localeText = {
+    en: {
+      ObituaryUpdates: "Obituary Updates",
+      justNow: "just now",
+      minute: "1 minute ago",
+      minutes: (n: number) => `${n} minutes ago`,
+      hour: "1 hour ago",
+      hours: (n: number) => `${n} hours ago`,
+      days: (n: number) => `${n} day(s) ago`,
+      date: (date: Date) =>
+        date.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+    },
+    ta: {
+      ObituaryUpdates: "மரண அறிவித்தல் புதுப்பிப்புகள்",
+      justNow: "இப்போது",
+      minute: "1 நிமிடம் முன்பு",
+      minutes: (n: number) => `${n} நிமிடங்கள் முன்பு`,
+      hour: "1 மணி நேரம் முன்பு",
+      hours: (n: number) => `${n} மணி நேரங்கள் முன்பு`,
+      days: (n: number) => `${n} நாட்களுக்கு முன்பு`,
+      date: (date: Date) =>
+        date.toLocaleDateString("ta", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        }),
+    },
+    si: {
+      ObituaryUpdates: "මරණ දැනුම්දීම යාවත්කාලීන",
+      justNow: "දැන්ම",
+      minute: "මිනිත්තුවකට පෙර",
+      minutes: (n: number) => `${n} මිනිත්තුකට පෙර`,
+      hour: "පැය එකකට පෙර",
+      hours: (n: number) => `${n} පැයකට පෙර`,
+      days: (n: number) => `${n} දිනකට පෙර`,
+      date: (date: Date) =>
+        date.toLocaleDateString("si-LK", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        }),
+    },
+  };
+
+  function getTimeAgo(dateString: string, lang: keyof typeof localeText) {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (diff < 60) return localeText[lang].justNow;
+    if (diff < 3600) {
+      const mins = Math.floor(diff / 60);
+      if (mins === 1) return localeText[lang].minute;
+      return localeText[lang].minutes(mins);
+    }
+    if (diff < 86400) {
+      const hours = Math.floor(diff / 3600);
+      if (hours === 1) return localeText[lang].hour;
+      return localeText[lang].hours(hours);
+    }
+    if (diff < 604800) {
+      const days = Math.floor(diff / 86400);
+      return localeText[lang].days(days);
+    }
+    return localeText[lang].date(date);
+  }
+
+  const trendingNews = data?.map((newsItem) => ({
+    id: newsItem._id,
+    title: newsItem.title[langKey]?.[0]?.value || "",
+    excerpt: newsItem.description[langKey]?.[0]?.value || "",
+    image: newsItem.thumbnailImage,
+    editorName: newsItem.editorName[langKey]?.[0]?.value || "",
+    category: newsItem.newsCategory.name[langKey]?.[0]?.name || "",
+    duration: (() => {
+      const now = new Date();
+      const date = new Date(newsItem.createdAt);
+      const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+      if (diff < 60) return localeText[langKey as keyof typeof localeText].justNow;
+      if (diff < 3600) {
+        const mins = Math.floor(diff / 60);
+        if (mins === 1) return localeText[langKey as keyof typeof localeText].minute;
+        return localeText[langKey as keyof typeof localeText].minutes(mins);
+      }
+      if (diff < 86400) {
+        const hours = Math.floor(diff / 3600);
+        if (hours === 1) return localeText[langKey as keyof typeof localeText].hour;
+        return localeText[langKey as keyof typeof localeText].hours(hours);
+      }
+      const days = Math.floor(diff / 86400);
+      return localeText[langKey as keyof typeof localeText].days(days);
+    })(),
+    featured: newsItem.isBreakingNews,
+  })) || [];
+
+  const featuredNews = trendingNews.slice(0, 1)[0] || null;
+  const regularNews = trendingNews.slice(1, 4);
+
+  const toggleExpand = (id: string) => {
     setExpandedItems((prev) =>
       prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id]
     );
   };
 
-  const isExpanded = (id: number) => expandedItems.includes(id);
-
-  const trendingNews: TrendingNewsItem[] = [
-    {
-      id: 1,
-      title:
-        "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisldhgteg convallis.",
-      excerpt:
-        "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisldhgteg convallis...",
-      image: "https://images.unsplash.com/photo-1516731415730-0c607149933a",
-      editorName: "Editor's name",
-      category: "Category1",
-      duration: "15 minutes ago",
-      featured: true,
-    },
-    {
-      id: 2,
-      title:
-        "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac...",
-      excerpt:
-        "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac...",
-      image: "https://images.unsplash.com/photo-1540479859555-17af45c78602",
-      editorName: "Editor's name",
-      category: "Category1",
-      duration: "15 minutes ago",
-    },
-    {
-      id: 3,
-      title:
-        "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac...",
-      excerpt:
-        "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac...",
-      image: "https://images.unsplash.com/photo-1518091043644-c1d4457512c6",
-      editorName: "Editor's name",
-      category: "Category1",
-      duration: "15 minutes ago",
-    },
-    {
-      id: 4,
-      title:
-        "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac...",
-      excerpt:
-        "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac...",
-      image: "https://images.unsplash.com/photo-1520869309377-88c9961a0a2b",
-      editorName: "Editor's name",
-      category: "Category1",
-      duration: "15 minutes ago",
-    },
-    {
-      id: 5,
-      title:
-        "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac...",
-      excerpt:
-        "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac...",
-      image: "https://images.unsplash.com/photo-1547347298-4074fc3086f0",
-      editorName: "Editor's name",
-      category: "Category1",
-      duration: "15 minutes ago",
-    },
-  ];
-
-  const featuredNews = trendingNews.find((item) => item.featured);
-  const regularNews = trendingNews.filter((item) => !item.featured).slice(0, 4);
+  const isExpanded = (id: string) => expandedItems.includes(id);
 
   return (
     <section
       className={cn(
-        "flex flex-wrap gap-6 justify-center px-4 md:px-8 lg:px-16  mt-6 w-full mx-auto max-md:px-5",
+        "flex flex-wrap gap-6 justify-center px-4 md:px-8 lg:px-16 mt-6 w-full mx-auto max-md:px-5",
         className
       )}
     >
       <div className="flex justify-between items-center mb-6 w-full">
-
         <div className="flex-shrink min-w-0">
-          <TitleWithUnderline text="Trending News" underlineWidth={64} />
+          <TitleWithUnderline
+            text={langKey === "ta" ? "பிரபலமான செய்திகள்" : langKey === "si" ? "නවතම පුවත්" : "Trending News"}
+            underlineWidth={64}
+          />
         </div>
         <button className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors">
           <span className="text-sm sm:text-base md:text-heading-base">
-            View more
+            {langKey === "ta" ? "மேலும் பார்க்க" : langKey === "si" ? "තවත් බලන්න" : "View more"}
           </span>
           <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
         </button>
@@ -122,7 +180,7 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
               <img
                 src={featuredNews.image}
                 alt={featuredNews.title}
-                className="w-full h-full object-cover "
+                className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent">
                 <div className="absolute bottom-0 p-6 text-white">
@@ -138,15 +196,14 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
                         onClick={() => toggleExpand(featuredNews.id)}
                         className="text-[#ea384c] font-medium ml-1 hover:underline focus:outline-none"
                       >
-                        Read more
+                        {langKey === "ta" ? "மேலும் படிக்க" : langKey === "si" ? "තවත් කියවන්න" : "Read more"}
                       </button>
                     )}
                   </p>
-
                 </div>
               </div>
             </div>
-            <div className="flex items-center text-xs md:text-sm  mt-2 justify-between">
+            <div className="flex items-center text-xs md:text-sm mt-2 justify-between">
               <span className="flex items-center text-[#737373]">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -173,7 +230,6 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
                   {featuredNews.duration}
                 </span>
               </div>
-
             </div>
           </div>
         )}
@@ -224,7 +280,7 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
                         onClick={() => toggleExpand(news.id)}
                         className="text-[#ea384c] font-medium ml-1 hover:underline focus:outline-none"
                       >
-                        Read more
+                        {langKey === "ta" ? "மேலும் படிக்க" : langKey === "si" ? "තවත් කියවන්න" : "Read more"}
                       </button>
                     </p>
                   </div>

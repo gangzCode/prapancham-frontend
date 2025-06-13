@@ -25,6 +25,7 @@ type LanguageKey = "en" | "ta" | "si";
 
 const localeText = {
   en: {
+    ObituaryUpdates: "Obituary Updates",
     justNow: "just now",
     minute: "1 minute ago",
     minutes: (n: number) => `${n} minutes ago`,
@@ -39,6 +40,7 @@ const localeText = {
       }),
   },
   ta: {
+    ObituaryUpdates: "மரண அறிவித்தல் புதுப்பிப்புகள்",
     justNow: "இப்போது",
     minute: "1 நிமிடம் முன்பு",
     minutes: (n: number) => `${n} நிமிடங்கள் முன்பு`,
@@ -53,6 +55,7 @@ const localeText = {
       }),
   },
   si: {
+    ObituaryUpdates: "මරණ දැනුම්දීම යාවත්කාලීන",
     justNow: "දැන්ම",
     minute: "මිනිත්තුවකට පෙර",
     minutes: (n: number) => `${n} මිනිත්තුකට පෙර`,
@@ -60,13 +63,14 @@ const localeText = {
     hours: (n: number) => `${n} පැයකට පෙර`,
     days: (n: number) => `${n} දිනකට පෙර`,
     date: (date: Date) =>
-      date.toLocaleDateString("si", {
+      date.toLocaleDateString("si-LK", {
         day: "2-digit",
         month: "long",
         year: "numeric",
       }),
   },
 };
+
 
 const getTimeDifference = (updatedAt: string, langKey: LanguageKey): string => {
   const updatedTime = new Date(updatedAt).getTime();
@@ -91,8 +95,13 @@ const HeroSection = () => {
   const { language } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [newsDataList, setNewsDataList] = useState<NewsItem[]>([]);
+  const [obituaryData, setObituaryData] = useState<ObituaryEntry[]>([]);
   const { data, error } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/news/breaking-news/10`,
+    fetcher
+  );
+  const { data: obituaryDataResponse, error: obituaryError } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/order/priority`,
     fetcher
   );
 
@@ -116,6 +125,24 @@ const HeroSection = () => {
     setNewsDataList(transformedData);
   }, [data, error, langKey]);
 
+  useEffect(() => {
+    if (!obituaryDataResponse || obituaryError) return;
+
+    const transformedObituaryData: ObituaryEntry[] = obituaryDataResponse.orders.map(
+      (order: any) => ({
+        title: order.information.shortDescription,
+        name: order.information.title,
+        date: localeText[langKey].date(new Date(order.information.dateofDeath)),
+        address: order.information.address,
+
+        imageUrl: order.thumbnailImage || order.primaryImage,
+        condolences: order.selectedAddons.length,
+      })
+    );
+
+    setObituaryData(transformedObituaryData);
+  }, [obituaryDataResponse, obituaryError, langKey]);
+
   const handlePrevious = useCallback(() => {
     setCurrentIndex((prev) => Math.max(0, prev - 1));
   }, []);
@@ -127,57 +154,6 @@ const HeroSection = () => {
   const currentNews = newsDataList[currentIndex];
   const hasPrevious = currentIndex > 0;
   const hasNext = currentIndex < newsDataList.length - 1;
-
-  const obituaryData: ObituaryEntry[] = [
-    {
-      title: "31st day ceremony after death",
-      name: "Mr. Nadesh Rasathurai",
-      date: "15/02/2025",
-      address: "42, Jalan Tun Razak, Brickfields, Kuala Lumpur",
-      imageUrl: "https://randomuser.me/api/portraits/men/75.jpg",
-      condolences: 4,
-    },
-    {
-      title: "31st day ceremony after death",
-      name: "Mr. Nadesh Rasathurai",
-      date: "18/02/2025",
-      address: "15, Temple Road, Wellawatte, Colombo",
-      imageUrl: "https://randomuser.me/api/portraits/men/82.jpg",
-      condolences: 4,
-    },
-    {
-      title: "31st day ceremony after death",
-      name: "Mr. Nadesh Rasathurai",
-      date: "20/02/2025",
-      address: "28, Serangoon Road, Little India, Singapore",
-      imageUrl: "https://randomuser.me/api/portraits/men/91.jpg",
-      condolences: 4,
-    },
-    {
-      title: "31st day ceremony after death",
-      name: "Mr. Nadesh Rasathurai",
-      date: "22/02/2025",
-      address: "63, Lebuh Ampang, George Town, Penang",
-      imageUrl: "https://randomuser.me/api/portraits/men/85.jpg",
-      condolences: 4,
-    },
-    {
-      title: "31st day ceremony after death",
-      name: "Mr. Nadesh Rasathurai",
-      date: "25/02/2025",
-      address: "89, Jalan Masjid India, Kuala Lumpur",
-      imageUrl: "https://randomuser.me/api/portraits/men/92.jpg",
-      condolences: 4,
-    },
-    {
-      title: "31st day ceremony after death",
-      name: "Mr. Nadesh Rasathurai",
-      date: "28/02/2025",
-      address: "37, Race Course Road, Little India, Singapore",
-      imageUrl: "https://randomuser.me/api/portraits/men/95.jpg",
-      condolences: 4,
-    },
-  ];
 
   return (
     <section className="flex flex-wrap gap-6 justify-center items-center px-4 md:px-8 lg:px-16 mt-6 w-full max-md:px-5 max-md:max-w-full">
@@ -204,7 +180,10 @@ const HeroSection = () => {
 
       <aside className="self-stretch rounded-2xl min-h-[516px] min-w-60 w-[375px]">
         <div className="flex-shrink min-w-0 max-w-full">
-          <TitleWithUnderline text="Obituary Updates" underlineWidth={64} />
+          <TitleWithUnderline
+            text={localeText[langKey].ObituaryUpdates}
+            underlineWidth={64}
+          />
         </div>
         <div className="flex flex-1 gap-2 justify-center px-1 py-2 mt-4 h-full">
           <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[456px]">
