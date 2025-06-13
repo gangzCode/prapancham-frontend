@@ -152,7 +152,7 @@ const PodcastSection = ({
               <div className="aspect-video rounded-md overflow-hidden mb-4">
                 <img
                   src={podcast.image}
-                  alt={podcast.title}
+                  alt={podcast.title as string}
                   className="w-full h-full object-cover"
                 />
               </div>
