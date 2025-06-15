@@ -156,7 +156,11 @@ const PodcastSection = ({
               <div className="aspect-video rounded-md overflow-hidden mb-4">
                 <img
                   src={podcast.image}
+<<<<<<< HEAD
                   alt={typeof podcast.title === "string" ? podcast.title : ""}
+=======
+                  alt={podcast.title as string}
+>>>>>>> a065f93ced5ea012e3fcff76758c546412f0a1c9
                   className="w-full h-full object-cover"
                 />
               </div>
