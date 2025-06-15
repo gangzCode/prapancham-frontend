@@ -51,14 +51,18 @@ const PodcastSection = ({
     })),
   ];
 
+  const sanitizeCategory = (category: string) =>
+    category.replace(/\s+/g, "").toLowerCase();
+
   const { data: podcastData } = useSWR(
     activeCategory === "All"
       ? `${process.env.NEXT_PUBLIC_API_URL}/podcast`
-      : `${process.env.NEXT_PUBLIC_API_URL}/podcast?category=${categories.find((cat) => cat.en === activeCategory)?.en}`,
+      : `${process.env.NEXT_PUBLIC_API_URL}/podcast/${sanitizeCategory(categories.find((cat) => cat.en === activeCategory)?.en || "" )}`,
     fetcher
   );
 
-  const podcasts = (podcastData || []).map((podcast: any) => ({
+ const podcasts = (podcastData?.podcasts || []).map((podcast: any) => ({
+
     id: podcast._id,
     title: podcast.title[langKey]?.[0]?.value || "",
     description: podcast.description[langKey]?.[0]?.value || "",
@@ -152,7 +156,7 @@ const PodcastSection = ({
               <div className="aspect-video rounded-md overflow-hidden mb-4">
                 <img
                   src={podcast.image}
-                  alt={podcast.title}
+                  alt={typeof podcast.title === "string" ? podcast.title : ""}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -171,7 +175,7 @@ const PodcastSection = ({
 
                   <button
                     className="rounded-full bg-primary text-white p-2 hover:bg-primary/90 transition-colors"
-                    onClick={() => togglePlay(podcast._id)}
+                    onClick={() => typeof podcast.id === "number" ? togglePlay(podcast.id) : undefined}
                     aria-label={
                       isPlaying && currentPodcast === podcast.id
                         ? "Pause"
@@ -182,7 +186,9 @@ const PodcastSection = ({
                   </button>
 
                   <div className="text-sm text-gray-500">
-                    {podcast.duration.replace("hr", ":").replace("mins", "")}
+                    {typeof podcast.duration === "string"
+                      ? podcast.duration.replace("hr", ":").replace("mins", "")
+                      : podcast.duration ?? ""}
                   </div>
                 </div>
               </div>
