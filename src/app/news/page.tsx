@@ -15,54 +15,23 @@ import PoliticalNews from "@/components/category/PoliticalNews";
 import PaginationSection from "@/components/category/PaginationSection";
 import useSWR from 'swr';
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import { getTimeDifference } from "@/lib/utils";
 
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const NewsPage: React.FC = () => {
-  const topAdImages = [
-    "/images/top-ad-1.png",
-    "/images/top-ad-2.png",
-    "/images/top-ad-3.png",
-    "/images/top-ad-4.png",
-  ];
-  const breakingNewsItems = [
-    {
-      title:
-        "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisl convallis",
-      summary:
-        "Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus ac hendrerit nisl convallis",
-      image: "/images/breaking-news-image-1.png",
-      category: "Breaking News",
-      timeAgo: "2 minutes ago",
-    },
-    {
-      title:
-        "Second breaking news item with important updates and developments",
-      summary:
-        "Detailed coverage of the second breaking news story with additional information",
-      image: "/images/breaking-news-image-1.png",
-      category: "Breaking News",
-      timeAgo: "5 minutes ago",
-    },
-    {
-      title: "Third major news story breaks with significant implications",
-      summary:
-        "Comprehensive report on the third breaking news event and its impact",
-      image: "/images/breaking-news-image-1.png",
-      category: "Breaking News",
-      timeAgo: "10 minutes ago",
-    },
-  ];
 
 
-
-  const [currentIndex, setCurrentIndex] = useState(0);
   const { language } = useLanguage();
-
 
   const { data, error, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/news/news-category/active?page=1&limit=10`,
+    fetcher
+  );
+
+  const { data: breakingNewsData, error: breakingNewsError } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/news/breaking-news/10`,
     fetcher
   );
 
@@ -72,22 +41,31 @@ const NewsPage: React.FC = () => {
     si: "සියල්ල",
   };
 
+  let langKey: "en" | "ta" | "si" =
+    language === "english"
+      ? "en"
+      : language === "tamil"
+        ? "ta"
+        : language === "sinhala"
+          ? "si"
+          : "en";
 
 
-  let langKey = language;
-  if (langKey === "english") langKey = "en";
-  if (langKey === "tamil") langKey = "ta";
-  if (langKey === "sinhala") langKey = "si";
 
+  const [activeCountry, setActiveCountry] = useState("all");
 
-  const categories: string[] = [
-    allLabels[langKey] || allLabels["en"],
-    ...(data?.newsCategory?.map((cat: any) => {
-      const langObj = cat.name[langKey]?.[0] || cat.name["en"]?.[0];
-      return langObj?.name || "";
-    }) || []),
-  ];
-  const [activeCountry, setActiveCountry] = useState(categories[0]);
+  const breakingNewsItems = breakingNewsData
+    ? breakingNewsData.map((item: any) => ({
+      title: item.title?.[langKey]?.[0]?.value || "No title",
+      summary: item.description?.[langKey]?.[0]?.value || "No description",
+      image: item.mainImage || "/images/default-news-image.png",
+      category: "Breaking News",
+      timeAgo: getTimeDifference(item.updatedAt, langKey),
+    }))
+    : [];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
 
   const handlePrevious = () => {
     setCurrentIndex((prev) => Math.max(0, prev - 1));
@@ -97,7 +75,13 @@ const NewsPage: React.FC = () => {
     setCurrentIndex((prev) => Math.min(breakingNewsItems.length - 1, prev + 1));
   };
 
-  const currentNews = breakingNewsItems[currentIndex];
+  const currentNews = breakingNewsItems[currentIndex] || {
+    title: "No title",
+    summary: "No summary available",
+    image: "/images/default-news-image.png",
+    category: "Unknown",
+    timeAgo: "N/A",
+  };
 
   return (
     <div className="flex flex-col ">
@@ -118,17 +102,56 @@ const NewsPage: React.FC = () => {
           hasNext={currentIndex < breakingNewsItems.length - 1}
         />
         <CountryMenu
-          countries={categories}
+          countries={[
+            {
+              id: "all",
+              name: [
+                { lang: "en", value: allLabels["en"] },
+                { lang: "ta", value: allLabels["ta"] },
+                { lang: "si", value: allLabels["si"] },
+              ],
+            },
+            ...(data?.newsCategory?.map((cat: any) => ({
+              id: cat._id,
+              name: [
+                { lang: "en", value: cat.name.en?.[0]?.name || "" },
+                { lang: "ta", value: cat.name.ta?.[0]?.name || "" },
+                { lang: "si", value: cat.name.si?.[0]?.name || "" },
+              ],
+            })) || []),
+          ]}
           activeCountry={activeCountry}
           setActiveCountry={setActiveCountry}
         />
-       
-        {(activeCountry !== "Politics" && activeCountry !== "அரசியல்" && activeCountry !== "දේශපාලන") && <NewsTabsSection />}
-        {(activeCountry === "Politics" || activeCountry === "அரசியல்" || activeCountry === "දේශපාලන") && <PoliticalNews />}
 
-        <Separator />
-        {(activeCountry === "Politics" || activeCountry === "அரசியல்" || activeCountry === "දේශපාලන") && <PaginationSection />}
-        {(activeCountry !== "Politics" && activeCountry !== "அரசியல்" && activeCountry !== "දේශපාලන") && <TrendingNewsSection />}
+        {(activeCountry === "all") && <NewsTabsSection />}
+        {(activeCountry !== "all") &&
+          <PoliticalNews
+           countries={[
+            {
+              id: "all",
+              name: [
+                { lang: "en", value: allLabels["en"] },
+                { lang: "ta", value: allLabels["ta"] },
+                { lang: "si", value: allLabels["si"] },
+              ],
+            },
+            ...(data?.newsCategory?.map((cat: any) => ({
+              id: cat._id,
+              name: [
+                { lang: "en", value: cat.name.en?.[0]?.name || "" },
+                { lang: "ta", value: cat.name.ta?.[0]?.name || "" },
+                { lang: "si", value: cat.name.si?.[0]?.name || "" },
+              ],
+            })) || []),
+          ]}
+            activeCountry={activeCountry}
+          />
+        }
+
+        {/* <Separator /> */}
+        {/* {(activeCountry !== "all") && <PaginationSection />} */}
+        {(activeCountry === "all") && <TrendingNewsSection />}
         <Separator />
         <HAdCarousel
           ads={featuredAds}
@@ -137,9 +160,9 @@ const NewsPage: React.FC = () => {
           className="px-4 md:px-8 lg:px-16   max-md:px-5"
         />
         <Separator />
-        {(activeCountry !== "Politics" && activeCountry !== "அரசியல்" && activeCountry !== "දේශපාලන") && <NewsCategoriesSection />}
+        {(activeCountry === "all") && <NewsCategoriesSection />}
         <Separator className="mb-8" />
-        {(activeCountry === "Politics" || activeCountry === "அரசியல்" || activeCountry === "දේශපාලන") && <VideoNewsSection />}
+        {(activeCountry !== "all") && <VideoNewsSection />}
       </main>
     </div>
   );

@@ -96,12 +96,12 @@ const CategoryPage = () => {
         hasPrevious={currentIndex > 0}
         hasNext={currentIndex < breakingNewsItems.length - 1}
       />
-      <CountryMenu
+      {/* <CountryMenu
         countries={countries}
         activeCountry={activeCountry}
         setActiveCountry={setActiveCountry}
       />
-      <PoliticalNews />
+      <PoliticalNews /> */}
 
       <HAdCarousel
         ads={featuredAds}

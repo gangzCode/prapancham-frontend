@@ -71,7 +71,6 @@ const localeText = {
   },
 };
 
-
 const getTimeDifference = (updatedAt: string, langKey: LanguageKey): string => {
   const updatedTime = new Date(updatedAt).getTime();
   const currentTime = new Date().getTime();

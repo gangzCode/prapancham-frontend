@@ -85,11 +85,11 @@ const Advertisement = () => {
     return (
         <div className="mt-8">
 
-            <CountryMenu
+            {/* <CountryMenu
                 countries={categories}
                 activeCountry={activeCountry}
                 setActiveCountry={setActiveCountry}
-            />
+            /> */}
 
             <div className="py-8 px-4 md:px-8 lg:px-16 space-y-4">
                 <div className="bg-slate-50 shadow-lg p-4 ">

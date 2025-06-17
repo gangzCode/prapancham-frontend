@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from "@/components/ui/LanguageProvider";
 
 interface BreakingNewsCardProps {
   title: string;
@@ -27,12 +28,32 @@ const BreakingNewsHCard: React.FC<BreakingNewsCardProps> = ({
   hasPrevious,
   hasNext
 }) => {
+  const { language } = useLanguage();
+
+  const localizedText = {
+    en: {
+      readMore: "Read more",
+      breakingNews: "Breaking News",
+    },
+    ta: {
+      readMore: "மேலும் படிக்க",
+      breakingNews: "பிரேக்கிங் நியூஸ்",
+    },
+    si: {
+      readMore: "වැඩිදුර කියවන්න",
+      breakingNews: "බ්‍රේකින් නියුස්",
+    },
+  };
+
+  const langKey =
+    language === "tamil" ? "ta" : language === "sinhala" ? "si" : "en";
+
   return (
     <div className={cn("relative bg-white shadow-sm", className)}>
       <div className="px-4 md:px-8 lg:px-16">
         <div className="flex items-center justify-between mb-2 pt-4">
           <div className="flex items-center">
-            <span className="text-red-600 font-medium mr-2">{category}</span>
+            <span className="text-red-600 font-medium mr-2">{localizedText[langKey].breakingNews}</span>
             <span className="text-gray-500 text-2xl leading-none mx-2">•</span>
             <span className="text-gray-500 text-sm">{timeAgo}</span>
           </div>
@@ -76,7 +97,9 @@ const BreakingNewsHCard: React.FC<BreakingNewsCardProps> = ({
             <h2 className="text-xl md:text-2xl font-bold leading-tight mb-2">{title}</h2>
             <p className="text-gray-700 mb-2">{summary}...</p>
             
-            <a href="#" className="text-red-600 font-medium hover:underline">Read more</a>
+            <a href="#" className="text-red-600 font-medium hover:underline">
+              {localizedText[langKey].readMore}
+            </a>
           </div>
         </div>
       </div>

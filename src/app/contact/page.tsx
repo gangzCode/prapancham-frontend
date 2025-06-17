@@ -121,11 +121,11 @@ const ContactPage: React.FC = () => {
         </div>
       </div>
 
-      <CountryMenu
+      {/* <CountryMenu
         countries={countries}
         activeCountry={activeCountry}
         setActiveCountry={setActiveCountry}
-      />
+      /> */}
 
       {/* Quick Contact Form Section */}
       <div className="py-6 bg-white px-4 lg:px-16 sm:py-8 md:py-10">

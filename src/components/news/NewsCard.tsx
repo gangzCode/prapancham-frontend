@@ -1,7 +1,8 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export interface NewsCardProps {
+  [x: string]: ReactNode;
   title: string;
   image: string;
   category: string;

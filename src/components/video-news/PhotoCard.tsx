@@ -2,6 +2,8 @@ import React from "react";
 import Image from "next/image";
 import { Play, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/components/ui/LanguageProvider";
+
 
 export interface PhotoCardProps {
   title: string;
@@ -22,6 +24,29 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
   duration,
   variant = "small",
 }) => {
+  const { language } = useLanguage();
+  const langKey: "en" | "ta" | "si" =
+    language === "english"
+      ? "en"
+      : language === "tamil"
+        ? "ta"
+        : language === "sinhala"
+          ? "si"
+          : "en";
+    
+  const localeText = {
+    en: {
+      readMore: "Read more",
+    },
+    ta: {
+      readMore: "மேலும் படிக்க",
+    },
+    si: {
+      readMore: "තවත් කියවන්න",
+    },
+  };
+
+
   return (
     <div
       className={cn(
@@ -33,21 +58,23 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
         className={cn(
           "relative overflow-hidden ",
           variant === "small"
-            ? "sm:max-w-[10rem] w-full aspect-[1/1] sm:flex-shrink-0"
-            : "w-full aspect-video mb-4 "
+        ? "sm:max-w-[10rem] w-full aspect-[1/1] sm:flex-shrink-0"
+        : "w-full aspect-video mb-4 "
         )}
       >
-        <Image
+        <img
           src={image}
           alt={title}
-          fill
-          className="object-cover transform "
+          className="object-cover w-full h-full absolute inset-0"
+          style={{ objectFit: "cover" }}
         />
-        {/* <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+        {/* 
+        <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
           <div className="bg-white/90 rounded-full p-2 flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform duration-300 video-play-button">
-            <Play className="w-4 h-4 text-primary fill-primary" />
+        <Play className="w-4 h-4 text-primary fill-primary" />
           </div>
-        </div> */}
+        </div> 
+        */}
       </div>
 
       <div
@@ -73,7 +100,7 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
           href="#"
           className="text-secondary font-medium text-sm hover:underline mb-2 inline-flex items-center gap-1 group-hover:gap-2 transition-all"
         >
-          Read more
+          {localeText[langKey].readMore}
           <ChevronRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
         </a>
 
