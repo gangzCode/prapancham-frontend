@@ -188,17 +188,14 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
                     {featuredNews.title}
                   </h3>
                   <p className="text-sm text-gray-200 mb-2">
-                    {isExpanded(featuredNews.id)
-                      ? featuredNews.excerpt
-                      : featuredNews.excerpt.substring(0, 70)}
-                    {!isExpanded(featuredNews.id) && (
+                    
                       <button
-                        onClick={() => toggleExpand(featuredNews.id)}
-                        className="text-[#ea384c] font-medium ml-1 hover:underline focus:outline-none"
+                      onClick={() => window.location.href = `/news/${featuredNews.id}`}
+                      className="text-[#ea384c] font-medium ml-1 hover:underline focus:outline-none"
                       >
-                        {langKey === "ta" ? "மேலும் படிக்க" : langKey === "si" ? "තවත් කියවන්න" : "Read more"}
+                      {langKey === "ta" ? "மேலும் படிக்க" : langKey === "si" ? "තවත් කියවන්න" : "Read more"}
                       </button>
-                    )}
+                    
                   </p>
                 </div>
               </div>
@@ -272,15 +269,11 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
                       {news.title}
                     </h3>
                     <p className="text-xs text-gray-200 mb-1">
-                      {isExpanded(news.id)
-                        ? news.excerpt
-                        : news.title.substring(0, 35)}
-                      ...
                       <button
-                        onClick={() => toggleExpand(news.id)}
-                        className="text-[#ea384c] font-medium ml-1 hover:underline focus:outline-none"
+                      onClick={() => window.location.href = `/news/${news.id}`}
+                      className="text-[#ea384c] font-medium ml-1 hover:underline focus:outline-none"
                       >
-                        {langKey === "ta" ? "மேலும் படிக்க" : langKey === "si" ? "තවත් කියවන්න" : "Read more"}
+                      {langKey === "ta" ? "மேலும் படிக்க" : langKey === "si" ? "තවත් කියවන්න" : "Read more"}
                       </button>
                     </p>
                   </div>

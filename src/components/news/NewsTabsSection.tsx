@@ -154,7 +154,7 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
                         <p className="text-gray-600 mt-2 text-sm line-clamp-3">
                           {news.description}
                           <a
-                            href="#"
+                            href={`/news/${news.id}`}
                             className="text-red-600 ml-1 hover:underline"
                           >
                             {localeText[langKey].ReadMore}

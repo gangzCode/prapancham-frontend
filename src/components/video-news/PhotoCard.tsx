@@ -13,6 +13,7 @@ export interface PhotoCardProps {
   category: string;
   duration: string;
   variant?: "small" | "large";
+  id?: string; 
 }
 
 const PhotoCard: React.FC<PhotoCardProps> = ({
@@ -23,6 +24,7 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
   category,
   duration,
   variant = "small",
+  id 
 }) => {
   const { language } = useLanguage();
   const langKey: "en" | "ta" | "si" =
@@ -97,7 +99,7 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
         </p>
 
         <a
-          href="#"
+          href={`/news/${id}`}
           className="text-secondary font-medium text-sm hover:underline mb-2 inline-flex items-center gap-1 group-hover:gap-2 transition-all"
         >
           {localeText[langKey].readMore}

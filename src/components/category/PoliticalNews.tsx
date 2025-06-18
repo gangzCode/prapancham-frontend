@@ -85,7 +85,7 @@ const PoliticalNewsSection: React.FC<PoliticalNewsSectionProps> = ({ activeCount
 
   const translations: Record<LanguageKey, { [key: string]: string }> = {
     en: {
-      noPoliticalNewsFound: "No political news found for selected date",
+      noPoliticalNewsFound: `No ${category} news found for selected date`,
       selectDate: "Select date",
       cancel: "Cancel",
       ok: "OK",
@@ -95,7 +95,7 @@ const PoliticalNewsSection: React.FC<PoliticalNewsSectionProps> = ({ activeCount
       failedtoLoad: "Failed to load news.",
     },
     ta: {
-      noPoliticalNewsFound: "தேர்ந்தெடுக்கப்பட்ட தேதிக்கு அரசியல் செய்திகள் எதுவும் கிடைக்கவில்லை",
+      noPoliticalNewsFound: `தேர்ந்தெடுக்கப்பட்ட தேதிக்கு ${category} செய்திகள் எதுவும் கிடைக்கவில்லை`,
       selectDate: "தேதியைத் தேர்ந்தெடுக்கவும்",
       cancel: "ரத்து செய்",
       ok: "சரி",
@@ -105,7 +105,7 @@ const PoliticalNewsSection: React.FC<PoliticalNewsSectionProps> = ({ activeCount
       failedtoLoad: "செய்திகளை ஏற்றுவதில் தோல்வி.",
     },
     si: {
-      noPoliticalNewsFound: "තෝරාගත් දිනය සඳහා දේශපාලන පුවත් නොමැත",
+      noPoliticalNewsFound: `තෝරාගත් දිනය සඳහා ${category} පුවත් නොමැත`,
       selectDate: "දිනය තෝරන්න",
       cancel: "අවලංගු කරන්න",
       ok: "හරි",
@@ -249,6 +249,7 @@ const PoliticalNewsSection: React.FC<PoliticalNewsSectionProps> = ({ activeCount
           <div className="grid md:grid-cols-2 gap-8">
             {featuredVideo && (
               <PhotoCard
+                id={featuredVideo.id}
                 title={featuredVideo.title}
                 excerpt={featuredVideo.excerpt}
                 image={featuredVideo.image}
@@ -262,6 +263,7 @@ const PoliticalNewsSection: React.FC<PoliticalNewsSectionProps> = ({ activeCount
               {smallVideos.map((video) => (
                 <PhotoCard
                   key={video.id}
+                  id={video.id}
                   title={video.title}
                   excerpt={video.excerpt}
                   image={video.image}
@@ -284,6 +286,7 @@ const PoliticalNewsSection: React.FC<PoliticalNewsSectionProps> = ({ activeCount
               {largeVideos.map((video) => (
                 <PhotoCard
                   key={video.id}
+                  id={video.id}
                   title={video.title}
                   excerpt={video.excerpt}
                   image={video.image}
@@ -299,6 +302,8 @@ const PoliticalNewsSection: React.FC<PoliticalNewsSectionProps> = ({ activeCount
               {xlargeVideos.map((video) => (
                 <PhotoCard
                   key={video.id}
+                  id={video.id}
+
                   title={video.title}
                   excerpt={video.excerpt}
                   image={video.image}
@@ -323,6 +328,8 @@ const PoliticalNewsSection: React.FC<PoliticalNewsSectionProps> = ({ activeCount
                 {doubleVideos.map((video) => (
                   <PhotoCard
                     key={video.id}
+                    id={video.id}
+
                     title={video.title}
                     excerpt={video.excerpt}
                     image={video.image}

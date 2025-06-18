@@ -13,7 +13,7 @@ import { useLanguage } from "@/components/ui/LanguageProvider";
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 type NewsItem = {
-  id: number;
+  id: string;
   backgroundImage: string;
   timestamp: string;
   title: string;
@@ -112,7 +112,7 @@ const HeroSection = () => {
     if (!data || error) return;
 
     const transformedData: NewsItem[] = data.map((item: any) => ({
-      id: Number(item._id),
+      id: item._id,
       backgroundImage:
         item.mainImage || "https://randomuser.me/api/portraits/men/95.jpg",
       timestamp: getTimeDifference(item.updatedAt, langKey),

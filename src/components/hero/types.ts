@@ -8,7 +8,7 @@ export interface ObituaryEntry {
 }
 
 export interface NewsItem {
-  id: number;
+  id: string;
   backgroundImage: string;
   timestamp: string;
   title: string;

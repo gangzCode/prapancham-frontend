@@ -14,9 +14,11 @@ interface BreakingNewsCardProps {
   onNext: () => void;
   hasPrevious: boolean;
   hasNext: boolean;
+  id: string;
 }
 
 const BreakingNewsHCard: React.FC<BreakingNewsCardProps> = ({
+  id,
   title,
   summary,
   image,
@@ -97,7 +99,7 @@ const BreakingNewsHCard: React.FC<BreakingNewsCardProps> = ({
             <h2 className="text-xl md:text-2xl font-bold leading-tight mb-2">{title}</h2>
             <p className="text-gray-700 mb-2">{summary}...</p>
             
-            <a href="#" className="text-red-600 font-medium hover:underline">
+            <a href={`/news/${id}`} className="text-red-600 font-medium hover:underline">
               {localizedText[langKey].readMore}
             </a>
           </div>

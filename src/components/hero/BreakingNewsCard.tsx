@@ -34,6 +34,7 @@ const BreakingNewsCard: React.FC<BreakingNewsCardProps> = ({
   title,
   description,
   date,
+  id,
   onPrevious,
   onNext,
   hasPrevious,
@@ -83,14 +84,14 @@ const BreakingNewsCard: React.FC<BreakingNewsCardProps> = ({
         </h2>
         <p className="mt-2 text-body-base text-[#1A1D1F] max-md:max-w-full">
           {displayText}
-          {shouldTruncate && (
+          
             <button
               className="font-sans font-bold text-secondary ml-1"
-              onClick={() => setIsExpanded(!isExpanded)}
+              onClick={() => window.location.href = `/news/${id}`}
             >
               {isExpanded ? t.readLess : t.readMore}
             </button>
-          )}
+        
         </p>
       </div>
 

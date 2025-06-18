@@ -61,6 +61,7 @@ const NewsPage: React.FC = () => {
       image: item.mainImage || "/images/default-news-image.png",
       category: "Breaking News",
       timeAgo: getTimeDifference(item.updatedAt, langKey),
+      id: item._id,
     }))
     : [];
 
@@ -95,6 +96,7 @@ const NewsPage: React.FC = () => {
           image={currentNews.image}
           category={currentNews.category}
           timeAgo={currentNews.timeAgo}
+          id={currentNews.id}
           // className="my-4"
           onPrevious={handlePrevious}
           onNext={handleNext}

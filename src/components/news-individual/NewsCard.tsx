@@ -3,12 +3,13 @@ import Link from "next/link";
 import { ArrowRight, UserRound, ChevronRight } from "lucide-react";
 
 interface NewsCardProps {
-  id: number;
+  id: String;
   title: string;
   image: string;
   category: string;
   duration: string;
   editorName: string;
+  language?: string;
 }
 
 const NewsCard: React.FC<NewsCardProps> = ({
@@ -18,6 +19,8 @@ const NewsCard: React.FC<NewsCardProps> = ({
   category,
   duration,
   editorName,
+  language 
+  
 }) => {
   return (
     <div className="group relative overflow-hidden bg-white  shadow-sm hover:shadow transition-all duration-300">
@@ -57,7 +60,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
               {title.length > 50 ? `${title.slice(0, 50)}...` : title}
               <Link
                 href={`/news/${id}`}
-              ><span className=" font-semibold">Read more</span>
+              ><span className=" font-semibold">{language==="en" ? " Read more" : language==="ta" ? " மேலும் படிக்க" : language==="si" ? " තවත් කියවන්න" : " Read more"}</span>
               </Link>
             </p>
           </div>
