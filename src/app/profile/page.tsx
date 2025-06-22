@@ -22,7 +22,7 @@ const tributeData = Array.from({ length: 10 }).map((_, index) => ({
 const Events: React.FC = () => {
     const [activeTab, setActiveTab] = useState("General");
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [loading, setLoading] = useState(false); 
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     const [profile, setProfile] = useState({
@@ -49,7 +49,7 @@ const Events: React.FC = () => {
                             return;
                         }
                     }
-                } catch (error) {}
+                } catch (error) { }
             }
             setIsModalOpen(true);
         };
@@ -70,7 +70,7 @@ const Events: React.FC = () => {
                 image: user.image || '',
             }));
         }
-    }, [isModalOpen ]);
+    }, [isModalOpen]);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -105,7 +105,7 @@ const Events: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true); 
+        setLoading(true);
         const userStr = localStorage.getItem("user");
         if (!userStr) {
             setLoading(false);
@@ -143,6 +143,27 @@ const Events: React.FC = () => {
             toast.error("Failed to update profile.");
         }
         setLoading(false);
+    };
+    const handleClose = () => {
+        const user = localStorage.getItem("user");
+        let isAuthValid = false;
+        if (user) {
+            try {
+                const token = localStorage.getItem("accessToken");
+                if (token) {
+                    const decodedToken = JSON.parse(atob(token.split(".")[1]));
+                    const currentTime = Math.floor(Date.now() / 1000);
+                    if (decodedToken.exp && decodedToken.exp > currentTime) {
+                        isAuthValid = true;
+                    }
+                }
+            } catch (error) { }
+        }
+        if (!isAuthValid && typeof window !== "undefined") {
+            window.history.back();
+        } else {
+            setIsModalOpen(false);
+        }
     };
 
     const tabs = ["General", "Obituary", "Remembrance", "Advertisement"];
@@ -403,7 +424,7 @@ const Events: React.FC = () => {
             </section>
         );
     }
-    return <SignupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />;
+    return <SignupModal isOpen={isModalOpen} onClose={handleClose} />;
 };
 
 export default Events;

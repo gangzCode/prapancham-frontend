@@ -36,6 +36,7 @@ const NewsCategoryBlock: React.FC<NewsCategoryBlockProps> = ({
             category={item.category}
             timeAgo={item.timeAgo}
             editor={item.editor}
+            _id={item._id}
           />
         ))}
       </div>

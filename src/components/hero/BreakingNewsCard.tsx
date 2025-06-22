@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NewsItem } from "./types";
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import Link from "next/link";
 
 interface BreakingNewsCardProps extends NewsItem {
   onPrevious: () => void;
@@ -79,19 +80,23 @@ const BreakingNewsCard: React.FC<BreakingNewsCardProps> = ({
       </div>
 
       <div className="mt-4 w-full max-md:max-w-full">
-        <h2 className="text-heading-lg font-bold text-[#1A1D1F] max-md:max-w-full">
-          {title}
-        </h2>
+        <Link
+          href={`/news/${id}`}
+        >
+          <h2 className="text-heading-lg font-bold text-[#1A1D1F] max-md:max-w-full">
+            {title}
+          </h2>
+        </Link>
         <p className="mt-2 text-body-base text-[#1A1D1F] max-md:max-w-full">
           {displayText}
-          
-            <button
-              className="font-sans font-bold text-secondary ml-1"
-              onClick={() => window.location.href = `/news/${id}`}
-            >
-              {isExpanded ? t.readLess : t.readMore}
-            </button>
-        
+
+          <button
+            className="font-sans font-bold text-secondary ml-1"
+            onClick={() => window.location.href = `/news/${id}`}
+          >
+            {isExpanded ? t.readLess : t.readMore}
+          </button>
+
         </p>
       </div>
 

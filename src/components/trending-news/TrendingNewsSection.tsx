@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { TitleWithUnderline } from "../ui/title-with-underline";
 import useSWR from "swr";
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import Link from "next/link";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -184,18 +185,21 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent">
                 <div className="absolute bottom-0 p-6 text-white">
-                  <h3 className="text-xl hover:text-[#ea384c] md:text-2xl font-bold leading-tight mb-2">
-                    {featuredNews.title}
-                  </h3>
+                  <Link
+                    href={`/news/${featuredNews.id}`}>
+                    <h3 className="text-xl hover:text-[#ea384c] md:text-2xl font-bold leading-tight mb-2">
+                      {featuredNews.title}
+                    </h3>
+                  </Link>
                   <p className="text-sm text-gray-200 mb-2">
-                    
-                      <button
+
+                    <button
                       onClick={() => window.location.href = `/news/${featuredNews.id}`}
                       className="text-[#ea384c] font-medium ml-1 hover:underline focus:outline-none"
-                      >
+                    >
                       {langKey === "ta" ? "மேலும் படிக்க" : langKey === "si" ? "තවත් කියවන්න" : "Read more"}
-                      </button>
-                    
+                    </button>
+
                   </p>
                 </div>
               </div>
@@ -270,10 +274,10 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
                     </h3>
                     <p className="text-xs text-gray-200 mb-1">
                       <button
-                      onClick={() => window.location.href = `/news/${news.id}`}
-                      className="text-[#ea384c] font-medium ml-1 hover:underline focus:outline-none"
+                        onClick={() => window.location.href = `/news/${news.id}`}
+                        className="text-[#ea384c] font-medium ml-1 hover:underline focus:outline-none"
                       >
-                      {langKey === "ta" ? "மேலும் படிக்க" : langKey === "si" ? "තවත් කියවන්න" : "Read more"}
+                        {langKey === "ta" ? "மேலும் படிக்க" : langKey === "si" ? "තවත් කියවන්න" : "Read more"}
                       </button>
                     </p>
                   </div>

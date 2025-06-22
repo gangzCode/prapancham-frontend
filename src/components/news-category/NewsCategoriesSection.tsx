@@ -128,7 +128,7 @@ const NewsCategoriesSection: React.FC = () => {
                   "මාතෘකාව",
                 ])}
                 news={category.news.map((newsItem) => ({
-                  ...newsItem,
+                  _id: (newsItem as any)._id,
                   title: getLocalizedValue(newsItem.title[langKey], [
                     "Headline",
                     "தலைப்பு",
@@ -138,12 +138,13 @@ const NewsCategoriesSection: React.FC = () => {
                     newsItem.editorName?.[langKey] || [],
                     ["Editor", "ஆசிரியர்", "සම්පත්කරු"]
                   ),
-                  image: newsItem.thumbnailImage || newsItem.thumbnailImage || "",
+                  image: newsItem.thumbnailImage || "",
                   category: getLocalizedValue(
                     category.category.name[langKey],
                     ["News", "செய்தி", "පුවත්"]
                   ),
                   timeAgo: getTimeAgo(newsItem.createdAt, langKey),
+                  className: undefined,
                 }))}
                 adImage="https://images.unsplash.com/photo-1518640467707-6811f4a6ab73"
               />

@@ -1,8 +1,10 @@
 import React from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export interface NewsCardProps {
+  _id: any;
   title: string;
   image: string;
   category: string;
@@ -18,20 +20,25 @@ const NewsCard: React.FC<NewsCardProps> = ({
   timeAgo,
   editor,
   className,
+  _id,
 }) => {
   return (
     <div className={cn("flex gap-4 mb-4 shadow-md p-4 hover:shadow-lg", className)}>
-      <div className="w-24 h-24 flex-shrink-0 relative">
-        <Image
-          src={image}
-          alt={title}
-          fill
-          className="object-cover"
-          sizes="96px"
-        />
-      </div>
+      <Link href={`/news/${_id}`} >
+        <div className="w-24 h-24 flex-shrink-0 relative">
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-cover"
+            sizes="96px"
+          />
+        </div>
+      </Link>
       <div className="flex-1 flex flex-col">
-        <p className="text-sm font-medium line-clamp-3">{title}</p>
+        <Link href={`/news/${_id}`} >
+          <p className="text-sm font-medium line-clamp-3">{title}</p>
+        </Link>
         <div className="flex items-center mt-auto text-xs mr-2 justify-between">
           <span className="flex items-center text-gray-500">
             <svg
@@ -57,6 +64,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
           </div>
         </div>
       </div>
+
     </div>
   );
 };

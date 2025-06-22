@@ -3,22 +3,43 @@ import { CheckCircle } from 'lucide-react';
 interface PlansProps {
     planName: string;
     price: number;
+    currency: string;
+    language?: 'en' | 'ta' | 'si';
     features: string[];
+    plan: any;
     isPremium: boolean;
     setActiveStep: (step: number) => void;
+    setSelectedPlan: (plan: any) => void;
+
 }
 
-const Plans: React.FC<PlansProps> = ({ planName, price, features, isPremium ,setActiveStep}) => {
+const Plans: React.FC<PlansProps> = ({
+    planName,
+    price,
+    features,
+    isPremium,
+    setActiveStep,
+    currency,
+    language,
+    setSelectedPlan,
+    plan
+}) => {
+
+
     return (
         <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 p-2">
             <div className="bg-white rounded-lg shadow-xl p-6 relative">
                 <div className={`bg-primary text-white text-center py-4 rounded-t-lg ${isPremium ? 'relative ' : ''}`}>
                     <h2 className="text-lg">{planName}</h2>
-                    <p className="text-2xl font-bold">LKR {price}</p>
+                    <p className="text-2xl font-bold">{currency} {price}</p>
 
                     {isPremium && (
                         <div className="absolute top-0 right-2 bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded-tl-lg">
-                            Premium
+                            {language === 'ta'
+                                ? 'பிரீமியம்'
+                                : language === 'si'
+                                    ? 'ප්‍රිමියම්'
+                                    : 'Premium'}
                         </div>
                     )}
                 </div>
@@ -33,10 +54,17 @@ const Plans: React.FC<PlansProps> = ({ planName, price, features, isPremium ,set
                         </li>
                     ))}
                 </ul>
-                <button 
-                onClick={() => setActiveStep(2)}
-                className={`w-full ${isPremium ? 'bg-primary text-white' : 'bg-white text-primary '} border border-primary py-2 rounded`}>
-                    Get Started
+                <button
+                    onClick={() => {
+                        setActiveStep(2);
+                        setSelectedPlan(plan);
+                    }}
+                    className={`w-full ${isPremium ? 'bg-primary text-white' : 'bg-white text-primary '} border border-primary py-2 rounded`}>
+                    {language === 'ta'
+                        ? 'தொடங்குங்கள்'
+                        : language === 'si'
+                            ? 'ආරම්භ කරන්න'
+                            : 'Get Started'}
                 </button>
             </div>
         </div>
