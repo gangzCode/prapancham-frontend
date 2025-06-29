@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import DonateModal from "./DonateModal";
 import TributeModal from "./TributeModal";
+import { ObituaryEntry } from "../hero/types";
 interface TributeCardProps {
   condolencesCount: number;
   timeAgo: string;
@@ -11,6 +12,7 @@ interface TributeCardProps {
   ceremonyTitle: string;
   eventName: string;
   date: string;
+  entry: ObituaryEntry;
   onPostTribute?: () => void;
   onDonate?: () => void;
 }
@@ -22,11 +24,15 @@ const TributeCard: React.FC<TributeCardProps> = ({
   ceremonyTitle,
   eventName,
   date,
+  entry,
   onPostTribute,
   onDonate,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTributeModalOpen, setIsTributeModalOpen] = useState(false);
+
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <div className="w-full  mx-auto bg-white  shadow-md overflow-hidden p-2">
       <div className="flex justify-between w-full items-center border-b">
@@ -37,13 +43,11 @@ const TributeCard: React.FC<TributeCardProps> = ({
       </div>
       <Link href="/obituary/01">
         <div className="flex">
-          <div className="w-[35%] h-40 relative">
-            <Image
+          <div className="w-[35%] h-40 relative overflow-hidden">
+            <img
               src={imageUrl}
               alt="Portrait"
-              layout="fill"
-              objectFit="cover"
-              className="object-cover"
+              className="w-full h-full object-cover"
             />
           </div>
           <div className="w-[65%] bg-black text-white p-4 flex flex-col justify-center items-end">
@@ -68,7 +72,11 @@ const TributeCard: React.FC<TributeCardProps> = ({
         >
           Donate
         </button>
-        <DonateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        <DonateModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          obituaryEntry={entry}
+        />
       </div>
     </div>
   );
