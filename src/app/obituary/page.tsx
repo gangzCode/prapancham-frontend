@@ -9,13 +9,13 @@ import PaginationBar from "@/components/category/PaginationBar";
 import OrbituaryNavbar from "@/components/obituary/OrbituaryNavbar";
 
 const tributeData = Array.from({ length: 10 }).map((_, index) => ({
-    id: index,
-    condolencesCount: Math.floor(Math.random() * 10) + 1,
-    timeAgo: `${Math.floor(Math.random() * 5) + 1} hour${Math.random() > 0.5 ? "s" : ""} ago`,
-    imageUrl: "/images/tribute.jpg",
-    ceremonyTitle: "31st day ceremony after death",
-    eventName: `Event Name ${index + 1}`,
-    date: "DD/MM/YYYY",
+    "_id": `685ac0799230744ead66da8c${index}`,
+    "title": "31st day ceremony after death",
+    "name": "Mr U. Gangezwer",
+    "date": "01 Oct 2022",
+    "address": "123 Street",
+    "imageUrl": "/images/tribute.jpg",
+    "condolences": 1
 }));
 
 const Obituary: React.FC = () => {
@@ -34,13 +34,14 @@ const Obituary: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {tributeData.map((item) => (
                             <TributeCard
-                                key={item.id}
-                                condolencesCount={item.condolencesCount}
-                                timeAgo={item.timeAgo}
+                                key={item._id}
+                                condolencesCount={item.condolences}
+                                timeAgo={ "1 hour ago"}
                                 imageUrl={item.imageUrl}
-                                ceremonyTitle={item.ceremonyTitle}
-                                eventName={item.eventName}
+                                ceremonyTitle={item.title}
+                                eventName={item.name}
                                 date={item.date}
+                                entry={item}
                             />
                         ))}
                     </div>
@@ -53,7 +54,6 @@ const Obituary: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Right side advertisement section - 1/3 width on desktop */}
                 <div className="md:col-span-1">
                     <AdvertisementSidebar numberOfAds={4} />
                 </div>

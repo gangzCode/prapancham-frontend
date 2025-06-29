@@ -81,6 +81,7 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
     if (!obituaryDataResponse || obituaryError) return;
 
     const transformed = obituaryDataResponse.orders.map((order: any) => ({
+      _id: order._id,
       title: order.information.shortDescription,
       name: order.information.title,
       date: localeText[langKey].date(new Date(order.information.dateofDeath)),

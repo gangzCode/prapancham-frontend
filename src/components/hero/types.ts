@@ -1,4 +1,5 @@
 export interface ObituaryEntry {
+  _id: string;
   title: string;
   name: string;
   date: string;

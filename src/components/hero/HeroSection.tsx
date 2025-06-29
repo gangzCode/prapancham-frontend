@@ -129,11 +129,11 @@ const HeroSection = () => {
 
     const transformedObituaryData: ObituaryEntry[] = obituaryDataResponse.orders.map(
       (order: any) => ({
+        _id: order._id,
         title: order.information.shortDescription,
         name: order.information.title,
         date: localeText[langKey].date(new Date(order.information.dateofDeath)),
         address: order.information.address,
-
         imageUrl: order.thumbnailImage || order.primaryImage,
         condolences: order.selectedAddons.length,
       })
