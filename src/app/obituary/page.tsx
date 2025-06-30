@@ -328,7 +328,14 @@ const Obituary: React.FC = () => {
         setSearchTerm(""); // Clear search when selecting country
         setActiveFilters(null); // Clear filters when selecting country
         setCurrentPage(1); // Reset to first page when selecting country
-        fetchOrdersByCountry(countryId, 1);
+        
+        // If "All" is selected (empty countryId), fetch all orders
+        if (countryId === "" || countryId === "all") {
+            setSelectedCountryId(null); // Set to null for "All" option
+            fetchOrders(1);
+        } else {
+            fetchOrdersByCountry(countryId, 1);
+        }
     };
 
     // Function to handle page change
@@ -362,7 +369,7 @@ const Obituary: React.FC = () => {
             />
             <CountrySection 
                 onCountrySelect={handleCountrySelect}
-                selectedCountryId={selectedCountryId}
+                selectedCountryId={selectedCountryId === null ? "all" : selectedCountryId}
             />
             <Separator className="mb-4" />
 

@@ -1,9 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import DonateModal from "./DonateModal";
-import TributeModal from "./TributeModal";
 import { Delete, Edit, Minus, Trash, Trash2 } from 'lucide-react';
 import { useLanguage } from "@/components/ui/LanguageProvider";
 

@@ -135,7 +135,7 @@ const HeroSection = () => {
         date: localeText[langKey].date(new Date(order.information.dateofDeath)),
         address: order.information.address,
         imageUrl: order.thumbnailImage || order.primaryImage,
-        condolences: order.selectedAddons.length,
+        condolences: order.tributeItems ? order.tributeItems.length : 0,
       })
     );
 

@@ -24,9 +24,9 @@ const ObituaryCard: React.FC<ObituaryCardProps> = ({ entry }) => {
 
   const localizedText = {
     condolences: {
-      en: `${entry.condolences} Condolences`,
-      ta: `${entry.condolences} இரங்கல்கள்`,
-      si: `${entry.condolences} සංවේදීතා`,
+      en: `Condolences`,
+      ta: `இரங்கல்கள்`,
+      si: `සංවේදීතා`,
     },
 
     postTribute: {
