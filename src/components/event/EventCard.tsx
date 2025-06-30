@@ -29,7 +29,7 @@ const EventCard: React.FC<EventCardProps> = ({
     <article className="flex relative flex-col gap-4 pb-4 w-full bg-white min-h-[212px] shadow-[0px_0px_12px_rgba(0,0,0,0.06)] max-md:max-w-full">
       <div className="relative">
         <Image
-          src={imageUrl}
+          src={imageUrl || "/images/Prapancham-logo.png"}
           alt={eventName}
           width={400}
           height={112}

@@ -37,7 +37,7 @@ const AdBanner: React.FC<AdBannerProps> = ({ image }) => (
   <div className="mb-2 overflow-hidden ">
     <div className="aspect-[21/9] sm:aspect-[16/9] md:aspect-[21/9] relative">
       <Image
-        src={image}
+        src={image || "/images/Prapancham-logo.png"}
         alt="Advertisement"
         fill
         className="object-cover"

@@ -75,7 +75,7 @@ const EventSlider = () => {
       <div className="relative w-full">
         <div className="relative w-full min-h-96 aspect-[2/1]">
           <Image
-            src={currentEvent.featuredEventImage || currentEvent.image}
+            src={currentEvent.featuredEventImage || currentEvent.image || "/images/Prapancham-logo.png"}
             alt={getTranslatedField(currentEvent.name, 'value')}
             fill
             className="object-cover filter brightness-50 rounded-lg"

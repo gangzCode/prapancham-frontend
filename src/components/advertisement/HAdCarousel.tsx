@@ -161,7 +161,7 @@ const HAdCarousel = ({
               >
                 <div className="aspect-video w-full h-full relative">
                   <Image
-                    src={ad.image}
+                    src={ad.image || "/images/Prapancham-logo.png"}
                     alt={ad.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"

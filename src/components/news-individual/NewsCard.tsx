@@ -50,7 +50,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
       </div> */}
       <div className="bg-white overflow-hidden">
         <div className="relative">
-          <img alt={title} className="w-full h-64 object-cover filter " height="500" src={image} width="600" />
+          <img alt={title} className="w-full h-64 object-cover filter " height="500" src={image || undefined} width="600" />
           <div className="absolute inset-0 bg-black bg-opacity-50 p-4 flex flex-col justify-between">
             <div className="flex items-center text-white text-sm mb-2">
               <UserRound />

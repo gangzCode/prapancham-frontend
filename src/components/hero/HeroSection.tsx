@@ -114,7 +114,7 @@ const HeroSection = () => {
     const transformedData: NewsItem[] = data.map((item: any) => ({
       id: item._id,
       backgroundImage:
-        item.mainImage || "https://randomuser.me/api/portraits/men/95.jpg",
+        item.mainImage || "/images/Prapancham-logo.png",
       timestamp: getTimeDifference(item.updatedAt, langKey),
       title: item.title?.[langKey]?.[0]?.value || "No title",
       description: item.description?.[langKey]?.[0]?.value || "No description",
@@ -160,7 +160,7 @@ const HeroSection = () => {
         <article className="flex-1 shrink self-stretch my-auto basis-0 min-w-60 shadow-[0px_0px_12px_rgba(0,0,0,0.06)] max-md:max-w-full">
           <div className="flex relative flex-col justify-end w-full min-h-[516px] max-md:max-w-full">
             <Image
-              src={currentNews.backgroundImage}
+              src={currentNews.backgroundImage || "/images/Prapancham-logo.png"}
               alt="News background"
               width={700}
               height={516}

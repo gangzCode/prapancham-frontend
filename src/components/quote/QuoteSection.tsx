@@ -97,7 +97,7 @@ const QuoteSection: React.FC<QuoteSectionProps> = ({ className }) => {
           <div className="w-full md:w-1/3 relative h-[250px] md:h-[300px]">
             {image && (
               <Image
-                src={image}
+                src={image || "/images/Prapancham-logo.png"}
                 alt={personName}
                 fill
                 className="object-cover rounded-md"

@@ -24,7 +24,7 @@ const HorizontalAdBanner: React.FC<HorizontalAdBannerProps> = ({
       )}
     >
       <Image
-        src={image}
+        src={image || "/images/Prapancham-logo.png"}
         alt={alt}
         fill
         className="object-cover"
