@@ -1,0 +1,331 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import OrbituaryCard from "./OrbituaryCard";
+import { useLanguage } from "@/components/ui/LanguageProvider";
+
+type LanguageKey = "en" | "ta" | "si";
+
+interface UserObituaryOrder {
+    _id: string;
+    information: {
+        title: string;
+        address: string;
+        dateofBirth: string;
+        dateofDeath: string;
+        description: string;
+        tributeVideo: string;
+        shortDescription: string;
+    };
+    basePackagePrice: {
+        country: {
+            _id: string;
+            currencyCode: string;
+        };
+        price: number;
+    };
+    finalPrice: {
+        country: {
+            _id: string;
+            currencyCode: string;
+        };
+        price: number;
+    };
+    finalPriceInCAD: number;
+    donationRecieved: {
+        currencyCode: string;
+    };
+    donationGivenBack: {
+        currencyCode: string;
+    };
+    memoryImageMoneyRecieved: {
+        currencyCode: string;
+    };
+    flowerMoneyRecieved: {
+        currencyCode: string;
+    };
+    slideshowImages: string[];
+    tributeItems: any[];
+    expiryDate: string;
+    recievedDonations: any[];
+    primaryImage: string;
+    thumbnailImage: string;
+    selectedAddons: any[];
+    additionalImages: string[];
+    isDeleted: boolean;
+    orderStatus: string;
+    contactDetails: any[];
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+    selectedBgColor?: any;
+    selectedPackage?: any;
+    selectedPrimaryImageBgFrame?: any;
+}
+
+interface UserObituariesResponse {
+    type: string;
+    count: number;
+    orders: UserObituaryOrder[];
+}
+
+const UserObituaries: React.FC = () => {
+    const { language } = useLanguage();
+    let langKey: LanguageKey = "en";
+    if (language === "tamil") langKey = "ta";
+    else if (language === "sinhala") langKey = "si";
+
+    const translations: Record<LanguageKey, { [key: string]: string }> = {
+        en: {
+            myObituaries: "My Obituaries",
+            loading: "Loading your obituaries...",
+            noObituaries: "No obituaries found.",
+            errorLoading: "Error loading obituaries. Please try again.",
+            failedToFetch: "Failed to fetch obituaries:",
+            refresh: "Refresh",
+            days: "days",
+            day: "day",
+            hours: "hours",
+            hour: "hour",
+            minutes: "minutes",
+            minute: "minute",
+            justNow: "Just now",
+            ago: "ago",
+            loginRequired: "Please log in to view your obituaries."
+        },
+        ta: {
+            myObituaries: "எனது இரங்கல்கள்",
+            loading: "உங்கள் இரங்கல்களை ஏற்றுகிறது...",
+            noObituaries: "இரங்கல்கள் எதுவும் கிடைக்கவில்லை.",
+            errorLoading: "இரங்கல்களை ஏற்றுவதில் பிழை. மீண்டும் முயற்சிக்கவும்.",
+            failedToFetch: "இரங்கல்களைப் பெறுவதில் தோல்வி:",
+            refresh: "புதுப்பிக்கவும்",
+            days: "நாட்கள்",
+            day: "நாள்",
+            hours: "மணி நேரங்கள்",
+            hour: "மணி நேரம்",
+            minutes: "நிமிடங்கள்",
+            minute: "நிமிடம்",
+            justNow: "இப்போதே",
+            ago: "முன்பு",
+            loginRequired: "உங்கள் இரங்கல்களைப் பார்க்க தயவுசெய்து உள்நுழையவும்."
+        },
+        si: {
+            myObituaries: "මගේ මරණ දැන්වීම්",
+            loading: "ඔබේ මරණ දැන්වීම් පූරණය වෙමින්...",
+            noObituaries: "මරණ දැන්වීම් හමු නොවීය.",
+            errorLoading: "මරණ දැන්වීම් පූරණය කිරීමේදී දෝෂයක්. කරුණාකර නැවත උත්සාහ කරන්න.",
+            failedToFetch: "මරණ දැන්වීම් ලබා ගැනීමට අසමත්:",
+            refresh: "නැවුම් කරන්න",
+            days: "දින",
+            day: "දිනය",
+            hours: "පැය",
+            hour: "පැයක්",
+            minutes: "මිනිත්තු",
+            minute: "මිනිත්තුව",
+            justNow: "දැන්",
+            ago: "කලින්",
+            loginRequired: "ඔබේ මරණ දැන්වීම් බැලීමට කරුණාකර පුරනය වන්න."
+        }
+    };
+
+    const t = translations[langKey];
+
+    const [obituaries, setObituaries] = useState<UserObituaryOrder[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string>("");
+    const [user, setUser] = useState<any>(null);
+
+    // Function to get user data from localStorage
+    const getUserFromStorage = () => {
+        try {
+            const userData = localStorage.getItem('user');
+            const accessToken = localStorage.getItem('accessToken');
+
+            if (userData && accessToken) {
+                return {
+                    user: JSON.parse(userData),
+                    accessToken
+                };
+            }
+            return null;
+        } catch (error) {
+            console.error('Error parsing user data from localStorage:', error);
+            return null;
+        }
+    };
+
+    // Function to calculate time ago from createdAt
+    const calculateTimeAgo = (createdAt: string): string => {
+        const now = new Date();
+        const created = new Date(createdAt);
+        const diffInMilliseconds = now.getTime() - created.getTime();
+        const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        const diffInDays = Math.floor(diffInHours / 24);
+
+        if (diffInDays > 0) {
+            return `${diffInDays} ${diffInDays > 1 ? t.days : t.day} ${t.ago}`;
+        } else if (diffInHours > 0) {
+            return `${diffInHours} ${diffInHours > 1 ? t.hours : t.hour} ${t.ago}`;
+        } else if (diffInMinutes > 0) {
+            return `${diffInMinutes} ${diffInMinutes > 1 ? t.minutes : t.minute} ${t.ago}`;
+        } else {
+            return t.justNow;
+        }
+    };
+
+    // Function to fetch user obituaries
+    const fetchUserObituaries = async (userId: string, accessToken: string) => {
+        try {
+            setLoading(true);
+            setError("");
+
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/order/find/${userId}?type=obituary`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                setObituaries([]);
+                return;
+            }
+
+            const data: UserObituariesResponse = await response.json();
+            setObituaries(data.orders);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : t.errorLoading);
+            console.error('Error fetching user obituaries:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        const userData = getUserFromStorage();
+
+        if (userData && userData.user && userData.accessToken) {
+            setUser(userData.user);
+            fetchUserObituaries(userData.user._id, userData.accessToken);
+        } else {
+            setError(t.loginRequired);
+            setLoading(false);
+        }
+    }, []);
+
+    // Function to refresh obituaries
+    const handleRefresh = () => {
+        const userData = getUserFromStorage();
+        if (userData && userData.user && userData.accessToken) {
+            fetchUserObituaries(userData.user._id, userData.accessToken);
+        }
+    };
+
+    // Function to handle after deletion (refresh the list)
+    const handleAfterDelete = () => {
+        handleRefresh();
+    };
+
+    // Function to calculate total donations received
+    const calculateDonationReceived = (recievedDonations: any): any => {
+        if (!recievedDonations || !recievedDonations.price) {
+            return {
+                price: 0,
+                currencyCode: 'CAD' // Default to CAD if no donations
+            }
+        }
+        else return {
+            price: recievedDonations.price,
+            currencyCode: recievedDonations.currencyCode || 'CAD' // Default to CAD if no currency code
+        }
+    };
+
+    // Transform obituary data to match OrbituaryCard props
+    const transformObituaryData = (obituary: UserObituaryOrder) => ({
+        condolencesCount: obituary.tributeItems?.length || 0,
+        timeAgo: calculateTimeAgo(obituary.createdAt),
+        imageUrl: obituary.primaryImage || obituary.thumbnailImage || "/images/tribute.jpg",
+        ceremonyTitle: obituary.information.shortDescription || obituary.information.title,
+        eventName: obituary.information.title,
+        date: new Date(obituary.information.dateofDeath).toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        }),
+        finalPrice: {
+            currencyCode: obituary.finalPrice.country.currencyCode,
+            price: obituary.finalPrice.price
+        },
+        donationReceived: calculateDonationReceived(obituary.donationRecieved),
+        postedDate: new Date(obituary.createdAt).toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        })
+    });
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#880002]"></div>
+                <span className="ml-4 text-gray-600">{t.loading}</span>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <p>{error}</p>
+                {user && error !== t.loginRequired && (
+                    <button
+                        onClick={handleRefresh}
+                        className="mt-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+                    >
+                        {t.refresh}
+                    </button>
+                )}
+            </div>
+        );
+    }
+
+    return (
+        <div>
+            {obituaries.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {obituaries.map((obituary) => {
+                        const cardData = transformObituaryData(obituary);
+                        return (
+                            <OrbituaryCard
+                                key={obituary._id}
+                                orderId={obituary._id}
+                                condolencesCount={cardData.condolencesCount}
+                                timeAgo={cardData.timeAgo}
+                                imageUrl={cardData.imageUrl}
+                                ceremonyTitle={cardData.ceremonyTitle}
+                                eventName={cardData.eventName}
+                                date={cardData.date}
+                                finalPrice={cardData.finalPrice}
+                                donationReceived={cardData.donationReceived}
+                                postedDate={cardData.postedDate}
+                                onDelete={handleAfterDelete}
+                            />
+                        );
+                    })}
+                </div>
+            ) : (
+                <div className="text-center py-12">
+                    <p className="text-gray-500 text-lg">{t.noObituaries}</p>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default UserObituaries;
