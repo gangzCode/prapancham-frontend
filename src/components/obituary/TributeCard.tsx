@@ -1,10 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import DonateModal from "./DonateModal";
 import TributeModal from "./TributeModal";
 import { ObituaryEntry } from "../hero/types";
+import { useLanguage } from "@/components/ui/LanguageProvider";
+
+type LanguageKey = "en" | "ta" | "si";
 interface TributeCardProps {
   condolencesCount: number;
   timeAgo: string;
@@ -28,6 +30,33 @@ const TributeCard: React.FC<TributeCardProps> = ({
   onPostTribute,
   onDonate,
 }) => {
+  const { language } = useLanguage();
+  let langKey: LanguageKey = "en";
+  if (language === "tamil") langKey = "ta";
+  else if (language === "sinhala") langKey = "si";
+
+  const translations: Record<LanguageKey, { [key: string]: string }> = {
+    en: {
+      condolences: "Condolences",
+      postTribute: "Post Tribute",
+      donate: "Donate",
+      portrait: "Portrait"
+    },
+    ta: {
+      condolences: "இரங்கல்கள்",
+      postTribute: "அஞ்சலி அனுப்பு",
+      donate: "நன்கொடை",
+      portrait: "உருவப்படம்"
+    },
+    si: {
+      condolences: "අනුකම්පාව",
+      postTribute: "උපහාරය යවන්න",
+      donate: "දානය",
+      portrait: "ප්‍රතිමාව"
+    }
+  };
+
+  const t = translations[langKey];
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTributeModalOpen, setIsTributeModalOpen] = useState(false);
 
@@ -37,7 +66,7 @@ const TributeCard: React.FC<TributeCardProps> = ({
     <div className="w-full  mx-auto bg-white  shadow-md overflow-hidden p-2">
       <div className="flex justify-between w-full items-center border-b">
         <span className="text-[#880002] ">
-          {condolencesCount} Condolences
+          {condolencesCount} {t.condolences}
         </span>
         <span className="text-gray-600 text-sm">{timeAgo}</span>
       </div>
@@ -46,7 +75,7 @@ const TributeCard: React.FC<TributeCardProps> = ({
           <div className="w-[35%] h-40 relative overflow-hidden">
             <img
               src={imageUrl}
-              alt="Portrait"
+              alt={t.portrait}
               className="w-full h-full object-cover"
             />
           </div>
@@ -63,14 +92,14 @@ const TributeCard: React.FC<TributeCardProps> = ({
           onClick={() => setIsTributeModalOpen(true)}
           className="w-4/5 py-2 border border-primary rounded text-primary "
         >
-          Post Tribute
+          {t.postTribute}
         </button>
         <TributeModal isOpen={isTributeModalOpen} onClose={() => setIsTributeModalOpen(false)} />
         <button
           onClick={() => setIsModalOpen(true)}
           className="w-1/5 py-2 bg-primary text-white rounded"
         >
-          Donate
+          {t.donate}
         </button>
         <DonateModal
           isOpen={isModalOpen}
