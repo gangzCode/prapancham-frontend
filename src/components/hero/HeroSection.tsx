@@ -7,6 +7,7 @@ import { ObituaryEntry } from "./types";
 import BreakingNewsCard from "./BreakingNewsCard";
 import ObituaryCard from "./ObituaryCard";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 import useSWR from "swr";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
@@ -95,11 +96,11 @@ const HeroSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [newsDataList, setNewsDataList] = useState<NewsItem[]>([]);
   const [obituaryData, setObituaryData] = useState<ObituaryEntry[]>([]);
-  const { data, error } = useSWR(
+  const { data, error, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/news/breaking-news/10`,
     fetcher
   );
-  const { data: obituaryDataResponse, error: obituaryError } = useSWR(
+  const { data: obituaryDataResponse, error: obituaryError, isLoading: obituaryLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/order/priority`,
     fetcher
   );
@@ -156,7 +157,13 @@ const HeroSection = () => {
 
   return (
     <section className="flex flex-wrap gap-6 justify-center items-center px-4 md:px-8 lg:px-16 mt-6 w-full max-md:px-5 max-md:max-w-full">
-      {currentNews && (
+      {isLoading ? (
+        <article className="flex-1 shrink self-stretch my-auto basis-0 min-w-60 shadow-[0px_0px_12px_rgba(0,0,0,0.06)] max-md:max-w-full">
+          <div className="flex relative flex-col justify-center items-center w-full min-h-[516px] max-md:max-w-full bg-gray-50">
+            <LoadingSpinner message="Loading breaking news..." />
+          </div>
+        </article>
+      ) : currentNews ? (
         <article className="flex-1 shrink self-stretch my-auto basis-0 min-w-60 shadow-[0px_0px_12px_rgba(0,0,0,0.06)] max-md:max-w-full">
           <div className="flex relative flex-col justify-end w-full min-h-[516px] max-md:max-w-full">
             <Image
@@ -175,7 +182,7 @@ const HeroSection = () => {
             />
           </div>
         </article>
-      )}
+      ) : null}
 
       <aside className="self-stretch rounded-2xl min-h-[516px] min-w-60 w-[375px]">
         <div className="flex-shrink min-w-0 max-w-full">
@@ -185,16 +192,22 @@ const HeroSection = () => {
           />
         </div>
         <div className="flex flex-1 gap-2 justify-center px-1 py-2 mt-4 h-full">
-          <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[456px]">
-            <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-0 md:pr-4">
-              {obituaryData.map((entry, index) => (
-                <div key={index} className={index > 0 ? "mt-2" : ""}>
-                  <ObituaryCard entry={entry} />
-                </div>
-              ))}
+          {obituaryLoading ? (
+            <div className="flex flex-1 justify-center items-center h-[456px]">
+              <LoadingSpinner message="Loading obituaries..." />
             </div>
-            <ScrollBar orientation="vertical" />
-          </ScrollArea>
+          ) : (
+            <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[456px]">
+              <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-0 md:pr-4">
+                {obituaryData.map((entry, index) => (
+                  <div key={index} className={index > 0 ? "mt-2" : ""}>
+                    <ObituaryCard entry={entry} />
+                  </div>
+                ))}
+              </div>
+              <ScrollBar orientation="vertical" />
+            </ScrollArea>
+          )}
         </div>
       </aside>
     </section>
