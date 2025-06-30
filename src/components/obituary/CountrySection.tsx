@@ -128,7 +128,7 @@ const CountrySection = ({ onCountrySelect, selectedCountryId }: CountrySectionPr
             si: [{ name: t.all, value: t.all, _id: "all-si" }]
         },
         currencyCode: "",
-        image: "https://flagsapi.com/SO/flat/64.png",
+        image: "/globe.svg",
         orderCount: countries.reduce((total, country) => total + country.orderCount, 0)
     };
 
@@ -185,7 +185,7 @@ const CountrySection = ({ onCountrySelect, selectedCountryId }: CountrySectionPr
 
     return (
         <div className="">
-            <div className="container mx-auto p-4">
+            <div>
                 {error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                         {error}
@@ -223,7 +223,7 @@ const CountrySection = ({ onCountrySelect, selectedCountryId }: CountrySectionPr
                                             className="w-full h-full object-cover"
                                             onError={(e) => {
                                                 // Fallback to a default image if the API image fails
-                                                e.currentTarget.src = 'https://flagsapi.com/SO/flat/64.png';
+                                                e.currentTarget.src = '/globe.svg';
                                             }}
                                         />
                                     </div>
