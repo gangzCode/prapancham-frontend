@@ -27,6 +27,8 @@ type LanguageKey = "en" | "ta" | "si";
 const localeText = {
   en: {
     ObituaryUpdates: "Obituary Updates",
+    noObituaries: "No obituaries available",
+    checkBackLater: "Check back later for updates",
     justNow: "just now",
     minute: "1 minute ago",
     minutes: (n: number) => `${n} minutes ago`,
@@ -42,6 +44,8 @@ const localeText = {
   },
   ta: {
     ObituaryUpdates: "மரண அறிவித்தல் புதுப்பிப்புகள்",
+    noObituaries: "மரண அறிவித்தல்கள் இல்லை",
+    checkBackLater: "புதுப்பிப்புகளுக்கு பின்னர் சரிபார்க்கவும்",
     justNow: "இப்போது",
     minute: "1 நிமிடம் முன்பு",
     minutes: (n: number) => `${n} நிமிடங்கள் முன்பு`,
@@ -57,6 +61,8 @@ const localeText = {
   },
   si: {
     ObituaryUpdates: "මරණ දැනුම්දීම යාවත්කාලීන",
+    noObituaries: "මරණ දැනුම්දීම් නොමැත",
+    checkBackLater: "යාවත්කාලීන කිරීම් සඳහා පසුව පරීක්ෂා කරන්න",
     justNow: "දැන්ම",
     minute: "මිනිත්තුවකට පෙර",
     minutes: (n: number) => `${n} මිනිත්තුකට පෙර`,
@@ -195,6 +201,13 @@ const HeroSection = () => {
           {obituaryLoading ? (
             <div className="flex flex-1 justify-center items-center h-[456px]">
               <LoadingSpinner message="Loading obituaries..." />
+            </div>
+          ) : obituaryData.length === 0 ? (
+            <div className="flex flex-1 justify-center items-center h-[456px]">
+              <div className="text-center text-gray-500">
+                <p className="text-lg font-medium mb-2">{localeText[langKey].noObituaries}</p>
+                <p className="text-sm">{localeText[langKey].checkBackLater}</p>
+              </div>
             </div>
           ) : (
             <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[456px]">
