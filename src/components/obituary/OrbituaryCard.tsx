@@ -5,6 +5,9 @@ import Link from "next/link";
 import DonateModal from "./DonateModal";
 import TributeModal from "./TributeModal";
 import { Delete, Edit, Minus, Trash, Trash2 } from 'lucide-react';
+import { useLanguage } from "@/components/ui/LanguageProvider";
+
+type LanguageKey = "en" | "ta" | "si";
 
 interface OrbituaryCardProps {
   condolencesCount: number;
@@ -27,6 +30,33 @@ const OrbituaryCard: React.FC<OrbituaryCardProps> = ({
   onPostTribute,
   onDonate,
 }) => {
+  const { language } = useLanguage();
+  let langKey: LanguageKey = "en";
+  if (language === "tamil") langKey = "ta";
+  else if (language === "sinhala") langKey = "si";
+
+  const translations: Record<LanguageKey, { [key: string]: string }> = {
+    en: {
+      condolences: "Condolences",
+      donationReceived: "Donation received",
+      postedDate: "Posted date",
+      portrait: "Portrait"
+    },
+    ta: {
+      condolences: "இரங்கல்கள்",
+      donationReceived: "நன்கொடை பெறப்பட்டது",
+      postedDate: "இடுகை தேதி",
+      portrait: "உருவப்படம்"
+    },
+    si: {
+      condolences: "අනුකම්පාව",
+      donationReceived: "දානය ලැබුණි",
+      postedDate: "පළ කළ දිනය",
+      portrait: "ප්‍රතිමාව"
+    }
+  };
+
+  const t = translations[langKey];
   return (
     <div className="w-full   bg-white  shadow-md overflow-hidden p-2">
       <div className="flex justify-end w-full items-center border-b gap-2">
@@ -38,7 +68,7 @@ const OrbituaryCard: React.FC<OrbituaryCardProps> = ({
         <div className="w-[40%] h-48 relative">
           <Image
             src={imageUrl}
-            alt="Portrait"
+            alt={t.portrait}
             layout="fill"
             objectFit="cover"
             className="object-cover"
@@ -57,7 +87,7 @@ const OrbituaryCard: React.FC<OrbituaryCardProps> = ({
             04
           </p>
           <p className="text-sm text-gray-500">
-            Condolences
+            {t.condolences}
           </p>
         </div>
         <Minus className=" hidden md:block h-10 w-[1px] mt-1 bg-gray-300" />
@@ -66,7 +96,7 @@ const OrbituaryCard: React.FC<OrbituaryCardProps> = ({
             20,000LKR
           </p>
           <p className="text-sm text-gray-500">
-            Donation received
+            {t.donationReceived}
           </p>
         </div>
         <Minus className=" hidden md:block h-10 w-[1px] mt-1 bg-gray-300" />
@@ -75,7 +105,7 @@ const OrbituaryCard: React.FC<OrbituaryCardProps> = ({
             12/02/2025
           </p>
           <p className="text-sm text-gray-500">
-            Posted date
+            {t.postedDate}
           </p>
         </div>
       </div>
