@@ -87,7 +87,7 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
       date: localeText[langKey].date(new Date(order.information.dateofDeath)),
       address: order.information.address,
       imageUrl: order.thumbnailImage || order.primaryImage,
-      condolences: order.selectedAddons?.length || 0,
+      condolences: order.tributeItems ? order.tributeItems.length : 0,
     }));
 
     setObituaryData(transformed);
@@ -187,16 +187,25 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
               />
             </div>
             <div className="flex flex-1 gap-2 justify-center px-1 py-2 mt-4 h-full">
-              <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[456px]">
-                <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-0 md:pr-4">
-                  {obituaryData.map((entry, index) => (
-                    <div key={index} className={index > 0 ? "mt-2" : ""}>
-                      <ObituaryCard entry={entry} />
-                    </div>
-                  ))}
+              {obituaryData.length === 0 ? (
+                <div className="flex flex-1 justify-center items-center h-[456px]">
+                  <div className="text-center text-gray-500">
+                    <p className="text-lg font-medium mb-2">{localeText[langKey].noObituaries}</p>
+                    <p className="text-sm">{localeText[langKey].checkBackLater}</p>
+                  </div>
                 </div>
-                <ScrollBar orientation="vertical" />
-              </ScrollArea>
+              ) : (
+                <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[456px]">
+                  <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-0 md:pr-4">
+                    {obituaryData.map((entry, index) => (
+                      <div key={index} className={index > 0 ? "mt-2" : ""}>
+                        <ObituaryCard entry={entry} />
+                      </div>
+                    ))}
+                  </div>
+                  <ScrollBar orientation="vertical" />
+                </ScrollArea>
+              )}
             </div>
           </aside>
         </div>
@@ -211,6 +220,8 @@ const localeText = {
   en: {
     ReadMore: "Read more",
     ObituaryUpdates: "Obituary Updates",
+    noObituaries: "No obituaries available",
+    checkBackLater: "Check back later for updates",
     justNow: "just now",
     minute: "1 minute ago",
     minutes: (n: number) => `${n} minutes ago`,
@@ -227,6 +238,8 @@ const localeText = {
   ta: {
     ReadMore: "மேலும் வாசிக்க",
     ObituaryUpdates: "மரண அறிவித்தல் புதுப்பிப்புகள்",
+    noObituaries: "மரண அறிவித்தல்கள் இல்லை",
+    checkBackLater: "புதுப்பிப்புகளுக்கு பின்னர் சரிபார்க்கவும்",
     justNow: "இப்போது",
     minute: "1 நிமிடம் முன்பு",
     minutes: (n: number) => `${n} நிமிடங்கள் முன்பு`,
@@ -243,6 +256,8 @@ const localeText = {
   si: {
     ReadMore: "වැඩිදුර කියවන්න",
     ObituaryUpdates: "මරණ දැනුම්දීම යාවත්කාලීන",
+    noObituaries: "මරණ දැනුම්දීම් නොමැත",
+    checkBackLater: "යාවත්කාලීන කිරීම් සඳහා පසුව පරීක්ෂා කරන්න",
     justNow: "දැන්ම",
     minute: "මිනිත්තුවකට පෙර",
     minutes: (n: number) => `${n} මිනිත්තුකට පෙර`,

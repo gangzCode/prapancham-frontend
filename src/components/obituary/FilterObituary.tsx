@@ -241,7 +241,7 @@ const FilterObituary = ({ onFilter, onReset, isLoading = false }: FilterObituary
                                 </div>
 
                                 {/* Items per page */}
-                                <div className="space-y-2">
+                                {/* <div className="space-y-2">
                                     <label className="text-sm font-medium text-gray-700">{t.itemsPerPage}</label>
                                     <select
                                         value={filters.limit}
@@ -253,7 +253,7 @@ const FilterObituary = ({ onFilter, onReset, isLoading = false }: FilterObituary
                                         <option value={15}>15</option>
                                         <option value={20}>20</option>
                                     </select>
-                                </div>
+                                </div> */}
                             </div>
 
                             <div className="flex gap-3 mt-6">

@@ -34,7 +34,7 @@ const TributeCard: React.FC<TributeCardProps> = ({
       <div className="flex">
         <div className="w-[35%] h-40 relative">
           <Image
-            src={imageUrl}
+            src={imageUrl || "/images/Prapancham-logo.png"}
             alt="Portrait"
             layout="fill"
             objectFit="cover"

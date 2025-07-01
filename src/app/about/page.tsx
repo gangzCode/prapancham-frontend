@@ -267,7 +267,7 @@ const About = () => {
                             <div key={index} className="flex md:items-center space-x-4 mb-6">
                                 <div className="w-16 h-16 relative m-4 flex-shrink-0">
                                     <Image
-                                        src={offer.imageSrc}
+                                        src={offer.imageSrc || "/images/Prapancham-logo.png"}
                                         alt={`Icon representing`}
                                         layout="fill"
                                         objectFit="cover"

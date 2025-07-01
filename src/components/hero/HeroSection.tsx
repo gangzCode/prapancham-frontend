@@ -7,6 +7,7 @@ import { ObituaryEntry } from "./types";
 import BreakingNewsCard from "./BreakingNewsCard";
 import ObituaryCard from "./ObituaryCard";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 import useSWR from "swr";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
@@ -26,6 +27,8 @@ type LanguageKey = "en" | "ta" | "si";
 const localeText = {
   en: {
     ObituaryUpdates: "Obituary Updates",
+    noObituaries: "No obituaries available",
+    checkBackLater: "Check back later for updates",
     justNow: "just now",
     minute: "1 minute ago",
     minutes: (n: number) => `${n} minutes ago`,
@@ -41,6 +44,8 @@ const localeText = {
   },
   ta: {
     ObituaryUpdates: "மரண அறிவித்தல் புதுப்பிப்புகள்",
+    noObituaries: "மரண அறிவித்தல்கள் இல்லை",
+    checkBackLater: "புதுப்பிப்புகளுக்கு பின்னர் சரிபார்க்கவும்",
     justNow: "இப்போது",
     minute: "1 நிமிடம் முன்பு",
     minutes: (n: number) => `${n} நிமிடங்கள் முன்பு`,
@@ -56,6 +61,8 @@ const localeText = {
   },
   si: {
     ObituaryUpdates: "මරණ දැනුම්දීම යාවත්කාලීන",
+    noObituaries: "මරණ දැනුම්දීම් නොමැත",
+    checkBackLater: "යාවත්කාලීන කිරීම් සඳහා පසුව පරීක්ෂා කරන්න",
     justNow: "දැන්ම",
     minute: "මිනිත්තුවකට පෙර",
     minutes: (n: number) => `${n} මිනිත්තුකට පෙර`,
@@ -95,11 +102,11 @@ const HeroSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [newsDataList, setNewsDataList] = useState<NewsItem[]>([]);
   const [obituaryData, setObituaryData] = useState<ObituaryEntry[]>([]);
-  const { data, error } = useSWR(
+  const { data, error, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/news/breaking-news/10`,
     fetcher
   );
-  const { data: obituaryDataResponse, error: obituaryError } = useSWR(
+  const { data: obituaryDataResponse, error: obituaryError, isLoading: obituaryLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/order/priority`,
     fetcher
   );
@@ -114,7 +121,7 @@ const HeroSection = () => {
     const transformedData: NewsItem[] = data.map((item: any) => ({
       id: item._id,
       backgroundImage:
-        item.mainImage || "https://randomuser.me/api/portraits/men/95.jpg",
+        item.mainImage || "/images/Prapancham-logo.png",
       timestamp: getTimeDifference(item.updatedAt, langKey),
       title: item.title?.[langKey]?.[0]?.value || "No title",
       description: item.description?.[langKey]?.[0]?.value || "No description",
@@ -135,7 +142,7 @@ const HeroSection = () => {
         date: localeText[langKey].date(new Date(order.information.dateofDeath)),
         address: order.information.address,
         imageUrl: order.thumbnailImage || order.primaryImage,
-        condolences: order.selectedAddons.length,
+        condolences: order.tributeItems ? order.tributeItems.length : 0,
       })
     );
 
@@ -156,11 +163,17 @@ const HeroSection = () => {
 
   return (
     <section className="flex flex-wrap gap-6 justify-center items-center px-4 md:px-8 lg:px-16 mt-6 w-full max-md:px-5 max-md:max-w-full">
-      {currentNews && (
+      {isLoading ? (
+        <article className="flex-1 shrink self-stretch my-auto basis-0 min-w-60 shadow-[0px_0px_12px_rgba(0,0,0,0.06)] max-md:max-w-full">
+          <div className="flex relative flex-col justify-center items-center w-full min-h-[516px] max-md:max-w-full bg-gray-50">
+            <LoadingSpinner message="Loading breaking news..." />
+          </div>
+        </article>
+      ) : currentNews ? (
         <article className="flex-1 shrink self-stretch my-auto basis-0 min-w-60 shadow-[0px_0px_12px_rgba(0,0,0,0.06)] max-md:max-w-full">
           <div className="flex relative flex-col justify-end w-full min-h-[516px] max-md:max-w-full">
             <Image
-              src={currentNews.backgroundImage}
+              src={currentNews.backgroundImage || "/images/Prapancham-logo.png"}
               alt="News background"
               width={700}
               height={516}
@@ -175,7 +188,7 @@ const HeroSection = () => {
             />
           </div>
         </article>
-      )}
+      ) : null}
 
       <aside className="self-stretch rounded-2xl min-h-[516px] min-w-60 w-[375px]">
         <div className="flex-shrink min-w-0 max-w-full">
@@ -185,16 +198,29 @@ const HeroSection = () => {
           />
         </div>
         <div className="flex flex-1 gap-2 justify-center px-1 py-2 mt-4 h-full">
-          <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[456px]">
-            <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-0 md:pr-4">
-              {obituaryData.map((entry, index) => (
-                <div key={index} className={index > 0 ? "mt-2" : ""}>
-                  <ObituaryCard entry={entry} />
-                </div>
-              ))}
+          {obituaryLoading ? (
+            <div className="flex flex-1 justify-center items-center h-[456px]">
+              <LoadingSpinner message="Loading obituaries..." />
             </div>
-            <ScrollBar orientation="vertical" />
-          </ScrollArea>
+          ) : obituaryData.length === 0 ? (
+            <div className="flex flex-1 justify-center items-center h-[456px]">
+              <div className="text-center text-gray-500">
+                <p className="text-lg font-medium mb-2">{localeText[langKey].noObituaries}</p>
+                <p className="text-sm">{localeText[langKey].checkBackLater}</p>
+              </div>
+            </div>
+          ) : (
+            <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[456px]">
+              <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-0 md:pr-4">
+                {obituaryData.map((entry, index) => (
+                  <div key={index} className={index > 0 ? "mt-2" : ""}>
+                    <ObituaryCard entry={entry} />
+                  </div>
+                ))}
+              </div>
+              <ScrollBar orientation="vertical" />
+            </ScrollArea>
+          )}
         </div>
       </aside>
     </section>

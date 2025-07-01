@@ -152,7 +152,6 @@ export default function Footer() {
           <div className="md:col-span-3">
             <div className="mb-12">
               <Image
-                // src="/images/prapancham-footer-logo.svg"
                 src="/images/Prapancham-logo.png"
                 alt="Prapancham"
                 className="max-w-[64px] sm:max-w-none items-center justify-center rounded-md"

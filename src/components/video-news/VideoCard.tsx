@@ -68,7 +68,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
         )}
       >
         <Image
-          src={image}
+          src={image || "/images/Prapancham-logo.png"}
           alt={title}
           fill
           className="object-cover transform group-hover:scale-105 transition-transform duration-300"

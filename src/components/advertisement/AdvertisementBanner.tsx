@@ -16,7 +16,7 @@ const AdvertisementBanner: React.FC<AdvertisementBannerProps> = ({
       <div className="flex flex-wrap gap-3 justify-center items-center w-full max-md:max-w-full">
         {images.map((image, index) => (
           <Image
-            key={index}
+            key={index || "/images/Prapancham-logo.png"}
             src={image}
             alt={`Advertisement ${index + 1}`}
             width={284}

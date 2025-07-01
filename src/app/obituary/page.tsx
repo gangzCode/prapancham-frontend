@@ -227,12 +227,23 @@ const Obituary: React.FC = () => {
             setIsFiltering(true);
             setError("");
 
+            // remove the attributes that have false values from filters
+            const filteredKeys = Object.keys(filters).reduce((acc, key) => {
+                if (filters[key as keyof FilterOptions] !== false && filters[key as keyof FilterOptions] !== null && filters[key as keyof FilterOptions] !== undefined) {
+                    acc[key] = filters[key as keyof FilterOptions];
+                }
+                return acc;
+            }, {} as { [key: string]: number | boolean });
+
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order/filter`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(filters),
+                body: JSON.stringify({
+                    ...filteredKeys,
+                    page: currentPage, // Include current page in the request
+                }),
             });
 
             if (!response.ok) {
@@ -328,7 +339,14 @@ const Obituary: React.FC = () => {
         setSearchTerm(""); // Clear search when selecting country
         setActiveFilters(null); // Clear filters when selecting country
         setCurrentPage(1); // Reset to first page when selecting country
-        fetchOrdersByCountry(countryId, 1);
+        
+        // If "All" is selected (empty countryId), fetch all orders
+        if (countryId === "" || countryId === "all") {
+            setSelectedCountryId(null); // Set to null for "All" option
+            fetchOrders(1);
+        } else {
+            fetchOrdersByCountry(countryId, 1);
+        }
     };
 
     // Function to handle page change
@@ -362,7 +380,7 @@ const Obituary: React.FC = () => {
             />
             <CountrySection 
                 onCountrySelect={handleCountrySelect}
-                selectedCountryId={selectedCountryId}
+                selectedCountryId={selectedCountryId === null ? "all" : selectedCountryId}
             />
             <Separator className="mb-4" />
 

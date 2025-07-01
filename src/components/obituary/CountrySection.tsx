@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useLanguage } from "@/components/ui/LanguageProvider";
+
+type LanguageKey = "en" | "ta" | "si";
 
 interface CountryData {
     _id: string;
@@ -33,6 +36,45 @@ interface CountrySectionProps {
 }
 
 const CountrySection = ({ onCountrySelect, selectedCountryId }: CountrySectionProps) => {
+    const { language } = useLanguage();
+    let langKey: LanguageKey = "en";
+    if (language === "tamil") langKey = "ta";
+    else if (language === "sinhala") langKey = "si";
+
+    const translations: Record<LanguageKey, { [key: string]: string }> = {
+        en: {
+            all: "All",
+            posts: "Posts",
+            post: "Post",
+            loadingCountries: "Loading countries...",
+            noCountryData: "No country data available.",
+            failedToFetchCountry: "Failed to fetch country data:",
+            errorFetchingCountry: "An error occurred while fetching country data",
+            flagAlt: "flag"
+        },
+        ta: {
+            all: "அனைத்தும்",
+            posts: "இடுகைகள்",
+            post: "இடுகை",
+            loadingCountries: "நாடுகளை ஏற்றுகிறது...",
+            noCountryData: "நாட்டு தரவு எதுவும் கிடைக்கவில்லை.",
+            failedToFetchCountry: "நாட்டு தரவைப் பெறுவதில் தோல்வி:",
+            errorFetchingCountry: "நாட்டு தரவைப் பெறுவதில் பிழை ஏற்பட்டது",
+            flagAlt: "கொடி"
+        },
+        si: {
+            all: "සියල්ල",
+            posts: "පළ කිරීම්",
+            post: "පළ කිරීම",
+            loadingCountries: "රටවල් පූරණය වෙමින්...",
+            noCountryData: "රට දත්ත කිසිවක් නොමැත.",
+            failedToFetchCountry: "රට දත්ත ලබා ගැනීමට අසමත්:",
+            errorFetchingCountry: "රට දත්ත ලබා ගැනීමේදී දෝෂයක් ඇතිවිය",
+            flagAlt: "කොඩිය"
+        }
+    };
+
+    const t = translations[langKey];
     const [countries, setCountries] = useState<CountryData[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
@@ -48,13 +90,13 @@ const CountrySection = ({ onCountrySelect, selectedCountryId }: CountrySectionPr
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order/country-order-count`);
 
             if (!response.ok) {
-                throw new Error(`Failed to fetch country data: ${response.status}`);
+                throw new Error(`${t.failedToFetchCountry} ${response.status}`);
             }
 
             const data: CountryData[] = await response.json();
             setCountries(data);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'An error occurred while fetching country data');
+            setError(err instanceof Error ? err.message : t.errorFetchingCountry);
             console.error('Error fetching country data:', err);
         } finally {
             setLoading(false);
@@ -77,49 +119,73 @@ const CountrySection = ({ onCountrySelect, selectedCountryId }: CountrySectionPr
         return () => window.removeEventListener('resize', updateItemsPerPage);
     }, []);
 
+    // Create "All" country option
+    const allCountryOption: CountryData = {
+        _id: "all",
+        name: {
+            en: [{ name: t.all, value: t.all, _id: "all-en" }],
+            ta: [{ name: t.all, value: t.all, _id: "all-ta" }],
+            si: [{ name: t.all, value: t.all, _id: "all-si" }]
+        },
+        currencyCode: "",
+        image: "/globe.svg",
+        orderCount: countries.reduce((total, country) => total + country.orderCount, 0)
+    };
+
+    // Combine "All" option with countries
+    const allCountries = [allCountryOption, ...countries];
+
     // Calculate visible countries for carousel
     let visibleCountries: CountryData[] = [];
 
-    if (countries.length > 0) {
-        if (currentIndex + itemsPerPage > countries.length) {
+    if (allCountries.length > 0) {
+        if (currentIndex + itemsPerPage > allCountries.length) {
             visibleCountries = [
-                ...countries.slice(currentIndex),
-                ...countries.slice(0, (currentIndex + itemsPerPage) % countries.length),
+                ...allCountries.slice(currentIndex),
+                ...allCountries.slice(0, (currentIndex + itemsPerPage) % allCountries.length),
             ];
         } else {
-            visibleCountries = countries.slice(currentIndex, currentIndex + itemsPerPage);
+            visibleCountries = allCountries.slice(currentIndex, currentIndex + itemsPerPage);
         }
     }
 
     const handlePrev = () => {
-        if (countries.length > 0) {
-            setCurrentIndex((prev) => (countries.length + prev - 1) % countries.length);
+        if (allCountries.length > 0) {
+            setCurrentIndex((prev) => (allCountries.length + prev - 1) % allCountries.length);
         }
     };
 
     const handleNext = () => {
-        if (countries.length > 0) {
-            setCurrentIndex((prev) => (prev + 1) % countries.length);
+        if (allCountries.length > 0) {
+            setCurrentIndex((prev) => (prev + 1) % allCountries.length);
         }
     };
 
-    // Helper function to get country name in English
+    // Helper function to get country name based on current language
     const getCountryName = (country: CountryData): string => {
-        return country.name.en[0]?.value || 'Unknown Country';
+        if (country._id === "all") {
+            return country.name[langKey][0]?.value || t.all;
+        }
+        return country.name[langKey][0]?.value || country.name.en[0]?.value || 'Unknown Country';
     };
 
     // Handle country click
     const handleCountryClick = (country: CountryData) => {
         if (onCountrySelect) {
             const countryName = getCountryName(country);
-            onCountrySelect(country._id, countryName);
+            if (country._id === "all") {
+                // Special handling for "All" - pass null to trigger fetchOrders
+                onCountrySelect("", countryName);
+            } else {
+                onCountrySelect(country._id, countryName);
+            }
         }
     };
 
 
     return (
         <div className="">
-            <div className="container mx-auto p-4">
+            <div>
                 {error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                         {error}
@@ -129,14 +195,14 @@ const CountrySection = ({ onCountrySelect, selectedCountryId }: CountrySectionPr
                 {loading ? (
                     <div className="bg-white p-6 shadow flex items-center justify-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#880002]"></div>
-                        <span className="ml-2 text-gray-600">Loading countries...</span>
+                        <span className="ml-2 text-gray-600">{t.loadingCountries}</span>
                     </div>
-                ) : countries.length > 0 ? (
+                ) : allCountries.length > 1 ? (
                     <div className="bg-white p-6 shadow flex items-center gap-4">
                         <button 
                             className="text-gray-500 hover:text-gray-700 disabled:opacity-50" 
                             onClick={handlePrev}
-                            disabled={countries.length <= itemsPerPage}
+                            disabled={allCountries.length <= itemsPerPage}
                         >
                             <ChevronLeft size={24} />
                         </button>
@@ -146,25 +212,25 @@ const CountrySection = ({ onCountrySelect, selectedCountryId }: CountrySectionPr
                                 <div 
                                     key={country._id} 
                                     className={`flex items-center gap-3 relative cursor-pointer p-2 rounded-lg transition-colors hover:bg-gray-50 ${
-                                        selectedCountryId === country._id ? 'bg-blue-50 border-2 border-blue-300' : ''
+                                        (selectedCountryId === country._id) || (country._id === "all" && (selectedCountryId === null || selectedCountryId === "")) ? 'bg-blue-50 border-2 border-blue-300' : ''
                                     }`}
                                     onClick={() => handleCountryClick(country)}
                                 >
                                     <div className="w-[60px] h-[60px] rounded-full overflow-hidden flex-shrink-0 bg-gray-100">
                                         <img
                                             src={country.image}
-                                            alt={`${getCountryName(country)} flag`}
+                                            alt={`${getCountryName(country)} ${t.flagAlt}`}
                                             className="w-full h-full object-cover"
                                             onError={(e) => {
                                                 // Fallback to a default image if the API image fails
-                                                e.currentTarget.src = '/images/default-flag.png';
+                                                e.currentTarget.src = '/globe.svg';
                                             }}
                                         />
                                     </div>
                                     <div>
                                         <p className="font-semibold">{getCountryName(country)}</p>
                                         <p className="text-red-700">
-                                            {country.orderCount} {country.orderCount === 1 ? 'Post' : 'Posts'}
+                                            {country.orderCount} {country.orderCount === 1 ? t.post : t.posts}
                                         </p>
                                     </div>
                                     {(idx % 2 === 1 && idx !== visibleCountries.length - 1) && (
@@ -180,14 +246,14 @@ const CountrySection = ({ onCountrySelect, selectedCountryId }: CountrySectionPr
                         <button 
                             className="text-gray-500 hover:text-gray-700 disabled:opacity-50" 
                             onClick={handleNext}
-                            disabled={countries.length <= itemsPerPage}
+                            disabled={allCountries.length <= itemsPerPage}
                         >
                             <ChevronRight size={24} />
                         </button>
                     </div>
                 ) : (
                     <div className="bg-white p-6 shadow flex items-center justify-center">
-                        <p className="text-gray-500">No country data available.</p>
+                        <p className="text-gray-500">{t.noCountryData}</p>
                     </div>
                 )}
             </div>

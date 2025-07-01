@@ -27,7 +27,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
       <Link href={`/news/${_id}`} >
         <div className="w-24 h-24 flex-shrink-0 relative">
           <Image
-            src={image}
+            src={image || "/images/Prapancham-logo.png"}
             alt={title}
             fill
             className="object-cover"

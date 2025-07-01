@@ -77,7 +77,7 @@ const OrbituaryNavbar = ({ onSearch, onFilter, onReset, isLoading = false }: Orb
 
     return (
         <div className="">
-            <div className="container mx-auto pt-4">
+            <div>
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-4">
                     <div className="flex md:w-96 items-center gap-2">
                         <FilterObituary onFilter={onFilter} onReset={onReset} isLoading={isLoading} />

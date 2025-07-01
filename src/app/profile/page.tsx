@@ -5,25 +5,48 @@ import React, { useState, useEffect } from "react";
 import { Upload, Trash2 } from 'lucide-react';
 import { TitleWithUnderline } from '@/components/ui/title-with-underline';
 import OrbituaryCard from '@/components/obituary/OrbituaryCard';
+import UserObituaries from '@/components/obituary/UserObituaries';
+import UserRemembrances from '@/components/obituary/UserRemembrances';
 import SignupModal from "../../components/siginin/SignupModal ";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useLanguage } from "@/components/ui/LanguageProvider";
 
-const tributeData = Array.from({ length: 10 }).map((_, index) => ({
-    id: index,
-    condolencesCount: Math.floor(Math.random() * 10) + 1,
-    timeAgo: `${Math.floor(Math.random() * 5) + 1} hour${Math.random() > 0.5 ? "s" : ""} ago`,
-    imageUrl: "/images/tribute.jpg",
-    ceremonyTitle: "31st day ceremony after death",
-    eventName: `Event Name ${index + 1}`,
-    date: "DD/MM/YYYY",
-}));
+type LanguageKey = "en" | "ta" | "si";
 
 const Events: React.FC = () => {
     const [activeTab, setActiveTab] = useState("General");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+
+    const translations: Record<LanguageKey, { [key: string]: string }> = {
+        en: {
+            general: "General",
+            obituary: "Obituary",
+            remembrance: "Remembrance",
+            advertisement: "Advertisement",
+        },
+        ta: {
+            general: "பொதுவானது",
+            obituary: "மரண அறிவித்தல்",
+            remembrance: "நினைவுச்சின்னம்",
+            advertisement: "விளம்பரம்",
+        },
+        si: {
+            general: "සාමාන්‍ය",
+            obituary: "මරණ දැනුම්දීම",
+            remembrance: "අනුස්මරණය",
+            advertisement: "වෙළඳ දැන්වීම",
+        }
+    }
+
+    const { language } = useLanguage();
+    let langKey: LanguageKey = "en";
+    if (language === "tamil") langKey = "ta";
+    else if (language === "sinhala") langKey = "si";
+
+    const t = translations[langKey];
 
     const [profile, setProfile] = useState({
         username: '',
@@ -167,6 +190,22 @@ const Events: React.FC = () => {
     };
 
     const tabs = ["General", "Obituary", "Remembrance", "Advertisement"];
+    
+    // Create localized tabs mapping
+    const getLocalizedTabText = (tab: string) => {
+        switch (tab) {
+            case "General":
+                return t.general;
+            case "Obituary":
+                return t.obituary;
+            case "Remembrance":
+                return t.remembrance;
+            case "Advertisement":
+                return t.advertisement;
+            default:
+                return tab;
+        }
+    };
 
     if (!isModalOpen) {
         return (
@@ -184,7 +223,7 @@ const Events: React.FC = () => {
                                                 className={`${activeTab === tab ? "text-[#1D94C5] font-bold" : ""
                                                     } transition-colors duration-200`}
                                             >
-                                                {tab}
+                                                {getLocalizedTabText(tab)}
                                             </a>
                                             {index < tabs.length - 1 && (
                                                 <Minus className=" h-4 w-[1px] mt-1 bg-black" />
@@ -216,7 +255,7 @@ const Events: React.FC = () => {
                                     <div className="relative">
                                         {profile.image ? (
                                             <Image
-                                                src={profile.image}
+                                                src={profile.image || "/images/Prapancham-logo.png"}
                                                 alt="Profile"
                                                 width={100}
                                                 height={100}
@@ -339,77 +378,49 @@ const Events: React.FC = () => {
                     {activeTab === 'Obituary' &&
                         <div className='my-4 md:p-6'>
                             <div className="flex-shrink min-w-0 max-w-full pb-6">
-                                <TitleWithUnderline text="Tributes" underlineWidth={64} fontSize={3} />
+                                <TitleWithUnderline text={t.obituary} underlineWidth={64} fontSize={3} />
                             </div>
                             <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-                                <div className="border-2 border-dashed border-gray-300 flex items-center justify-center p-4 min-h-48">
+                                <div
+                                    className="border-2 border-dashed border-gray-300 flex items-center justify-center p-4 min-h-48 cursor-pointer hover:border-primary hover:bg-gray-50 transition-colors"
+                                    onClick={() => router.push('/create-memorial')}
+                                >
                                     <div className="text-center">
                                         <CirclePlus className="w-10 h-10 text-gray-400 mx-auto mb-2" />
                                         <p className="text-gray-500">Post Obituary</p>
                                     </div>
                                 </div>
-                                <div className="bg-white shadow-md  px-4 w-full ">
-                                    <div className="relative bg-primary text-white p-4 mb-4 rounded-b-none rounded-lg">
-                                        <div className="absolute top-0 right-0 bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded-tr-lg">Premium</div>
-                                        <div className="text-lg font-semibold mt-6">4 Days Plan + no addons</div>
-                                        <div className="text-2xl font-bold mt-4">LKR 10,000</div>
-                                        <div className="text-sm mt-4">Purchased on 22/03/2025</div>
-                                    </div>
-                                    <button className="my-4 w-full bg-primary text-white py-4 rounded-lg text-center font-semibold">Continue Editing</button>
-                                </div>
-                                {tributeData.map((item) => (
-                                    <OrbituaryCard
-                                        key={item.id}
-                                        condolencesCount={item.condolencesCount}
-                                        timeAgo={item.timeAgo}
-                                        imageUrl={item.imageUrl}
-                                        ceremonyTitle={item.ceremonyTitle}
-                                        eventName={item.eventName}
-                                        date={item.date}
-                                    />
-                                ))}
+                            </div>
+                            <div className="mt-8">
+                                <UserObituaries />
                             </div>
                         </div>
                     }
                     {activeTab === 'Remembrance' &&
                         <div className='my-4 md:p-6'>
                             <div className="flex-shrink min-w-0 max-w-full pb-6">
-                                <TitleWithUnderline text="Rememberence" underlineWidth={64} fontSize={3} />
+                                <TitleWithUnderline text={t.remembrance} underlineWidth={64} fontSize={3} />
                             </div>
                             <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-                                <div className="border-2 border-dashed border-gray-300 flex items-center justify-center p-4 min-h-48">
+                                <div
+                                    className="border-2 border-dashed border-gray-300 flex items-center justify-center p-4 min-h-48 cursor-pointer hover:border-primary hover:bg-gray-50 transition-colors"
+                                    onClick={() => router.push('/create-memorial')}
+                                >
                                     <div className="text-center">
                                         <CirclePlus className="w-10 h-10 text-gray-400 mx-auto mb-2" />
                                         <p className="text-gray-500">Post Rememberence</p>
                                     </div>
                                 </div>
-                                <div className="bg-white shadow-md  px-4 w-full ">
-                                    <div className="relative bg-primary text-white p-4 mb-4 rounded-b-none rounded-lg">
-                                        <div className="absolute top-0 right-0 bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded-tr-lg">Premium</div>
-                                        <div className="text-lg font-semibold mt-6">4 Days Plan + no addons</div>
-                                        <div className="text-2xl font-bold mt-4">LKR 10,000</div>
-                                        <div className="text-sm mt-4">Purchased on 22/03/2025</div>
-                                    </div>
-                                    <button className="my-4 w-full bg-primary text-white py-4 rounded-lg text-center font-semibold">Continue Editing</button>
-                                </div>
-                                {tributeData.map((item) => (
-                                    <OrbituaryCard
-                                        key={item.id}
-                                        condolencesCount={item.condolencesCount}
-                                        timeAgo={item.timeAgo}
-                                        imageUrl={item.imageUrl}
-                                        ceremonyTitle={item.ceremonyTitle}
-                                        eventName={item.eventName}
-                                        date={item.date}
-                                    />
-                                ))}
+                            </div>
+                            <div className="mt-8">
+                                <UserRemembrances />
                             </div>
                         </div>
                     }
                     {activeTab === 'Advertisement' &&
                         <div className='my-4 md:p-6'>
                             <div className="flex-shrink min-w-0 max-w-full pb-6">
-                                <TitleWithUnderline text="Advertisement" underlineWidth={64} fontSize={3} />
+                                <TitleWithUnderline text={t.advertisement} underlineWidth={64} fontSize={3} />
                             </div>
                             <div className="border-2 border-dashed border-gray-300 flex items-center justify-center p-4 min-h-48">
                                 <div className="text-center">

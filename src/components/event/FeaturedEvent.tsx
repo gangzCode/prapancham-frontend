@@ -20,7 +20,7 @@ const FeaturedEvent: React.FC<FeaturedEventProps> = ({
   return (
     <article className="flex relative flex-col justify-center p-2 my-auto bg-white min-w-60 shadow-[0px_0px_12px_rgba(0,0,0,0.06)] w-full md:w-[573px] h-[560px] max-w-full mt-4">
       <Image
-        src={imageUrl}
+        src={imageUrl || "/images/Prapancham-logo.png"}
         alt={eventName}
         fill
         className="object-cover absolute inset-0 z-0 w-full h-full max-md:max-w-full"
