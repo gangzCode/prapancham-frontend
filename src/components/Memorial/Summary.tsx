@@ -64,30 +64,54 @@ const Summary: React.FC<SummaryProps> = ({
 
     // Get total price
     const getTotalPrice = () => {
-        const planPrice = selectedPlan?.price || 0;
+        const planPrice = getPlanPrice();
         const addonPrice = selectedAddon?.reduce((total: number, addon: any) => total + (addon.price || 0), 0) || 0;
         return planPrice + addonPrice;
     };
 
+    // Get plan price for selected country
+    const getPlanPrice = () => {
+        if (!selectedPlan?.priceList || !selectedCountryId) return 0;
+        
+        const countryPrice = selectedPlan.priceList.find((priceItem: any) => 
+            priceItem.country._id === selectedCountryId
+        );
+        
+        return countryPrice?.price || 0;
+    };
+
     // Get currency
     const getCurrency = () => {
-        return selectedPlan?.currency || 'USD';
+        if (!selectedPlan?.priceList || !selectedCountryId) return 'USD';
+        
+        const countryPrice = selectedPlan.priceList.find((priceItem: any) => 
+            priceItem.country._id === selectedCountryId
+        );
+        
+        return countryPrice?.country?.currencyCode || 'USD';
     };
 
     // Get plan features
     const getPlanFeatures = () => {
         const features = [];
+        const currency = getCurrency();
 
-        // Add base plan description
+        // Add base plan description with price
         const description = selectedPlan?.description?.[language];
         if (description && description[0]) {
-            features.push(description[0].value);
+            features.push({
+                name: description[0].value,
+                price: getPlanPrice()
+            });
         }
 
-        // Add selected addons
+        // Add selected addons with their prices
         if (selectedAddon && selectedAddon.length > 0) {
             selectedAddon.forEach((addon: any) => {
-                features.push(addon.name);
+                features.push({
+                    name: addon.name,
+                    price: addon.price || 0
+                });
             });
         }
 
@@ -202,9 +226,14 @@ const Summary: React.FC<SummaryProps> = ({
                     <Separator />
                     {getPlanFeatures().map((feature, index) => (
                         <div key={index} className='flex justify-between items-center mt-2 mx-8'>
-                            <p>{feature}</p>
-                            <div className="w-6 h-6 rounded-full flex items-center justify-center border border-gray-500">
-                                <Check className="text-black w-4 h-4" />
+                            <div className="flex justify-between items-center w-full">
+                                <p>{feature.name}</p>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-md font-semibold">{feature.price.toLocaleString()} {getCurrency()}</span>
+                                    <div className="w-6 h-6 rounded-full flex items-center justify-center border border-gray-500">
+                                        <Check className="text-black w-4 h-4" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     ))}
