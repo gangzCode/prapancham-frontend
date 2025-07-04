@@ -6,28 +6,110 @@ import Image from "next/image";
 import { CirclePlus } from 'lucide-react';
 
 interface AdditionalImageProps {
+    selectedPlan: any;
+    profile: any;
+    language: string;
+    selectedAddon?: any;
+    selectedCountryId: string;
+    informationFormData?: any;
+    contactData?: any;
+    thumbnailImage?: File | null;
+    primaryImage?: File | null;
+    frameData?: any;
+    initialImages?: File[] | null;
+    onImagesDataChange?: (images: File[]) => void;
     setActiveStep: (step: number) => void;
 }
 
-const AdditionalImage: React.FC<AdditionalImageProps> = ({ setActiveStep }) => {
-    const [images, setImages] = useState<File[]>([]);
-    const [previews, setPreviews] = useState<string[]>([]);
+const AdditionalImage: React.FC<AdditionalImageProps> = ({ 
+    selectedPlan,
+    profile,
+    language,
+    selectedAddon,
+    selectedCountryId,
+    informationFormData,
+    contactData,
+    thumbnailImage,
+    primaryImage,
+    frameData,
+    initialImages,
+    onImagesDataChange,
+    setActiveStep 
+}) => {
+    const [images, setImages] = useState<File[]>(initialImages || []);
+    const [previews, setPreviews] = useState<string[]>(
+        initialImages ? initialImages.map(file => URL.createObjectURL(file)) : []
+    );
+
+    // Get the maximum number of additional images allowed
+    const getMaxImages = () => {
+        return selectedPlan?.noofAdditionalImages || 5;
+    };
+
+    // Get plan name based on language
+    const getPlanName = () => {
+        const planNames = selectedPlan?.name?.[language];
+        return planNames?.[0]?.name || 'Selected Package';
+    };
+
+    // Get plan duration
+    const getDuration = () => {
+        return selectedPlan?.duration || 0;
+    };
+
+    // Get addon info
+    const getAddonInfo = () => {
+        if (!selectedAddon || selectedAddon.length === 0) {
+            return 'with no extra addons';
+        }
+        return `with ${selectedAddon.map((addon: any) => addon.name).join(', ')} addon${selectedAddon.length > 1 ? 's' : ''}`;
+    };
 
     const handleDrop = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
-        const droppedFiles = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith("image/"));
-        const newPreviews = droppedFiles.map(file => URL.createObjectURL(file));
+        const maxImages = getMaxImages();
+        const availableSlots = maxImages - images.length;
+        
+        if (availableSlots <= 0) return;
 
-        setImages(prev => [...prev, ...droppedFiles]);
-        setPreviews(prev => [...prev, ...newPreviews]);
+        const droppedFiles = Array.from(e.dataTransfer.files)
+            .filter(file => file.type.startsWith("image/"))
+            .slice(0, availableSlots);
+        
+        const newPreviews = droppedFiles.map(file => URL.createObjectURL(file));
+        const updatedImages = [...images, ...droppedFiles];
+        const updatedPreviews = [...previews, ...newPreviews];
+
+        setImages(updatedImages);
+        setPreviews(updatedPreviews);
+        
+        // Notify parent component of images change
+        if (onImagesDataChange) {
+            onImagesDataChange(updatedImages);
+        }
     };
 
     const handleBrowse = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFiles = Array.from(e.target.files ?? []).filter(file => file.type.startsWith("image/"));
-        const newPreviews = selectedFiles.map(file => URL.createObjectURL(file));
+        const maxImages = getMaxImages();
+        const availableSlots = maxImages - images.length;
+        
+        if (availableSlots <= 0) return;
 
-        setImages(prev => [...prev, ...selectedFiles]);
-        setPreviews(prev => [...prev, ...newPreviews]);
+        const selectedFiles = Array.from(e.target.files ?? [])
+            .filter(file => file.type.startsWith("image/"))
+            .slice(0, availableSlots);
+        
+        const newPreviews = selectedFiles.map(file => URL.createObjectURL(file));
+        const updatedImages = [...images, ...selectedFiles];
+        const updatedPreviews = [...previews, ...newPreviews];
+
+        setImages(updatedImages);
+        setPreviews(updatedPreviews);
+        
+        // Notify parent component of images change
+        if (onImagesDataChange) {
+            onImagesDataChange(updatedImages);
+        }
     };
 
     const removeImage = (index: number) => {
@@ -40,15 +122,41 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({ setActiveStep }) => {
 
         setImages(updatedImages);
         setPreviews(updatedPreviews);
+        
+        // Notify parent component of images change
+        if (onImagesDataChange) {
+            onImagesDataChange(updatedImages);
+        }
     };
+
+    // Log the received data for debugging
+    useEffect(() => {
+        console.log({
+            "selectedPlan": selectedPlan,
+            "selectedAddon": selectedAddon,
+            "selectedCountryId": selectedCountryId,
+            "profile": profile,
+            "language": language,
+            "informationFormData": informationFormData,
+            "contactData": contactData,
+            "thumbnailImage": thumbnailImage,
+            "primaryImage": primaryImage,
+            "frameData": frameData,
+            "maxImages": getMaxImages(),
+            "selectedImages": images,
+            "imagePreviews": previews
+        });
+    }, [selectedPlan, selectedAddon, selectedCountryId, profile, language, informationFormData, contactData, thumbnailImage, primaryImage, frameData, images, previews]);
 
     return (
         <div className='p-4 md:p-8 lg:px-16 bg-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)]'>
             <form>
                 <div className="p-4 mb-6">
-                    <h3 className="text-xl font-semibold text-center mb-4 text-primary">Hi name, Our deepest condolences.</h3>
+                    <h3 className="text-xl font-semibold text-center mb-4 text-primary">
+                        Hi {profile?.username || 'there'}, Our deepest condolences.
+                    </h3>
                     <p className="text-center text-gray-500 mb-4 text-primary">
-                        You have selected a 4 days obituary plan package, <span className='text-[#880002]'>with no extra addons</span>
+                        You have selected a {getDuration()} days '{getPlanName()}' package, <span className='text-[#880002]'>{getAddonInfo()}</span>
                     </p>
                 </div>
                 <div className="flex-shrink min-w-0 mb-8">
@@ -78,7 +186,7 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({ setActiveStep }) => {
                                         </button>
                                     </div>
                                 ))}
-                                {previews.length < 5 && (
+                                {previews.length < getMaxImages() && (
                                     <div className="relative group">
                                         <div className="border-2 rounded h-48 aspect-square border-dashed border-gray-300 flex items-center justify-center p-4 min-h-48">
                                             <div className="text-center">
@@ -96,7 +204,7 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({ setActiveStep }) => {
                                                 />
 
                                                 <p className="text-primary mt-2">
-                                                    {5 - previews.length} more images left
+                                                    {getMaxImages() - previews.length} more images left
                                                 </p>
                                             </div>
 
@@ -122,23 +230,25 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({ setActiveStep }) => {
                             </div>
                         )}
                     </div>
-                    <div className="bg-[#F8D7DA] mt-4 p-2 rounded flex flex-col gap-4">
-                        <div>Recommended image size</div>
-                        <div>Recommended image type</div>
-                        <div>Image max size</div>
-                        <div>You can upload only 1 primary image</div>
+                    <div className="bg-[#F8D7DA] mt-4 p-4 rounded">
+                        <strong>Recommended image size:</strong> 400x400 pixels (1:1 aspect ratio)<br />
+                        <strong>Recommended image type:</strong> JPEG, PNG, or WebP<br />
+                        <strong>Image max size:</strong> 5 MB<br />
+                        <strong>Note:</strong> You can upload up to {getMaxImages()} additional images
                     </div>
 
                 </div>
                 <div className="flex justify-end gap-2 items-center self-stretch mt-16">
                     <button
-                        onClick={() => setActiveStep(6)}
+                        type="button"
+                        onClick={() => setActiveStep(7)}
                         className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
                         Back
                     </button>
                     <button
-                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
-                        onClick={() => setActiveStep(8)}
+                        type="button"
+                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6"
+                        onClick={() => setActiveStep(9)}
                     >
                         Next
                     </button>
