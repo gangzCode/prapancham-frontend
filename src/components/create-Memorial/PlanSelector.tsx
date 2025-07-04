@@ -147,8 +147,8 @@ const PlanSelector: React.FC<PlanSelectorProps> = ({
                                         language === 'ta'
                                             ? `${plan.planName} நாட்கள் திட்டம்`
                                             : language === 'si'
-                                            ? `${plan.planName} දින සැලැස්ම`
-                                            : `${plan.planName} Days plan`
+                                                ? `${plan.planName} දින සැලැස්ම`
+                                                : `${plan.planName} Days plan`
                                     }
                                     price={Number(plan.price)}
                                     currency={plan.currency}
