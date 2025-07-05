@@ -125,9 +125,9 @@ const Summary: React.FC<SummaryProps> = ({
         return features;
     };
 
-    const calculateAge = (dateOfBirth: string, dateOfDeath: string) => {
-        const birthDate = new Date(dateOfBirth);
-        const deathDate = dateOfDeath ? new Date(dateOfDeath) : new Date();
+    const calculateAge = (dateofBirth: string, dateofDeath: string) => {
+        const birthDate = new Date(dateofBirth);
+        const deathDate = dateofDeath ? new Date(dateofDeath) : new Date();
         let age = deathDate.getFullYear() - birthDate.getFullYear();
         const monthDiff = deathDate.getMonth() - birthDate.getMonth();
         if (monthDiff < 0 || (monthDiff === 0 && deathDate.getDate() < birthDate.getDate())) {
@@ -142,8 +142,8 @@ const Summary: React.FC<SummaryProps> = ({
             information: informationFormData ? {
                 title: informationFormData.title || '',
                 address: informationFormData.address || '',
-                dateOfBirth: informationFormData.dateOfBirth ? new Date(informationFormData.dateOfBirth).toISOString().split('T')[0] : '',
-                dateOfDeath: informationFormData.dateOfDeath ? new Date(informationFormData.dateOfDeath).toISOString().split('T')[0] : '',
+                dateofBirth: informationFormData.dateofBirth ? new Date(informationFormData.dateofBirth).toISOString().split('T')[0] : '',
+                dateofDeath: informationFormData.dateofDeath ? new Date(informationFormData.dateofDeath).toISOString().split('T')[0] : '',
                 description: informationFormData.description || '',
                 tributeVideo: informationFormData.tributeVideo || '',
                 shortDescription: informationFormData.shortDescription || '',
@@ -476,7 +476,7 @@ const Summary: React.FC<SummaryProps> = ({
                                         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 sm:gap-0">
                                             <div className="text-gray-500 text-center flex md:flex-col">
                                                 <p>Birth<span className="md:hidden mr-1 ml-1">:</span></p>
-                                                <p>{informationFormData?.dateOfBirth ? new Date(informationFormData.dateOfBirth).toLocaleDateString() : 'Birth date'}</p>
+                                                <p>{informationFormData?.dateofBirth ? new Date(informationFormData.dateofBirth).toLocaleDateString() : 'Birth date'}</p>
                                             </div>
 
                                             {primaryPreview && (
@@ -514,7 +514,7 @@ const Summary: React.FC<SummaryProps> = ({
 
                                             <div className="text-gray-500 text-center flex md:flex-col">
                                                 <p>Death<span className="md:hidden mr-1 ml-1">:</span></p>
-                                                <p>{informationFormData?.dateOfDeath ? new Date(informationFormData.dateOfDeath).toLocaleDateString() : 'Death date'}</p>
+                                                <p>{informationFormData?.dateofDeath ? new Date(informationFormData.dateofDeath).toLocaleDateString() : 'Death date'}</p>
                                             </div>
                                         </div>
 
@@ -652,9 +652,9 @@ const Summary: React.FC<SummaryProps> = ({
                                 </div>
                                 <div className="space-y-2 mt-2 p-2">
                                     <p className="text-gray-500">Name: {informationFormData?.title ? informationFormData.title : 'Not provided'}</p>
-                                    <p className="text-gray-500">Birth Date: {informationFormData?.dateOfBirth ? new Date(informationFormData.dateOfBirth).toLocaleDateString() : 'Not provided'}</p>
-                                    <p className="text-gray-500">Death Date: {informationFormData?.dateOfDeath ? new Date(informationFormData.dateOfDeath).toLocaleDateString() : 'Not provided'}</p>
-                                    <p className="text-gray-500">Age: {informationFormData?.dateOfBirth && informationFormData?.dateOfDeath ? calculateAge(informationFormData.dateOfBirth, informationFormData.dateOfDeath) : 'Not provided'}</p>
+                                    <p className="text-gray-500">Birth Date: {informationFormData?.dateofBirth ? new Date(informationFormData.dateofBirth).toLocaleDateString() : 'Not provided'}</p>
+                                    <p className="text-gray-500">Death Date: {informationFormData?.dateofDeath ? new Date(informationFormData.dateofDeath).toLocaleDateString() : 'Not provided'}</p>
+                                    <p className="text-gray-500">Age: {informationFormData?.dateofBirth && informationFormData?.dateofDeath ? calculateAge(informationFormData.dateofBirth, informationFormData.dateofDeath) : 'Not provided'}</p>
                                     <p>Address: {informationFormData?.address || 'Not provided'}</p>
                                 </div>
                                 <Separator className="mt-6 !w-full mb-8" />

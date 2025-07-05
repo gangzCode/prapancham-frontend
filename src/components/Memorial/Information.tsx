@@ -18,8 +18,8 @@ interface FormData {
     title: string;
     shortDescription: string;
     address: string;
-    dateOfBirth: string;
-    dateOfDeath: string;
+    dateofBirth: string;
+    dateofDeath: string;
     description: string;
     tributeVideo: string;
 }
@@ -38,8 +38,8 @@ const Information: React.FC<InformationProps> = ({
         title: initialFormData?.title || '',
         shortDescription: initialFormData?.shortDescription || '',
         address: initialFormData?.address || '',
-        dateOfBirth: initialFormData?.dateOfBirth || '',
-        dateOfDeath: initialFormData?.dateOfDeath || '',
+        dateofBirth: initialFormData?.dateofBirth || '',
+        dateofDeath: initialFormData?.dateofDeath || '',
         description: initialFormData?.description || '',
         tributeVideo: initialFormData?.tributeVideo || ''
     });
@@ -63,8 +63,8 @@ const Information: React.FC<InformationProps> = ({
     const isFormValid = () => {
         return formData.title.trim() !== '' &&
                formData.address.trim() !== '' &&
-               formData.dateOfBirth !== '' &&
-               formData.dateOfDeath !== '';
+               formData.dateofBirth !== '' &&
+               formData.dateofDeath !== '';
     };
 
     // Get plan name based on language
@@ -189,27 +189,27 @@ const Information: React.FC<InformationProps> = ({
                     />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="dateOfBirth" className={`pb-2 block`}>
+                    <label htmlFor="dateofBirth" className={`pb-2 block`}>
                         Date of Birth<span className="text-[#880002]">*</span>
                     </label>
                     <input
                         type="date"
-                        id="dateOfBirth"
-                        value={formData.dateOfBirth}
-                        onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
+                        id="dateofBirth"
+                        value={formData.dateofBirth}
+                        onChange={(e) => handleInputChange('dateofBirth', e.target.value)}
                         required
                         className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                     />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="dateOfDeath" className={`pb-2 block`}>
+                    <label htmlFor="dateofDeath" className={`pb-2 block`}>
                         Date of Death<span className="text-[#880002]">*</span>
                     </label>
                     <input
                         type="date"
-                        id="dateOfDeath"
-                        value={formData.dateOfDeath}
-                        onChange={(e) => handleInputChange('dateOfDeath', e.target.value)}
+                        id="dateofDeath"
+                        value={formData.dateofDeath}
+                        onChange={(e) => handleInputChange('dateofDeath', e.target.value)}
                         required
                         className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                     />
