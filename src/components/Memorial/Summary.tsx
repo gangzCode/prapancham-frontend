@@ -3,7 +3,8 @@ import { TitleWithUnderline } from '@/components/ui/title-with-underline';
 import { Check, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { Separator } from '../ui/separator';
-import DonateModal from '../obituary/DonateModal';
+import StripePaymentMemorial, { useStripePaymentModal } from './StripePaymentMemorial';
+import { add } from 'date-fns';
 interface SummaryProps {
     selectedPlan: any;
     profile: any;
@@ -44,8 +45,10 @@ const Summary: React.FC<SummaryProps> = ({
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', message: string } | null>(null);
-    const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
-    const [obituaryEntry, setObituaryEntry] = useState<any>(null);
+    const { isOpen: isPaymentModalOpen, openModal: openPaymentModal, closeModal: closePaymentModal } = useStripePaymentModal();
+    const [stripePaymentProp, setStripePaymentProp] = useState<any>(null);
+    const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(null);
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
     // Get plan name based on language
     const getPlanName = () => {
@@ -232,19 +235,21 @@ const Summary: React.FC<SummaryProps> = ({
                 const result = await response.json();
                 setSubmitMessage({ type: 'success', message: 'Order submitted successfully!' });
 
+                const loggedInUser = JSON.parse(localStorage.getItem('user') || '{}');
+
                 // Create obituary entry object for DonateModal
-                const obituaryData = {
-                    _id: result.order._id,
-                    title: result.order.information.title || 'Memorial Title',
-                    name: result.order.information.title || 'Memorial Name',
-                    date: new Date().toLocaleDateString(),
-                    address: result.order.information.address || 'No address provided',
-                    imageUrl: result.order.thumbnailImage || '',
-                    condolences: result.order.tributeItems.length || 0
+                const stripePaymentData = {
+                    email: loggedInUser.email || '',
+                    name: loggedInUser.name || '',
+                    address: loggedInUser.address || '',
+                    phoneNumber: loggedInUser.phone || '',
+                    countryId: selectedCountryId,
+                    packageAmount: getTotalPrice(),
                 };
 
-                setObituaryEntry(obituaryData);
-                setIsDonateModalOpen(true);
+                setStripePaymentProp(stripePaymentData);
+                setStripeClientSecret(result.paymentIntentClientSecret || null);
+                openPaymentModal();
             } else {
                 const errorData = await response.json();
                 setSubmitMessage({
@@ -345,17 +350,49 @@ const Summary: React.FC<SummaryProps> = ({
     }, [selectedPlan]);
 
 
-    // Handle closing the donate modal
-    const handleCloseDonateModal = () => {
-        setIsDonateModalOpen(false);
-        setObituaryEntry(null);
+    // Handle closing the payment modal
+    const handleClosePaymentModal = () => {
+        closePaymentModal();
+        setStripePaymentProp(null);
+        setStripeClientSecret(null);
+    };
+
+    // Handle successful payment
+    const handlePaymentSuccess = () => {
+        closePaymentModal();
+        setStripePaymentProp(null);
+        setStripeClientSecret(null);
+        // Show success popup
+        setShowSuccessPopup(true);
+    };
+
+    // Handle success popup OK button
+    const handleSuccessOk = () => {
+        setShowSuccessPopup(false);
+        // Refresh the page
+        window.location.reload();
+    };
+
+    // Handle payment error
+    const handlePaymentError = (error: string) => {
+        console.error('Payment error:', error);
+        setSubmitMessage({
+            type: 'error',
+            message: `Payment failed: ${error}`
+        });
+    };
+
+    // Handle back from payment
+    const handlePaymentBack = () => {
+        closePaymentModal();
+        // Optionally keep the form data and allow user to retry
     };
 
     return (
         <div className='p-4 md:p-8 lg:px-16 bg-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)]'>
             <form>
                 <div className="p-4 mb-6">
-                    <h3 className="text-xl font-semibold text-center mb-4 text-primary">
+                    <h3 className="text-2xl md:text-4xl font-bold text-center mb-4 text-primary">
                         Hi {profile?.username || 'there'}, Our deepest condolences.
                     </h3>
                     <p className="text-center text-gray-500 mb-4 text-primary">
@@ -433,7 +470,7 @@ const Summary: React.FC<SummaryProps> = ({
                                 >
                                     <div className="pt-4 pb-2 text-center max-w-lg mx-auto px-4">
                                         <h1 className="text-xl font-bold text-primary mb-6">
-                                            {'Our deepest condolences'}
+                                            {informationFormData?.shortDescription || 'Our deepest condolences'}
                                         </h1>
 
                                         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 sm:gap-0">
@@ -481,7 +518,7 @@ const Summary: React.FC<SummaryProps> = ({
                                             </div>
                                         </div>
 
-                                        <h1 className="text-xl font-bold text-primary mb-6">
+                                        <h1 className="text-xl font-bold text-secondary mb-6">
                                             {informationFormData?.title || 'Memorial Title'}
                                         </h1>
                                     </div>
@@ -536,11 +573,11 @@ const Summary: React.FC<SummaryProps> = ({
                                                 <div className="bg-white p-4 shadow-md w-full">
                                                     <h3 className="text-lg font-semibold mb-4 text-center">Additional Images</h3>
                                                     <div className="relative">
-                                                        <div className="w-full relative">
+                                                        <div className="w-full relative aspect-video">
                                                             <img
                                                                 src={additionalPreviews[currentImageIndex]}
                                                                 alt={`Additional image ${currentImageIndex + 1}`}
-                                                                className="w-full aspect-square object-cover rounded shadow-md"
+                                                                className="w-full h-full object-cover rounded shadow-md"
                                                             />
 
                                                             {/* Navigation arrows - only show if multiple images */}
@@ -570,9 +607,6 @@ const Summary: React.FC<SummaryProps> = ({
                                                                 </div>
                                                             )}
                                                         </div>
-                                                        <p className="text-center text-sm text-gray-500 mt-2">
-                                                            {additionalPreviews.length} image{additionalPreviews.length !== 1 ? 's' : ''}
-                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -725,13 +759,64 @@ const Summary: React.FC<SummaryProps> = ({
                 </div>
             </form>
 
-            {/* Donate Modal */}
-            {isDonateModalOpen && obituaryEntry && (
-                <DonateModal
-                    isOpen={isDonateModalOpen}
-                    onClose={handleCloseDonateModal}
-                    obituaryEntry={obituaryEntry}
+            {/* Stripe Payment Modal */}
+            {isPaymentModalOpen && stripePaymentProp && stripeClientSecret && (
+                <StripePaymentMemorial
+                    formData={stripePaymentProp}
+                    onSuccess={handlePaymentSuccess}
+                    onError={handlePaymentError}
+                    onBack={handlePaymentBack}
+                    onClose={handleClosePaymentModal}
+                    currencyCode={getCurrency()}
+                    clientSecret={stripeClientSecret}
+                    isOpen={isPaymentModalOpen}
+                    t={{
+                        completePayment: 'Complete Payment',
+                        packageAmount: 'Package Amount',
+                        customer: 'Customer',
+                        email: 'Email',
+                        processing: 'Processing...',
+                        back: 'Back',
+                        payNow: 'Pay Now',
+                        noClientSecret: 'Payment initialization required. Please try again.'
+                    }}
                 />
+            )}
+
+            {/* Success Popup */}
+            {showSuccessPopup && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 text-center">
+                        {/* Success Icon */}
+                        <div className="flex justify-center mb-4">
+                            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                                <Check className="w-8 h-8 text-green-600" />
+                            </div>
+                        </div>
+                        
+                        {/* Success Message */}
+                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Payment Successful!</h2>
+                        <p className="text-gray-600 mb-6">
+                            Your memorial package has been purchased successfully. Thank you for your order.
+                        </p>
+                        
+                        {/* Package Details */}
+                        <div className="bg-gray-50 p-4 rounded-lg mb-6 text-left">
+                            <h3 className="font-semibold text-gray-900 mb-2">Order Summary:</h3>
+                            <p className="text-sm text-gray-600">Package: {getPlanName()}</p>
+                            <p className="text-sm text-gray-600">Duration: {getDuration()} days</p>
+                            <p className="text-sm text-gray-600">Total: {getTotalPrice().toLocaleString()} {getCurrency()}</p>
+                        </div>
+                        
+                        {/* OK Button */}
+                        <button
+                            onClick={handleSuccessOk}
+                            className="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold"
+                        >
+                            OK
+                        </button>
+                    </div>
+                </div>
             )}
         </div>
     );

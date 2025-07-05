@@ -16,6 +16,7 @@ interface InformationProps {
 
 interface FormData {
     title: string;
+    shortDescription: string;
     address: string;
     dateOfBirth: string;
     dateOfDeath: string;
@@ -35,6 +36,7 @@ const Information: React.FC<InformationProps> = ({
 }) => {
     const [formData, setFormData] = useState<FormData>({
         title: initialFormData?.title || '',
+        shortDescription: initialFormData?.shortDescription || '',
         address: initialFormData?.address || '',
         dateOfBirth: initialFormData?.dateOfBirth || '',
         dateOfDeath: initialFormData?.dateOfDeath || '',
@@ -43,12 +45,17 @@ const Information: React.FC<InformationProps> = ({
     });
 
     const [wordCount, setWordCount] = useState(0);
+    const [shortDescWordCount, setShortDescWordCount] = useState(0);
 
     // Initialize word count from initial form data
     useEffect(() => {
         if (initialFormData?.description) {
             const words = initialFormData.description.trim().split(/\s+/).filter((word: string) => word.length > 0);
             setWordCount(words.length);
+        }
+        if (initialFormData?.shortDescription) {
+            const shortWords = initialFormData.shortDescription.trim().split(/\s+/).filter((word: string) => word.length > 0);
+            setShortDescWordCount(shortWords.length);
         }
     }, [initialFormData]);
 
@@ -101,6 +108,12 @@ const Information: React.FC<InformationProps> = ({
             const words = value.trim().split(/\s+/).filter(word => word.length > 0);
             setWordCount(words.length);
         }
+
+        // Count words for short description field
+        if (field === 'shortDescription') {
+            const words = value.trim().split(/\s+/).filter(word => word.length > 0);
+            setShortDescWordCount(words.length);
+        }
     };
 
     useEffect(() => {
@@ -118,7 +131,7 @@ const Information: React.FC<InformationProps> = ({
         <div className='p-4 md:p-8 lg:px-16 bg-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)]'>
             <form>
                 <div className="p-4 mb-6">
-                    <h3 className="text-xl font-semibold text-center mb-4 text-primary">
+                    <h3 className="text-2xl md:text-4xl font-bold text-center mb-4 text-primary">
                         Hi {profile?.username || 'there'}, Our deepest condolences.
                     </h3>
                     <p className="text-center text-gray-500 mb-4 text-primary">
@@ -140,6 +153,27 @@ const Information: React.FC<InformationProps> = ({
                         required
                         className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                     />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="shortDescription" className={`pb-2 block`}>
+                        Short Description
+                    </label>
+                    <textarea
+                        id="shortDescription"
+                        rows={2}
+                        value={formData.shortDescription}
+                        onChange={(e) => {
+                            const words = e.target.value.trim().split(/\s+/).filter(word => word.length > 0);
+                            if (words.length <= 10 || e.target.value === '') {
+                                handleInputChange('shortDescription', e.target.value);
+                            }
+                        }}
+                        className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                        placeholder="Maximum 10 words allowed"
+                    />
+                    <p className="text-xs text-gray-600 mt-1">
+                        {shortDescWordCount}/10 words used
+                    </p>
                 </div>
                 <div className="mb-4">
                     <label htmlFor="address" className={`pb-2 block`}>
