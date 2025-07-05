@@ -139,13 +139,19 @@ const CountrySection = ({ onCountrySelect, selectedCountryId }: CountrySectionPr
     let visibleCountries: CountryData[] = [];
 
     if (allCountries.length > 0) {
-        if (currentIndex + itemsPerPage > allCountries.length) {
-            visibleCountries = [
-                ...allCountries.slice(currentIndex),
-                ...allCountries.slice(0, (currentIndex + itemsPerPage) % allCountries.length),
-            ];
+        // If we have fewer countries than items per page, show all countries without repetition
+        if (allCountries.length <= itemsPerPage) {
+            visibleCountries = allCountries;
         } else {
-            visibleCountries = allCountries.slice(currentIndex, currentIndex + itemsPerPage);
+            // Only use carousel logic if we have more countries than items per page
+            if (currentIndex + itemsPerPage > allCountries.length) {
+                visibleCountries = [
+                    ...allCountries.slice(currentIndex),
+                    ...allCountries.slice(0, (currentIndex + itemsPerPage) % allCountries.length),
+                ];
+            } else {
+                visibleCountries = allCountries.slice(currentIndex, currentIndex + itemsPerPage);
+            }
         }
     }
 

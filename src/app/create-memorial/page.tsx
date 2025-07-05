@@ -19,6 +19,7 @@ import { useLanguage } from "@/components/ui/LanguageProvider";
 import CountrySelector from '@/components/create-Memorial/CountrySelector';
 import PlanSelector from '@/components/create-Memorial/PlanSelector';
 import PlanSummary from '@/components/create-Memorial/PlanSummary';
+import ThumbnailImage from '@/components/Memorial/ThumbnailImage';
 
 
 const fetcher = (url: string | URL | Request) => fetch(url).then(res => res.json());
@@ -29,6 +30,13 @@ const CreateMemorialPage: React.FC = () => {
     const [selectedAddon, setSelectedAddon] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCountryId, setSelectedCountryId] = useState('');
+    const [informationFormData, setInformationFormData] = useState<any>(null);
+    const [contactDetailsData, setContactDetailsData] = useState<any>(null);
+    const [thumbnailImageData, setThumbnailImageData] = useState<File | null>(null);
+    const [primaryImageData, setPrimaryImageData] = useState<File | null>(null);
+    const [frameData, setFrameData] = useState<any>(null);
+    const [additionalImagesData, setAdditionalImagesData] = useState<File[]>([]);
+    const [accountDetailsData, setAccountDetailsData] = useState<any>(null);
     const { language } = useLanguage();
 
     // console.log("selectedplan", selectedPlan);
@@ -175,36 +183,123 @@ const CreateMemorialPage: React.FC = () => {
                 }
                 {activeStep === 3 &&
                     <Information
+                        selectedPlan={selectedPlan}
+                        profile={profile}
+                        language={langKey}
+                        selectedAddon={selectedAddon}
+                        selectedCountryId={selectedCountryId}
                         setActiveStep={setActiveStep}
+                        onFormDataChange={setInformationFormData}
+                        initialFormData={informationFormData}
                     />
                 }
                 {activeStep === 4 &&
                     <ContactDetailsForm
+                        selectedPlan={selectedPlan}
+                        profile={profile}
+                        language={langKey}
+                        selectedAddon={selectedAddon}
+                        selectedCountryId={selectedCountryId}
+                        informationFormData={informationFormData}
+                        initialContactData={contactDetailsData}
+                        onContactDataChange={setContactDetailsData}
                         setActiveStep={setActiveStep}
                     />
                 }
                 {activeStep === 5 &&
-                    <PrimaryImage
+                    <ThumbnailImage
+                        selectedPlan={selectedPlan}
+                        profile={profile}
+                        language={langKey}
+                        selectedAddon={selectedAddon}
+                        selectedCountryId={selectedCountryId}
+                        informationFormData={informationFormData}
+                        contactData={contactDetailsData}
+                        initialImageData={thumbnailImageData}
+                        onImageDataChange={setThumbnailImageData}
                         setActiveStep={setActiveStep}
                     />
                 }
                 {activeStep === 6 &&
-                    <Frame
+                    <PrimaryImage
+                        selectedPlan={selectedPlan}
+                        profile={profile}
+                        language={langKey}
+                        selectedAddon={selectedAddon}
+                        selectedCountryId={selectedCountryId}
+                        informationFormData={informationFormData}
+                        contactData={contactDetailsData}
+                        thumbnailImage={thumbnailImageData}
+                        initialImageData={primaryImageData}
+                        onImageDataChange={setPrimaryImageData}
                         setActiveStep={setActiveStep}
                     />
                 }
                 {activeStep === 7 &&
-                    <AdditionalImage
+                    <Frame
+                        selectedPlan={selectedPlan}
+                        profile={profile}
+                        language={langKey}
+                        selectedAddon={selectedAddon}
+                        selectedCountryId={selectedCountryId}
+                        informationFormData={informationFormData}
+                        contactData={contactDetailsData}
+                        thumbnailImage={thumbnailImageData}
+                        primaryImage={primaryImageData}
+                        initialSelectedFrame={frameData?._id || null}
+                        onFrameDataChange={setFrameData}
                         setActiveStep={setActiveStep}
                     />
                 }
                 {activeStep === 8 &&
-                    <AccoundDetails
+                    <AdditionalImage
+                        selectedPlan={selectedPlan}
+                        profile={profile}
+                        language={langKey}
+                        selectedAddon={selectedAddon}
+                        selectedCountryId={selectedCountryId}
+                        informationFormData={informationFormData}
+                        contactData={contactDetailsData}
+                        thumbnailImage={thumbnailImageData}
+                        primaryImage={primaryImageData}
+                        frameData={frameData}
+                        initialImages={additionalImagesData}
+                        onImagesDataChange={setAdditionalImagesData}
                         setActiveStep={setActiveStep}
                     />
                 }
                 {activeStep === 9 &&
+                    <AccoundDetails
+                        selectedPlan={selectedPlan}
+                        profile={profile}
+                        language={langKey}
+                        selectedAddon={selectedAddon}
+                        selectedCountryId={selectedCountryId}
+                        informationFormData={informationFormData}
+                        contactData={contactDetailsData}
+                        thumbnailImage={thumbnailImageData}
+                        primaryImage={primaryImageData}
+                        frameData={frameData}
+                        additionalImagesData={additionalImagesData}
+                        initialAccountData={accountDetailsData}
+                        onAccountDataChange={setAccountDetailsData}
+                        setActiveStep={setActiveStep}
+                    />
+                }
+                {activeStep === 10 &&
                     <Summary
+                        selectedPlan={selectedPlan}
+                        profile={profile}
+                        language={langKey}
+                        selectedAddon={selectedAddon}
+                        selectedCountryId={selectedCountryId}
+                        informationFormData={informationFormData}
+                        contactData={contactDetailsData}
+                        thumbnailImage={thumbnailImageData}
+                        primaryImage={primaryImageData}
+                        frameData={frameData}
+                        additionalImagesData={additionalImagesData}
+                        accountDetailsData={accountDetailsData}
                         setActiveStep={setActiveStep}
                     />
                 }

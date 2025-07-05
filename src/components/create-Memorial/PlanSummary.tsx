@@ -223,7 +223,11 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
                     {language === 'ta' && 'பின்னுக்கு'}
                 </button>
                 <button
-                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6"
+                    className={`gap-2.5 self-stretch px-4 py-3 my-auto whitespace-nowrap rounded min-h-6 transition-all duration-200 ${
+                        !isChecked 
+                            ? 'bg-gray-400 text-gray-600 cursor-not-allowed opacity-60' 
+                            : 'bg-[#0D1322] text-white hover:bg-[#1a2540]'
+                    }`}
                     onClick={(e) => {
                         e.preventDefault();
                         setActiveStep(3);

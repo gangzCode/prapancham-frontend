@@ -2,9 +2,8 @@
 
 import { TitleWithUnderline } from '@/components/ui/title-with-underline';
 import React, { useEffect, useState, DragEvent } from 'react';
-import Image from "next/image";
 
-interface PrimaryImageProps {
+interface ThumbnailImageProps {
     selectedPlan: any;
     profile: any;
     language: string;
@@ -13,12 +12,11 @@ interface PrimaryImageProps {
     informationFormData?: any;
     contactData?: any;
     initialImageData?: File | null;
-    thumbnailImage?: File | null;
     onImageDataChange?: (imageData: File | null) => void;
     setActiveStep: (step: number) => void;
 }
 
-const PrimaryImage: React.FC<PrimaryImageProps> = ({ 
+const ThumbnailImage: React.FC<ThumbnailImageProps> = ({ 
     selectedPlan,
     profile,
     language,
@@ -27,7 +25,6 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
     informationFormData,
     contactData,
     initialImageData,
-    thumbnailImage,
     onImageDataChange,
     setActiveStep 
 }) => {
@@ -131,7 +128,7 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
                     </p>
                 </div>
                 <div className="flex-shrink min-w-0 mb-8">
-                    <TitleWithUnderline text="Primary Image" underlineWidth={64} />
+                    <TitleWithUnderline text="Thumbnail Image" underlineWidth={64} />
                 </div>
                 <div className="w-full">
                     <div
@@ -176,13 +173,13 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
                         <strong>Recommended image size:</strong> 400x400 pixels (1:1 aspect ratio)<br />
                         <strong>Recommended image type:</strong> JPEG, PNG, or WebP<br />
                         <strong>Image max size:</strong> 5 MB<br />
-                        <strong>Note:</strong> You can upload only 1 primary image
+                        <strong>Note:</strong> You can upload only 1 thumbnail image
                     </div>
                 </div>
                 <div className="flex justify-end gap-2 items-center self-stretch mt-16">
                     <button
                         type="button"
-                        onClick={() => setActiveStep(5)}
+                        onClick={() => setActiveStep(4)}
                         className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
                         Back
                     </button>
@@ -195,7 +192,7 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
                         }`}
                         onClick={() => {
                             if (isFormValid()) {
-                                setActiveStep(7);
+                                setActiveStep(6);
                             }
                         }}
                         disabled={!isFormValid()}
@@ -208,4 +205,4 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
     );
 };
 
-export default PrimaryImage;
+export default ThumbnailImage;

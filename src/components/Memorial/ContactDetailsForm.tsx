@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PlusCircle, Trash2 } from 'lucide-react';
 import { TitleWithUnderline } from '../ui/title-with-underline';
 
@@ -13,7 +13,39 @@ interface ContactDetail {
     email: string;
 }
 
+interface Country {
+    _id: string;
+    name: {
+        en: Array<{ name: string; value: string; _id: string }>;
+        ta: Array<{ name: string; value: string; _id: string }>;
+        si: Array<{ name: string; value: string; _id: string }>;
+    };
+    currencyCode: string;
+    isDeleted: boolean;
+    isActive: boolean;
+    image: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+interface CountriesResponse {
+    countries: Country[];
+    pagination: {
+        currentPage: number;
+        totalPages: number;
+        totalItems: number;
+    };
+}
+
 interface ContactDetailProps {
+    selectedPlan: any;
+    profile: any;
+    language: string;
+    selectedAddon?: any;
+    selectedCountryId: string;
+    informationFormData?: any;
+    initialContactData?: ContactDetail[];
+    onContactDataChange?: (contactData: ContactDetail[]) => void;
     setActiveStep: (step: number) => void;
 }
 
@@ -26,35 +58,168 @@ const defaultDetail: ContactDetail = {
     email: '',
 };
 
-const ContactDetailsForm: React.FC<ContactDetailProps> = ({ setActiveStep }) => {
-    const [contacts, setContacts] = useState<ContactDetail[]>([defaultDetail]);
+const ContactDetailsForm: React.FC<ContactDetailProps> = ({ 
+    selectedPlan,
+    profile,
+    language,
+    selectedAddon,
+    selectedCountryId,
+    informationFormData,
+    initialContactData,
+    onContactDataChange,
+    setActiveStep 
+}) => {
+    const [contacts, setContacts] = useState<ContactDetail[]>(
+        initialContactData && initialContactData.length > 0 
+            ? initialContactData 
+            : [defaultDetail]
+    );
+    const [countries, setCountries] = useState<Country[]>([]);
+    const [loadingCountries, setLoadingCountries] = useState(true);
+
+    // Get plan name based on language
+    const getPlanName = () => {
+        const planNames = selectedPlan?.name?.[language];
+        return planNames?.[0]?.name || 'Selected Package';
+    };
+
+    // Get plan duration
+    const getDuration = () => {
+        return selectedPlan?.duration || 0;
+    };
+
+    // Get maximum number of contact details allowed
+    const getMaxContactDetails = () => {
+        return selectedPlan?.noofContectDetails || 1;
+    };
+
+    // Get addon info
+    const getAddonInfo = () => {
+        if (!selectedAddon || selectedAddon.length === 0) {
+            return 'with no extra addons';
+        }
+        return `with ${selectedAddon.map((addon: any) => addon.name).join(', ')} addon${selectedAddon.length > 1 ? 's' : ''}`;
+    };
+
+    // Validation function to check if at least one contact has required fields filled
+    const isFormValid = () => {
+        return contacts.some(contact => 
+            contact.country.trim() !== '' &&
+            contact.phone.trim() !== '' &&
+            contact.name.trim() !== ''
+        );
+    };
+
+    // Fetch countries from API
+    const fetchCountries = async () => {
+        try {
+            setLoadingCountries(true);
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+            const response = await fetch(`${apiUrl}/country/active?page=1&limit=10`);
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch countries');
+            }
+            
+            const data: CountriesResponse = await response.json();
+            setCountries(data.countries);
+        } catch (error) {
+            console.error('Error fetching countries:', error);
+            // Keep empty array as fallback
+            setCountries([]);
+        } finally {
+            setLoadingCountries(false);
+        }
+    };
+
+    // Get country name based on current language
+    const getCountryName = (country: Country) => {
+        const languageKey = language as keyof typeof country.name;
+        const nameArray = country.name[languageKey];
+        return nameArray && nameArray.length > 0 ? nameArray[0].value || nameArray[0].name : 'Unknown Country';
+    };
 
     const handleChange = (index: number, field: keyof ContactDetail, value: string) => {
         const updated = [...contacts];
         updated[index][field] = value;
         setContacts(updated);
+        
+        // Notify parent component of contact data changes
+        if (onContactDataChange) {
+            onContactDataChange(updated);
+        }
     };
 
     const addContact = () => {
-        setContacts([...contacts, { ...defaultDetail }]);
+        const maxContacts = getMaxContactDetails();
+        if (contacts.length < maxContacts) {
+            // Create a fresh copy of defaultDetail for each new contact
+            const newContact: ContactDetail = {
+                country: '',
+                address: '',
+                phone: '',
+                name: '',
+                relationship: '',
+                email: '',
+            };
+            const updatedContacts = [...contacts, newContact];
+            setContacts(updatedContacts);
+            
+            // Notify parent component of contact data changes
+            if (onContactDataChange) {
+                onContactDataChange(updatedContacts);
+            }
+        }
     };
 
     const removeContact = (index: number) => {
         if (contacts.length === 1) return;
         const updated = contacts.filter((_, i) => i !== index);
         setContacts(updated);
+        
+        // Notify parent component of contact data changes
+        if (onContactDataChange) {
+            onContactDataChange(updated);
+        }
     };
+
+    // Fetch countries on component mount
+    useEffect(() => {
+        fetchCountries();
+    }, []);
+
+    // Log the received information form data
+    React.useEffect(() => {
+        console.log({
+            "selectedPlan": selectedPlan,
+            "selectedAddon": selectedAddon,
+            "selectedCountryId": selectedCountryId,
+            "profile": profile,
+            "language": language,
+            "informationFormData": informationFormData,
+            "maxContactDetails": getMaxContactDetails(),
+            "currentContactsCount": contacts.length,
+            "contactDetails": contacts,
+            "countries": countries,
+            "loadingCountries": loadingCountries
+        });
+    }, [selectedPlan, selectedAddon, selectedCountryId, profile, language, informationFormData, contacts, countries, loadingCountries]);
 
     return (
         <div className="p-4 md:p-8 lg:px-16 bg-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] mt-10">
             <div className="p-4 mb-6">
-                <h3 className="text-xl font-semibold text-center mb-4 text-primary">Hi name, Our deepest condolences.</h3>
+                <h3 className="text-xl font-semibold text-center mb-4 text-primary">
+                    Hi {profile?.username || 'there'}, Our deepest condolences.
+                </h3>
                 <p className="text-center text-gray-500 mb-4 text-primary">
-                    You have selected a 4 days obituary plan package, <span className='text-[#880002]'>with no extra addons</span>
+                    You have selected a {getDuration()} days '{getPlanName()}' package, <span className='text-[#880002]'>{getAddonInfo()}</span>
                 </p>
             </div>
             <div className="flex-shrink min-w-0 mb-8">
                 <TitleWithUnderline text="Contact Details" underlineWidth={64} />
+                <p className="text-sm text-gray-600 mt-2">
+                    You can add up to {getMaxContactDetails()} contact detail{getMaxContactDetails() > 1 ? 's' : ''} for this plan.
+                </p>
             </div>
 
             {contacts.map((contact, index) => (
@@ -67,10 +232,16 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({ setActiveStep }) => 
                                 value={contact.country}
                                 onChange={(e) => handleChange(index, 'country', e.target.value)}
                                 className="w-full p-4 border border-primary rounded focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                disabled={loadingCountries}
                             >
-                                <option value="">--Select Country--</option>
-                                <option value="USA">USA</option>
-                                <option value="Canada">Canada</option>
+                                <option value="">
+                                    {loadingCountries ? 'Loading countries...' : '--Select Country--'}
+                                </option>
+                                {countries.map((country) => (
+                                    <option key={country._id} value={country._id}>
+                                        {getCountryName(country)}
+                                    </option>
+                                ))}
                             </select>
                         </div>
 
@@ -145,10 +316,18 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({ setActiveStep }) => 
                 <button
                     type="button"
                     onClick={addContact}
-                    className="text-green-600 flex items-center space-x-1"
+                    disabled={contacts.length >= getMaxContactDetails()}
+                    className={`flex items-center space-x-1 ${
+                        contacts.length >= getMaxContactDetails()
+                            ? 'text-gray-400 cursor-not-allowed'
+                            : 'text-green-600 hover:text-green-700 cursor-pointer'
+                    }`}
                 >
                     <PlusCircle className="h-5 w-5" />
-                    <span>Add More Contact Details</span>
+                    <span>
+                        Add More Contact Details 
+                        ({contacts.length}/{getMaxContactDetails()})
+                    </span>
                 </button>
 
                 <div className="flex justify-end gap-2 items-center self-stretch">
@@ -158,8 +337,17 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({ setActiveStep }) => 
                         Back
                     </button>
                     <button
-                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
-                        onClick={() => setActiveStep(5)}
+                        className={`gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap rounded min-h-6 ${
+                            isFormValid() 
+                                ? 'bg-[#0D1322] hover:bg-[#1a2647] cursor-pointer' 
+                                : 'bg-gray-400 cursor-not-allowed'
+                        }`}
+                        onClick={() => {
+                            if (isFormValid()) {
+                                setActiveStep(5);
+                            }
+                        }}
+                        disabled={!isFormValid()}
                     >
                         Next
                     </button>
