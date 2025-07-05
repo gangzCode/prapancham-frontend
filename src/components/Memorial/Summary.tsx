@@ -36,12 +36,16 @@ const Summary: React.FC<SummaryProps> = ({
     accountDetailsData,
     setActiveStep
 }) => {
-    const [activeTab, setActiveTab] = useState("");
-    const [activeColor, setActiveColor] = useState("bg-gray-100");
+    const [activeColor, setActiveColor] = useState("#ffffff");
+    const [activeColorId, setActiveColorId] = useState<string>("");
     const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
     const [primaryPreview, setPrimaryPreview] = useState<string | null>(null);
     const [additionalPreviews, setAdditionalPreviews] = useState<string[]>([]);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+    const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
+    const [obituaryEntry, setObituaryEntry] = useState<any>(null);
 
     // Get plan name based on language
     const getPlanName = () => {
@@ -72,22 +76,22 @@ const Summary: React.FC<SummaryProps> = ({
     // Get plan price for selected country
     const getPlanPrice = () => {
         if (!selectedPlan?.priceList || !selectedCountryId) return 0;
-        
-        const countryPrice = selectedPlan.priceList.find((priceItem: any) => 
+
+        const countryPrice = selectedPlan.priceList.find((priceItem: any) =>
             priceItem.country._id === selectedCountryId
         );
-        
+
         return countryPrice?.price || 0;
     };
 
     // Get currency
     const getCurrency = () => {
         if (!selectedPlan?.priceList || !selectedCountryId) return 'USD';
-        
-        const countryPrice = selectedPlan.priceList.find((priceItem: any) => 
+
+        const countryPrice = selectedPlan.priceList.find((priceItem: any) =>
             priceItem.country._id === selectedCountryId
         );
-        
+
         return countryPrice?.country?.currencyCode || 'USD';
     };
 
@@ -129,8 +133,134 @@ const Summary: React.FC<SummaryProps> = ({
         return age;
     }
 
-    const handlePay = () => {
-        setActiveTab("success");
+    // Create form data object
+    const createFormData = () => {
+        const formData = {
+            information: informationFormData ? {
+                title: informationFormData.title || '',
+                address: informationFormData.address || '',
+                dateOfBirth: informationFormData.dateOfBirth ? new Date(informationFormData.dateOfBirth).toISOString().split('T')[0] : '',
+                dateOfDeath: informationFormData.dateOfDeath ? new Date(informationFormData.dateOfDeath).toISOString().split('T')[0] : '',
+                description: informationFormData.description || '',
+                tributeVideo: informationFormData.tributeVideo || '',
+                shortDescription: informationFormData.shortDescription || '',
+            } : {},
+            primaryImage: primaryImage || null,
+            accountDetails: accountDetailsData ? {
+                bankName: accountDetailsData.bankName || '',
+                branchName: accountDetailsData.branch || '',
+                accountNumber: accountDetailsData.accountNumber || '',
+                accountHolderName: accountDetailsData.accountHolder || ''
+            } : {},
+            selectedCountry: selectedCountryId || '',
+            selectedPackage: selectedPlan?._id || '',
+            thumbnailImage: thumbnailImage || null,
+            username: profile?.username || '',
+            contactDetails: contactData ? contactData.map((contact: any) => ({
+                country: contact.country || '',
+                address: contact.address || '',
+                phoneNumber: contact.phone || '',
+                name: contact.name || '',
+                relationship: contact.relationship || '',
+                email: contact.email || '',
+            })) : [],
+            additionalImages: additionalImagesData || [],
+            selectedAddons: selectedAddon?.map((addon: any) => addon.id) || [],
+            selectedPrimaryImageBgFrame: frameData?.id || '',
+            selectedBgColor: activeColorId || '',
+            slideshowImages: additionalImagesData || []
+        };
+        return formData;
+    };
+
+    const handleContinueToPay = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setSubmitMessage(null);
+
+        try {
+            const formData = createFormData();
+            console.log('Form Data:', formData);
+
+            // Create FormData for file upload
+            const uploadFormData = new FormData();
+
+            // Append non-file fields
+            uploadFormData.append('information', JSON.stringify(formData.information));
+            uploadFormData.append('selectedCountry', formData.selectedCountry);
+            uploadFormData.append('selectedPackage', formData.selectedPackage);
+            uploadFormData.append('username', formData.username);
+            uploadFormData.append('contactDetails', JSON.stringify(formData.contactDetails));
+            uploadFormData.append('selectedAddons', JSON.stringify(formData.selectedAddons));
+            uploadFormData.append('selectedPrimaryImageBgFrame', formData.selectedPrimaryImageBgFrame);
+            uploadFormData.append('selectedBgColor', formData.selectedBgColor);
+            uploadFormData.append('accountDetails', JSON.stringify(formData.accountDetails));
+
+            // Append file fields
+            if (formData.primaryImage) {
+                uploadFormData.append('primaryImage', formData.primaryImage);
+            }
+            if (formData.thumbnailImage) {
+                uploadFormData.append('thumbnailImage', formData.thumbnailImage);
+            }
+            if (formData.additionalImages && formData.additionalImages.length > 0) {
+                formData.additionalImages.forEach((file, index) => {
+                    uploadFormData.append('additionalImages', file);
+                });
+            }
+            if (formData.slideshowImages && formData.slideshowImages.length > 0) {
+                formData.slideshowImages.forEach((file, index) => {
+                    uploadFormData.append('slideshowImages', file);
+                });
+            }
+
+            // Get access token from local storage
+            const accessToken = localStorage.getItem('accessToken');
+
+            const headers: HeadersInit = {};
+            if (accessToken) {
+                headers['Authorization'] = `Bearer ${accessToken}`;
+            }
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
+                method: 'POST',
+                headers: headers,
+                body: uploadFormData,
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                setSubmitMessage({ type: 'success', message: 'Order submitted successfully!' });
+
+                // Create obituary entry object for DonateModal
+                const obituaryData = {
+                    _id: result.order._id,
+                    title: result.order.information.title || 'Memorial Title',
+                    name: result.order.information.title || 'Memorial Name',
+                    date: new Date().toLocaleDateString(),
+                    address: result.order.information.address || 'No address provided',
+                    imageUrl: result.order.thumbnailImage || '',
+                    condolences: result.order.tributeItems.length || 0
+                };
+
+                setObituaryEntry(obituaryData);
+                setIsDonateModalOpen(true);
+            } else {
+                const errorData = await response.json();
+                setSubmitMessage({
+                    type: 'error',
+                    message: errorData.message || 'Failed to submit order. Please try again.'
+                });
+            }
+        } catch (error) {
+            console.error('Error submitting order:', error);
+            setSubmitMessage({
+                type: 'error',
+                message: 'Network error. Please check your connection and try again.'
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     // Create preview URLs for images
@@ -162,7 +292,7 @@ const Summary: React.FC<SummaryProps> = ({
     useEffect(() => {
         if (additionalPreviews.length > 1) {
             const interval = setInterval(() => {
-                setCurrentImageIndex((prevIndex) => 
+                setCurrentImageIndex((prevIndex) =>
                     (prevIndex + 1) % additionalPreviews.length
                 );
             }, 2000);
@@ -172,13 +302,13 @@ const Summary: React.FC<SummaryProps> = ({
 
     // Navigation functions for carousel
     const nextImage = () => {
-        setCurrentImageIndex((prevIndex) => 
+        setCurrentImageIndex((prevIndex) =>
             (prevIndex + 1) % additionalPreviews.length
         );
     };
 
     const prevImage = () => {
-        setCurrentImageIndex((prevIndex) => 
+        setCurrentImageIndex((prevIndex) =>
             prevIndex === 0 ? additionalPreviews.length - 1 : prevIndex - 1
         );
     };
@@ -204,6 +334,22 @@ const Summary: React.FC<SummaryProps> = ({
         });
     }, [selectedPlan, selectedAddon, selectedCountryId, profile, language, informationFormData, contactData, thumbnailImage, primaryImage, frameData, additionalImagesData, accountDetailsData]);
 
+
+    // Initialize default background color
+    useEffect(() => {
+        if (selectedPlan?.bgColors && selectedPlan.bgColors.length > 0) {
+            const firstColor = selectedPlan.bgColors[0];
+            setActiveColor(firstColor.colorCode);
+            setActiveColorId(firstColor._id);
+        }
+    }, [selectedPlan]);
+
+
+    // Handle closing the donate modal
+    const handleCloseDonateModal = () => {
+        setIsDonateModalOpen(false);
+        setObituaryEntry(null);
+    };
 
     return (
         <div className='p-4 md:p-8 lg:px-16 bg-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)]'>
@@ -248,16 +394,18 @@ const Summary: React.FC<SummaryProps> = ({
                     <Separator className="mb-5 w-full" />
                     <div className="flex flex-wrap gap-2 my-4">
                         {(selectedPlan?.bgColors || [
-                            { colorCode: "#ffffff" },
+                            { _id: "", colorCode: "#ffffff" },
                         ]).map((colorObj: any, index: number) => {
                             const color = colorObj?.colorCode || colorObj;
+                            const colorId = colorObj?._id || "";
                             return (
                                 <button
-                                    key={color}
+                                    key={colorId || color}
                                     className="w-8 h-8 rounded-full flex items-center justify-center relative border-2 border-gray-400 bg-white"
                                     onClick={(e) => {
                                         e.preventDefault();
                                         setActiveColor(color);
+                                        setActiveColorId(colorId);
                                     }}
                                 >
                                     <div
@@ -352,14 +500,14 @@ const Summary: React.FC<SummaryProps> = ({
                                 </button>
                             </div>
                             <Separator className="mt-4 !w-full" />
-                            
+
                             {/* YouTube Video and Additional Images Section */}
                             {(informationFormData?.tributeVideo || (additionalPreviews && additionalPreviews.length > 0)) && (
                                 <div className="mt-8">
                                     <div className="flex-shrink min-w-0 max-w-full mb-6">
                                         <TitleWithUnderline text="Media Gallery" underlineWidth={64} fontSize={3} />
                                     </div>
-                                    
+
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         {/* YouTube Video Section */}
                                         {informationFormData?.tributeVideo && (
@@ -381,7 +529,7 @@ const Summary: React.FC<SummaryProps> = ({
                                                 </div>
                                             </div>
                                         )}
-                                        
+
                                         {/* Additional Images Carousel Section */}
                                         {additionalPreviews && additionalPreviews.length > 0 && (
                                             <div className={`${!informationFormData?.tributeVideo ? 'md:col-span-2 flex justify-center' : ''}`}>
@@ -394,7 +542,7 @@ const Summary: React.FC<SummaryProps> = ({
                                                                 alt={`Additional image ${currentImageIndex + 1}`}
                                                                 className="w-full aspect-square object-cover rounded shadow-md"
                                                             />
-                                                            
+
                                                             {/* Navigation arrows - only show if multiple images */}
                                                             {additionalPreviews.length > 1 && (
                                                                 <>
@@ -414,7 +562,7 @@ const Summary: React.FC<SummaryProps> = ({
                                                                     </button>
                                                                 </>
                                                             )}
-                                                            
+
                                                             {/* Image counter */}
                                                             {additionalPreviews.length > 1 && (
                                                                 <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
@@ -432,7 +580,7 @@ const Summary: React.FC<SummaryProps> = ({
                                     </div>
                                 </div>
                             )}
-                            
+
                             <div className="mt-8">
                                 <div className="flex-shrink min-w-0 max-w-full">
                                     <TitleWithUnderline text="Contacts" underlineWidth={64} fontSize={3} />
@@ -546,65 +694,45 @@ const Summary: React.FC<SummaryProps> = ({
                 <div className='text-end'>
                     I have read and accept the <span className='text-[#880002] underline'>Terms & Conditions</span>
                 </div>
+
+                {/* Display success/error message */}
+                {submitMessage && (
+                    <div className={`mt-4 p-4 rounded-lg ${submitMessage.type === 'success'
+                            ? 'bg-green-100 border border-green-400 text-green-700'
+                            : 'bg-red-100 border border-red-400 text-red-700'
+                        }`}>
+                        <p className="text-center font-semibold">{submitMessage.message}</p>
+                    </div>
+                )}
+
                 <div className="flex justify-end gap-2 items-center self-stretch mt-16">
                     <button
                         type="button"
                         onClick={() => setActiveStep(9)}
-                        className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
+                        className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 "
+                        disabled={isSubmitting}
+                    >
                         Back
                     </button>
                     <button
                         type="button"
-                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
-                        onClick={(e => {
-                            e.preventDefault();
-                            setActiveTab("payment");
-                        }
-                        )}
+                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 disabled:opacity-50 disabled:cursor-not-allowed"
+                        onClick={handleContinueToPay}
+                        disabled={isSubmitting}
                     >
-                        Continue to Pay
+                        {isSubmitting ? 'Submitting...' : 'Continue to Pay'}
                     </button>
                 </div>
-                {activeTab &&
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 ">
-
-                        <div
-                            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-                            onClick={(e => {
-                                e.preventDefault();
-                                setActiveTab("");
-                            }
-                            )}
-                        ></div>
-
-
-                        <div className="relative bg-white p-8  shadow-lg  max-w-full z-50 overflow-y-auto  overflow-x-hidden thin-scrollbar">
-                            <button
-                                onClick={(e => {
-                                    e.preventDefault();
-                                    setActiveTab("");
-                                }
-                                )}
-                                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 rounded-full p-2 border-2 border-black w-8 h-8 flex items-center justify-center"
-                            ><X className="w-8 h-8 text-black" strokeWidth={4} />
-
-                            </button>
-
-                            {activeTab === "payment" && (
-                                <>
-                                {/* <DonateModal
-                                     isOpen={true}
-                                     onClose={() => setActiveTab("donate")}
-                                     obituaryEntry={entry}
-                                 /> */}
-                                </>
-                            )}
-                            {activeTab === "success" &&
-                                <></>
-                            }
-                        </div>
-                    </div>}
             </form>
+
+            {/* Donate Modal */}
+            {isDonateModalOpen && obituaryEntry && (
+                <DonateModal
+                    isOpen={isDonateModalOpen}
+                    onClose={handleCloseDonateModal}
+                    obituaryEntry={obituaryEntry}
+                />
+            )}
         </div>
     );
 };
