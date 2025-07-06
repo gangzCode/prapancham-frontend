@@ -169,7 +169,7 @@ const Summary: React.FC<SummaryProps> = ({
             })) : [],
             additionalImages: additionalImagesData || [],
             selectedAddons: selectedAddon?.map((addon: any) => addon.id) || [],
-            selectedPrimaryImageBgFrame: frameData?.id || '',
+            selectedPrimaryImageBgFrame: frameData?._id || '',
             selectedBgColor: activeColorId || '',
             slideshowImages: additionalImagesData || []
         };

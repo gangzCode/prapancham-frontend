@@ -70,8 +70,8 @@ const TributeCard: React.FC<TributeCardProps> = ({
         </span>
         <span className="text-gray-600 text-sm">{timeAgo}</span>
       </div>
-      <Link href="/obituary/01">
-        <div className="flex">
+      <Link href={`/obituary/${entry._id}`}>
+        <div className="flex cursor-pointer hover:opacity-90 transition-opacity duration-200">
           <div className="w-[35%] h-40 relative overflow-hidden">
             <img
               src={imageUrl}
