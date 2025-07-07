@@ -120,7 +120,7 @@ const ThumbnailImage: React.FC<ThumbnailImageProps> = ({
         <div className='p-4 md:p-8 lg:px-16 bg-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)]'>
             <form>
                 <div className="p-4 mb-6">
-                    <h3 className="text-xl font-semibold text-center mb-4 text-primary">
+                    <h3 className="text-2xl md:text-4xl font-bold text-center mb-4 text-primary">
                         Hi {profile?.username || 'there'}, Our deepest condolences.
                     </h3>
                     <p className="text-center text-gray-500 mb-4 text-primary">
