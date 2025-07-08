@@ -32,7 +32,10 @@ const Events: React.FC = () => {
                     />
                 </div>
                 <div className="md:col-span-1">
-                    <AdvertisementSidebar numberOfAds={6} />
+                    <AdvertisementSidebar 
+                    numberOfAds={6}
+                    adPageName="events"
+                     />
                 </div>
             </div>
         </section>

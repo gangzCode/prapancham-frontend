@@ -328,7 +328,10 @@ const CreateMemorialPage: React.FC = () => {
 
                             {/* Right side advertisement section - 1/3 width on desktop */}
                             <div className="md:col-span-1 pl-8">
-                                <AdvertisementSidebar numberOfAds={4} />
+                                <AdvertisementSidebar 
+                                numberOfAds={4}
+                                adPageName='create-memorial'
+                                 />
                             </div>
                         </div>
                     </div>
