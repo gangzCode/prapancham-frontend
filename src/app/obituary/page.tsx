@@ -445,7 +445,10 @@ const Obituary: React.FC = () => {
                 </div>
 
                 <div className="md:col-span-1">
-                    <AdvertisementSidebar numberOfAds={4} />
+                    <AdvertisementSidebar 
+                    numberOfAds={4}
+                    adPageName="obituary"
+                    />
                 </div>
             </div>
         </section>

@@ -193,11 +193,10 @@ const NewsCategoriesSection: React.FC = () => {
               <Button
                 key={category}
                 variant="ghost"
-                className={`px-4 py-2 rounded-none border-b-2 ${
-                  activeCategory === category
+                className={`px-4 py-2 rounded-none border-b-2 ${activeCategory === category
                     ? "border-red-600 text-red-600 font-medium"
                     : "border-transparent text-gray-700 hover:text-red-600"
-                }`}
+                  }`}
                 onClick={() => setActiveCategory(category)}
               >
                 {category}
@@ -268,7 +267,11 @@ const NewsCategoriesSection: React.FC = () => {
 
         {/* Right side advertisement section - 1/3 width on desktop */}
         <div className="lg:col-span-1 h-[600px] md:h-[800px] lg:h-[1600px] pr-4 border-r-[3px] border-gray-200 overflow-hidden">
-          <AdvertisementSidebar className="h-full overflow-y-auto" />
+          <AdvertisementSidebar
+            className="h-full overflow-y-auto"
+            numberOfAds={4}
+            adPageName="news"
+          />
         </div>
       </div>
     </section>

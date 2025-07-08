@@ -21,6 +21,50 @@ import PlanSelector from '@/components/create-Memorial/PlanSelector';
 import PlanSummary from '@/components/create-Memorial/PlanSummary';
 import ThumbnailImage from '@/components/Memorial/ThumbnailImage';
 
+// Define interfaces for ad types and advertisements
+interface AdType {
+  _id: string;
+  imageSize: string;
+  isDeleted: boolean;
+  type: string;
+  isActive: boolean;
+  __v: number;
+}
+
+interface AdTypesResponse {
+  adTypes: AdType[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+  };
+}
+
+interface AdCategory {
+  name: {
+    en: Array<{ name: string; value: string; _id: string }>;
+    ta: Array<{ name: string; value: string; _id: string }>;
+    si: Array<{ name: string; value: string; _id: string }>;
+  };
+  _id: string;
+  isDeleted: boolean;
+  isActive: boolean;
+  __v: number;
+}
+
+interface Advertisement {
+  _id: string;
+  image: string;
+  isDeleted: boolean;
+  adPageName: string;
+  isActive: boolean;
+  expiryDate: string;
+  uploadedDate: string;
+  __v: number;
+  adCategory: AdCategory;
+  adType: AdType;
+  link: string;
+}
 
 const fetcher = (url: string | URL | Request) => fetch(url).then(res => res.json());
 
@@ -38,6 +82,34 @@ const CreateMemorialPage: React.FC = () => {
     const [additionalImagesData, setAdditionalImagesData] = useState<File[]>([]);
     const [accountDetailsData, setAccountDetailsData] = useState<any>(null);
     const { language } = useLanguage();
+
+    // Fetch ad types to get Billboard and Sidebar Banner ad type IDs
+    const { data: adTypesData } = useSWR<AdTypesResponse>(
+        `${process.env.NEXT_PUBLIC_API_URL}/advertistment/ad-type/active?page=1&limit=10`,
+        fetcher
+    );
+
+    // Find Billboard and Sidebar Banner ad type IDs
+    const billboardAdType = adTypesData?.adTypes?.find(type => type.type === 'Billboard');
+    const sidebarBannerAdType = adTypesData?.adTypes?.find(type => type.type === 'Sidebar Banner');
+    const billboardAdTypeId = billboardAdType?._id;
+    const sidebarBannerAdTypeId = sidebarBannerAdType?._id;
+
+    // Fetch Billboard ads for create-memorial page
+    const { data: billboardAds } = useSWR<Advertisement[]>(
+        billboardAdTypeId 
+            ? `${process.env.NEXT_PUBLIC_API_URL}/advertistment/by-ad-type-ad-page?adType=${billboardAdTypeId}&adPageName=create-memorial`
+            : null,
+        fetcher
+    );
+
+    // Fetch Sidebar Banner ads for create-memorial page
+    const { data: sidebarBannerAds } = useSWR<Advertisement[]>(
+        sidebarBannerAdTypeId 
+            ? `${process.env.NEXT_PUBLIC_API_URL}/advertistment/by-ad-type-ad-page?adType=${sidebarBannerAdTypeId}&adPageName=create-memorial`
+            : null,
+        fetcher
+    );
 
     // console.log("selectedplan", selectedPlan);
 
@@ -307,18 +379,50 @@ const CreateMemorialPage: React.FC = () => {
                     <div>
                         <div className="my-16 grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div className="md:col-span-2">
-                                <img
-                                    src="https://images.unsplash.com/photo-1538688423619-a81d3f23454b"
-                                    alt="Black Friday Sale"
-                                    className="w-full md:max-h-[232px] max-h-[232px] object-cover"
-                                />
+                                {billboardAds && billboardAds.length > 0 ? (
+                                    <a 
+                                        href={billboardAds[0].link} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="block"
+                                    >
+                                        <img
+                                            src={billboardAds[0].image}
+                                            alt="Advertisement"
+                                            className="w-full md:max-h-[232px] max-h-[232px] object-cover"
+                                        />
+                                    </a>
+                                ) : (
+                                    <div className="w-full md:max-h-[232px] max-h-[232px] bg-red-600 flex items-center justify-center">
+                                        <div className="text-center text-white p-4">
+                                            <h3 className="text-lg font-semibold mb-2">Ad Space Available</h3>
+                                            <p className="text-sm">Contact us for advertising opportunities</p>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
-                            <div>
-                                <img
-                                    src="/images/top-ad-1.png"
-                                    alt="Black Friday Sale"
-                                    className="w-full md:max-h-[232px] max-h-[116px] object-cover"
-                                />
+                            <div className='md:col-span-1'>
+                                {sidebarBannerAds && sidebarBannerAds.length > 0 ? (
+                                    <a 
+                                        href={sidebarBannerAds[0].link} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="block"
+                                    >
+                                        <img
+                                            src={sidebarBannerAds[0].image}
+                                            alt="Advertisement"
+                                            className="w-full md:max-h-[232px] max-h-[232px] object-cover"
+                                        />
+                                    </a>
+                                ) : (
+                                    <div className="w-full md:max-h-[232px] max-h-[232px] bg-red-600 flex items-center justify-center">
+                                        <div className="text-center text-white p-4">
+                                            <h3 className="text-lg font-semibold mb-2">Ad Space Available</h3>
+                                            <p className="text-sm">Contact us for advertising opportunities</p>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 ">
@@ -328,7 +432,10 @@ const CreateMemorialPage: React.FC = () => {
 
                             {/* Right side advertisement section - 1/3 width on desktop */}
                             <div className="md:col-span-1 pl-8">
-                                <AdvertisementSidebar numberOfAds={4} />
+                                <AdvertisementSidebar 
+                                numberOfAds={4}
+                                adPageName='create-memorial'
+                                 />
                             </div>
                         </div>
                     </div>

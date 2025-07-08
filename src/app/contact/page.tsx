@@ -9,6 +9,54 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import ContactSection from "@/components/contact/ContactSection";
 import toast from "react-hot-toast";
+import useSWR from 'swr';
+
+// Define interfaces for ad types and advertisements
+interface AdType {
+  _id: string;
+  imageSize: string;
+  isDeleted: boolean;
+  type: string;
+  isActive: boolean;
+  __v: number;
+}
+
+interface AdTypesResponse {
+  adTypes: AdType[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+  };
+}
+
+interface AdCategory {
+  name: {
+    en: Array<{ name: string; value: string; _id: string }>;
+    ta: Array<{ name: string; value: string; _id: string }>;
+    si: Array<{ name: string; value: string; _id: string }>;
+  };
+  _id: string;
+  isDeleted: boolean;
+  isActive: boolean;
+  __v: number;
+}
+
+interface Advertisement {
+  _id: string;
+  image: string;
+  isDeleted: boolean;
+  adPageName: string;
+  isActive: boolean;
+  expiryDate: string;
+  uploadedDate: string;
+  __v: number;
+  adCategory: AdCategory;
+  adType: AdType;
+  link: string;
+}
+
+const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const countries = [
   "Sri Lanka",
@@ -46,6 +94,24 @@ const ContactPage: React.FC = () => {
   const [errors, setErrors] = useState<any>({});
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  // Fetch ad types to get Full Width ad type ID
+  const { data: adTypesData } = useSWR<AdTypesResponse>(
+    `${process.env.NEXT_PUBLIC_API_URL}/advertistment/ad-type/active?page=1&limit=10`,
+    fetcher
+  );
+
+  // Find Full Width ad type ID
+  const fullWidthAdType = adTypesData?.adTypes?.find(type => type.type === 'Full Width');
+  const fullWidthAdTypeId = fullWidthAdType?._id;
+
+  // Fetch Full Width ads for contact page
+  const { data: contactAds } = useSWR<Advertisement[]>(
+    fullWidthAdTypeId 
+      ? `${process.env.NEXT_PUBLIC_API_URL}/advertistment/by-ad-type-ad-page?adType=${fullWidthAdTypeId}&adPageName=contact`
+      : null,
+    fetcher
+  );
 
   const validate = () => {
     const newErrors: any = {};
@@ -232,12 +298,24 @@ const ContactPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Horizontal advertisement Section */}
-      <img
-        src="https://images.unsplash.com/photo-1627384113743-6bd5a479fffd"
-        alt="Black Friday Sale"
-        className="w-full max-h-[232px] object-cover px-4 md:px-8 lg:px-16 mb-4"
-      />
+      {/* Dynamic Advertisement Section */}
+      <div className="px-4 md:px-8 lg:px-16 mb-4">
+        {contactAds && contactAds.length > 0 ? (
+          <a href={contactAds[0].link} target="_blank" rel="noopener noreferrer">
+            <img
+              src={contactAds[0].image}
+              alt="Advertisement"
+              className="w-full max-h-[232px] object-cover"
+            />
+          </a>
+        ) : (
+          <div className="bg-red-600 text-white text-center py-8 px-4">
+            <h3 className="text-xl font-bold mb-2">Ad Space Available</h3>
+            <p className="mb-2">Contact us to advertise here</p>
+            <p className="text-lg font-semibold">+94 77 002 33 23</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

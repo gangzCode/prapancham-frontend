@@ -1,42 +1,62 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState,useEffect } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import AdvertisementTypeMenu from "@/components/advertisement/advertismentType";
-import CountryMenu from "@/components/contact/CountryMenu";
+import React, { useState, useEffect } from "react";
 import PaginationBar from "@/components/category/PaginationBar";
 import useSWR from 'swr';
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 
 
-const ads = {
-    banners: {
-        top: "/images/top-ad-1.png",
-        bottom: "/images/top-ad-2.png",
-    },
-    gridAds: [
-        "/images/top-ad-1.png",
-        "/images/top-ad-2.png",
-        "/images/top-ad-3.png",
-        "/images/top-ad-4.png",
-        "/images/top-ad-1.png",
-        "/images/top-ad-1.png",
-    ]
-};
+// Define ad types interface
+interface AdType {
+    _id: string;
+    imageSize: string;
+    isDeleted: boolean;
+    type: string;
+    isActive: boolean;
+    __v: number;
+}
 
-const adTypes = [
-    "Commercial (50 Posts)",
-    "House for rent and sales (10 Posts)",
-    "Job vacancies (15 Posts)",
-];
+interface AdCategory {
+    name: {
+        en: Array<{ name: string; value: string; _id: string }>;
+        ta: Array<{ name: string; value: string; _id: string }>;
+        si: Array<{ name: string; value: string; _id: string }>;
+    };
+    _id: string;
+    isDeleted: boolean;
+    isActive: boolean;
+    __v: number;
+}
+
+interface Advertisement {
+    _id: string;
+    image: string;
+    isDeleted: boolean;
+    adPageName: string;
+    isActive: boolean;
+    expiryDate: string;
+    uploadedDate: string;
+    __v: number;
+    adCategory: AdCategory;
+    adType: AdType;
+    link: string;
+}
+
+interface AdResponse {
+    advertisements: Advertisement[];
+    pagination: {
+        currentPage: number;
+        totalPages: number;
+        totalItems: number;
+    };
+}
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const Advertisement = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const totalPages = 3;
     const { language } = useLanguage();
     let langKey: LanguageKey;
 
@@ -57,8 +77,15 @@ const Advertisement = () => {
     };
     const t = translations[langKey];
 
+    // Fetch ad categories
     const { data, error, isLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API_URL}/advertistment/ad-categories-with-count`,
+        fetcher
+    );
+
+    // Fetch active advertisements
+    const { data: adsData, error: adsError, isLoading: adsLoading } = useSWR<AdResponse>(
+        `${process.env.NEXT_PUBLIC_API_URL}/advertistment/active?page=${currentPage}`,
         fetcher
     );
 
@@ -69,6 +96,36 @@ const Advertisement = () => {
             return `${langObj?.value} (${cat.adCount} ${t.posts})` || "";
         }) || []),
     ];
+
+    // Categorize ads by type
+    const categorizeAdsByType = (advertisements: Advertisement[]) => {
+        const categorized: Record<string, Advertisement[]> = {};
+        
+        advertisements.forEach(ad => {
+            const type = ad.adType.type;
+            if (!categorized[type]) {
+                categorized[type] = [];
+            }
+            categorized[type].push(ad);
+        });
+        
+        return categorized;
+    };
+
+    const categorizedAds = adsData ? categorizeAdsByType(adsData.advertisements) : {};
+
+    // Helper function to render an ad
+    const renderAd = (ad: Advertisement, className: string = "") => (
+        <div key={ad._id} className="bg-slate-50 shadow-lg p-4">
+            <a href={ad.link} target="_blank" rel="noopener noreferrer">
+                <img
+                    src={ad.image}
+                    alt={`${ad.adType.type} Advertisement`}
+                    className={className}
+                />
+            </a>
+        </div>
+    );
 
 
     const [activeCountry, setActiveCountry] = useState(categories[0]);
@@ -82,130 +139,175 @@ const Advertisement = () => {
         setCurrentPage(pageNumber);
     };
 
+    // Loading state
+    if (adsLoading) {
+        return (
+            <div className="mt-8 py-8 px-4 md:px-8 lg:px-16">
+                <div className="text-center">Loading advertisements...</div>
+            </div>
+        );
+    }
+
+    // Error state
+    if (adsError) {
+        return (
+            <div className="mt-8 py-8 px-4 md:px-8 lg:px-16">
+                <div className="text-center text-red-500">Error loading advertisements.</div>
+            </div>
+        );
+    }
+
     return (
         <div className="mt-8">
 
-            {/* <CountryMenu
-                countries={categories}
-                activeCountry={activeCountry}
-                setActiveCountry={setActiveCountry}
-            /> */}
-
             <div className="py-8 px-4 md:px-8 lg:px-16 space-y-4">
-                <div className="bg-slate-50 shadow-lg p-4 ">
-                    <img
-                        src="https://images.unsplash.com/photo-1538688423619-a81d3f23454b"
-                        alt="Black Friday Sale"
-                        className="w-full md:max-h-[232px] max-h-[116px] object-cover"
-                    />
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
-                    {ads.gridAds.map((src, index) => (
-                        <div key={index} className="bg-slate-50 shadow-lg p-4 ">
+                {/* First Full Width Ad */}
+                {categorizedAds['Full Width'] && categorizedAds['Full Width'].length > 0 && (
+                    <div className="bg-slate-50 shadow-lg p-4">
+                        <a href={categorizedAds['Full Width'][0].link} target="_blank" rel="noopener noreferrer">
                             <img
-                                src={src}
-                                alt="Black Friday Sale"
-                                className="w-full max-h-[232px] object-fit"
+                                src={categorizedAds['Full Width'][0].image}
+                                alt={`${categorizedAds['Full Width'][0].adType.type} Advertisement`}
+                                className="w-full md:max-h-[232px] max-h-[116px] object-cover"
                             />
-                        </div>
-                    ))}
-                </div>
-
-                <div className="bg-slate-50 shadow-lg p-4 ">
-                    <img
-                        src="https://images.unsplash.com/photo-1538688423619-a81d3f23454b"
-                        alt="Black Friday Sale"
-                        className="w-full md:max-h-[232px] max-h-[116px] object-cover"
-                    />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-4">
-                    <div className="bg-slate-50 shadow-lg p-4 flex items-stretch md:col-span-2">
-                        <img
-                            src={ads.gridAds[0]}
-                            alt="Top Image"
-                            className="w-full h-full object-fit md:max-h-[232px] max-h-[116px]"
-                        />
+                        </a>
                     </div>
+                )}
 
-                    <div className="grid grid-cols-2 gap-2 md:grid-cols-2 md:col-span-2">
-                        {ads.gridAds.slice(1, 3).map((src, index) => (
-                            <div key={index} className="bg-slate-50 shadow-lg p-4 flex items-stretch">
-                                <img
-                                    src={src}
-                                    alt={`Image ${index + 2}`}
-                                    className="w-full h-full object-fit max-h-[232px]"
-                                />
+                {/* Sidebar Banner Ads */}
+                {categorizedAds['Sidebar Banner'] && categorizedAds['Sidebar Banner'].length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+                        {categorizedAds['Sidebar Banner'].map(ad => (
+                            <div key={ad._id} className="bg-slate-50 shadow-lg p-4">
+                                <a href={ad.link} target="_blank" rel="noopener noreferrer">
+                                    <img
+                                        src={ad.image}
+                                        alt={`${ad.adType.type} Advertisement`}
+                                        className="w-full max-h-[232px] object-fit"
+                                    />
+                                </a>
                             </div>
                         ))}
                     </div>
-                </div>
+                )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4">
-                    {ads.gridAds.slice(0, 2).map((src, index) => (
-                        <div key={index} className="bg-slate-50 shadow-lg p-4 ">
+                {/* Second Full Width Ad */}
+                {categorizedAds['Full Width'] && categorizedAds['Full Width'].length > 1 && (
+                    <div className="bg-slate-50 shadow-lg p-4">
+                        <a href={categorizedAds['Full Width'][1].link} target="_blank" rel="noopener noreferrer">
                             <img
-                                src={src}
-                                alt="Black Friday Sale"
-                                className="w-full md:h-[464px]  h-auto object-fit"
+                                src={categorizedAds['Full Width'][1].image}
+                                alt={`${categorizedAds['Full Width'][1].adType.type} Advertisement`}
+                                className="w-full md:max-h-[232px] max-h-[116px] object-cover"
                             />
-                        </div>
-                    ))}
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4">
-                    {ads.gridAds.slice(0, 2).map((src, index) => (
-                        <div key={index} className="bg-slate-50 shadow-lg p-4 ">
-                            <img
-                                src={src}
-                                alt="Black Friday Sale"
-                                className="w-full md:max-h-[232px] max-h-[116px] h-auto object-fit"
-                            />
-                        </div>
-                    ))}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-4">
-                    <div className="bg-slate-50 shadow-lg p-4 flex items-stretch md:col-span-2">
-                        <img
-                            src={ads.gridAds[0]}
-                            alt="Top Image"
-                            className="w-full h-full object-fit md:max-h-[232px] max-h-[116px]"
-                        />
+                        </a>
                     </div>
+                )}
 
-                    <div className="grid grid-cols-2 gap-2 md:grid-cols-2 md:col-span-2">
-                        {ads.gridAds.slice(1, 3).map((src, index) => (
-                            <div key={index} className="bg-slate-50 shadow-lg p-4 flex items-stretch">
-                                <img
-                                    src={src}
-                                    alt={`Image ${index + 2}`}
-                                    className="w-full h-full object-fit max-h-[232px]"
-                                />
+                {/* Billboard Ads */}
+                {categorizedAds['Billboard'] && categorizedAds['Billboard'].length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4">
+                        {categorizedAds['Billboard'].map(ad => (
+                            <div key={ad._id} className="bg-slate-50 shadow-lg p-4">
+                                <a href={ad.link} target="_blank" rel="noopener noreferrer">
+                                    <img
+                                        src={ad.image}
+                                        alt={`${ad.adType.type} Advertisement`}
+                                        className="w-full md:h-[464px] h-auto object-fit"
+                                    />
+                                </a>
                             </div>
                         ))}
                     </div>
-                </div>
-                <div className="grid grid-cols-1 gap-2 mb-4">
-                    {ads.gridAds.slice(2, 3).map((src, index) => (
-                        <div key={index} className="bg-slate-50 shadow-lg p-4 ">
-                            <img
-                                src={src}
-                                alt="Black Friday Sale"
-                                className="w-full md:h-[648px]  h-[400px] object-fit"
-                            />
-                        </div>
-                    ))}
-                </div>
+                )}
 
-                <div>
-                    <PaginationBar
-                        currentPage={1}
-                        totalPages={10}
-                        onPageChange={setCurrentPage}
-                    />
-                </div>
+                {/* Square Ads */}
+                {categorizedAds['Square'] && categorizedAds['Square'].length > 0 && (
+                    <div className="grid grid-cols-2 gap-2 mb-4">
+                        {categorizedAds['Square'].map(ad => (
+                            <div key={ad._id} className="bg-slate-50 shadow-lg p-4">
+                                <a href={ad.link} target="_blank" rel="noopener noreferrer">
+                                    <img
+                                        src={ad.image}
+                                        alt={`${ad.adType.type} Advertisement`}
+                                        className="w-full aspect-square object-cover"
+                                    />
+                                </a>
+                            </div>
+                        ))}
+                    </div>
+                )}
 
+                {/* Standard Ads */}
+                {categorizedAds['Standard'] && categorizedAds['Standard'].length > 0 && (
+                    <div className="grid grid-cols-1 gap-2 mb-4">
+                        {categorizedAds['Standard'].map(ad => (
+                            <div key={ad._id} className="bg-slate-50 shadow-lg p-4">
+                                <a href={ad.link} target="_blank" rel="noopener noreferrer">
+                                    <img
+                                        src={ad.image}
+                                        alt={`${ad.adType.type} Advertisement`}
+                                        className="w-full md:h-[648px] h-[400px] object-fit"
+                                    />
+                                </a>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* Display other ad types if any */}
+                {Object.keys(categorizedAds).map(adType => {
+                    if (!['Full Width', 'Sidebar Banner', 'Billboard', 'Square', 'Standard'].includes(adType)) {
+                        return (
+                            <div key={adType} className="space-y-4">
+                                <h3 className="text-lg font-semibold">{adType} Ads</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
+                                    {categorizedAds[adType].map(ad => (
+                                        <div key={ad._id} className="bg-slate-50 shadow-lg p-4">
+                                            <a href={ad.link} target="_blank" rel="noopener noreferrer">
+                                                <img
+                                                    src={ad.image}
+                                                    alt={`${ad.adType.type} Advertisement`}
+                                                    className="w-full h-auto object-fit"
+                                                />
+                                            </a>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        );
+                    }
+                    return null;
+                })}
+
+                {/* Remaining Full Width Ads (3rd and beyond) */}
+                {categorizedAds['Full Width'] && categorizedAds['Full Width'].length > 2 && (
+                    <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Additional Full Width Ads</h3>
+                        {categorizedAds['Full Width'].slice(2).map((ad) => (
+                            <div key={ad._id} className="bg-slate-50 shadow-lg p-4">
+                                <a href={ad.link} target="_blank" rel="noopener noreferrer">
+                                    <img
+                                        src={ad.image}
+                                        alt={`${ad.adType.type} Advertisement`}
+                                        className="w-full md:max-h-[232px] max-h-[116px] object-cover"
+                                    />
+                                </a>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* Pagination */}
+                {adsData && adsData.pagination && (
+                    <div>
+                        <PaginationBar
+                            currentPage={adsData.pagination.currentPage}
+                            totalPages={adsData.pagination.totalPages}
+                            onPageChange={handlePageChange}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );

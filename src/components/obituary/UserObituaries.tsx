@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import OrbituaryCard from "./OrbituaryCard";
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import { CirclePlus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type LanguageKey = "en" | "ta" | "si";
 
@@ -71,6 +73,7 @@ interface UserObituariesResponse {
 
 const UserObituaries: React.FC = () => {
     const { language } = useLanguage();
+    const router = useRouter();
     let langKey: LanguageKey = "en";
     if (language === "tamil") langKey = "ta";
     else if (language === "sinhala") langKey = "si";
@@ -91,7 +94,8 @@ const UserObituaries: React.FC = () => {
             minute: "minute",
             justNow: "Just now",
             ago: "ago",
-            loginRequired: "Please log in to view your obituaries."
+            loginRequired: "Please log in to view your obituaries.",
+            postObituary: "Post Obituary"
         },
         ta: {
             myObituaries: "எனது இரங்கல்கள்",
@@ -108,7 +112,8 @@ const UserObituaries: React.FC = () => {
             minute: "நிமிடம்",
             justNow: "இப்போதே",
             ago: "முன்பு",
-            loginRequired: "உங்கள் இரங்கல்களைப் பார்க்க தயவுசெய்து உள்நுழையவும்."
+            loginRequired: "உங்கள் இரங்கல்களைப் பார்க்க தயவுசெய்து உள்நுழையவும்.",
+            postObituary: "இரங்கல் இடு"
         },
         si: {
             myObituaries: "මගේ මරණ දැන්වීම්",
@@ -125,7 +130,8 @@ const UserObituaries: React.FC = () => {
             minute: "මිනිත්තුව",
             justNow: "දැන්",
             ago: "කලින්",
-            loginRequired: "ඔබේ මරණ දැන්වීම් බැලීමට කරුණාකර පුරනය වන්න."
+            loginRequired: "ඔබේ මරණ දැන්වීම් බැලීමට කරුණාකර පුරනය වන්න.",
+            postObituary: "මරණ දැන්වීම පළ කරන්න"
         }
     };
 
@@ -297,9 +303,45 @@ const UserObituaries: React.FC = () => {
 
     return (
         <div>
-            {obituaries.length > 0 ? (
+            {/* First row with Post Obituary card and first 2 obituaries (if they exist) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                {/* Post Obituary Card */}
+                <div
+                    className="border-2 border-dashed border-gray-300 flex items-center justify-center p-4 min-h-48 cursor-pointer hover:border-primary hover:bg-gray-50 transition-colors"
+                    onClick={() => router.push('/create-memorial')}
+                >
+                    <div className="text-center">
+                        <CirclePlus className="w-10 h-10 text-gray-400 mx-auto mb-2" />
+                        <p className="text-gray-500">{t.postObituary}</p>
+                    </div>
+                </div>
+                
+                {/* First 2 obituary cards (if they exist) */}
+                {obituaries.slice(0, 2).map((obituary) => {
+                    const cardData = transformObituaryData(obituary);
+                    return (
+                        <OrbituaryCard
+                            key={obituary._id}
+                            orderId={obituary._id}
+                            condolencesCount={cardData.condolencesCount}
+                            timeAgo={cardData.timeAgo}
+                            imageUrl={cardData.imageUrl}
+                            ceremonyTitle={cardData.ceremonyTitle}
+                            eventName={cardData.eventName}
+                            date={cardData.date}
+                            finalPrice={cardData.finalPrice}
+                            donationReceived={cardData.donationReceived}
+                            postedDate={cardData.postedDate}
+                            onDelete={handleAfterDelete}
+                        />
+                    );
+                })}
+            </div>
+            
+            {/* Remaining obituaries in normal 3-column grid */}
+            {obituaries.length > 2 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {obituaries.map((obituary) => {
+                    {obituaries.slice(2).map((obituary) => {
                         const cardData = transformObituaryData(obituary);
                         return (
                             <OrbituaryCard
@@ -319,7 +361,10 @@ const UserObituaries: React.FC = () => {
                         );
                     })}
                 </div>
-            ) : (
+            )}
+            
+            {/* No obituaries message */}
+            {obituaries.length === 0 && !loading && !error && (
                 <div className="text-center py-12">
                     <p className="text-gray-500 text-lg">{t.noObituaries}</p>
                 </div>

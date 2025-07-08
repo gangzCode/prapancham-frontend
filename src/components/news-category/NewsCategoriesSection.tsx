@@ -146,7 +146,7 @@ const NewsCategoriesSection: React.FC = () => {
                   timeAgo: getTimeAgo(newsItem.createdAt, langKey),
                   className: undefined,
                 }))}
-                adImage="https://images.unsplash.com/photo-1518640467707-6811f4a6ab73"
+                adImage=""
               />
             ))}
           </ScrollArea>
@@ -154,7 +154,10 @@ const NewsCategoriesSection: React.FC = () => {
 
         {/* Right side advertisement section - 1/3 width on desktop */}
         <div className="md:col-span-1">
-          <AdvertisementSidebar />
+          <AdvertisementSidebar
+            numberOfAds={4}
+            adPageName="home"
+          />
         </div>
       </div>
     </section>

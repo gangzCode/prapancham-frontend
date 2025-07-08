@@ -164,7 +164,10 @@ const NewsIndividual: React.FC = () => {
 
 
           <div className="md:col-span-1">
-            <AdvertisementSidebar numberOfAds={6} />
+            <AdvertisementSidebar 
+            numberOfAds={6}
+            adPageName="news"
+             />
           </div>
         </div>
       </div>
