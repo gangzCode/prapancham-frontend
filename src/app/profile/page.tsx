@@ -190,7 +190,7 @@ const Events: React.FC = () => {
     };
 
     const tabs = ["General", "Obituary", "Remembrance", "Advertisement"];
-    
+
     // Create localized tabs mapping
     const getLocalizedTabText = (tab: string) => {
         switch (tab) {
@@ -380,20 +380,7 @@ const Events: React.FC = () => {
                             <div className="flex-shrink min-w-0 max-w-full pb-6">
                                 <TitleWithUnderline text={t.obituary} underlineWidth={64} fontSize={3} />
                             </div>
-                            <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-                                <div
-                                    className="border-2 border-dashed border-gray-300 flex items-center justify-center p-4 min-h-48 cursor-pointer hover:border-primary hover:bg-gray-50 transition-colors"
-                                    onClick={() => router.push('/create-memorial')}
-                                >
-                                    <div className="text-center">
-                                        <CirclePlus className="w-10 h-10 text-gray-400 mx-auto mb-2" />
-                                        <p className="text-gray-500">Post Obituary</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="mt-8">
-                                <UserObituaries />
-                            </div>
+                            <UserObituaries />
                         </div>
                     }
                     {activeTab === 'Remembrance' &&
@@ -401,20 +388,7 @@ const Events: React.FC = () => {
                             <div className="flex-shrink min-w-0 max-w-full pb-6">
                                 <TitleWithUnderline text={t.remembrance} underlineWidth={64} fontSize={3} />
                             </div>
-                            <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-                                <div
-                                    className="border-2 border-dashed border-gray-300 flex items-center justify-center p-4 min-h-48 cursor-pointer hover:border-primary hover:bg-gray-50 transition-colors"
-                                    onClick={() => router.push('/create-memorial')}
-                                >
-                                    <div className="text-center">
-                                        <CirclePlus className="w-10 h-10 text-gray-400 mx-auto mb-2" />
-                                        <p className="text-gray-500">Post Rememberence</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="mt-8">
-                                <UserRemembrances />
-                            </div>
+                            <UserRemembrances />
                         </div>
                     }
                     {activeTab === 'Advertisement' &&
