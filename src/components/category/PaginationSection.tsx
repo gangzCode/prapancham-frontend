@@ -150,7 +150,11 @@ const PaginationSection = () => {
         </div>
         {/* Right side advertisement section - 1/3 width on desktop */}
         <div className="lg:col-span-1 h-auto pr-4 border-r-[3px] border-gray-200 overflow-hidden">
-          <AdvertisementSidebar className="h-full overflow-y-auto" numberOfAds={6} />
+          <AdvertisementSidebar 
+          className="h-full overflow-y-auto" 
+          numberOfAds={4} 
+          adPageName="home"
+          />
         </div>
       </div>
 

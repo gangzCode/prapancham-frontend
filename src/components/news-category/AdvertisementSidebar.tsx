@@ -1,5 +1,4 @@
-import React from "react";
-import { Youtube } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
@@ -11,16 +10,31 @@ interface ContactCardProps {
 
 interface AdBannerProps {
   image: string;
+  link?: string;
 }
 
-const adImages = [
-  "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
-  "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
-  "https://images.unsplash.com/photo-1518770660439-4636190af475",
-  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
-  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
-  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
-];
+interface AdType {
+  _id: string;
+  imageSize: string;
+  isDeleted: boolean;
+  type: string;
+  isActive: boolean;
+  __v: number;
+}
+
+interface AdData {
+  _id: string;
+  image: string;
+  isDeleted: boolean;
+  adPageName: string;
+  isActive: boolean;
+  expiryDate: string;
+  uploadedDate: string;
+  __v: number;
+  adCategory: any;
+  adType: AdType;
+  link?: string;
+}
 
 const ContactCard: React.FC<ContactCardProps> = ({ title, phone }) => (
   <div className="mb-2 sm:mb-3 md:mb-4">
@@ -33,29 +47,107 @@ const ContactCard: React.FC<ContactCardProps> = ({ title, phone }) => (
   </div>
 );
 
-const AdBanner: React.FC<AdBannerProps> = ({ image }) => (
-  <div className="mb-2 overflow-hidden ">
-    <div className="aspect-[21/9] sm:aspect-[16/9] md:aspect-[21/9] relative">
-      <Image
-        src={image || "/images/Prapancham-logo.png"}
-        alt="Advertisement"
-        fill
-        className="object-cover"
-        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-      />
+const AdBanner: React.FC<AdBannerProps> = ({ image, link }) => {
+  const content = (
+    <div className="mb-2 overflow-hidden cursor-pointer">
+      <div className="aspect-[21/9] sm:aspect-[16/9] md:aspect-[21/9] relative">
+        <Image
+          src={image || "/images/Prapancham-logo.png"}
+          alt="Advertisement"
+          fill
+          className="object-cover"
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+
+  if (link) {
+    return (
+      <a href={link} target="_blank" rel="noopener noreferrer">
+        {content}
+      </a>
+    );
+  }
+
+  return content;
+};
 
 interface AdvertisementSidebarProps {
   className?: string;
   numberOfAds?: number;
+  adPageName?: string;
 }
 
 const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
   className,
-  numberOfAds
+  numberOfAds,
+  adPageName = 'home'
 }) => {
+  const [adData, setAdData] = useState<AdData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAds = async () => {
+      try {
+        setLoading(true);
+        
+        // Get access token from localStorage
+        const accessToken = localStorage.getItem('accessToken');
+        
+        // First, get the ad types to find the Sidebar Banner type
+        const adTypesResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/advertistment/ad-type/active?page=1&limit=10`,
+          {
+            headers: {
+              ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        
+        if (!adTypesResponse.ok) {
+          throw new Error('Failed to fetch ad types');
+        }
+        
+        const adTypesData = await adTypesResponse.json();
+        const sidebarAdType = adTypesData.adTypes.find(
+          (type: AdType) => type.type === 'Sidebar Banner'
+        );
+        
+        if (!sidebarAdType) {
+          console.error('Sidebar Banner ad type not found');
+          return;
+        }
+        
+        // Now fetch the advertisements for this page and ad type
+        const adsResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/advertistment/by-ad-type-ad-page?adType=${sidebarAdType._id}&adPageName=${adPageName}`,
+          {
+            headers: {
+              ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        
+        if (!adsResponse.ok) {
+          throw new Error('Failed to fetch advertisements');
+        }
+        
+        const adsData = await adsResponse.json();
+        setAdData(Array.isArray(adsData) ? adsData : []);
+        
+      } catch (error) {
+        console.error('Error fetching advertisements:', error);
+        setAdData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAds();
+  }, [adPageName]);
   return (
     <div
       className={cn(
@@ -80,28 +172,45 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
         />
       </div>
 
-      {/* <div className="space-y-2 sm:space-y-3 md:space-y-4 mt-4 sm:mt-5 md:mt-6">        
-        <AdBanner image="https://images.unsplash.com/photo-1649972904349-6e44c42644a7" />
-        <AdBanner image="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b" />
-        <AdBanner image="https://images.unsplash.com/photo-1518770660439-4636190af475" />
-        <AdBanner image="https://images.unsplash.com/photo-1461749280684-dccba630e2f6" />
-      </div> */}
-
       <div className="space-y-2 sm:space-y-3 md:space-y-4 mt-4 sm:mt-5 md:mt-6">
-        {adImages.slice(0, numberOfAds || 4).map((_, index) => (
-          <AdBanner
-            key={index}
-            image="https://images.unsplash.com/photo-1649972904349-6e44c42644a7"
-          />
-        ))}
+        {loading ? (
+          // Show loading placeholder
+          Array.from({ length: numberOfAds || 4 }).map((_, index) => (
+            <div
+              key={index}
+              className="mb-2 overflow-hidden animate-pulse"
+            >
+              <div className="aspect-[21/9] sm:aspect-[16/9] md:aspect-[21/9] relative bg-gray-300 rounded"></div>
+            </div>
+          ))
+        ) : adData.length > 0 ? (
+          // Show actual ads
+          adData.slice(0, numberOfAds || 4).map((ad, index) => (
+            <AdBanner
+              key={ad._id || index}
+              image={ad.image}
+              link={ad.link}
+            />
+          ))
+        ) : (
+          // Show no ads message
+          <div className="text-center p-6 sm:p-8 bg-red-600 rounded">
+            <p className="text-base sm:text-lg md:text-2xl text-white font-medium leading-relaxed">
+              AD-Space Available for purchase.
+              <br />
+              Contact us for more information.
+            </p>
+          </div>
+        )}
+
       </div>
 
-      <div className="mt-4 sm:mt-5 md:mt-6">
+      <div className="mt-4 sm:mt-4 md:mt-4">
         <h3 className="text-sm sm:text-base md:text-heading-base text-secondary mb-2">
           For More Details Contact Us
         </h3>
         <div className="space-y-1 sm:space-y-2">
-          {[1, 2, 3, 4, 5].map((_, index) => (
+          {[1, 2].map((_, index) => (
             <button
               key={index}
               className="w-full bg-[#0D1322] text-white text-sm sm:text-body-base py-1.5 sm:py-2 px-2 sm:px-4 text-center rounded hover:bg-[#0c4c62] transition-colors"
@@ -125,13 +234,6 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
             className="w-6 h-6 sm:w-8 sm:h-8"
           />
           <span>Listen To Our Podcast Now</span>
-        </a>
-        <a
-          href="#"
-          className="flex items-center gap-1 sm:gap-2 text-secondary text-sm sm:text-body-base hover:underline py-1.5 sm:py-2 px-2 sm:px-4 bg-white rounded shadow-md hover:shadow-lg hover:bg-gray-100 transition-all duration-200"
-        >
-          <Youtube className="h-6 w-6 sm:h-8 sm:w-8" />
-          <span>Visit our YouTube Now</span>
         </a>
       </div>
     </div>

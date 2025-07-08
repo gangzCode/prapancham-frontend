@@ -154,7 +154,10 @@ const NewsCategoriesSection: React.FC = () => {
 
         {/* Right side advertisement section - 1/3 width on desktop */}
         <div className="md:col-span-1">
-          <AdvertisementSidebar />
+          <AdvertisementSidebar
+            numberOfAds={4}
+            adPageName="home"
+          />
         </div>
       </div>
     </section>
