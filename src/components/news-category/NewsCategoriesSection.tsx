@@ -146,7 +146,7 @@ const NewsCategoriesSection: React.FC = () => {
                   timeAgo: getTimeAgo(newsItem.createdAt, langKey),
                   className: undefined,
                 }))}
-                adImage="https://images.unsplash.com/photo-1518640467707-6811f4a6ab73"
+                adImage=""
               />
             ))}
           </ScrollArea>
