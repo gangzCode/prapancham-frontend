@@ -6,7 +6,133 @@ import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import DonateModal from '@/components/obituary/DonateModal';
 import type { ObituaryEntry } from '@/components/hero/types';
+import { useLanguage } from '@/components/ui/LanguageProvider';
 // import { demoData } from "./demoData";
+
+type LanguageKey = "en" | "ta" | "si";
+
+const localeText = {
+  en: {
+    loading: "Loading...",
+    error: "Error:",
+    obituaryNotFound: "Obituary not found",
+    ourDeepestCondolences: "Our deepest condolences",
+    birth: "Birth",
+    death: "Death",
+    birthDate: "Birth date",
+    deathDate: "Death date",
+    memorialTitle: "Memorial Title",
+    noDescriptionProvided: "No description provided.",
+    postTribute: "Post Tribute",
+    donate: "Donate",
+    mediaGallery: "Media Gallery",
+    tributeVideo: "Tribute Video",
+    slideshowImages: "Slideshow Images",
+    contacts: "Contacts",
+    noContactInformation: "No contact information provided.",
+    requestToContact: "Request to Contact",
+    overview: "Overview",
+    name: "Name:",
+    birthDateLabel: "Birth Date:",
+    deathDateLabel: "Death Date:",
+    age: "Age:",
+    address: "Address:",
+    notProvided: "Not provided",
+    postersInformation: "Poster's Information",
+    nameNotProvided: "Name not provided",
+    addressNotProvided: "Address not provided",
+    emailNotProvided: "Email not provided",
+    phoneNotProvided: "Phone not provided",
+    accountDetails: "Account Details",
+    bank: "Bank:",
+    branch: "Branch:",
+    account: "Account:",
+    holder: "Holder:",
+    pictures: "Pictures",
+    noImagesUploaded: "No images uploaded",
+    noImageSelected: "No image selected"
+  },
+  ta: {
+    loading: "ஏற்றுகிறது...",
+    error: "பிழை:",
+    obituaryNotFound: "மரண அறிவித்தல் கிடைக்கவில்லை",
+    ourDeepestCondolences: "எங்கள் ஆழ்ந்த இரங்கல்கள்",
+    birth: "பிறப்பு",
+    death: "மரணம்",
+    birthDate: "பிறந்த தேதி",
+    deathDate: "மரண தேதி",
+    memorialTitle: "நினைவு தலைப்பு",
+    noDescriptionProvided: "விளக்கம் வழங்கப்படவில்லை.",
+    postTribute: "அஞ்சலி இடு",
+    donate: "நன்கொடை",
+    mediaGallery: "ஊடக காட்சியகம்",
+    tributeVideo: "அஞ்சலி வீடியோ",
+    slideshowImages: "ஸ்லைடுஷோ படங்கள்",
+    contacts: "தொடர்புகள்",
+    noContactInformation: "தொடர்பு தகவல்கள் வழங்கப்படவில்லை.",
+    requestToContact: "தொடர்பு கோரிக்கை",
+    overview: "கண்ணோட்டம்",
+    name: "பெயர்:",
+    birthDateLabel: "பிறந்த தேதி:",
+    deathDateLabel: "மரண தேதி:",
+    age: "வயது:",
+    address: "முகவரி:",
+    notProvided: "வழங்கப்படவில்லை",
+    postersInformation: "போஸ்டரின் தகவல்கள்",
+    nameNotProvided: "பெயர் வழங்கப்படவில்லை",
+    addressNotProvided: "முகவரி வழங்கப்படவில்லை",
+    emailNotProvided: "மின்னஞ்சல் வழங்கப்படவில்லை",
+    phoneNotProvided: "தொலைபேசி வழங்கப்படவில்லை",
+    accountDetails: "கணக்கு விவரங்கள்",
+    bank: "வங்கி:",
+    branch: "கிளை:",
+    account: "கணக்கு:",
+    holder: "வைத்திருப்பவர்:",
+    pictures: "படங்கள்",
+    noImagesUploaded: "படங்கள் பதிவேற்றப்படவில்லை",
+    noImageSelected: "படம் தேர்ந்தெடுக்கப்படவில்லை"
+  },
+  si: {
+    loading: "පූරණය වෙමින්...",
+    error: "දෝෂය:",
+    obituaryNotFound: "මරණ දැනුම්දීම සොයා ගත නොහැක",
+    ourDeepestCondolences: "අපගේ ගැඹුරු සමුපකාර",
+    birth: "උපත",
+    death: "මරණය",
+    birthDate: "උපන් දිනය",
+    deathDate: "මරණ දිනය",
+    memorialTitle: "ස්මාරක මාතෘකාව",
+    noDescriptionProvided: "විස්තරයක් ලබා දී නැත.",
+    postTribute: "ප්‍රණාමය පළ කරන්න",
+    donate: "දන්දීම්",
+    mediaGallery: "මාධ්‍ය ගැලරිය",
+    tributeVideo: "ප්‍රණාම වීඩියෝව",
+    slideshowImages: "ස්ලයිඩ්ෂෝ පින්තූර",
+    contacts: "සම්බන්ධතා",
+    noContactInformation: "සම්බන්ධතා තොරතුරු ලබා දී නැත.",
+    requestToContact: "සම්බන්ධ වීමට ඉල්ලීම",
+    overview: "දළ විශ්ලේෂණය",
+    name: "නම:",
+    birthDateLabel: "උපන් දිනය:",
+    deathDateLabel: "මරණ දිනය:",
+    age: "වයස:",
+    address: "ලිපිනය:",
+    notProvided: "ලබා දී නැත",
+    postersInformation: "පෝස්ටරගේ තොරතුරු",
+    nameNotProvided: "නම ලබා දී නැත",
+    addressNotProvided: "ලිපිනය ලබා දී නැත",
+    emailNotProvided: "ඊ-මේල් ලබා දී නැත",
+    phoneNotProvided: "දුරකථනය ලබා දී නැත",
+    accountDetails: "ගිණුම් විස්තර",
+    bank: "බැංකුව:",
+    branch: "ශාඛාව:",
+    account: "ගිණුම:",
+    holder: "හිමිකරු:",
+    pictures: "පින්තූර",
+    noImagesUploaded: "පින්තූර උඩුගත කර නැත",
+    noImageSelected: "පින්තූරයක් තෝරා නැත"
+  },
+};
 interface ObituaryData {
     information: {
         title: string;
@@ -72,8 +198,15 @@ interface ObituaryData {
 }
 
 const ObituaryDetail: React.FC = () => {
+    const { language } = useLanguage();
     const params = useParams();
     const orderId = params?.id as string;
+
+    let langKey: LanguageKey = "en";
+    if (language === "tamil") langKey = "ta";
+    else if (language === "sinhala") langKey = "si";
+
+    const t = localeText[langKey];
 
   const [obituaryData, setObituaryData] = useState<ObituaryData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -165,7 +298,7 @@ const ObituaryDetail: React.FC = () => {
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
-                <div className="text-xl">Loading...</div>
+                <div className="text-xl">{t.loading}</div>
             </div>
         );
     }
@@ -173,7 +306,7 @@ const ObituaryDetail: React.FC = () => {
     if (error) {
         return (
             <div className="flex justify-center items-center min-h-screen">
-                <div className="text-xl text-red-500">Error: {error}</div>
+                <div className="text-xl text-red-500">{t.error} {error}</div>
             </div>
         );
     }
@@ -181,7 +314,7 @@ const ObituaryDetail: React.FC = () => {
     if (!obituaryData) {
         return (
             <div className="flex justify-center items-center min-h-screen">
-                <div className="text-xl">Obituary not found</div>
+                <div className="text-xl">{t.obituaryNotFound}</div>
             </div>
         );
     }
@@ -200,13 +333,13 @@ const ObituaryDetail: React.FC = () => {
                             >
                                 <div className="pt-4 pb-2 text-center max-w-lg mx-auto px-4">
                                     <h1 className="text-xl font-bold text-primary mb-6">
-                                        {obituaryData.information.shortDescription || 'Our deepest condolences'}
+                                        {obituaryData.information.shortDescription || t.ourDeepestCondolences}
                                     </h1>
 
                                     <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 sm:gap-0">
                                         <div className="text-gray-500 text-center flex md:flex-col">
-                                            <p>Birth<span className="md:hidden mr-1 ml-1">:</span></p>
-                                            <p>{obituaryData.information.dateofBirth ? new Date(obituaryData.information.dateofBirth).toLocaleDateString() : 'Birth date'}</p>
+                                            <p>{t.birth}<span className="md:hidden mr-1 ml-1">:</span></p>
+                                            <p>{obituaryData.information.dateofBirth ? new Date(obituaryData.information.dateofBirth).toLocaleDateString() : t.birthDate}</p>
                                         </div>
 
                                         {obituaryData.primaryImage && (
@@ -238,36 +371,36 @@ const ObituaryDetail: React.FC = () => {
                                         )}
                                         {!obituaryData.primaryImage && (
                                             <div className="w-40 sm:w-60 shadow-md aspect-square bg-gray-200 flex items-center justify-center mx-auto sm:mx-4">
-                                                <p className="text-gray-500 text-sm">No image selected</p>
+                                                <p className="text-gray-500 text-sm">{t.noImageSelected}</p>
                                             </div>
                                         )}
 
                                         <div className="text-gray-500 text-center flex md:flex-col">
-                                            <p>Death<span className="md:hidden mr-1 ml-1">:</span></p>
-                                            <p>{obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString() : 'Death date'}</p>
+                                            <p>{t.death}<span className="md:hidden mr-1 ml-1">:</span></p>
+                                            <p>{obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString() : t.deathDate}</p>
                                         </div>
                                     </div>
 
                                     <h1 className="text-xl font-bold text-secondary mb-6">
-                                        {obituaryData.information.title || 'Memorial Title'}
+                                        {obituaryData.information.title || t.memorialTitle}
                                     </h1>
                                 </div>
                             </div>
                         </div>
 
                         <p className="text-justify mt-4">
-                            {obituaryData.information.description || 'No description provided.'}
+                            {obituaryData.information.description || t.noDescriptionProvided}
                         </p>
 
                         <div className="flex justify-end gap-2 items-center self-stretch mt-4">
                             <button className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
-                                Post Tribute
+                                {t.postTribute}
                             </button>
                             <button 
                                 onClick={openModal}
                                 className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
                             >
-                                Donate
+                                {t.donate}
                             </button>
                         </div>
 
@@ -277,7 +410,7 @@ const ObituaryDetail: React.FC = () => {
                         {(obituaryData.information.tributeVideo || (obituaryData.additionalImages && obituaryData.additionalImages.length > 0)) && (
                             <div className="mt-8">
                                 <div className="flex-shrink min-w-0 max-w-full mb-6">
-                                    <TitleWithUnderline text="Media Gallery" underlineWidth={64} fontSize={3} />
+                                    <TitleWithUnderline text={t.mediaGallery} underlineWidth={64} fontSize={3} />
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -285,7 +418,7 @@ const ObituaryDetail: React.FC = () => {
                                     {obituaryData.information.tributeVideo && (
                                         <div className={`${!obituaryData.additionalImages || obituaryData.additionalImages.length === 0 ? 'md:col-span-2 flex justify-center' : ''}`}>
                                             <div className="bg-white p-4 shadow-md">
-                                                <h3 className="text-lg font-semibold mb-4 text-center">Tribute Video</h3>
+                                                <h3 className="text-lg font-semibold mb-4 text-center">{t.tributeVideo}</h3>
                                                 <div className="aspect-video w-full">
                                                     <iframe
                                                         width="100%"
@@ -306,7 +439,7 @@ const ObituaryDetail: React.FC = () => {
                                     {obituaryData.additionalImages && obituaryData.additionalImages.length > 0 && (
                                         <div className={`${!obituaryData.information.tributeVideo ? 'md:col-span-2 flex justify-center' : ''}`}>
                                             <div className="bg-white p-4 shadow-md w-full">
-                                                <h3 className="text-lg font-semibold mb-4 text-center">Additional Images</h3>
+                                                <h3 className="text-lg font-semibold mb-4 text-center">{t.slideshowImages}</h3>
                                                 <div className="relative">
                                                     <div className="w-full relative aspect-video">
                                                         <img
@@ -353,7 +486,7 @@ const ObituaryDetail: React.FC = () => {
                         {/* Contacts Section */}
                         <div className="mt-8">
                             <div className="flex-shrink min-w-0 max-w-full">
-                                <TitleWithUnderline text="Contacts" underlineWidth={64} fontSize={3} />
+                                <TitleWithUnderline text={t.contacts} underlineWidth={64} fontSize={3} />
                             </div>
                             {obituaryData.contactDetails && obituaryData.contactDetails.length > 0 ? (
                                 obituaryData.contactDetails.map((contact: any, index: number) => (
@@ -366,13 +499,13 @@ const ObituaryDetail: React.FC = () => {
                                             <p>{contact.relationship}</p>
                                         </div>
                                         <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
-                                            Request to Contact
+                                            {t.requestToContact}
                                         </button>
                                     </div>
                                 ))
                             ) : (
                                 <div className="bg-white p-6 shadow-md mb-4">
-                                    <p className="text-gray-500 text-center">No contact information provided.</p>
+                                    <p className="text-gray-500 text-center">{t.noContactInformation}</p>
                                 </div>
                             )}
                         </div>
@@ -383,31 +516,47 @@ const ObituaryDetail: React.FC = () => {
                         <div className="bg-white p-2 shadow-md">
                             {/* Overview Section */}
                             <div className="flex-shrink min-w-0 max-w-full mt-2">
-                                <TitleWithUnderline text="Overview" underlineWidth={64} fontSize={3} />
+                                <TitleWithUnderline text={t.overview} underlineWidth={64} fontSize={3} />
                             </div>
                             <div className="space-y-2 mt-2 p-2">
-                                <p className="text-gray-500">Name: {obituaryData.information.title || 'Not provided'}</p>
-                                <p className="text-gray-500">Birth Date: {obituaryData.information.dateofBirth ? new Date(obituaryData.information.dateofBirth).toLocaleDateString() : 'Not provided'}</p>
-                                <p className="text-gray-500">Death Date: {obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString() : 'Not provided'}</p>
-                                <p className="text-gray-500">Age: {obituaryData.information.dateofBirth && obituaryData.information.dateofDeath ? calculateAge(obituaryData.information.dateofBirth, obituaryData.information.dateofDeath) : 'Not provided'}</p>
-                                <p>Address: {obituaryData.information.address || 'Not provided'}</p>
+                                <p className="text-gray-500">{t.name} {obituaryData.information.title || t.notProvided}</p>
+                                <p className="text-gray-500">{t.birthDateLabel} {obituaryData.information.dateofBirth ? new Date(obituaryData.information.dateofBirth).toLocaleDateString() : t.notProvided}</p>
+                                <p className="text-gray-500">{t.deathDateLabel} {obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString() : t.notProvided}</p>
+                                <p className="text-gray-500">{t.age} {obituaryData.information.dateofBirth && obituaryData.information.dateofDeath ? calculateAge(obituaryData.information.dateofBirth, obituaryData.information.dateofDeath) : t.notProvided}</p>
+                                <p>{t.address} {obituaryData.information.address || t.notProvided}</p>
                             </div>
 
                             <Separator className="mt-6 !w-full mb-8" />
 
                             {/* Poster's Information Section */}
                             <div className="flex-shrink min-w-0 max-w-full mt-4">
-                                <TitleWithUnderline text="Poster's Information" underlineWidth={64} fontSize={3} />
+                                <TitleWithUnderline text={t.postersInformation} underlineWidth={64} fontSize={3} />
                             </div>
                             <div className="space-y-2 mt-2 p-2">
-                                <p className="text-[#880002]">{obituaryData.username || 'Name'}</p>
-                                <p>Address not provided</p>
-                                <p>{obituaryData.username || 'Email not provided'}</p>
-                                <p>Phone not provided</p>
+                                <p className="text-[#880002]">
+                                    {obituaryData.contactDetails && obituaryData.contactDetails.length > 0 
+                                        ? obituaryData.contactDetails[0].name 
+                                        : obituaryData.username || t.nameNotProvided}
+                                </p>
+                                <p>
+                                    {obituaryData.contactDetails && obituaryData.contactDetails.length > 0 
+                                        ? obituaryData.contactDetails[0].address || t.addressNotProvided
+                                        : t.addressNotProvided}
+                                </p>
+                                <p>
+                                    {obituaryData.contactDetails && obituaryData.contactDetails.length > 0 
+                                        ? obituaryData.contactDetails[0].email || t.emailNotProvided
+                                        : obituaryData.username || t.emailNotProvided}
+                                </p>
+                                <p>
+                                    {obituaryData.contactDetails && obituaryData.contactDetails.length > 0 
+                                        ? obituaryData.contactDetails[0].phoneNumber || t.phoneNotProvided
+                                        : t.phoneNotProvided}
+                                </p>
                             </div>
 
                             <button className="w-full gap-2.5 self-stretch px-4 py-3 my-auto mt-4 text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
-                                Request to Contact
+                                {t.requestToContact}
                             </button>
 
                             {/* Account Details Section */}
@@ -415,13 +564,13 @@ const ObituaryDetail: React.FC = () => {
                                 <>
                                     <Separator className="mt-6 !w-full mb-4" />
                                     <div className="flex-shrink min-w-0 max-w-full mt-4">
-                                        <TitleWithUnderline text="Account Details" underlineWidth={64} fontSize={3} />
+                                        <TitleWithUnderline text={t.accountDetails} underlineWidth={64} fontSize={3} />
                                     </div>
                                     <div className="space-y-2 mt-2 p-2">
-                                        <p>Bank: {obituaryData.accountDetails.bankName || 'Not provided'}</p>
-                                        <p>Branch: {obituaryData.accountDetails.branchName || 'Not provided'}</p>
-                                        <p>Account: {obituaryData.accountDetails.accountNumber || 'Not provided'}</p>
-                                        <p>Holder: {obituaryData.accountDetails.accountHolderName || 'Not provided'}</p>
+                                        <p>{t.bank} {obituaryData.accountDetails.bankName || t.notProvided}</p>
+                                        <p>{t.branch} {obituaryData.accountDetails.branchName || t.notProvided}</p>
+                                        <p>{t.account} {obituaryData.accountDetails.accountNumber || t.notProvided}</p>
+                                        <p>{t.holder} {obituaryData.accountDetails.accountHolderName || t.notProvided}</p>
                                     </div>
                                 </>
                             )}
@@ -430,7 +579,7 @@ const ObituaryDetail: React.FC = () => {
 
                             {/* Pictures Section */}
                             <div className="flex-shrink min-w-0 max-w-full mt-8 mb-6">
-                                <TitleWithUnderline text="Pictures" underlineWidth={64} fontSize={3} />
+                                <TitleWithUnderline text={t.pictures} underlineWidth={64} fontSize={3} />
                             </div>
                             <div className="p-2">
                                 <div className="bg-white p-2 shadow-md">
@@ -453,7 +602,7 @@ const ObituaryDetail: React.FC = () => {
                                         </div>
                                     ) : (
                                         <div className="p-4 text-center text-gray-500">
-                                            No images uploaded
+                                            {t.noImagesUploaded}
                                         </div>
                                     )}
                                 </div>
