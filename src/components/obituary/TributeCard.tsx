@@ -104,7 +104,16 @@ const TributeCard: React.FC<TributeCardProps> = ({
         >
           {t.postTribute}
         </button>
-        <TributeModal isOpen={isTributeModalOpen} onClose={() => setIsTributeModalOpen(false)} />
+        <TributeModal 
+          isOpen={isTributeModalOpen} 
+          onClose={() => setIsTributeModalOpen(false)}
+          obituaryEntry={entry}
+          timeAgo={timeAgo}
+          imageUrl={imageUrl}
+          ceremonyTitle={ceremonyTitle}
+          eventName={eventName}
+          date={date}
+        />
         <button
           onClick={() => setIsModalOpen(true)}
           className="w-1/5 py-2 bg-primary text-white rounded"
