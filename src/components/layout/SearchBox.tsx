@@ -3,82 +3,181 @@
 import { useEffect, useId, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { LoaderCircle, Mic, Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-interface SearchResult {
-  id: string;
-  title: string;
-  description: string;
+interface OrderResult {
+  _id: string;
+  information: {
+    title: string;
+    address: string;
+    dateofBirth: string;
+    dateofDeath: string;
+    description: string;
+    tributeVideo: string;
+    shortDescription: string;
+  };
+  thumbnailImage: string;
+  primaryImage: string;
+  username: string;
 }
 
-const dummyData: SearchResult[] = [
-  {
-    id: "1",
-    title: "Introduction to Classical Music",
-    description:
-      "Learn about the fundamentals of classical music and its rich history",
-  },
-  {
-    id: "2",
-    title: "Understanding Ragas",
-    description: "Explore the melodic framework of Indian classical music",
-  },
-  {
-    id: "3",
-    title: "Rhythm Patterns in Carnatic Music",
-    description:
-      "Deep dive into the complex rhythm patterns used in South Indian classical music",
-  },
-  {
-    id: "4",
-    title: "Musical Instruments Guide",
-    description:
-      "Comprehensive guide to traditional Indian musical instruments",
-  },
-  {
-    id: "5",
-    title: "Concert Etiquette",
-    description: "Guidelines for attending classical music concerts",
-  },
-];
+interface SearchResponse {
+  query: string;
+  orders: OrderResult[];
+  news: any[];
+  events: any[];
+}
 
 const SearchBox: React.FC = () => {
   const id = useId();
+  const router = useRouter();
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResponse | null>(null);
   const [showResults, setShowResults] = useState(false);
+  const [activeTab, setActiveTab] = useState<'orders' | 'news' | 'events'>('orders');
 
   useEffect(() => {
-    if (inputValue) {
+    if (inputValue.trim()) {
       setIsLoading(true);
-      const timer = setTimeout(() => {
+      const timer = setTimeout(async () => {
         try {
-          // Filter dummy data based on search query
-          const filteredResults = dummyData.filter(
-            (item) =>
-              item.title.toLowerCase().includes(inputValue.toLowerCase()) ||
-              item.description.toLowerCase().includes(inputValue.toLowerCase())
-          );
-          setSearchResults(filteredResults);
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/search?q=${encodeURIComponent(inputValue.trim())}`);
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data: SearchResponse = await response.json();
+          setSearchResults(data);
+          setShowResults(true);
+          // Set default active tab to the first tab that has results
+          if (data.orders.length > 0) {
+            setActiveTab('orders');
+          } else if (data.news.length > 0) {
+            setActiveTab('news');
+          } else if (data.events.length > 0) {
+            setActiveTab('events');
+          }
         } catch (error) {
           console.error("Search error:", error);
+          setSearchResults(null);
         } finally {
           setIsLoading(false);
         }
-      }, 500); // Simulate network delay
+      }, 1000); // 1000ms debounce
+
       return () => clearTimeout(timer);
+    } else {
+      setSearchResults(null);
+      setShowResults(false);
+      setIsLoading(false);
     }
-    setSearchResults([]);
-    setIsLoading(false);
   }, [inputValue]);
 
+  const handleOrderClick = (orderId: string) => {
+    console.log("Order clicked:", orderId);
+    // Prevent the blur event from interfering
+    setTimeout(() => {
+      router.push(`/obituary/${orderId}`);
+      setShowResults(false);
+      setInputValue("");
+    }, 0);
+  };
+
   const handleInputFocus = () => {
-    if (inputValue) setShowResults(true);
+    if (inputValue && searchResults) setShowResults(true);
   };
 
   const handleInputBlur = () => {
     // Delay hiding results to allow for result click
-    setTimeout(() => setShowResults(false), 200);
+    setTimeout(() => setShowResults(false), 300);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Prevent the input from losing focus when clicking on results
+    e.preventDefault();
+  };
+
+  const hasResults = searchResults && (searchResults.orders.length > 0 || searchResults.news.length > 0 || searchResults.events.length > 0);
+
+  const getTabContent = () => {
+    if (!searchResults) return null;
+
+    switch (activeTab) {
+      case 'orders':
+        return searchResults.orders.map((order) => (
+          <div
+            key={order._id}
+            className="flex items-center gap-3 p-3 hover:bg-gray-50 active:bg-gray-100 rounded-md cursor-pointer transition-all duration-150 group"
+            onClick={() => handleOrderClick(order._id)}
+            onMouseDown={handleMouseDown}
+          >
+            <img
+              src={order.thumbnailImage || order.primaryImage || "/images/tribute.jpg"}
+              alt={order.information.title}
+              className="w-12 h-12 object-cover rounded"
+            />
+            <div className="flex-1 min-w-0">
+              <div className="font-medium text-sm group-hover:text-primary transition-colors truncate">
+                {order.information.title}
+              </div>
+              <div className="text-xs text-gray-500 truncate">
+                {order.information.address}
+              </div>
+            </div>
+          </div>
+        ));
+
+      case 'news':
+        return searchResults.news.map((news, index) => (
+          <div
+            key={index}
+            className="p-3 hover:bg-gray-50 active:bg-gray-100 rounded-md cursor-pointer transition-all duration-150 group"
+            onClick={() => {
+              console.log("Selected news:", news);
+            }}
+          >
+            <div className="font-medium text-sm group-hover:text-primary transition-colors">
+              {news.title}
+            </div>
+            <div className="text-xs text-gray-500 line-clamp-2 mt-1">
+              {news.description}
+            </div>
+          </div>
+        ));
+
+      case 'events':
+        return searchResults.events.map((event, index) => (
+          <div
+            key={index}
+            className="p-3 hover:bg-gray-50 active:bg-gray-100 rounded-md cursor-pointer transition-all duration-150 group"
+            onClick={() => {
+              console.log("Selected event:", event);
+            }}
+          >
+            <div className="font-medium text-sm group-hover:text-primary transition-colors">
+              {event.title}
+            </div>
+            <div className="text-xs text-gray-500 line-clamp-2 mt-1">
+              {event.description}
+            </div>
+          </div>
+        ));
+
+      default:
+        return null;
+    }
+  };
+
+  const getAvailableTabs = () => {
+    if (!searchResults) return [];
+
+    const tabs = [];
+    if (searchResults.orders.length > 0) tabs.push({ key: 'orders', label: 'Obituaries', count: searchResults.orders.length });
+    if (searchResults.news.length > 0) tabs.push({ key: 'news', label: 'News', count: searchResults.news.length });
+    if (searchResults.events.length > 0) tabs.push({ key: 'events', label: 'Events', count: searchResults.events.length });
+    return tabs;
   };
 
   return (
@@ -108,25 +207,42 @@ const SearchBox: React.FC = () => {
           )}
         </div>
       </div>
-      {showResults && searchResults.length > 0 && (
-        <div className="fixed md:absolute left-0 right-0 md:left-auto md:right-auto top-full md:top-auto w-full md:w-auto min-w-full bg-white rounded-none md:rounded-lg shadow-2xl mt-0 md:mt-1 max-h-[50vh] md:max-h-[300px] overflow-y-auto origin-top animate-in fade-in zoom-in duration-200 border-t md:border border-gray-200 z-50">
-          <div className="p-2 space-y-1">
-            {searchResults.map((result) => (
-              <div
-                key={result.id}
-                className="p-3 hover:bg-gray-50 active:bg-gray-100 rounded-md cursor-pointer transition-all duration-150 group"
-                onClick={() => {
-                  console.log("Selected result:", result);
-                }}
-              >
-                <div className="font-medium group-hover:text-primary transition-colors">
-                  {result.title}
-                </div>
-                <div className="text-sm text-gray-600 line-clamp-2">
-                  {result.description}
-                </div>
+
+      {showResults && hasResults && (
+        <div
+          className="fixed md:absolute left-0 right-0 md:left-auto md:right-auto top-full md:top-auto w-full md:w-[600px] bg-white rounded-none md:rounded-lg shadow-2xl mt-0 md:mt-1 max-h-[50vh] md:max-h-[500px] overflow-hidden origin-top animate-in fade-in zoom-in duration-200 border-t md:border border-gray-200 z-50"
+          onMouseDown={handleMouseDown}
+        >
+          <div className="flex flex-col h-full">
+            {/* Tab Headers */}
+            <div className="flex border-b border-gray-200 bg-gray-50">
+              {getAvailableTabs().map((tab) => (
+                <button
+                  key={tab.key}
+                  className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${activeTab === tab.key
+                      ? 'text-primary border-b-2 border-primary bg-white'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    }`}
+                  onClick={() => setActiveTab(tab.key as 'orders' | 'news' | 'events')}
+                >
+                  {tab.label} ({tab.count})
+                </button>
+              ))}
+            </div>
+
+            {/* Tab Content */}
+            <div className="flex-1 overflow-y-auto p-2">
+              <div className="space-y-1">
+                {getTabContent()}
               </div>
-            ))}
+            </div>
+
+            {/* Show message if no results found */}
+            {searchResults && searchResults.orders.length === 0 && searchResults.news.length === 0 && searchResults.events.length === 0 && (
+              <div className="text-center py-8 text-gray-500">
+                No results found for "{searchResults.query}"
+              </div>
+            )}
           </div>
         </div>
       )}
