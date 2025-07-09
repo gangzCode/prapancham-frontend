@@ -57,6 +57,7 @@ const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const Advertisement = () => {
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedAdCategory, setSelectedAdCategory] = useState<string>('');
     const { language } = useLanguage();
     let langKey: LanguageKey;
 
@@ -67,31 +68,34 @@ const Advertisement = () => {
     const translations: Record<LanguageKey, { [key: string]: string }> = {
         en: {
             posts: "Posts",
+            allCategories: "All Categories",
         },
         ta: {
             posts: "பதிவுகள்",
+            allCategories: "அனைத்து வகைகள்",
         },
         si: {
             posts: "පිටු",
+            allCategories: "සියලුම කාණ්ඩ",
         },
     };
     const t = translations[langKey];
 
     // Fetch ad categories
-    const { data, error, isLoading } = useSWR(
+    const { data: categoriesData, error, isLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API_URL}/advertistment/ad-categories-with-count`,
         fetcher
     );
 
-    // Fetch active advertisements
+    // Fetch active advertisements with category filter
     const { data: adsData, error: adsError, isLoading: adsLoading } = useSWR<AdResponse>(
-        `${process.env.NEXT_PUBLIC_API_URL}/advertistment/by-category?page=${currentPage}&limit=20`,
+        `${process.env.NEXT_PUBLIC_API_URL}/advertistment/by-category?page=${currentPage}&limit=20${selectedAdCategory ? `&adCategory=${selectedAdCategory}` : ''}`,
         fetcher
     );
 
 
     const categories: string[] = [
-        ...(data?.map((cat: any) => {
+        ...(categoriesData?.map((cat: any) => {
             const langObj = cat.name[langKey]?.[0] || cat.name["en"]?.[0];
             return `${langObj?.value} (${cat.adCount} ${t.posts})` || "";
         }) || []),
@@ -139,6 +143,14 @@ const Advertisement = () => {
         setCurrentPage(pageNumber);
     };
 
+    const handleCategoryChange = (categoryId: string) => {
+        setSelectedAdCategory(categoryId);
+        setCurrentPage(1); // Reset to first page when changing category
+    };
+
+    // Get total ad count for "All Categories" tab
+    const totalAdCount = categoriesData?.reduce((sum: number, cat: any) => sum + cat.adCount, 0) || 0;
+
     // Loading state
     if (adsLoading) {
         return (
@@ -166,6 +178,40 @@ const Advertisement = () => {
 
     return (
         <div className="mt-8">
+            {/* Category Tabs */}
+            <div className="py-4 px-4 md:px-8 lg:px-16 bg-white border-b">
+                <div className="flex flex-wrap gap-2 md:gap-4">
+                    {/* All Categories Tab */}
+                    <button
+                        onClick={() => handleCategoryChange('')}
+                        className={`px-4 py-2 rounded-lg font-medium text-sm md:text-base transition-colors ${
+                            selectedAdCategory === '' 
+                                ? 'bg-primary text-white' 
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                    >
+                        {t.allCategories} ({totalAdCount} {t.posts})
+                    </button>
+                    
+                    {/* Category Tabs */}
+                    {categoriesData?.map((category: any) => {
+                        const langObj = category.name[langKey]?.[0] || category.name["en"]?.[0];
+                        return (
+                            <button
+                                key={category._id}
+                                onClick={() => handleCategoryChange(category._id)}
+                                className={`px-4 py-2 rounded-lg font-medium text-sm md:text-base transition-colors ${
+                                    selectedAdCategory === category._id 
+                                        ? 'bg-primary text-white' 
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                }`}
+                            >
+                                {langObj?.value} ({category.adCount} {t.posts})
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
 
             <div className="py-8 px-4 md:px-8 lg:px-16 space-y-4">
                 {/* First Full Width Ad */}
