@@ -268,6 +268,20 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
           />
           <span>Listen To Our Podcast Now</span>
         </a>
+        
+        <a
+          href="#"
+          className="flex items-center gap-1 sm:gap-2 text-secondary text-sm sm:text-body-base hover:underline py-1.5 sm:py-2 px-2 sm:px-4 bg-white rounded shadow-md hover:shadow-lg hover:bg-gray-100 transition-all duration-200"
+        >
+          <Image
+            src="/icons/youtube-icon.svg"
+            alt="YouTube"
+            width={24}
+            height={24}
+            className="w-6 h-6 sm:w-8 sm:h-8"
+          />
+          <span>Visit our YouTube Now</span>
+        </a>
       </div>
     </div>
   );
