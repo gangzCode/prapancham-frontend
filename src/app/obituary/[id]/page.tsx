@@ -295,6 +295,24 @@ const ObituaryDetail: React.FC = () => {
         return match ? match[1] : null;
     };
 
+    // Handle phone call functionality
+    const handleRequestToContact = (phoneNumber?: string) => {
+        // Get the first contact's phone number if no specific number provided
+        const contactPhone = phoneNumber || 
+            (obituaryData?.contactDetails && obituaryData.contactDetails.length > 0 
+                ? obituaryData.contactDetails[0].phoneNumber 
+                : null);
+        
+        if (contactPhone) {
+            // Clean the phone number (remove spaces, dashes, etc.)
+            const cleanedPhone = contactPhone.replace(/[^+\d]/g, '');
+            window.location.href = `tel:${cleanedPhone}`;
+        } else {
+            // Fallback - could show an alert or handle no phone number case
+            alert('No phone number available for contact.');
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -498,7 +516,10 @@ const ObituaryDetail: React.FC = () => {
                                             <p>{contact.email}</p>
                                             <p>{contact.relationship}</p>
                                         </div>
-                                        <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                                        <button 
+                                            onClick={() => handleRequestToContact(contact.phoneNumber)}
+                                            className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
+                                        >
                                             {t.requestToContact}
                                         </button>
                                     </div>
@@ -555,12 +576,15 @@ const ObituaryDetail: React.FC = () => {
                                 </p>
                             </div>
 
-                            <button className="w-full gap-2.5 self-stretch px-4 py-3 my-auto mt-4 text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                            <button 
+                                onClick={() => handleRequestToContact()}
+                                className="w-full gap-2.5 self-stretch px-4 py-3 my-auto mt-4 text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
+                            >
                                 {t.requestToContact}
                             </button>
 
                             {/* Account Details Section */}
-                            {obituaryData.accountDetails && (
+                            {/* {obituaryData.accountDetails && (
                                 <>
                                     <Separator className="mt-6 !w-full mb-4" />
                                     <div className="flex-shrink min-w-0 max-w-full mt-4">
@@ -573,7 +597,7 @@ const ObituaryDetail: React.FC = () => {
                                         <p>{t.holder} {obituaryData.accountDetails.accountHolderName || t.notProvided}</p>
                                     </div>
                                 </>
-                            )}
+                            )} */}
 
                             <Separator className="mt-8 !w-full mb-4" />
 
@@ -607,6 +631,12 @@ const ObituaryDetail: React.FC = () => {
                                     )}
                                 </div>
                             </div>
+                            <button 
+                                onClick={() => handleRequestToContact()}
+                                className="w-full gap-2.5 self-stretch px-4 py-3 my-auto mt-4 text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
+                            >
+                                {t.requestToContact}
+                            </button>
                         </div>
                     </div>
                 </div>
