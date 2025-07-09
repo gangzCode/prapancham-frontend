@@ -4,6 +4,7 @@ import type { ObituaryEntry } from "./types";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 import DonateModal from "../obituary/DonateModal";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface ObituaryCardProps {
   entry: ObituaryEntry;
@@ -12,11 +13,20 @@ interface ObituaryCardProps {
 const ObituaryCard: React.FC<ObituaryCardProps> = ({ entry }) => {
   const { language } = useLanguage();
   const langKey: "en" | "ta" | "si" = language === "tamil" ? "ta" : language === "sinhala" ? "si" : "en";
+  const router = useRouter();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Prevent navigation if clicking on buttons
+    if ((e.target as HTMLElement).closest('button')) {
+      return;
+    }
+    router.push(`/obituary/${entry._id}`);
+  };
 
   useEffect(() => {
     console.log("ObituaryCard rendered with entry:", entry);
@@ -42,7 +52,10 @@ const ObituaryCard: React.FC<ObituaryCardProps> = ({ entry }) => {
   };
   return (
     <>
-      <article className="flex flex-col justify-center p-2 w-full rounded-lg bg-stone-50">
+      <article 
+        className="flex flex-col justify-center p-2 w-full rounded-lg bg-stone-50 cursor-pointer hover:bg-stone-100 transition-colors duration-200"
+        onClick={handleCardClick}
+      >
         <h3 className="gap-3.5 self-stretch py-1 w-full text-heading-base text-[#0D1322] rounded">
           {entry.title}
         </h3>
