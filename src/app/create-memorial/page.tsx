@@ -23,47 +23,47 @@ import ThumbnailImage from '@/components/Memorial/ThumbnailImage';
 
 // Define interfaces for ad types and advertisements
 interface AdType {
-  _id: string;
-  imageSize: string;
-  isDeleted: boolean;
-  type: string;
-  isActive: boolean;
-  __v: number;
+    _id: string;
+    imageSize: string;
+    isDeleted: boolean;
+    type: string;
+    isActive: boolean;
+    __v: number;
 }
 
 interface AdTypesResponse {
-  adTypes: AdType[];
-  pagination: {
-    currentPage: number;
-    totalPages: number;
-    totalItems: number;
-  };
+    adTypes: AdType[];
+    pagination: {
+        currentPage: number;
+        totalPages: number;
+        totalItems: number;
+    };
 }
 
 interface AdCategory {
-  name: {
-    en: Array<{ name: string; value: string; _id: string }>;
-    ta: Array<{ name: string; value: string; _id: string }>;
-    si: Array<{ name: string; value: string; _id: string }>;
-  };
-  _id: string;
-  isDeleted: boolean;
-  isActive: boolean;
-  __v: number;
+    name: {
+        en: Array<{ name: string; value: string; _id: string }>;
+        ta: Array<{ name: string; value: string; _id: string }>;
+        si: Array<{ name: string; value: string; _id: string }>;
+    };
+    _id: string;
+    isDeleted: boolean;
+    isActive: boolean;
+    __v: number;
 }
 
 interface Advertisement {
-  _id: string;
-  image: string;
-  isDeleted: boolean;
-  adPageName: string;
-  isActive: boolean;
-  expiryDate: string;
-  uploadedDate: string;
-  __v: number;
-  adCategory: AdCategory;
-  adType: AdType;
-  link: string;
+    _id: string;
+    image: string;
+    isDeleted: boolean;
+    adPageName: string;
+    isActive: boolean;
+    expiryDate: string;
+    uploadedDate: string;
+    __v: number;
+    adCategory: AdCategory;
+    adType: AdType;
+    link: string;
 }
 
 const fetcher = (url: string | URL | Request) => fetch(url).then(res => res.json());
@@ -97,7 +97,7 @@ const CreateMemorialPage: React.FC = () => {
 
     // Fetch Billboard ads for create-memorial page
     const { data: billboardAds } = useSWR<Advertisement[]>(
-        billboardAdTypeId 
+        billboardAdTypeId
             ? `${process.env.NEXT_PUBLIC_API_URL}/advertistment/by-ad-type-ad-page?adType=${billboardAdTypeId}&adPageName=create-memorial`
             : null,
         fetcher
@@ -105,7 +105,7 @@ const CreateMemorialPage: React.FC = () => {
 
     // Fetch Sidebar Banner ads for create-memorial page
     const { data: sidebarBannerAds } = useSWR<Advertisement[]>(
-        sidebarBannerAdTypeId 
+        sidebarBannerAdTypeId
             ? `${process.env.NEXT_PUBLIC_API_URL}/advertistment/by-ad-type-ad-page?adType=${sidebarBannerAdTypeId}&adPageName=create-memorial`
             : null,
         fetcher
@@ -188,6 +188,13 @@ const CreateMemorialPage: React.FC = () => {
             setIsModalOpen(false);
         }
     };
+
+    const handleWhatsAppClick = () => {
+        const phoneNumber = "94770023323";
+        const message = encodeURIComponent("Hi! I'm interested in advertising on your platform. Could you please provide more information?");
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+        window.open(whatsappUrl, '_blank');
+    }
 
 
     useEffect(() => {
@@ -380,9 +387,9 @@ const CreateMemorialPage: React.FC = () => {
                         <div className="my-16 grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div className="md:col-span-2">
                                 {billboardAds && billboardAds.length > 0 ? (
-                                    <a 
-                                        href={billboardAds[0].link} 
-                                        target="_blank" 
+                                    <a
+                                        href={billboardAds[0].link}
+                                        target="_blank"
                                         rel="noopener noreferrer"
                                         className="block"
                                     >
@@ -393,19 +400,37 @@ const CreateMemorialPage: React.FC = () => {
                                         />
                                     </a>
                                 ) : (
-                                    <div className="w-full md:max-h-[232px] max-h-[232px] bg-red-600 flex items-center justify-center">
-                                        <div className="text-center text-white p-4">
-                                            <h3 className="text-lg font-semibold mb-2">Ad Space Available</h3>
-                                            <p className="text-sm">Contact us for advertising opportunities</p>
+                                    <div
+                                        className="overflow-hidden cursor-pointer"
+                                        onClick={handleWhatsAppClick}
+                                    >
+                                        <div className="w-full md:max-h-[232px] max-h-[232px] relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
+                                            <div className="text-center text-white p-4">
+                                                <h3 className="text-lg md:text-xl font-bold mb-2">
+                                                    Want to Advertise Here?
+                                                </h3>
+                                                <p className="text-xs md:text-sm mb-2 opacity-90">
+                                                    Contact us to post your advertisements and reach thousands of viewers
+                                                </p>
+                                                <div className="space-y-1">
+                                                    <p className="text-xs md:text-sm font-medium flex items-center justify-center gap-2">
+                                                        <span className="text-green-300">💬</span>
+                                                        +94 77 002 33 23
+                                                    </p>
+                                                    <p className="text-xs opacity-80">
+                                                        Click to message us on WhatsApp!
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 )}
                             </div>
                             <div className='md:col-span-1'>
                                 {sidebarBannerAds && sidebarBannerAds.length > 0 ? (
-                                    <a 
-                                        href={sidebarBannerAds[0].link} 
-                                        target="_blank" 
+                                    <a
+                                        href={sidebarBannerAds[0].link}
+                                        target="_blank"
                                         rel="noopener noreferrer"
                                         className="block"
                                     >
@@ -416,10 +441,28 @@ const CreateMemorialPage: React.FC = () => {
                                         />
                                     </a>
                                 ) : (
-                                    <div className="w-full md:max-h-[232px] max-h-[232px] bg-red-600 flex items-center justify-center">
-                                        <div className="text-center text-white p-4">
-                                            <h3 className="text-lg font-semibold mb-2">Ad Space Available</h3>
-                                            <p className="text-sm">Contact us for advertising opportunities</p>
+                                    <div
+                                        className="overflow-hidden cursor-pointer"
+                                        onClick={handleWhatsAppClick}
+                                    >
+                                        <div className="w-full md:max-h-[232px] max-h-[232px] relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
+                                            <div className="text-center text-white p-3">
+                                                <h3 className="text-sm md:text-lg font-bold mb-2">
+                                                    Want to Advertise Here?
+                                                </h3>
+                                                <p className="text-xs mb-2 opacity-90">
+                                                    Contact us to post your advertisements
+                                                </p>
+                                                <div className="space-y-1">
+                                                    <p className="text-xs font-medium flex items-center justify-center gap-1">
+                                                        <span className="text-green-300">💬</span>
+                                                        +94 77 002 33 23
+                                                    </p>
+                                                    <p className="text-xs opacity-80">
+                                                        Click to message us!
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 )}
@@ -432,10 +475,10 @@ const CreateMemorialPage: React.FC = () => {
 
                             {/* Right side advertisement section - 1/3 width on desktop */}
                             <div className="md:col-span-1 pl-8">
-                                <AdvertisementSidebar 
-                                numberOfAds={4}
-                                adPageName='create-memorial'
-                                 />
+                                <AdvertisementSidebar
+                                    numberOfAds={4}
+                                    adPageName='create-memorial'
+                                />
                             </div>
                         </div>
                     </div>

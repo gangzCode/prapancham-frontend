@@ -85,7 +85,7 @@ const Advertisement = () => {
 
     // Fetch active advertisements
     const { data: adsData, error: adsError, isLoading: adsLoading } = useSWR<AdResponse>(
-        `${process.env.NEXT_PUBLIC_API_URL}/advertistment/active?page=${currentPage}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/advertistment/by-category?page=${currentPage}&limit=20`,
         fetcher
     );
 
@@ -100,7 +100,7 @@ const Advertisement = () => {
     // Categorize ads by type
     const categorizeAdsByType = (advertisements: Advertisement[]) => {
         const categorized: Record<string, Advertisement[]> = {};
-        
+
         advertisements.forEach(ad => {
             const type = ad.adType.type;
             if (!categorized[type]) {
@@ -108,7 +108,7 @@ const Advertisement = () => {
             }
             categorized[type].push(ad);
         });
-        
+
         return categorized;
     };
 
@@ -157,6 +157,13 @@ const Advertisement = () => {
         );
     }
 
+    const handleWhatsAppClick = () => {
+        const phoneNumber = "94770023323";
+        const message = encodeURIComponent("Hi! I'm interested in advertising on your platform. Could you please provide more information?");
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+        window.open(whatsappUrl, '_blank');
+    }
+
     return (
         <div className="mt-8">
 
@@ -188,6 +195,115 @@ const Advertisement = () => {
                                 </a>
                             </div>
                         ))}
+                        {/* Fill empty spaces with advertisement message */}
+                        {categorizedAds['Sidebar Banner'].length % 2 === 1 && (
+                            <div className="bg-slate-50 shadow-lg p-4 md:hidden cursor-pointer"
+                                onClick={handleWhatsAppClick}
+                            >
+                                <a href="https://wa.me/94770023323" target="_blank" rel="noopener noreferrer">
+                                    <div className="aspect-video w-full h-full relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
+                                        <div className="text-center text-white p-6">
+                                            <h3 className="text-xl md:text-2xl font-bold mb-4">
+                                                Want to Advertise Here?
+                                            </h3>
+                                            <p className="text-sm md:text-base mb-4 opacity-90">
+                                                Contact us to post your advertisements and reach thousands of viewers
+                                            </p>
+                                            <div className="space-y-2">
+                                                <p className="text-sm md:text-base font-medium flex items-center justify-center gap-2">
+                                                    <span className="text-green-300">💬</span>
+                                                    +94 77 002 33 23
+                                                </p>
+                                                <p className="text-xs md:text-sm opacity-80">
+                                                    Click to message us on WhatsApp!
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        )}
+                        {categorizedAds['Sidebar Banner'].length % 3 !== 0 && categorizedAds['Sidebar Banner'].length % 3 === 1 && (
+                            <>
+                                <div className="hidden md:block bg-slate-50 shadow-lg p-4 cursor-pointer"
+                                    onClick={handleWhatsAppClick}
+                                >
+                                    <a href="https://wa.me/94770023323" target="_blank" rel="noopener noreferrer">
+                                        <div className="aspect-video w-full h-full relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
+                                            <div className="text-center text-white p-6">
+                                                <h3 className="text-xl md:text-2xl font-bold mb-4">
+                                                    Want to Advertise Here?
+                                                </h3>
+                                                <p className="text-sm md:text-base mb-4 opacity-90">
+                                                    Contact us to post your advertisements and reach thousands of viewers
+                                                </p>
+                                                <div className="space-y-2">
+                                                    <p className="text-sm md:text-base font-medium flex items-center justify-center gap-2">
+                                                        <span className="text-green-300">💬</span>
+                                                        +94 77 002 33 23
+                                                    </p>
+                                                    <p className="text-xs md:text-sm opacity-80">
+                                                        Click to message us on WhatsApp!
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div className="hidden md:block bg-slate-50 shadow-lg p-4 cursor-pointer"
+                                    onClick={handleWhatsAppClick}
+                                >
+                                    <a href="https://wa.me/94770023323" target="_blank" rel="noopener noreferrer">
+                                        <div className="aspect-video w-full h-full relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
+                                            <div className="text-center text-white p-6">
+                                                <h3 className="text-xl md:text-2xl font-bold mb-4">
+                                                    Want to Advertise Here?
+                                                </h3>
+                                                <p className="text-sm md:text-base mb-4 opacity-90">
+                                                    Contact us to post your advertisements and reach thousands of viewers
+                                                </p>
+                                                <div className="space-y-2">
+                                                    <p className="text-sm md:text-base font-medium flex items-center justify-center gap-2">
+                                                        <span className="text-green-300">💬</span>
+                                                        +94 77 002 33 23
+                                                    </p>
+                                                    <p className="text-xs md:text-sm opacity-80">
+                                                        Click to message us on WhatsApp!
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </>
+                        )}
+                        {categorizedAds['Sidebar Banner'].length % 3 === 2 && (
+                            <div className="hidden md:block bg-slate-50 shadow-lg p-4 cursor-pointer"
+                                onClick={handleWhatsAppClick}
+                            >
+                                <a href="https://wa.me/94770023323" target="_blank" rel="noopener noreferrer">
+                                    <div className="aspect-video w-full h-full relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
+                                        <div className="text-center text-white p-6">
+                                            <h3 className="text-xl md:text-2xl font-bold mb-4">
+                                                Want to Advertise Here?
+                                            </h3>
+                                            <p className="text-sm md:text-base mb-4 opacity-90">
+                                                Contact us to post your advertisements and reach thousands of viewers
+                                            </p>
+                                            <div className="space-y-2">
+                                                <p className="text-sm md:text-base font-medium flex items-center justify-center gap-2">
+                                                    <span className="text-green-300">💬</span>
+                                                    +94 77 002 33 23
+                                                </p>
+                                                <p className="text-xs md:text-sm opacity-80">
+                                                    Click to message us on WhatsApp!
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -218,6 +334,34 @@ const Advertisement = () => {
                                 </a>
                             </div>
                         ))}
+                        {/* Fill empty spaces with advertisement message */}
+                        {categorizedAds['Billboard'].length % 2 === 1 && (
+                            <div className="hidden md:block bg-slate-50 shadow-lg p-4 cursor-pointer"
+                                onClick={handleWhatsAppClick}
+                            >
+                                <a href="https://wa.me/94770023323" target="_blank" rel="noopener noreferrer">
+                                    <div className="aspect-video w-full h-full relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
+                                        <div className="text-center text-white p-6">
+                                            <h3 className="text-xl md:text-2xl font-bold mb-4">
+                                                Want to Advertise Here?
+                                            </h3>
+                                            <p className="text-sm md:text-base mb-4 opacity-90">
+                                                Contact us to post your advertisements and reach thousands of viewers
+                                            </p>
+                                            <div className="space-y-2">
+                                                <p className="text-sm md:text-base font-medium flex items-center justify-center gap-2">
+                                                    <span className="text-green-300">💬</span>
+                                                    +94 77 002 33 23
+                                                </p>
+                                                <p className="text-xs md:text-sm opacity-80">
+                                                    Click to message us on WhatsApp!
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -235,6 +379,34 @@ const Advertisement = () => {
                                 </a>
                             </div>
                         ))}
+                        {/* Fill empty spaces with advertisement message */}
+                        {categorizedAds['Square'].length % 2 === 1 && (
+                            <div className="bg-slate-50 shadow-lg p-4 cursor-pointer"
+                                onClick={handleWhatsAppClick}
+                            >
+                                <a href="https://wa.me/94770023323" target="_blank" rel="noopener noreferrer">
+                                    <div className="aspect-square w-full h-full relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
+                                        <div className="text-center text-white p-4">
+                                            <h3 className="text-lg font-bold mb-2">
+                                                Want to Advertise Here?
+                                            </h3>
+                                            <p className="text-xs mb-2 opacity-90">
+                                                Contact us to post your advertisements
+                                            </p>
+                                            <div className="space-y-1">
+                                                <p className="text-xs font-medium flex items-center justify-center gap-1">
+                                                    <span className="text-green-300">💬</span>
+                                                    +94 77 002 33 23
+                                                </p>
+                                                <p className="text-xs opacity-80">
+                                                    Click to message us!
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        )}
                     </div>
                 )}
 

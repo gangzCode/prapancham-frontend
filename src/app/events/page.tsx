@@ -33,7 +33,7 @@ const Events: React.FC = () => {
                 </div>
                 <div className="md:col-span-1">
                     <AdvertisementSidebar 
-                    numberOfAds={6}
+                    numberOfAds={4}
                     adPageName="events"
                      />
                 </div>
