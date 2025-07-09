@@ -5,6 +5,7 @@ import Image from "next/image";
 import { TitleWithUnderline } from "../ui/title-with-underline";
 import { Separator } from "@/components/ui/separator";
 import type { ObituaryEntry } from "../hero/types";
+import CardFormWithStepper from "./CardFormWithStepper";
 
 type TributeModalProps = {
     isOpen: boolean;
@@ -30,6 +31,34 @@ const TributeModal: React.FC<TributeModalProps> = ({
     const [activeTab, setActiveTab] = useState("message");
     const [images, setImages] = useState<File[]>([]);
     const [previews, setPreviews] = useState<string[]>([]);
+
+    const [cardTemplates, setCardTemplates] = useState<any[]>([]);
+    const [loadingTemplates, setLoadingTemplates] = useState(false);
+
+    // Fetch card templates when cards tab is active
+    useEffect(() => {
+        const fetchCardTemplates = async () => {
+            if (activeTab === "cards" && cardTemplates.length === 0) {
+                setLoadingTemplates(true);
+                try {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tribute-items/card-template/active?page=1&limit=10`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        setCardTemplates(data.tributeCardTemplate || []);
+                    } else {
+                        console.error('Failed to fetch card templates');
+                    }
+                } catch (error) {
+                    console.error('Error fetching card templates:', error);
+                } finally {
+                    setLoadingTemplates(false);
+                }
+            }
+        };
+
+        fetchCardTemplates();
+    }, [activeTab, cardTemplates.length]);
+
     
     // Form state for message submission
     const [formData, setFormData] = useState({
@@ -336,96 +365,11 @@ const TributeModal: React.FC<TributeModalProps> = ({
                             </div>
                         </form>
                     }
-                    {activeTab === "cards" &&
-                        <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
-                            <div className="p-4 mb-6">
-                                <h3 className="text-xl font-semibold text-center mb-4 text-primary">Choose a Card Design</h3>
-                                <p className="text-center text-gray-500 mb-4 text-primary">
-                                    You can select a design from the options below
-                                </p>
-                                <div className="flex flex-wrap justify-center md:justify-between gap-2 md:gap-4 mb-4">
-                                    {[1, 2, 3, 4].map((id) => (
-                                        <div
-                                            key={id}
-                                            className={`
-                                                w-56 h-32 bg-gray-200 rounded flex items-center justify-center
-                                                ${id === 1 ? 'block' : 'hidden'} 
-                                                md:block
-                                            `}
-                                        >
-                                            <span className="text-gray-500">Card Design {id}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="text-center">
-                                    <button className="px-2 py-1 mr-2">
-                                        <ChevronLeft />
-                                    </button>
-                                    <button className="px-2 py-1 ">
-                                        <ChevronRight />
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="message" className="block text-gray-700 mb-2">
-                                    Message
-                                </label>
-                                <textarea
-                                    id="message"
-                                    rows={4}
-                                    maxLength={2000}
-                                    className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                />
-                                <p className="text-xs">Maximum 2000 characters allowed</p>
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Name
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Relationship/Organization
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Country
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                />
-                            </div>
-                            <div className="flex justify-end gap-2 items-center self-stretch mt-16">
-                                <button
-                                    onClick={handleClose}
-                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
-                                    Back
-                                </button>
-                                <button
-                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
-                                    onClick={(e => {
-                                        e.preventDefault();
-                                        // setActiveTab("payment");
-                                    }
-                                    )}
-                                >
-                                    Next
-                                </button>
-                            </div>
-                        </form>
+                    {activeTab === "cards" && !loadingTemplates &&
+                        <CardFormWithStepper
+                        cardTemplates={cardTemplates}
+                        obituaryEntry={obituaryEntry}
+                        />
                     }
                     {activeTab === "letter" &&
                         <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
