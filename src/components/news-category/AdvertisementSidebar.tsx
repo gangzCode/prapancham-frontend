@@ -91,10 +91,10 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
     const fetchAds = async () => {
       try {
         setLoading(true);
-        
+
         // Get access token from localStorage
         const accessToken = localStorage.getItem('accessToken');
-        
+
         // First, get the ad types to find the Sidebar Banner type
         const adTypesResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/advertistment/ad-type/active?page=1&limit=10`,
@@ -105,21 +105,21 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
             },
           }
         );
-        
+
         if (!adTypesResponse.ok) {
           throw new Error('Failed to fetch ad types');
         }
-        
+
         const adTypesData = await adTypesResponse.json();
         const sidebarAdType = adTypesData.adTypes.find(
           (type: AdType) => type.type === 'Sidebar Banner'
         );
-        
+
         if (!sidebarAdType) {
           console.error('Sidebar Banner ad type not found');
           return;
         }
-        
+
         // Now fetch the advertisements for this page and ad type
         const adsResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/advertistment/by-ad-type-ad-page?adType=${sidebarAdType._id}&adPageName=${adPageName}`,
@@ -130,14 +130,14 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
             },
           }
         );
-        
+
         if (!adsResponse.ok) {
           throw new Error('Failed to fetch advertisements');
         }
-        
+
         const adsData = await adsResponse.json();
         setAdData(Array.isArray(adsData) ? adsData : []);
-        
+
       } catch (error) {
         console.error('Error fetching advertisements:', error);
         setAdData([]);
@@ -148,6 +148,13 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
 
     fetchAds();
   }, [adPageName]);
+
+  const handleWhatsAppClick = () => {
+    const phoneNumber = "94770023323";
+    const message = encodeURIComponent("Hi! I'm interested in advertising on your platform. Could you please provide more information?");
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+    window.open(whatsappUrl, '_blank');
+  }
   return (
     <div
       className={cn(
@@ -175,7 +182,7 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
       <div className="space-y-2 sm:space-y-3 md:space-y-4 mt-4 sm:mt-5 md:mt-6">
         {loading ? (
           // Show loading placeholder
-          Array.from({ length: numberOfAds || 4 }).map((_, index) => (
+          Array.from({ length: 4 }).map((_, index) => (
             <div
               key={index}
               className="mb-2 overflow-hidden animate-pulse"
@@ -183,26 +190,52 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
               <div className="aspect-[21/9] sm:aspect-[16/9] md:aspect-[21/9] relative bg-gray-300 rounded"></div>
             </div>
           ))
-        ) : adData.length > 0 ? (
-          // Show actual ads
-          adData.slice(0, numberOfAds || 4).map((ad, index) => (
-            <AdBanner
-              key={ad._id || index}
-              image={ad.image}
-              link={ad.link}
-            />
-          ))
         ) : (
-          // Show no ads message
-          <div className="text-center p-6 sm:p-8 bg-red-600 rounded">
-            <p className="text-base sm:text-lg md:text-2xl text-white font-medium leading-relaxed">
-              AD-Space Available for purchase.
-              <br />
-              Contact us for more information.
-            </p>
-          </div>
+          // Always show exactly 4 items
+          Array.from({ length: 4 }).map((_, index) => {
+            const ad = adData[index];
+            
+            if (ad) {
+              // Show actual ad
+              return (
+                <AdBanner
+                  key={ad._id || index}
+                  image={ad.image}
+                  link={ad.link}
+                />
+              );
+            } else {
+              // Show "Want to Advertise Here?" message
+              return (
+                <div
+                  key={`placeholder-${index}`}
+                  className="mb-2 overflow-hidden cursor-pointer"
+                  onClick={handleWhatsAppClick}
+                >
+                  <div className="aspect-[21/9] sm:aspect-[16/9] md:aspect-[21/9] relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
+                    <div className="text-center text-white p-2 sm:p-3">
+                      <h3 className="text-xs sm:text-sm font-bold mb-1 sm:mb-2">
+                        Want to Advertise Here?
+                      </h3>
+                      <p className="text-xs mb-1 opacity-90 hidden sm:block">
+                        Contact us to post your advertisements
+                      </p>
+                      <div className="space-y-1">
+                        <p className="text-xs font-medium flex items-center justify-center gap-1">
+                          <span className="text-green-300">💬</span>
+                          +94 77 002 33 23
+                        </p>
+                        <p className="text-xs opacity-80 hidden sm:block">
+                          Click to message us!
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+          })
         )}
-
       </div>
 
       <div className="mt-4 sm:mt-4 md:mt-4">
@@ -234,6 +267,20 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
             className="w-6 h-6 sm:w-8 sm:h-8"
           />
           <span>Listen To Our Podcast Now</span>
+        </a>
+        
+        <a
+          href="#"
+          className="flex items-center gap-1 sm:gap-2 text-secondary text-sm sm:text-body-base hover:underline py-1.5 sm:py-2 px-2 sm:px-4 bg-white rounded shadow-md hover:shadow-lg hover:bg-gray-100 transition-all duration-200"
+        >
+          <Image
+            src="/icons/youtube-icon.svg"
+            alt="YouTube"
+            width={24}
+            height={24}
+            className="w-6 h-6 sm:w-8 sm:h-8"
+          />
+          <span>Visit our YouTube Now</span>
         </a>
       </div>
     </div>

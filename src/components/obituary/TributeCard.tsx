@@ -9,6 +9,7 @@ import { useLanguage } from "@/components/ui/LanguageProvider";
 type LanguageKey = "en" | "ta" | "si";
 interface TributeCardProps {
   condolencesCount: number;
+  donationCount: number;
   timeAgo: string;
   imageUrl: string;
   ceremonyTitle: string;
@@ -21,6 +22,7 @@ interface TributeCardProps {
 
 const TributeCard: React.FC<TributeCardProps> = ({
   condolencesCount,
+  donationCount,
   timeAgo,
   imageUrl,
   ceremonyTitle,
@@ -38,18 +40,21 @@ const TributeCard: React.FC<TributeCardProps> = ({
   const translations: Record<LanguageKey, { [key: string]: string }> = {
     en: {
       condolences: "Condolences",
+      donations: "Donations",
       postTribute: "Post Tribute",
       donate: "Donate",
       portrait: "Portrait"
     },
     ta: {
       condolences: "இரங்கல்கள்",
+      donations: "நன்கொடை",
       postTribute: "அஞ்சலி அனுப்பு",
       donate: "நன்கொடை",
       portrait: "உருவப்படம்"
     },
     si: {
       condolences: "අනුකම්පාව",
+      donations: "දායදීම",
       postTribute: "උපහාරය යවන්න",
       donate: "දානය",
       portrait: "ප්‍රතිමාව"
@@ -65,9 +70,14 @@ const TributeCard: React.FC<TributeCardProps> = ({
   return (
     <div className="w-full  mx-auto bg-white  shadow-md overflow-hidden p-2">
       <div className="flex justify-between w-full items-center border-b">
-        <span className="text-[#880002] ">
-          {condolencesCount} {t.condolences}
-        </span>
+        <div className="flex gap-8">
+          <span className="text-[#880002] ">
+            {condolencesCount} {t.condolences}
+          </span>
+          <span className="text-[#880002] ">
+            {donationCount} {t.donations}
+          </span>
+        </div>
         <span className="text-gray-600 text-sm">{timeAgo}</span>
       </div>
       <Link href={`/obituary/${entry._id}`}>
@@ -94,7 +104,16 @@ const TributeCard: React.FC<TributeCardProps> = ({
         >
           {t.postTribute}
         </button>
-        <TributeModal isOpen={isTributeModalOpen} onClose={() => setIsTributeModalOpen(false)} />
+        <TributeModal 
+          isOpen={isTributeModalOpen} 
+          onClose={() => setIsTributeModalOpen(false)}
+          obituaryEntry={entry}
+          timeAgo={timeAgo}
+          imageUrl={imageUrl}
+          ceremonyTitle={ceremonyTitle}
+          eventName={eventName}
+          date={date}
+        />
         <button
           onClick={() => setIsModalOpen(true)}
           className="w-1/5 py-2 bg-primary text-white rounded"

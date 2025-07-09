@@ -4,20 +4,131 @@ import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { TitleWithUnderline } from "../ui/title-with-underline";
 import { Separator } from "@/components/ui/separator";
+import type { ObituaryEntry } from "../hero/types";
+import CardFormWithStepper from "./CardFormWithStepper";
 
 type TributeModalProps = {
     isOpen: boolean;
     onClose: () => void;
+    obituaryEntry: ObituaryEntry;
+    timeAgo: string;
+    imageUrl: string;
+    ceremonyTitle: string;
+    eventName: string;
+    date: string;
 };
 
-const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
-    const [isAnonymous, setIsAnonymous] = useState(false);
+const TributeModal: React.FC<TributeModalProps> = ({ 
+    isOpen, 
+    onClose, 
+    obituaryEntry, 
+    timeAgo, 
+    imageUrl, 
+    ceremonyTitle, 
+    eventName, 
+    date 
+}) => {
     const [activeTab, setActiveTab] = useState("message");
     const [images, setImages] = useState<File[]>([]);
     const [previews, setPreviews] = useState<string[]>([]);
 
-    const handleAnonymousChange = (e: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
-        setIsAnonymous(e.target.checked);
+    const [cardTemplates, setCardTemplates] = useState<any[]>([]);
+    const [loadingTemplates, setLoadingTemplates] = useState(false);
+
+    // Fetch card templates when cards tab is active
+    useEffect(() => {
+        const fetchCardTemplates = async () => {
+            if (activeTab === "cards" && cardTemplates.length === 0) {
+                setLoadingTemplates(true);
+                try {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tribute-items/card-template/active?page=1&limit=10`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        setCardTemplates(data.tributeCardTemplate || []);
+                    } else {
+                        console.error('Failed to fetch card templates');
+                    }
+                } catch (error) {
+                    console.error('Error fetching card templates:', error);
+                } finally {
+                    setLoadingTemplates(false);
+                }
+            }
+        };
+
+        fetchCardTemplates();
+    }, [activeTab, cardTemplates.length]);
+
+    
+    // Form state for message submission
+    const [formData, setFormData] = useState({
+        message: "",
+        name: "",
+        relationship: "",
+        country: ""
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmitTribute = async (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        if (!formData.message.trim()) {
+            setSubmitMessage({ type: 'error', text: 'Please enter a message.' });
+            return;
+        }
+
+        setIsSubmitting(true);
+        setSubmitMessage(null);
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order/tribute/${obituaryEntry._id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tributeOptions: 'message',
+                    message: {
+                        message: formData.message,
+                        name: formData.name,
+                        relationship: formData.relationship,
+                        country: formData.country
+                    }
+                }),
+            });
+
+            if (response.ok) {
+                setSubmitMessage({ type: 'success', text: 'Your tribute has been submitted successfully!' });
+                // Reset form
+                setFormData({
+                    message: "",
+                    name: "",
+                    relationship: "",
+                    country: ""
+                });
+                // Close modal after a short delay
+                setTimeout(() => {
+                    handleClose();
+                }, 2000);
+            } else {
+                const errorData = await response.json();
+                setSubmitMessage({ type: 'error', text: errorData.message || 'Failed to submit tribute. Please try again.' });
+            }
+        } catch (error) {
+            console.error('Error submitting tribute:', error);
+            setSubmitMessage({ type: 'error', text: 'Network error. Please check your connection and try again.' });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     useEffect(() => {
@@ -27,17 +138,26 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
         document.addEventListener("keydown", handleEscape);
         return () => document.removeEventListener("keydown", handleEscape);
     }, [onClose]);
+    
     const handleClose = () => {
         setActiveTab("message");
+        setFormData({
+            message: "",
+            name: "",
+            relationship: "",
+            country: ""
+        });
+        setSubmitMessage(null);
+        setIsSubmitting(false);
         onClose();
     };
 
     const tabs = [
-        { id: "message", title: "Message", subtitle: "ffj" },
-        { id: "cards", title: "Cards", subtitle: "ffj" },
-        { id: "letter", title: "Letter", subtitle: "ffj" },
-        { id: "memory", title: "Memory", subtitle: "ffj" },
-        { id: "flowers", title: "Send Flowers", subtitle: "ffj" },
+        { id: "message", title: "Message", subtitle: "Share your thoughts" },
+        { id: "cards", title: "Cards", subtitle: "Send a card" },
+        { id: "letter", title: "Letter", subtitle: "Write a letter" },
+        { id: "memory", title: "Memory", subtitle: "Share a memory" },
+        { id: "flowers", title: "Send Flowers", subtitle: "Send flowers" },
     ];
 
     const handleDrop = (e: DragEvent<HTMLDivElement>) => {
@@ -95,8 +215,8 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                     <div className="flex flex-col md:flex-row bg-gray-100 w-full p-4 mt-8">
                         <div className="w-full md:w-48 h-48 md:h-24 relative">
                             <Image
-                                src="/images/tribute.jpg"
-                                alt="Portrait"
+                                src={imageUrl || obituaryEntry.imageUrl || "/images/tribute.jpg"}
+                                alt={obituaryEntry.title || "Portrait"}
                                 layout="fill"
                                 objectFit="cover"
                                 className="object-cover rounded"
@@ -106,19 +226,19 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                         <div className="w-full pl-0 md:pl-4 mt-4 md:mt-0 flex flex-col gap-y-4">
 
                             <div className="flex flex-col md:flex-row md:justify-between items-start md:items-center">
-                                <h2 className="font-bold">Name in Full</h2>
+                                <h2 className="font-bold">{obituaryEntry.title || obituaryEntry.name}</h2>
                                 <span className="text-[#880002]">
-                                    2 Tributes
+                                    {obituaryEntry.condolences} Tributes
                                 </span>
                             </div>
 
                             <div className="flex flex-col md:flex-row md:justify-between items-start md:items-center mt-2">
                                 <div>
-                                    <p>No2. masdd, sddd sdsfffd</p>
-                                    <p>Date of Birth - Date of Death</p>
+                                    <p>{obituaryEntry.address}</p>
+                                    <p>{date || obituaryEntry.date}</p>
                                 </div>
                                 <span className="mt-4 md:mt-0">
-                                    1 hour ago
+                                    {timeAgo}
                                 </span>
                             </div>
                         </div>
@@ -147,175 +267,109 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                     </div>
 
                     {activeTab === "message" &&
-                        <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
+                        <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" onSubmit={handleSubmitTribute}>
                             <div className="p-4 mb-6">
                                 <h3 className="text-xl font-semibold text-center mb-4 text-primary">Write Your Message Here </h3>
                                 <p className="text-center text-gray-500 mb-4 text-primary">
-                                    You can select a design from the options below
+                                    Share your thoughts and condolences
                                 </p>
                             </div>
+
+                            {/* Display success/error messages */}
+                            {submitMessage && (
+                                <div className={`mb-4 p-3 rounded-lg ${submitMessage.type === 'success' ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-red-100 text-red-700 border border-red-300'}`}>
+                                    {submitMessage.text}
+                                </div>
+                            )}
+
                             <div className="mb-4">
                                 <label htmlFor="message" className="block text-gray-700 mb-2">
-                                    Message
+                                    Message <span className="text-red-500">*</span>
                                 </label>
                                 <textarea
                                     id="message"
+                                    name="message"
+                                    value={formData.message}
+                                    onChange={handleInputChange}
                                     rows={4}
                                     maxLength={2000}
+                                    required
                                     className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                    placeholder="Share your thoughts, condolences, or memories..."
                                 />
-                                <p className="text-xs">Maximum 2000 charactrts allowed</p>
+                                <p className="text-xs text-gray-500 mt-1">Maximum 2000 characters allowed ({formData.message.length}/2000)</p>
                             </div>
+                            
                             <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Name
+                                <label htmlFor="tribute-name" className="pb-2 block text-gray-700">
+                                    Name <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     type="text"
-                                    id="name"
-                                    readOnly={isAnonymous}
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                    id="tribute-name"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleInputChange}
+                                    required
+                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                    placeholder="Your full name"
                                 />
                             </div>
+                            
                             <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
+                                <label htmlFor="relationship" className="pb-2 block text-gray-700">
                                     Relationship/Organization
                                 </label>
                                 <input
                                     type="text"
-                                    id="name"
-                                    readOnly={isAnonymous}
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                    id="relationship"
+                                    name="relationship"
+                                    value={formData.relationship}
+                                    onChange={handleInputChange}
+                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                    placeholder="e.g., Friend, Colleague, Family member"
                                 />
                             </div>
+                            
                             <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
+                                <label htmlFor="country" className="pb-2 block text-gray-700">
                                     Country
                                 </label>
                                 <input
                                     type="text"
-                                    id="name"
-                                    readOnly={isAnonymous}
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                    id="country"
+                                    name="country"
+                                    value={formData.country}
+                                    onChange={handleInputChange}
+                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                    placeholder="Your country"
                                 />
                             </div>
+                            
                             <div className="flex justify-end gap-2 items-center self-stretch mt-16">
                                 <button
+                                    type="button"
                                     onClick={handleClose}
-                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
-                                    Back
+                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6"
+                                    disabled={isSubmitting}
+                                >
+                                    Cancel
                                 </button>
                                 <button
-                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
-                                    onClick={(e => {
-                                        e.preventDefault();
-                                        // setActiveTab("cards");
-                                    }
-                                    )}
+                                    type="submit"
+                                    disabled={isSubmitting || !formData.message.trim() || !formData.name.trim()}
+                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 disabled:bg-gray-400 disabled:cursor-not-allowed"
                                 >
-                                    Next
+                                    {isSubmitting ? 'Submitting...' : 'Submit Tribute'}
                                 </button>
                             </div>
                         </form>
                     }
-                    {activeTab === "cards" &&
-                        <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
-                            <div className="p-4 mb-6">
-                                <h3 className="text-xl font-semibold text-center mb-4 text-primary">Choose a Card Design</h3>
-                                <p className="text-center text-gray-500 mb-4 text-primary">
-                                    You can select a design from the options below
-                                </p>
-                                <div className="flex flex-wrap justify-center md:justify-between gap-2 md:gap-4 mb-4">
-                                    {[1, 2, 3, 4].map((id) => (
-                                        <img
-                                            key={id}
-                                            src={`/images/${[
-                                                'top-ad-1.png',
-                                                'top-ad-2.png',
-                                                'top-ad-3.png',
-                                                'top-ad-4.png'
-                                            ][id - 1]}`}
-                                            alt={`Card design ${id}`}
-                                            className={`
-                                                w-56 h-auto object-cover rounded
-                                                ${id === 1 ? 'block' : 'hidden'} 
-                                                md:block
-                                            `}
-                                        />
-                                    ))}
-                                </div>
-                                <div className="text-center">
-                                    <button className="px-2 py-1 mr-2">
-                                        <ChevronLeft />
-                                    </button>
-                                    <button className="px-2 py-1 ">
-                                        <ChevronRight />
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="message" className="block text-gray-700 mb-2">
-                                    Message
-                                </label>
-                                <textarea
-                                    id="message"
-                                    rows={4}
-                                    maxLength={2000}
-                                    className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                />
-                                <p className="text-xs">Maximum 2000 charactrts allowed</p>
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Name
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    readOnly={isAnonymous}
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Relationship/Organization
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    readOnly={isAnonymous}
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Country
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    readOnly={isAnonymous}
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                />
-                            </div>
-                            <div className="flex justify-end gap-2 items-center self-stretch mt-16">
-                                <button
-                                    onClick={handleClose}
-                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
-                                    Back
-                                </button>
-                                <button
-                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
-                                    onClick={(e => {
-                                        e.preventDefault();
-                                        // setActiveTab("payment");
-                                    }
-                                    )}
-                                >
-                                    Next
-                                </button>
-                            </div>
-                        </form>
+                    {activeTab === "cards" && !loadingTemplates &&
+                        <CardFormWithStepper
+                        cardTemplates={cardTemplates}
+                        obituaryEntry={obituaryEntry}
+                        />
                     }
                     {activeTab === "letter" &&
                         <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
@@ -326,21 +380,16 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                                 </p>
                                 <div className="flex flex-wrap justify-center md:justify-between gap-2 md:gap-4 mb-4">
                                     {[1, 2, 3, 4].map((id) => (
-                                        <img
+                                        <div
                                             key={id}
-                                            src={`/images/${[
-                                                'top-ad-1.png',
-                                                'top-ad-2.png',
-                                                'top-ad-3.png',
-                                                'top-ad-4.png'
-                                            ][id - 1]}`}
-                                            alt={`Card design ${id}`}
                                             className={`
-                                                w-56 h-auto object-cover rounded
+                                                w-56 h-32 bg-gray-200 rounded flex items-center justify-center
                                                 ${id === 1 ? 'block' : 'hidden'} 
                                                 md:block
                                             `}
-                                        />
+                                        >
+                                            <span className="text-gray-500">Letter Template {id}</span>
+                                        </div>
                                     ))}
                                 </div>
                                 <div className="text-center">
@@ -362,7 +411,7 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                                     maxLength={2000}
                                     className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                                 />
-                                <p className="text-xs">Maximum 2000 charactrts allowed</p>
+                                <p className="text-xs">Maximum 2000 characters allowed</p>
                             </div>
                             <div className="mb-4">
                                 <label htmlFor="name" className={`pb-2 block`}>
@@ -371,7 +420,6 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                                 <input
                                     type="text"
                                     id="name"
-                                    readOnly={isAnonymous}
                                     className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                                 />
                             </div>
@@ -382,7 +430,6 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                                 <input
                                     type="text"
                                     id="name"
-                                    readOnly={isAnonymous}
                                     className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                                 />
                             </div>
@@ -393,7 +440,6 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                                 <input
                                     type="text"
                                     id="name"
-                                    readOnly={isAnonymous}
                                     className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                                 />
                             </div>
@@ -473,7 +519,7 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                                     maxLength={2000}
                                     className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                                 />
-                                <p className="text-xs">Maximum 2000 charactrts allowed</p>
+                                <p className="text-xs">Maximum 2000 characters allowed</p>
                             </div>
                             <div className="mb-4">
                                 <label htmlFor="name" className={`pb-2 block`}>
@@ -482,7 +528,6 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                                 <input
                                     type="text"
                                     id="name"
-                                    readOnly={isAnonymous}
                                     className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                                 />
                             </div>
@@ -493,7 +538,6 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                                 <input
                                     type="text"
                                     id="name"
-                                    readOnly={isAnonymous}
                                     className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                                 />
                             </div>
@@ -504,7 +548,6 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                                 <input
                                     type="text"
                                     id="name"
-                                    readOnly={isAnonymous}
                                     className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                                 />
                             </div>
@@ -534,23 +577,19 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                                 <p className="text-center text-gray-500 mb-4 text-primary">
                                     You can select a design from the options below
                                 </p>
-                                <div className="flex flex-wrap justify-between text-center  mb-4">
-                                    <div className=" w-1/2">
-                                        <img
-                                            src="/images/top-ad-1.png"
-                                            alt="Card design"
-                                            className="w-full pr-2 h-auto object-cover rounded"
-                                        />
-                                        <p>jjfj</p>
+                                <div className="flex flex-wrap justify-between text-center mb-4">
+                                    <div className="w-1/2">
+                                        <div className="w-full pr-2 h-32 bg-gray-200 rounded flex items-center justify-center">
+                                            <span className="text-gray-500">Flower Type 1</span>
+                                        </div>
+                                        <p>Bouquet</p>
                                     </div>
 
                                     <div className="w-1/2">
-                                        <img
-                                            src="/images/top-ad-2.png"
-                                            alt="Card design"
-                                            className="w-full h-auto pl-2 object-cover rounded"
-                                        />
-                                        <p>jjfj</p>
+                                        <div className="w-full pl-2 h-32 bg-gray-200 rounded flex items-center justify-center">
+                                            <span className="text-gray-500">Flower Type 2</span>
+                                        </div>
+                                        <p>Wreath</p>
                                     </div>
                                 </div>
                             </div>
@@ -564,7 +603,7 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                                     maxLength={2000}
                                     className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                                 />
-                                <p className="text-xs">Maximum 2000 charactrts allowed</p>
+                                <p className="text-xs">Maximum 2000 characters allowed</p>
                             </div>
                             <div className="mb-4">
                                 <label htmlFor="name" className={`pb-2 block`}>
@@ -573,7 +612,6 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                                 <input
                                     type="text"
                                     id="name"
-                                    readOnly={isAnonymous}
                                     className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                                 />
                             </div>
@@ -584,7 +622,6 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                                 <input
                                     type="text"
                                     id="name"
-                                    readOnly={isAnonymous}
                                     className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                                 />
                             </div>
@@ -595,7 +632,6 @@ const TributeModal: React.FC<TributeModalProps> = ({ isOpen, onClose }) => {
                                 <input
                                     type="text"
                                     id="name"
-                                    readOnly={isAnonymous}
                                     className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                                 />
                             </div>

@@ -173,6 +173,13 @@ const HomePage: React.FC = () => {
     fetchAds();
   }, []);
 
+  const handleWhatsAppClick = () => {
+    const phoneNumber = "94770023323";
+    const message = encodeURIComponent("Hi! I'm interested in advertising on your platform. Could you please provide more information?");
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+    window.open(whatsappUrl, '_blank');
+  }
+
 
   return (
     <div className="flex flex-col">
@@ -204,10 +211,29 @@ const HomePage: React.FC = () => {
               />
             </a>
           ) : (
-            <div className="bg-red-600 text-white text-center py-8 px-4">
-              <h3 className="text-xl font-bold mb-2">Ad Space Available</h3>
-              <p className="mb-2">Contact us to advertise here</p>
-              <p className="text-lg font-semibold">+94 77 002 33 23</p>
+            <div
+              className="mb-2 overflow-hidden cursor-pointer"
+              onClick={handleWhatsAppClick}
+            >
+              <div className="w-full md:max-h-[232px] max-h-[116px] relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
+                <div className="text-center text-white p-6">
+                  <h3 className="text-xl md:text-2xl font-bold mb-4">
+                    Want to Advertise Here?
+                  </h3>
+                  <p className="text-sm md:text-base mb-4 opacity-90">
+                    Contact us to post your advertisements and reach thousands of viewers
+                  </p>
+                  <div className="space-y-2">
+                    <p className="text-sm md:text-base font-medium flex items-center justify-center gap-2">
+                      <span className="text-green-300">💬</span>
+                      +94 77 002 33 23
+                    </p>
+                    <p className="text-xs md:text-sm opacity-80">
+                      Click to message us on WhatsApp!
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>
