@@ -366,9 +366,9 @@ const Obituary: React.FC = () => {
             year: 'numeric'
         }),
         address: order.information.address,
-        imageUrl: order.primaryImage || order.thumbnailImage || "/images/tribute.jpg",
+        imageUrl: order.thumbnailImage || order.primaryImage || "/images/tribute.jpg",
         condolences: order.tributeItems? order.tributeItems.length : 0,
-        donations: order.recievedDonations ? order.recievedDonations.length : 0, // Assuming donations is an array in the order object
+        donations: order.recievedDonations ? order.recievedDonations.length : 0,
     });
 
     return (

@@ -211,7 +211,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
 
                 </button>
 
-                <div className="max-h-[80vh] w-auto md:w-[40rem]  lg:w-[68rem] ">
+                <div className="max-h-[80vh] w-auto md:w-[40rem] lg:w-[68rem]">
                     <div className="flex flex-col md:flex-row bg-gray-100 w-full p-4 mt-8">
                         <div className="w-full md:w-48 h-48 md:h-24 relative">
                             <Image
@@ -267,6 +267,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                     </div>
 
                     {activeTab === "message" &&
+                        <div className="pb-8">
                         <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" onSubmit={handleSubmitTribute}>
                             <div className="p-4 mb-6">
                                 <h3 className="text-xl font-semibold text-center mb-4 text-primary">Write Your Message Here </h3>
@@ -364,6 +365,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                 </button>
                             </div>
                         </form>
+                        </div>
                     }
                     {activeTab === "cards" && !loadingTemplates &&
                         <CardFormWithStepper
@@ -372,6 +374,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                         />
                     }
                     {activeTab === "letter" &&
+                        <div className="pb-8">
                         <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
                             <div className="p-4 mb-6">
                                 <h3 className="text-xl font-semibold text-center mb-4 text-primary">Choose a Template for Letter</h3>
@@ -461,8 +464,10 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                 </button>
                             </div>
                         </form>
+                        </div>
                     }
                     {activeTab === "memory" &&
+                        <div className="pb-8">
                         <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
                             <div className=" p-4  mb-6">
                                 <h3 className="text-xl font-semibold text-center mb-4 text-primary">Share Your Memories as Images</h3>
@@ -569,8 +574,10 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                 </button>
                             </div>
                         </form>
+                        </div>
                     }
                     {activeTab === "flowers" &&
+                        <div className="pb-8">
                         <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
                             <div className="p-4 mb-6">
                                 <h3 className="text-xl font-semibold text-center mb-4 text-primary">Choose a Type</h3>
@@ -653,6 +660,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                 </button>
                             </div>
                         </form>
+                        </div>
                     }
                 </div>
             </div>
