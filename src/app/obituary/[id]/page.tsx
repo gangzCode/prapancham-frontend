@@ -533,20 +533,22 @@ const ObituaryDetail: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div className="md:col-span-2">
-                        <div className="bg-gray-100 md:p-10 p-4">
+                        <div className="md:p-10 p-4" style={{ backgroundColor: obituaryData.selectedBgColor?.colorCode || "#ffffff" }}>
                             <div
-                                className="bg-white w-full shadow-md"
-                                style={{ backgroundColor: obituaryData.selectedBgColor?.colorCode || "#ffffff" }}
+                                className="bg-gray-100 w-full shadow-md"
+
                             >
                                 <div className="pt-4 pb-2 text-center max-w-lg mx-auto px-4">
-                                    <h1 className="text-xl font-bold text-primary mb-6">
+                                    <h1 className="text-2xl md:text-3xl font-serif font-light text-gray-800 mb-8 leading-relaxed tracking-wide">
                                         {obituaryData.information.shortDescription || t.ourDeepestCondolences}
                                     </h1>
 
-                                    <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 sm:gap-0">
+                                    <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-8">
                                         <div className="text-gray-500 text-center flex md:flex-col">
-                                            <p>{t.birth}<span className="md:hidden mr-1 ml-1">:</span></p>
-                                            <p>{obituaryData.information.dateofBirth ? new Date(obituaryData.information.dateofBirth).toLocaleDateString() : t.birthDate}</p>
+                                            <p className="text-sm uppercase tracking-wider text-gray-500 font-sans">
+                                                {t.birth}<span className="md:hidden mr-1 ml-1">:</span></p>
+                                            <p className="text-lg font-serif text-gray-700 mt-1">
+                                                {obituaryData.information.dateofBirth ? new Date(obituaryData.information.dateofBirth).toLocaleDateString() : t.birthDate}</p>
                                         </div>
 
                                         {obituaryData.primaryImage && (
@@ -583,12 +585,15 @@ const ObituaryDetail: React.FC = () => {
                                         )}
 
                                         <div className="text-gray-500 text-center flex md:flex-col">
-                                            <p>{t.death}<span className="md:hidden mr-1 ml-1">:</span></p>
-                                            <p>{obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString() : t.deathDate}</p>
+                                            <p className="text-sm uppercase tracking-wider text-gray-500 font-sans">
+                                                {t.death}<span className="md:hidden mr-1 ml-1">:</span></p>
+                                            <p className="text-lg font-serif text-gray-700 mt-1">
+                                                {obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString() : t.deathDate}
+                                            </p>
                                         </div>
                                     </div>
 
-                                    <h1 className="text-xl font-bold text-secondary mb-6">
+                                    <h1 className="text-3xl md:text-4xl font-serif font-normal text-gray-800 mb-8 leading-tight">
                                         {obituaryData.information.title || t.memorialTitle}
                                     </h1>
                                 </div>
