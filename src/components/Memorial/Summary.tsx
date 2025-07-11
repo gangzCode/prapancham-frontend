@@ -462,20 +462,22 @@ const Summary: React.FC<SummaryProps> = ({
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div className="md:col-span-2">
                             <div
-                                className="bg-gray-100 md:p-10 p-4"
+                                className="md:p-10 p-4"
+                                style={{ backgroundColor: activeColor }}
+
                             >
                                 <div
                                     className="bg-white w-full  shadow-md"
-                                    style={{ backgroundColor: activeColor }}
                                 >
                                     <div className="pt-4 pb-2 text-center max-w-lg mx-auto px-4">
-                                        <h1 className="text-xl font-bold text-primary mb-6">
+                                        <h1 className="text-2xl md:text-3xl font-serif font-light text-gray-800 mb-8 leading-relaxed tracking-wide">
                                             {informationFormData?.shortDescription || 'Our deepest condolences'}
                                         </h1>
 
-                                        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 sm:gap-0">
+                                        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-8">
                                             <div className="text-gray-500 text-center flex md:flex-col">
-                                                <p>Birth<span className="md:hidden mr-1 ml-1">:</span></p>
+                                                <p className="text-sm uppercase tracking-wider text-gray-500 font-sans">
+                                                    Birth<span className="md:hidden mr-1 ml-1">:</span></p>
                                                 <p>{informationFormData?.dateofBirth ? new Date(informationFormData.dateofBirth).toLocaleDateString() : 'Birth date'}</p>
                                             </div>
 
@@ -513,12 +515,12 @@ const Summary: React.FC<SummaryProps> = ({
                                             )}
 
                                             <div className="text-gray-500 text-center flex md:flex-col">
-                                                <p>Death<span className="md:hidden mr-1 ml-1">:</span></p>
+                                                <p className="text-sm uppercase tracking-wider text-gray-500 font-sans">Death<span className="md:hidden mr-1 ml-1">:</span></p>
                                                 <p>{informationFormData?.dateofDeath ? new Date(informationFormData.dateofDeath).toLocaleDateString() : 'Death date'}</p>
                                             </div>
                                         </div>
 
-                                        <h1 className="text-xl font-bold text-secondary mb-6">
+                                        <h1 className="text-3xl md:text-4xl font-serif font-normal text-gray-800 mb-8 leading-tight">
                                             {informationFormData?.title || 'Memorial Title'}
                                         </h1>
                                     </div>
@@ -732,8 +734,8 @@ const Summary: React.FC<SummaryProps> = ({
                 {/* Display success/error message */}
                 {submitMessage && (
                     <div className={`mt-4 p-4 rounded-lg ${submitMessage.type === 'success'
-                            ? 'bg-green-100 border border-green-400 text-green-700'
-                            : 'bg-red-100 border border-red-400 text-red-700'
+                        ? 'bg-green-100 border border-green-400 text-green-700'
+                        : 'bg-red-100 border border-red-400 text-red-700'
                         }`}>
                         <p className="text-center font-semibold">{submitMessage.message}</p>
                     </div>
@@ -793,13 +795,13 @@ const Summary: React.FC<SummaryProps> = ({
                                 <Check className="w-8 h-8 text-green-600" />
                             </div>
                         </div>
-                        
+
                         {/* Success Message */}
                         <h2 className="text-2xl font-bold text-gray-900 mb-2">Payment Successful!</h2>
                         <p className="text-gray-600 mb-6">
                             Your memorial package has been purchased successfully. Thank you for your order.
                         </p>
-                        
+
                         {/* Package Details */}
                         <div className="bg-gray-50 p-4 rounded-lg mb-6 text-left">
                             <h3 className="font-semibold text-gray-900 mb-2">Order Summary:</h3>
@@ -807,7 +809,7 @@ const Summary: React.FC<SummaryProps> = ({
                             <p className="text-sm text-gray-600">Duration: {getDuration()} days</p>
                             <p className="text-sm text-gray-600">Total: {getTotalPrice().toLocaleString()} {getCurrency()}</p>
                         </div>
-                        
+
                         {/* OK Button */}
                         <button
                             onClick={handleSuccessOk}
