@@ -793,13 +793,13 @@ const ObituaryDetail: React.FC = () => {
                                 }
                             >
 
-                                {t.postTribute}
+                                🕯️ {t.postTribute}
                             </button>
                             <button
                                 onClick={openModal}
                                 className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
                             >
-                                {t.donate}
+                                💝 {t.donate}
                             </button>
                         </div>
 

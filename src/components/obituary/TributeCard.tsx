@@ -70,10 +70,11 @@ const TributeCard: React.FC<TributeCardProps> = ({
   return (
     <div className="w-full  mx-auto bg-white  shadow-md overflow-hidden p-2">
       <div className="flex justify-between w-full items-center border-b">
-        <div className="flex gap-8">
+        <div className="flex gap-8 items-center">
           <span className="text-[#880002] ">
             {condolencesCount} {t.condolences}
           </span>
+          <div className="w-px h-4 bg-gray-300"></div>
           <span className="text-[#880002] ">
             {donationCount} {t.donations}
           </span>
@@ -102,7 +103,7 @@ const TributeCard: React.FC<TributeCardProps> = ({
           onClick={() => setIsTributeModalOpen(true)}
           className="w-4/5 py-2 border border-primary rounded text-primary "
         >
-          {t.postTribute}
+          🕯️ {t.postTribute}
         </button>
         <TributeModal 
           isOpen={isTributeModalOpen} 
@@ -118,7 +119,7 @@ const TributeCard: React.FC<TributeCardProps> = ({
           onClick={() => setIsModalOpen(true)}
           className="w-1/5 py-2 bg-primary text-white rounded"
         >
-          {t.donate}
+          💝 {t.donate}
         </button>
         <DonateModal
           isOpen={isModalOpen}

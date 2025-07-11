@@ -109,12 +109,12 @@ const ObituaryCard: React.FC<ObituaryCardProps> = ({ entry }) => {
             <button className="gap-2.5 self-stretch shrink-0 px-4 py-1.5 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]" onClick={() =>
               setIsTributeModalOpen(true)
             }>
-              {localizedText.postTribute[langKey]}
+              🕯️ {localizedText.postTribute[langKey]}
             </button>
             <button
               onClick={openModal}
               className="gap-2.5 self-stretch px-4 py-1.5 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
-              {localizedText.donate[langKey]}
+              💝 {localizedText.donate[langKey]}
             </button>
           </div>
         </div>
