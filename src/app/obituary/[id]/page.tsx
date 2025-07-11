@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import DonateModal from '@/components/obituary/DonateModal';
 import type { ObituaryEntry } from '@/components/hero/types';
 import { useLanguage } from '@/components/ui/LanguageProvider';
+import TributeModal from "@/components/obituary/TributeModal";
 // import { demoData } from "./demoData";
 
 type LanguageKey = "en" | "ta" | "si";
@@ -219,6 +220,7 @@ const ObituaryDetail: React.FC = () => {
 
     const [obituaryData, setObituaryData] = useState<ObituaryData | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const [isTributeModalOpen, setIsTributeModalOpen] = useState(false);
     const [error, setError] = useState<string>("");
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -477,6 +479,26 @@ const ObituaryDetail: React.FC = () => {
         return age;
     };
 
+    // Function to calculate time ago from createdAt
+    const calculateTimeAgo = (createdAt: string): string => {
+        const now = new Date();
+        const created = new Date(createdAt);
+        const diffInMilliseconds = now.getTime() - created.getTime();
+        const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        const diffInDays = Math.floor(diffInHours / 24);
+
+        if (diffInDays > 0) {
+            return `${diffInDays} ${diffInDays > 1 ? 'days' : 'day'} ago`;
+        } else if (diffInHours > 0) {
+            return `${diffInHours} ${diffInHours > 1 ? 'days' : 'day'} ago`;
+        } else if (diffInMinutes > 0) {
+            return `${diffInMinutes} ${diffInMinutes > 1 ? 'minutes' : 'minute'} ago`;
+        } else {
+            return 'just now';
+        }
+    };
+
     // Extract YouTube video ID
     const getYouTubeVideoId = (url: string) => {
         const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
@@ -605,7 +627,13 @@ const ObituaryDetail: React.FC = () => {
                         </p>
 
                         <div className="flex justify-end gap-2 items-center self-stretch mt-4">
-                            <button className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                            <button
+                                className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
+                                onClick={() =>
+                                    setIsTributeModalOpen(true)
+                                }
+                            >
+
                                 {t.postTribute}
                             </button>
                             <button
@@ -919,6 +947,33 @@ const ObituaryDetail: React.FC = () => {
                     }}
                 />
             )}
+
+            <TributeModal
+                isOpen={isTributeModalOpen}
+                onClose={() => setIsTributeModalOpen(false)}
+                obituaryEntry={{
+                    _id: obituaryData._id,
+                    title: obituaryData.information.title,
+                    name: obituaryData.information.title,
+                    date: obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                    }) : '',
+                    address: obituaryData.information.address,
+                    imageUrl: obituaryData.thumbnailImage || obituaryData.primaryImage || "/images/tribute.jpg",
+                    condolences: obituaryData.tributeItems ? obituaryData.tributeItems.length : 0,
+                }}
+                timeAgo={obituaryData.createdAt ? calculateTimeAgo(obituaryData.createdAt) : ''}
+                imageUrl={obituaryData.thumbnailImage || obituaryData.primaryImage || "/images/tribute.jpg"}
+                ceremonyTitle={obituaryData.information.title}
+                eventName={obituaryData.information.title}
+                date={obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                }) : ''}
+            />
         </div>
     );
 };
