@@ -166,7 +166,12 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
             underlineWidth={64}
           />
         </div>
-        <button className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors">
+        <button className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors"
+          onClick={() => {
+            window.location.href = "/news";
+          }
+          }
+        >
           <span className="text-sm sm:text-base md:text-heading-base">
             {langKey === "ta" ? "மேலும் பார்க்க" : langKey === "si" ? "තවත් බලන්න" : "View more"}
           </span>

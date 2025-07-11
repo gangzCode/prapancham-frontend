@@ -41,7 +41,12 @@ const NewsCategoryBlock: React.FC<NewsCategoryBlockProps> = ({
         ))}
       </div>
 
-      <div className="flex justify-end mb-4 mt-2 mr-4">
+      <div className="flex justify-end mb-4 mt-2 mr-4"
+        onClick={() => {
+          window.location.href = "/news";
+        }
+        }
+      >
         <a
           href="#"
           className="text-sm font-medium text-red-600 flex items-center hover:underline"
