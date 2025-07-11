@@ -5,6 +5,7 @@ import { useLanguage } from "@/components/ui/LanguageProvider";
 import DonateModal from "../obituary/DonateModal";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import TributeModal from "../obituary/TributeModal";
 
 interface ObituaryCardProps {
   entry: ObituaryEntry;
@@ -14,6 +15,8 @@ const ObituaryCard: React.FC<ObituaryCardProps> = ({ entry }) => {
   const { language } = useLanguage();
   const langKey: "en" | "ta" | "si" = language === "tamil" ? "ta" : language === "sinhala" ? "si" : "en";
   const router = useRouter();
+  const [isTributeModalOpen, setIsTributeModalOpen] = useState(false);
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -26,6 +29,26 @@ const ObituaryCard: React.FC<ObituaryCardProps> = ({ entry }) => {
       return;
     }
     router.push(`/obituary/${entry._id}`);
+  };
+
+  // Function to calculate time ago from createdAt
+  const calculateTimeAgo = (createdAt: string): string => {
+    const now = new Date();
+    const created = new Date(createdAt);
+    const diffInMilliseconds = now.getTime() - created.getTime();
+    const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInDays > 0) {
+      return `${diffInDays} ${diffInDays > 1 ? 'days' : 'day'} ago`;
+    } else if (diffInHours > 0) {
+      return `${diffInHours} ${diffInHours > 1 ? 'days' : 'day'} ago`;
+    } else if (diffInMinutes > 0) {
+      return `${diffInMinutes} ${diffInMinutes > 1 ? 'minutes' : 'minute'} ago`;
+    } else {
+      return 'just now';
+    }
   };
 
   useEffect(() => {
@@ -52,7 +75,7 @@ const ObituaryCard: React.FC<ObituaryCardProps> = ({ entry }) => {
   };
   return (
     <>
-      <article 
+      <article
         className="flex flex-col justify-center p-2 w-full rounded-lg bg-stone-50 cursor-pointer hover:bg-stone-100 transition-colors duration-200"
         onClick={handleCardClick}
       >
@@ -83,13 +106,15 @@ const ObituaryCard: React.FC<ObituaryCardProps> = ({ entry }) => {
             {entry.condolences} {localizedText.condolences[langKey]}
           </p>
           <div className="flex gap-2 items-center self-stretch my-auto">
-            <button className="gap-2.5 self-stretch shrink-0 px-4 py-1.5 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
-              {localizedText.postTribute[langKey]}
+            <button className="gap-2.5 self-stretch shrink-0 px-4 py-1.5 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]" onClick={() =>
+              setIsTributeModalOpen(true)
+            }>
+              🕯️ {localizedText.postTribute[langKey]}
             </button>
             <button
               onClick={openModal}
               className="gap-2.5 self-stretch px-4 py-1.5 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
-              {localizedText.donate[langKey]}
+              💝 {localizedText.donate[langKey]}
             </button>
           </div>
         </div>
@@ -101,6 +126,33 @@ const ObituaryCard: React.FC<ObituaryCardProps> = ({ entry }) => {
           obituaryEntry={entry}
         />
       )}
+
+      <TributeModal
+        isOpen={isTributeModalOpen}
+        onClose={() => setIsTributeModalOpen(false)}
+        obituaryEntry={{
+          _id: entry._id,
+          title: entry.title,
+          name: entry.title,
+          date: entry.date ? new Date(entry.date).toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+          }) : '',
+          address: entry.address,
+          imageUrl: entry.imageUrl || "/images/tribute.jpg",
+          condolences: entry.condolences ? entry.condolences : 0
+        }}
+        timeAgo={""}
+        imageUrl={entry.imageUrl || "/images/tribute.jpg"}
+        ceremonyTitle={entry.title}
+        eventName={entry.title}
+        date={entry.date ? new Date(entry.date).toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        }) : ''}
+      />
 
 
     </>

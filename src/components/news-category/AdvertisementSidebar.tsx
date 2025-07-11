@@ -243,7 +243,7 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
           For More Details Contact Us
         </h3>
         <div className="space-y-1 sm:space-y-2">
-          {[1, 2].map((_, index) => (
+          {[1, 2, 3, 4].map((_, index) => (
             <button
               key={index}
               className="w-full bg-[#0D1322] text-white text-sm sm:text-body-base py-1.5 sm:py-2 px-2 sm:px-4 text-center rounded hover:bg-[#0c4c62] transition-colors"

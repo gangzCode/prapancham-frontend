@@ -8,6 +8,7 @@ import { TitleWithUnderline } from "../ui/title-with-underline";
 import NewsCard, { NewsCardProps } from "./NewsCard";
 import ObituaryCard from "../hero/ObituaryCard";
 import { ObituaryEntry } from "../hero/types";
+import { ArrowRight } from "lucide-react";
 
 const tabNames = {
   en: { recent: "Recent News", important: "Important News" },
@@ -202,6 +203,25 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
                         <ObituaryCard entry={entry} />
                       </div>
                     ))}
+                  </div>
+
+                  <div className="mt-4 flex float-right mr-4">
+                    <button
+                      className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors"
+                      onClick={() => {
+                        window.location.href = "/obituary";
+                      }
+                      }
+                    >
+                      <span className="text-sm sm:text-base md:text-heading-base">
+                        {langKey === "ta"
+                          ? "மேலும் பார்க்க"
+                          : langKey === "si"
+                            ? "තවත් බලන්න"
+                            : "View more"}
+                      </span>
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+                    </button>
                   </div>
                   <ScrollBar orientation="vertical" />
                 </ScrollArea>
