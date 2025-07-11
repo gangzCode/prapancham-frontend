@@ -165,8 +165,18 @@ const NewsPage: React.FC = () => {
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => Math.min(breakingNewsItems.length - 1, prev + 1));
+    setCurrentIndex((prev) =>
+      prev >= breakingNewsItems.length - 1 ? 0 : prev + 1
+    );
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNext();
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [breakingNewsItems.length]);
 
   const currentNews = breakingNewsItems[currentIndex] || {
     title: "No title",
