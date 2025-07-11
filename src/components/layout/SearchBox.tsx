@@ -21,11 +21,53 @@ interface OrderResult {
   username: string;
 }
 
+interface MultilingualField {
+  en: { name: string; value: string; _id: string }[];
+  ta: { name: string; value: string; _id: string }[];
+  si: { name: string; value: string; _id: string }[];
+}
+
+interface NewsResult {
+  _id: string;
+  title: MultilingualField;
+  description: MultilingualField;
+  editorName: MultilingualField;
+  thumbnailImage: string;
+  mainImage: string;
+  isDeleted: boolean;
+  otherImages: string[];
+  paragraphs: (MultilingualField & { _id: string })[];
+  isBreakingNews: boolean;
+  isImportantNews: boolean;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  newsCategory: string;
+}
+
+interface EventResult {
+  _id: string;
+  name: MultilingualField;
+  description: MultilingualField;
+  eventDate: string;
+  isFeatured: boolean;
+  image: string;
+  featuredEventImage: string;
+  isDeleted: boolean;
+  expiryDate: string;
+  isActive: boolean;
+  uploadedDate: string;
+  createdAt: string;
+  updatedAt: string;
+  eventLink: string;
+  registeredPeopleCount: string;
+}
+
 interface SearchResponse {
   query: string;
   orders: OrderResult[];
-  news: any[];
-  events: any[];
+  news: NewsResult[];
+  events: EventResult[];
 }
 
 const SearchBox: React.FC = () => {
@@ -36,6 +78,11 @@ const SearchBox: React.FC = () => {
   const [searchResults, setSearchResults] = useState<SearchResponse | null>(null);
   const [showResults, setShowResults] = useState(false);
   const [activeTab, setActiveTab] = useState<'orders' | 'news' | 'events'>('orders');
+
+  // Helper function to extract English value from multilingual field
+  const getEnglishValue = (field: MultilingualField): string => {
+    return field.en?.[0]?.value || '';
+  };
 
   useEffect(() => {
     if (inputValue.trim()) {
@@ -80,6 +127,27 @@ const SearchBox: React.FC = () => {
     // Prevent the blur event from interfering
     setTimeout(() => {
       router.push(`/obituary/${orderId}`);
+      setShowResults(false);
+      setInputValue("");
+    }, 0);
+  };
+
+  const handleNewsClick = (newsId: string) => {
+    console.log("News clicked:", newsId);
+    // Prevent the blur event from interfering
+    setTimeout(() => {
+      router.push(`/news/${newsId}`);
+      setShowResults(false);
+      setInputValue("");
+    }, 0);
+  };
+
+  const handleEventClick = (eventId: string) => {
+    console.log("Event clicked:", eventId);
+    // Prevent the blur event from interfering
+    setTimeout(() => {
+      // router.push(`/events/${eventId}`);
+      router.push(`/events`);
       setShowResults(false);
       setInputValue("");
     }, 0);
@@ -130,37 +198,52 @@ const SearchBox: React.FC = () => {
         ));
 
       case 'news':
-        return searchResults.news.map((news, index) => (
+        return searchResults.news.map((news) => (
           <div
-            key={index}
-            className="p-3 hover:bg-gray-50 active:bg-gray-100 rounded-md cursor-pointer transition-all duration-150 group"
-            onClick={() => {
-              console.log("Selected news:", news);
-            }}
+            key={news._id}
+            className="flex items-center gap-3 p-3 hover:bg-gray-50 active:bg-gray-100 rounded-md cursor-pointer transition-all duration-150 group"
+            onClick={() => handleNewsClick(news._id)}
+            onMouseDown={handleMouseDown}
           >
-            <div className="font-medium text-sm group-hover:text-primary transition-colors">
-              {news.title}
-            </div>
-            <div className="text-xs text-gray-500 line-clamp-2 mt-1">
-              {news.description}
+            <img
+              src={news.thumbnailImage || news.mainImage || "/images/tribute.jpg"}
+              alt={getEnglishValue(news.title)}
+              className="w-12 h-12 object-cover rounded"
+            />
+            <div className="flex-1 min-w-0">
+              <div className="font-medium text-sm group-hover:text-primary transition-colors truncate">
+                {getEnglishValue(news.title)}
+              </div>
+              <div className="text-xs text-gray-500 line-clamp-2 mt-1">
+                {getEnglishValue(news.description)}
+              </div>
             </div>
           </div>
         ));
 
       case 'events':
-        return searchResults.events.map((event, index) => (
+        return searchResults.events.map((event) => (
           <div
-            key={index}
-            className="p-3 hover:bg-gray-50 active:bg-gray-100 rounded-md cursor-pointer transition-all duration-150 group"
-            onClick={() => {
-              console.log("Selected event:", event);
-            }}
+            key={event._id}
+            className="flex items-center gap-3 p-3 hover:bg-gray-50 active:bg-gray-100 rounded-md cursor-pointer transition-all duration-150 group"
+            onClick={() => handleEventClick(event._id)}
+            onMouseDown={handleMouseDown}
           >
-            <div className="font-medium text-sm group-hover:text-primary transition-colors">
-              {event.title}
-            </div>
-            <div className="text-xs text-gray-500 line-clamp-2 mt-1">
-              {event.description}
+            <img
+              src={event.image || event.featuredEventImage || "/images/tribute.jpg"}
+              alt={getEnglishValue(event.name)}
+              className="w-12 h-12 object-cover rounded"
+            />
+            <div className="flex-1 min-w-0">
+              <div className="font-medium text-sm group-hover:text-primary transition-colors truncate">
+                {getEnglishValue(event.name)}
+              </div>
+              <div className="text-xs text-gray-500 line-clamp-2 mt-1">
+                {getEnglishValue(event.description)}
+              </div>
+              <div className="text-xs text-gray-400 mt-1">
+                {new Date(event.eventDate).toLocaleDateString()}
+              </div>
             </div>
           </div>
         ));
