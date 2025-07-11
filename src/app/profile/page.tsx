@@ -26,18 +26,75 @@ const Events: React.FC = () => {
             obituary: "Obituary",
             remembrance: "Remembrance",
             advertisement: "Advertisement",
+            logOut: "Log Out",
+            uploadImage: "Upload Image",
+            remove: "Remove",
+            name: "Name",
+            emailId: "E-mail ID",
+            country: "Country",
+            phone: "Phone",
+            address: "Address",
+            saveChanges: "Save Changes",
+            saving: "Saving...",
+            selectCountry: "Select Country",
+            unitedStates: "United States",
+            noAdvertisements: "No advertisements posted!",
+            contactAdminPart1: "Contact",
+            administration: "administration",
+            contactAdminPart2: "to post your advertisements",
+            userNotFound: "User not found. Please log in again.",
+            profileUpdateSuccess: "Profile updated successfully!",
+            profileUpdateFailed: "Failed to update profile.",
         },
         ta: {
             general: "பொதுவானது",
             obituary: "மரண அறிவித்தல்",
             remembrance: "நினைவுச்சின்னம்",
             advertisement: "விளம்பரம்",
+            logOut: "வெளியேறு",
+            uploadImage: "படம் பதிவேற்றவும்",
+            remove: "அகற்று",
+            name: "பெயர்",
+            emailId: "மின்னஞ்சல் முகவரி",
+            country: "நாடு",
+            phone: "தொலைபேசி",
+            address: "முகவரி",
+            saveChanges: "மாற்றங்களை சேமிக்கவும்",
+            saving: "சேமிக்கிறது...",
+            selectCountry: "நாட்டை தேர்ந்தெடுக்கவும்",
+            unitedStates: "அமெரிக்கா",
+            noAdvertisements: "விளம்பரங்கள் இடப்படவில்லை!",
+            contactAdminPart1: "உங்கள் விளம்பரங்களை இடுவதற்கு",
+            administration: "நிர்வாகத்தை",
+            contactAdminPart2: "தொடர்பு கொள்ளவும்",
+            userNotFound: "பயனர் கண்டுபிடிக்கப்படவில்லை. தயவுசெய்து மீண்டும் உள்நுழையவும்.",
+            profileUpdateSuccess: "சுயவிவரம் வெற்றிகரமாக புதுப்பிக்கப்பட்டது!",
+            profileUpdateFailed: "சுயவிவரம் புதுப்பிக்க முடியவில்லை.",
         },
         si: {
             general: "සාමාන්‍ය",
             obituary: "මරණ දැනුම්දීම",
             remembrance: "අනුස්මරණය",
             advertisement: "වෙළඳ දැන්වීම",
+            logOut: "ඉවත් වන්න",
+            uploadImage: "පින්තූරය උඩුගත කරන්න",
+            remove: "ඉවත් කරන්න",
+            name: "නම",
+            emailId: "විද්‍යුත් තැපැල් ලිපිනය",
+            country: "රට",
+            phone: "දුරකථනය",
+            address: "ලිපිනය",
+            saveChanges: "වෙනස්කම් සුරකින්න",
+            saving: "සුරකිමින්...",
+            selectCountry: "රට තෝරන්න",
+            unitedStates: "එක්සත් ජනපදය",
+            noAdvertisements: "වෙළඳ දැන්වීම් පළ කර නැත!",
+            contactAdminPart1: "ඔබේ වෙළඳ දැන්වීම් පළ කිරීමට",
+            administration: "පරිපාලනය",
+            contactAdminPart2: "සම්බන්ධ කරගන්න",
+            userNotFound: "පරිශීලකයා සොයා ගත නොහැක. කරුණාකර නැවත පිවිසෙන්න.",
+            profileUpdateSuccess: "පැතිකඩ සාර්ථකව යාවත්කාලීන කරන ලදී!",
+            profileUpdateFailed: "පැතිකඩ යාවත්කාලීන කිරීමට අසමත් විය.",
         }
     }
 
@@ -132,7 +189,7 @@ const Events: React.FC = () => {
         const userStr = localStorage.getItem("user");
         if (!userStr) {
             setLoading(false);
-            toast.error("User not found. Please log in again.");
+            toast.error(t.userNotFound);
             return;
         }
         const user = JSON.parse(userStr);
@@ -157,13 +214,13 @@ const Events: React.FC = () => {
             if (response.ok) {
                 const updatedUser = await response.json();
                 localStorage.setItem('user', JSON.stringify(updatedUser));
-                toast.success('Profile updated successfully!');
+                toast.success(t.profileUpdateSuccess);
             } else {
                 const data = await response.json();
-                toast.error(data?.message || "Failed to update profile.");
+                toast.error(data?.message || t.profileUpdateFailed);
             }
         } catch (err) {
-            toast.error("Failed to update profile.");
+            toast.error(t.profileUpdateFailed);
         }
         setLoading(false);
     };
@@ -243,7 +300,7 @@ const Events: React.FC = () => {
                                         window.location.href = "/";
                                     }}
                                 >
-                                    Log Out
+                                    {t.logOut}
                                 </button>
                             </div>
                         </div>
@@ -271,7 +328,7 @@ const Events: React.FC = () => {
                                             accept="image/*"
                                             className="absolute inset-0 opacity-0 cursor-pointer"
                                             onChange={handleImageChange}
-                                            title="Upload Image"
+                                            title={t.uploadImage}
                                         />
                                     </div>
                                     <div className="flex flex-wrap gap-4">
@@ -281,7 +338,7 @@ const Events: React.FC = () => {
                                             onClick={() => document.querySelector<HTMLInputElement>('input[type="file"]')?.click()}
                                         >
                                             <Upload className="w-4 h-4" />
-                                            <span>Upload Image</span>
+                                            <span>{t.uploadImage}</span>
                                         </button>
                                         <button
                                             type="button"
@@ -289,7 +346,7 @@ const Events: React.FC = () => {
                                             onClick={handleRemoveImage}
                                         >
                                             <Trash2 className="w-4 h-4" />
-                                            <span>Remove</span>
+                                            <span>{t.remove}</span>
                                         </button>
                                     </div>
                                 </div>
@@ -298,7 +355,7 @@ const Events: React.FC = () => {
                                 <div className="grid grid-col-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label htmlFor="username" className="block pb-2 ">
-                                            Name
+                                            {t.name}
                                         </label>
                                         <input
                                             type="text"
@@ -309,8 +366,8 @@ const Events: React.FC = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label htmlFor="email" className="block pb-2 text-gray-400">
-                                            E-mail ID
+                                        <label htmlFor="email" className="block pb-2">
+                                            {t.emailId}
                                         </label>
                                         <input
                                             type="email"
@@ -323,7 +380,7 @@ const Events: React.FC = () => {
                                     <div>
                                         <div className="flex-1">
                                             <label htmlFor="country" className="block pb-2 ">
-                                                Country
+                                                {t.country}
                                             </label>
                                             <div className="relative">
                                                 <select
@@ -332,15 +389,15 @@ const Events: React.FC = () => {
                                                     onChange={handleChange}
                                                     className="w-full p-4 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                                                 >
-                                                    <option value="">Select Country</option>
-                                                    <option value="United States">United States</option>
+                                                    <option value="">{t.selectCountry}</option>
+                                                    <option value="United States">{t.unitedStates}</option>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
                                         <label htmlFor="phone" className="block pb-2 ">
-                                            Phone
+                                            {t.phone}
                                         </label>
                                         <input
                                             type="text"
@@ -352,7 +409,7 @@ const Events: React.FC = () => {
                                     </div>
                                     <div className="col-span-2">
                                         <label htmlFor="address" className="block pb-2 ">
-                                            Address
+                                            {t.address}
                                         </label>
                                         <input
                                             type="text"
@@ -369,7 +426,7 @@ const Events: React.FC = () => {
                                         className="px-5 bg-primary text-white p-3 rounded font-semibold"
                                         disabled={loading} // Disable while loading
                                     >
-                                        {loading ? "Saving..." : "Save Changes"}
+                                        {loading ? t.saving : t.saveChanges}
                                     </button>
                                 </div>
                             </form>
@@ -398,8 +455,10 @@ const Events: React.FC = () => {
                             </div>
                             <div className="border-2 border-dashed border-gray-300 flex items-center justify-center p-4 min-h-48">
                                 <div className="text-center">
-                                    <p className="text-gray-900">No advertisements posted!</p>
-                                    <p className="text-gray-900">Contact <span className='text-primary underline font-semibold'>administration</span> to post your advertisements</p>
+                                    <p className="text-gray-900">{t.noAdvertisements}</p>
+                                    <p className="text-gray-900">
+                                        {t.contactAdminPart1} <span className='text-primary underline font-semibold'>{t.administration}</span> {t.contactAdminPart2}
+                                    </p>
                                 </div>
                             </div>
 
