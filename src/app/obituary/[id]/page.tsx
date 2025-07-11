@@ -32,6 +32,7 @@ const localeText = {
         tributes: "Tributes",
         messages: "Messages",
         cards: "Cards",
+        letters: "Letters",
         contacts: "Contacts",
         noContactInformation: "No contact information provided.",
         requestToContact: "Request to Contact",
@@ -75,6 +76,7 @@ const localeText = {
         tributes: "அஞ்சலிகள்",
         messages: "செய்திகள்",
         cards: "அட்டைகள்",
+        letters: "கடிதங்கள்",
         contacts: "தொடர்புகள்",
         noContactInformation: "தொடர்பு தகவல்கள் வழங்கப்படவில்லை.",
         requestToContact: "தொடர்பு கோரிக்கை",
@@ -118,6 +120,7 @@ const localeText = {
         tributes: "ප්‍රණාම",
         messages: "පණිවිඩ",
         cards: "කාඩ්පත්",
+        letters: "ලිපි",
         contacts: "සම්බන්ධතා",
         noContactInformation: "සම්බන්ධතා තොරතුරු ලබා දී නැත.",
         requestToContact: "සම්බන්ධ වීමට ඉල්ලීම",
@@ -224,7 +227,7 @@ const ObituaryDetail: React.FC = () => {
     const [error, setError] = useState<string>("");
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [activeTab, setActiveTab] = useState<'messages' | 'cards'>('messages');
+    const [activeTab, setActiveTab] = useState<'messages' | 'cards' | 'letters'>('messages');
     const [tributeTemplateCards, setTributeTemplateCards] = useState<{
         tributeCardTemplate: [
             {
@@ -236,6 +239,25 @@ const ObituaryDetail: React.FC = () => {
         pagination: {}
     }>({
         tributeCardTemplate: [
+            {
+                _id: "",
+                name: "",
+                image: ""
+            }
+        ],
+        pagination: {}
+    });
+    const [tributeTemplateLetters, setTributeTemplateLetters] = useState<{
+        tributeLetterTemplate: [
+            {
+                _id: string;
+                name: string;
+                image: string;
+            }
+        ],
+        pagination: {}
+    }>({
+        tributeLetterTemplate: [
             {
                 _id: "",
                 name: "",
@@ -297,18 +319,41 @@ const ObituaryDetail: React.FC = () => {
         fetchTributeTemplateCards();
     }, []);
 
+    // Fetch tribute template letters
+    useEffect(() => {
+        const fetchTributeTemplateLetters = async () => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tribute-items/letter-template/active?page=1&limit=10`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                setTributeTemplateLetters(data);
+            } catch (err) {
+                console.error('Error fetching tribute template letters:', err);
+            }
+        };
+
+        fetchTributeTemplateLetters();
+    }, []);
+
     const getSelectedTemplate = (
         selectedCardTemplate: string
     ) => {
-        console.log('tributeTemplateCards:', tributeTemplateCards.tributeCardTemplate);
-        console.log('selectedCardTemplate:', selectedCardTemplate);
         return tributeTemplateCards.tributeCardTemplate.find(template => template._id === selectedCardTemplate);
+    };
+
+    const getSelectedLetterTemplate = (
+        selectedLetterTemplate: string
+    ) => {
+        return tributeTemplateLetters.tributeLetterTemplate.find(template => template._id === selectedLetterTemplate);
     };
 
     const CardPreview = (
         card: any
     ) => {
-        console.log('card.cardTemplate:', card.card);
         const selectedTemplate = getSelectedTemplate(card.card.cardTemplate);
 
         if (!selectedTemplate) {
@@ -432,6 +477,120 @@ const ObituaryDetail: React.FC = () => {
 
                         {/* Bottom decorative strip */}
                         <div className="h-2 bg-gradient-to-r from-teal-400 via-purple-400 to-pink-400"></div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    const LetterPreview = (
+        letter: any
+    ) => {
+        const selectedTemplate = getSelectedLetterTemplate(letter.letter.letterTemplate);
+
+        if (!selectedTemplate) {
+            return (
+                <div className="max-w-2xl mx-auto relative">
+                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg p-12 text-center border-2 border-dashed border-amber-200">
+                        <div className="w-16 h-16 mx-auto mb-6 bg-amber-100 rounded-full flex items-center justify-center">
+                            <svg className="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </div>
+                        <p className="text-amber-700 font-medium text-lg">Select a template to preview your letter</p>
+                        <p className="text-amber-600 text-sm mt-2">Your beautifully crafted letter will appear here</p>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className="max-w-2xl mx-auto">
+                <div className="relative">
+                    {/* Paper shadow layers */}
+                    <div className="absolute -inset-2 bg-gray-400 rounded-lg transform rotate-1 opacity-20"></div>
+                    <div className="absolute -inset-1 bg-gray-300 rounded-lg transform -rotate-1 opacity-30"></div>
+
+                    {/* Main letter paper with template background */}
+                    <div className="relative rounded-lg shadow-2xl overflow-hidden border border-white/20">
+                        {/* Background Image */}
+                        <div className="absolute inset-0">
+                            <img
+                                src={selectedTemplate.image || '/default-letter-template.jpg'}
+                                alt={selectedTemplate.name}
+                                className="w-full h-full object-cover"
+                            />
+                            {/* Paper-like overlay */}
+                            <div className="absolute inset-0 bg-white/85 backdrop-blur-sm"></div>
+                        </div>
+
+                        {/* Letter header with decorative border */}
+                        <div className="relative border-b-2 border-amber-300 bg-white/60 backdrop-blur-sm p-6">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-8 h-8 bg-amber-600 rounded-full flex items-center justify-center">
+                                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                                        </svg>
+                                    </div>
+                                    <h2 className="text-amber-900 font-serif text-xl font-bold">Personal Letter</h2>
+                                </div>
+                                <div className="text-amber-700 text-sm font-medium">
+                                    {new Date().toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric'
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Letter content */}
+                        <div className="relative p-8">
+                            {/* Greeting */}
+                            <div className="mb-6">
+                                <p className="text-amber-900 font-serif text-lg">Dear {obituaryData?.information.title || 'Friend'},</p>
+                            </div>
+
+                            {/* Message body */}
+                            {letter.letter.message && (
+                                <div className="mb-8">
+                                    <div className="text-amber-900 font-serif text-base leading-relaxed space-y-4">
+                                        {letter.letter.message.split('\n').map((paragraph: string, index: number) => (
+                                            <p key={index} className="indent-8 text-justify">
+                                                {paragraph}
+                                            </p>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Letter closing */}
+                            <div className="text-right">
+                                <p className="text-amber-900 font-serif text-base mb-2">From,</p>
+                                <div>
+                                    <div className="w-40 h-12 ml-auto border-b-2 border-amber-300 flex items-end justify-center pb-2">
+                                        <p className="text-amber-700 font-serif italic text-sm">
+                                            {letter.letter.name || 'Your signature'}
+                                        </p>
+                                    </div>
+                                    <p className="text-amber-700 font-serif text-sm mt-1">
+                                        {letter.letter.relationship || 'Your relationship'}
+                                    </p>
+                                    <p className="text-amber-700 font-serif text-sm">
+                                        {letter.letter.country || 'Your country'}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Vintage postmark */}
+                        <div className="absolute top-4 right-4 w-20 h-20 border-2 border-amber-600 rounded-full flex items-center justify-center transform -rotate-12 bg-white/60 backdrop-blur-sm opacity-80">
+                            <div className="text-center">
+                                <p className="text-amber-800 text-xs font-bold">SENT</p>
+                                <p className="text-amber-700 text-xs">{new Date().getFullYear()}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -673,6 +832,15 @@ const ObituaryDetail: React.FC = () => {
                                     >
                                         {t.cards}
                                     </button>
+                                    <button
+                                        onClick={() => setActiveTab('letters')}
+                                        className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${activeTab === 'letters'
+                                            ? 'border-primary text-primary bg-gray-50'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        {t.letters}
+                                    </button>
                                 </div>
 
                                 {/* Tab Content */}
@@ -718,6 +886,23 @@ const ObituaryDetail: React.FC = () => {
                                         {obituaryData.tributeItems.filter(tribute => tribute.tributeOptions === 'card' && !tribute.isDeleted).length === 0 && (
                                             <div className="col-span-full bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
                                                 No tribute cards available
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {activeTab === 'letters' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {obituaryData.tributeItems
+                                            .filter(tribute => tribute.tributeOptions === 'letter' && !tribute.isDeleted)
+                                            .map((tribute, index) => (
+                                                <div key={tribute._id}>
+                                                    <LetterPreview letter={tribute.letter} />
+                                                </div>
+                                            ))}
+                                        {obituaryData.tributeItems.filter(tribute => tribute.tributeOptions === 'letter' && !tribute.isDeleted).length === 0 && (
+                                            <div className="col-span-full bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
+                                                No tribute letters available
                                             </div>
                                         )}
                                     </div>

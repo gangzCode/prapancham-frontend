@@ -6,6 +6,7 @@ import { TitleWithUnderline } from "../ui/title-with-underline";
 import { Separator } from "@/components/ui/separator";
 import type { ObituaryEntry } from "../hero/types";
 import CardFormWithStepper from "./CardFormWithStepper";
+import LetterFormWithStepper from "./LetterFormWithStepper";
 
 type TributeModalProps = {
     isOpen: boolean;
@@ -18,15 +19,15 @@ type TributeModalProps = {
     date: string;
 };
 
-const TributeModal: React.FC<TributeModalProps> = ({ 
-    isOpen, 
-    onClose, 
-    obituaryEntry, 
-    timeAgo, 
-    imageUrl, 
-    ceremonyTitle, 
-    eventName, 
-    date 
+const TributeModal: React.FC<TributeModalProps> = ({
+    isOpen,
+    onClose,
+    obituaryEntry,
+    timeAgo,
+    imageUrl,
+    ceremonyTitle,
+    eventName,
+    date
 }) => {
     const [activeTab, setActiveTab] = useState("message");
     const [images, setImages] = useState<File[]>([]);
@@ -34,6 +35,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
 
     const [cardTemplates, setCardTemplates] = useState<any[]>([]);
     const [loadingTemplates, setLoadingTemplates] = useState(false);
+    const [letterTemplates, setLetterTemplates] = useState<any[]>([]);
 
     // Fetch card templates when cards tab is active
     useEffect(() => {
@@ -59,7 +61,31 @@ const TributeModal: React.FC<TributeModalProps> = ({
         fetchCardTemplates();
     }, [activeTab, cardTemplates.length]);
 
-    
+    // fetch letter templates when letter tab is active
+    useEffect(() => {
+        const fetchLetterTemplates = async () => {
+            if (activeTab === "letter" && letterTemplates.length === 0) {
+                setLoadingTemplates(true);
+                try {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tribute-items/letter-template/active?page=1&limit=10`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        setLetterTemplates(data.tributeLetterTemplate || []);
+                    } else {
+                        console.error('Failed to fetch letter templates');
+                    }
+                } catch (error) {
+                    console.error('Error fetching letter templates:', error);
+                } finally {
+                    setLoadingTemplates(false);
+                }
+            }
+        };
+
+        fetchLetterTemplates();
+    }, [activeTab, letterTemplates.length]);
+
+
     // Form state for message submission
     const [formData, setFormData] = useState({
         message: "",
@@ -80,7 +106,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
 
     const handleSubmitTribute = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!formData.message.trim()) {
             setSubmitMessage({ type: 'error', text: 'Please enter a message.' });
             return;
@@ -138,7 +164,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
         document.addEventListener("keydown", handleEscape);
         return () => document.removeEventListener("keydown", handleEscape);
     }, [onClose]);
-    
+
     const handleClose = () => {
         setActiveTab("message");
         setFormData({
@@ -268,398 +294,311 @@ const TributeModal: React.FC<TributeModalProps> = ({
 
                     {activeTab === "message" &&
                         <div className="pb-8">
-                        <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" onSubmit={handleSubmitTribute}>
-                            <div className="p-4 mb-6">
-                                <h3 className="text-xl font-semibold text-center mb-4 text-primary">Write Your Message Here </h3>
-                                <p className="text-center text-gray-500 mb-4 text-primary">
-                                    Share your thoughts and condolences
-                                </p>
-                            </div>
-
-                            {/* Display success/error messages */}
-                            {submitMessage && (
-                                <div className={`mb-4 p-3 rounded-lg ${submitMessage.type === 'success' ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-red-100 text-red-700 border border-red-300'}`}>
-                                    {submitMessage.text}
+                            <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" onSubmit={handleSubmitTribute}>
+                                <div className="p-4 mb-6">
+                                    <h3 className="text-xl font-semibold text-center mb-4 text-primary">Write Your Message Here </h3>
+                                    <p className="text-center text-gray-500 mb-4 text-primary">
+                                        Share your thoughts and condolences
+                                    </p>
                                 </div>
-                            )}
 
-                            <div className="mb-4">
-                                <label htmlFor="message" className="block text-gray-700 mb-2">
-                                    Message <span className="text-red-500">*</span>
-                                </label>
-                                <textarea
-                                    id="message"
-                                    name="message"
-                                    value={formData.message}
-                                    onChange={handleInputChange}
-                                    rows={4}
-                                    maxLength={2000}
-                                    required
-                                    className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                    placeholder="Share your thoughts, condolences, or memories..."
-                                />
-                                <p className="text-xs text-gray-500 mt-1">Maximum 2000 characters allowed ({formData.message.length}/2000)</p>
-                            </div>
-                            
-                            <div className="mb-4">
-                                <label htmlFor="tribute-name" className="pb-2 block text-gray-700">
-                                    Name <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    id="tribute-name"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleInputChange}
-                                    required
-                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                    placeholder="Your full name"
-                                />
-                            </div>
-                            
-                            <div className="mb-4">
-                                <label htmlFor="relationship" className="pb-2 block text-gray-700">
-                                    Relationship/Organization
-                                </label>
-                                <input
-                                    type="text"
-                                    id="relationship"
-                                    name="relationship"
-                                    value={formData.relationship}
-                                    onChange={handleInputChange}
-                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                    placeholder="e.g., Friend, Colleague, Family member"
-                                />
-                            </div>
-                            
-                            <div className="mb-4">
-                                <label htmlFor="country" className="pb-2 block text-gray-700">
-                                    Country
-                                </label>
-                                <input
-                                    type="text"
-                                    id="country"
-                                    name="country"
-                                    value={formData.country}
-                                    onChange={handleInputChange}
-                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                    placeholder="Your country"
-                                />
-                            </div>
-                            
-                            <div className="flex justify-end gap-2 items-center self-stretch mt-16">
-                                <button
-                                    type="button"
-                                    onClick={handleClose}
-                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6"
-                                    disabled={isSubmitting}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    disabled={isSubmitting || !formData.message.trim() || !formData.name.trim()}
-                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                                >
-                                    {isSubmitting ? 'Submitting...' : 'Submit Tribute'}
-                                </button>
-                            </div>
-                        </form>
+                                {/* Display success/error messages */}
+                                {submitMessage && (
+                                    <div className={`mb-4 p-3 rounded-lg ${submitMessage.type === 'success' ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-red-100 text-red-700 border border-red-300'}`}>
+                                        {submitMessage.text}
+                                    </div>
+                                )}
+
+                                <div className="mb-4">
+                                    <label htmlFor="message" className="block text-gray-700 mb-2">
+                                        Message <span className="text-red-500">*</span>
+                                    </label>
+                                    <textarea
+                                        id="message"
+                                        name="message"
+                                        value={formData.message}
+                                        onChange={handleInputChange}
+                                        rows={4}
+                                        maxLength={2000}
+                                        required
+                                        className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                        placeholder="Share your thoughts, condolences, or memories..."
+                                    />
+                                    <p className="text-xs text-gray-500 mt-1">Maximum 2000 characters allowed ({formData.message.length}/2000)</p>
+                                </div>
+
+                                <div className="mb-4">
+                                    <label htmlFor="tribute-name" className="pb-2 block text-gray-700">
+                                        Name <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="tribute-name"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleInputChange}
+                                        required
+                                        className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                        placeholder="Your full name"
+                                    />
+                                </div>
+
+                                <div className="mb-4">
+                                    <label htmlFor="relationship" className="pb-2 block text-gray-700">
+                                        Relationship/Organization
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="relationship"
+                                        name="relationship"
+                                        value={formData.relationship}
+                                        onChange={handleInputChange}
+                                        className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                        placeholder="e.g., Friend, Colleague, Family member"
+                                    />
+                                </div>
+
+                                <div className="mb-4">
+                                    <label htmlFor="country" className="pb-2 block text-gray-700">
+                                        Country
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="country"
+                                        name="country"
+                                        value={formData.country}
+                                        onChange={handleInputChange}
+                                        className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                        placeholder="Your country"
+                                    />
+                                </div>
+
+                                <div className="flex justify-end gap-2 items-center self-stretch mt-16">
+                                    <button
+                                        type="button"
+                                        onClick={handleClose}
+                                        className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6"
+                                        disabled={isSubmitting}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting || !formData.message.trim() || !formData.name.trim()}
+                                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                                    >
+                                        {isSubmitting ? 'Submitting...' : 'Submit Tribute'}
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     }
                     {activeTab === "cards" && !loadingTemplates &&
                         <CardFormWithStepper
-                        cardTemplates={cardTemplates}
-                        obituaryEntry={obituaryEntry}
+                            cardTemplates={cardTemplates}
+                            obituaryEntry={obituaryEntry}
                         />
                     }
-                    {activeTab === "letter" &&
-                        <div className="pb-8">
-                        <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
-                            <div className="p-4 mb-6">
-                                <h3 className="text-xl font-semibold text-center mb-4 text-primary">Choose a Template for Letter</h3>
-                                <p className="text-center text-gray-500 mb-4 text-primary">
-                                    You can select a design from the options below
-                                </p>
-                                <div className="flex flex-wrap justify-center md:justify-between gap-2 md:gap-4 mb-4">
-                                    {[1, 2, 3, 4].map((id) => (
-                                        <div
-                                            key={id}
-                                            className={`
-                                                w-56 h-32 bg-gray-200 rounded flex items-center justify-center
-                                                ${id === 1 ? 'block' : 'hidden'} 
-                                                md:block
-                                            `}
-                                        >
-                                            <span className="text-gray-500">Letter Template {id}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="text-center">
-                                    <button className="px-2 py-1 mr-2">
-                                        <ChevronLeft />
-                                    </button>
-                                    <button className="px-2 py-1 ">
-                                        <ChevronRight />
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="message" className="block text-gray-700 mb-2">
-                                    Message
-                                </label>
-                                <textarea
-                                    id="message"
-                                    rows={4}
-                                    maxLength={2000}
-                                    className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                />
-                                <p className="text-xs">Maximum 2000 characters allowed</p>
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Name
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Relationship/Organization
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Country
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                />
-                            </div>
-                            <div className="flex justify-end gap-2 items-center self-stretch mt-16">
-                                <button
-                                    onClick={handleClose}
-                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
-                                    Back
-                                </button>
-                                <button
-                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
-                                    onClick={(e => {
-                                        e.preventDefault();
-                                        // setActiveTab("payment");
-                                    }
-                                    )}
-                                >
-                                    Next
-                                </button>
-                            </div>
-                        </form>
-                        </div>
+                    {activeTab === "letter" && !loadingTemplates &&
+                        <LetterFormWithStepper
+                            letterTemplates={letterTemplates}
+                            obituaryEntry={obituaryEntry}
+                        />
                     }
                     {activeTab === "memory" &&
                         <div className="pb-8">
-                        <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
-                            <div className=" p-4  mb-6">
-                                <h3 className="text-xl font-semibold text-center mb-4 text-primary">Share Your Memories as Images</h3>
-                                <p className="text-center text-gray-500 mb-4 text-primary">
-                                    You can select a design from the options below
-                                </p>
-                                <div className="w-full">
-                                    <div
-                                        onDrop={handleDrop}
-                                        onDragOver={(e) => e.preventDefault()}
-                                        className="border-2  border-gray-300 p-6 rounded-lg flex flex-col items-center justify-center text-center bg-white hover:border-primary transition"
-                                    >
-                                        {previews.length > 0 && (
-                                            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                                                {previews.map((src, idx) => (
-                                                    <div key={idx} className="relative group">
-                                                        <img
-                                                            src={src}
-                                                            alt={`Preview ${idx + 1}`}
-                                                            className="w-full h-32 object-cover rounded shadow"
-                                                        />
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => removeImage(idx)}
-                                                            className="absolute top-1 right-1 bg-red-600 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition"
-                                                        >
-                                                            ✕
-                                                        </button>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                        <p className="text-gray-500 mb-2">Drag & drop images here or click to browse</p>
-                                        <label className="cursor-pointer text-white bg-primary px-8 py-2">
-                                            Browse Files...
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                multiple
-                                                onChange={handleBrowse}
-                                                className="hidden"
-                                            />
-                                        </label>
+                            <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
+                                <div className=" p-4  mb-6">
+                                    <h3 className="text-xl font-semibold text-center mb-4 text-primary">Share Your Memories as Images</h3>
+                                    <p className="text-center text-gray-500 mb-4 text-primary">
+                                        You can select a design from the options below
+                                    </p>
+                                    <div className="w-full">
+                                        <div
+                                            onDrop={handleDrop}
+                                            onDragOver={(e) => e.preventDefault()}
+                                            className="border-2  border-gray-300 p-6 rounded-lg flex flex-col items-center justify-center text-center bg-white hover:border-primary transition"
+                                        >
+                                            {previews.length > 0 && (
+                                                <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                                    {previews.map((src, idx) => (
+                                                        <div key={idx} className="relative group">
+                                                            <img
+                                                                src={src}
+                                                                alt={`Preview ${idx + 1}`}
+                                                                className="w-full h-32 object-cover rounded shadow"
+                                                            />
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => removeImage(idx)}
+                                                                className="absolute top-1 right-1 bg-red-600 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition"
+                                                            >
+                                                                ✕
+                                                            </button>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                            <p className="text-gray-500 mb-2">Drag & drop images here or click to browse</p>
+                                            <label className="cursor-pointer text-white bg-primary px-8 py-2">
+                                                Browse Files...
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    multiple
+                                                    onChange={handleBrowse}
+                                                    className="hidden"
+                                                />
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="message" className="block text-gray-700 mb-2">
-                                    Message
-                                </label>
-                                <textarea
-                                    id="message"
-                                    rows={4}
-                                    maxLength={2000}
-                                    className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                />
-                                <p className="text-xs">Maximum 2000 characters allowed</p>
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Name
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Relationship/Organization
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Country
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                />
-                            </div>
-                            <div className="flex justify-end gap-2 items-center self-stretch mt-16">
-                                <button
-                                    onClick={handleClose}
-                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
-                                    Back
-                                </button>
-                                <button
-                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
-                                    onClick={(e => {
-                                        e.preventDefault();
-                                        // setActiveTab("payment");
-                                    }
-                                    )}
-                                >
-                                    Next
-                                </button>
-                            </div>
-                        </form>
+                                <div className="mb-4">
+                                    <label htmlFor="message" className="block text-gray-700 mb-2">
+                                        Message
+                                    </label>
+                                    <textarea
+                                        id="message"
+                                        rows={4}
+                                        maxLength={2000}
+                                        className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                    />
+                                    <p className="text-xs">Maximum 2000 characters allowed</p>
+                                </div>
+                                <div className="mb-4">
+                                    <label htmlFor="name" className={`pb-2 block`}>
+                                        Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label htmlFor="name" className={`pb-2 block`}>
+                                        Relationship/Organization
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label htmlFor="name" className={`pb-2 block`}>
+                                        Country
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                    />
+                                </div>
+                                <div className="flex justify-end gap-2 items-center self-stretch mt-16">
+                                    <button
+                                        onClick={handleClose}
+                                        className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
+                                        Back
+                                    </button>
+                                    <button
+                                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
+                                        onClick={(e => {
+                                            e.preventDefault();
+                                            // setActiveTab("payment");
+                                        }
+                                        )}
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     }
                     {activeTab === "flowers" &&
                         <div className="pb-8">
-                        <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
-                            <div className="p-4 mb-6">
-                                <h3 className="text-xl font-semibold text-center mb-4 text-primary">Choose a Type</h3>
-                                <p className="text-center text-gray-500 mb-4 text-primary">
-                                    You can select a design from the options below
-                                </p>
-                                <div className="flex flex-wrap justify-between text-center mb-4">
-                                    <div className="w-1/2">
-                                        <div className="w-full pr-2 h-32 bg-gray-200 rounded flex items-center justify-center">
-                                            <span className="text-gray-500">Flower Type 1</span>
+                            <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
+                                <div className="p-4 mb-6">
+                                    <h3 className="text-xl font-semibold text-center mb-4 text-primary">Choose a Type</h3>
+                                    <p className="text-center text-gray-500 mb-4 text-primary">
+                                        You can select a design from the options below
+                                    </p>
+                                    <div className="flex flex-wrap justify-between text-center mb-4">
+                                        <div className="w-1/2">
+                                            <div className="w-full pr-2 h-32 bg-gray-200 rounded flex items-center justify-center">
+                                                <span className="text-gray-500">Flower Type 1</span>
+                                            </div>
+                                            <p>Bouquet</p>
                                         </div>
-                                        <p>Bouquet</p>
-                                    </div>
 
-                                    <div className="w-1/2">
-                                        <div className="w-full pl-2 h-32 bg-gray-200 rounded flex items-center justify-center">
-                                            <span className="text-gray-500">Flower Type 2</span>
+                                        <div className="w-1/2">
+                                            <div className="w-full pl-2 h-32 bg-gray-200 rounded flex items-center justify-center">
+                                                <span className="text-gray-500">Flower Type 2</span>
+                                            </div>
+                                            <p>Wreath</p>
                                         </div>
-                                        <p>Wreath</p>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="message" className="block text-gray-700 mb-2">
-                                    Message
-                                </label>
-                                <textarea
-                                    id="message"
-                                    rows={4}
-                                    maxLength={2000}
-                                    className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                />
-                                <p className="text-xs">Maximum 2000 characters allowed</p>
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Name
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Relationship/Organization
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="name" className={`pb-2 block`}>
-                                    Country
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                />
-                            </div>
-                            <div className="flex justify-end gap-2 items-center self-stretch mt-16">
-                                <button
-                                    onClick={handleClose}
-                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
-                                    Back
-                                </button>
-                                <button
-                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
-                                    onClick={(e => {
-                                        e.preventDefault();
-                                        // setActiveTab("payment");
-                                    }
-                                    )}
-                                >
-                                    Next
-                                </button>
-                            </div>
-                        </form>
+                                <div className="mb-4">
+                                    <label htmlFor="message" className="block text-gray-700 mb-2">
+                                        Message
+                                    </label>
+                                    <textarea
+                                        id="message"
+                                        rows={4}
+                                        maxLength={2000}
+                                        className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                    />
+                                    <p className="text-xs">Maximum 2000 characters allowed</p>
+                                </div>
+                                <div className="mb-4">
+                                    <label htmlFor="name" className={`pb-2 block`}>
+                                        Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label htmlFor="name" className={`pb-2 block`}>
+                                        Relationship/Organization
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label htmlFor="name" className={`pb-2 block`}>
+                                        Country
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                    />
+                                </div>
+                                <div className="flex justify-end gap-2 items-center self-stretch mt-16">
+                                    <button
+                                        onClick={handleClose}
+                                        className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
+                                        Back
+                                    </button>
+                                    <button
+                                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
+                                        onClick={(e => {
+                                            e.preventDefault();
+                                            // setActiveTab("payment");
+                                        }
+                                        )}
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     }
                 </div>
