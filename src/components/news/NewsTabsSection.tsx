@@ -19,7 +19,7 @@ const tabNames = {
 type LanguageKey = "en" | "ta" | "si";
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-const useLocalizedNews = (endpoint: string, langKey: LanguageKey) => {
+const useLocalizedNews = (endpoint: string, langKey: LanguageKey, categoryId?: string) => {
   const { data, error } = useSWR(endpoint, fetcher);
 
   const getTimeAgo = (createdAt: string) => {
@@ -41,7 +41,16 @@ const useLocalizedNews = (endpoint: string, langKey: LanguageKey) => {
   const news: NewsCardProps[] = useMemo(() => {
     if (!data || error) return [];
 
-    return data.map((item: any) => ({
+    let filteredData = data;
+    
+    // If categoryId is provided and not "all", filter by category
+    if (categoryId && categoryId !== "all") {
+      filteredData = data.filter((item: any) => 
+        item.newsCategory?._id === categoryId
+      );
+    }
+
+    return filteredData.map((item: any) => ({
       id: item._id,
       title: item.title?.[langKey]?.[0]?.value || "",
       image: item.thumbnailImage || item.mainImage || "",
@@ -53,7 +62,7 @@ const useLocalizedNews = (endpoint: string, langKey: LanguageKey) => {
       description: item.description?.[langKey]?.[0]?.value || "",
       editorName: item.editorName?.[langKey]?.[0]?.value || "",
     }));
-  }, [data, error, langKey]);
+  }, [data, error, langKey, categoryId]);
 
   return { news, loading: !data && !error };
 };
@@ -61,9 +70,10 @@ const useLocalizedNews = (endpoint: string, langKey: LanguageKey) => {
 
 interface NewsTabsSectionProps {
   className?: string;
+  categoryId?: string; // Optional category ID to filter news by
 }
 
-const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
+const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className, categoryId }) => {
   const [activeTab, setActiveTab] = useState<"recent" | "important">("recent");
   const [obituaryData, setObituaryData] = useState<ObituaryEntry[]>([]);
 
@@ -72,6 +82,11 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
   let langKey: LanguageKey = "en";
   if (language === "tamil") langKey = "ta";
   else if (language === "sinhala") langKey = "si";
+
+  // Reset to recent tab when category changes
+  useEffect(() => {
+    setActiveTab("recent");
+  }, [categoryId]);
 
   const { data: obituaryDataResponse, error: obituaryError } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/order/priority`,
@@ -95,15 +110,17 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
   }, [obituaryDataResponse, obituaryError, langKey]);
 
   const { news: recentNews } = useLocalizedNews(
-    `${process.env.NEXT_PUBLIC_API_URL}/news/recent/5`,
-    langKey
+    `${process.env.NEXT_PUBLIC_API_URL}/news/recent/20`, // Fetch more to allow filtering
+    langKey,
+    categoryId
   );
   const { news: importantNews } = useLocalizedNews(
-    `${process.env.NEXT_PUBLIC_API_URL}/news/important-news/10`,
-    langKey
+    `${process.env.NEXT_PUBLIC_API_URL}/news/important-news/30`, // Fetch more to allow filtering
+    langKey,
+    categoryId
   );
 
-  const displayedNews = activeTab === "recent" ? recentNews : importantNews;
+  const displayedNews = (activeTab === "recent" ? recentNews : importantNews).slice(0, activeTab === "recent" ? 5 : 10);
 
   return (
     <div className={cn("px-4 md:px-8 lg:px-16 py-6", className)}>
@@ -137,43 +154,57 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className }) => {
 
           <ScrollArea className="h-[790px] pr-0 md:pr-4">
             <div className="space-y-6">
-              {displayedNews.map((news, id) => (
-                <div
-                  key={id}
-                  className="relative group bg-white p-4 shadow-sm md:mr-5 hover:shadow-md"
-                >
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="w-full md:w-48">
-                      <img
-                        src={news.image}
-                        alt={news.title}
-                        className="w-full aspect-[1/1] object-cover"
-                      />
-                    </div>
-                    <div className="w-full flex flex-col justify-between">
-                      <div>
-                        <h3 className="font-bold">{news.title}</h3>
-                        <p className="text-gray-600 mt-2 text-sm line-clamp-3">
-                          {news.description}
-                          <a
-                            href={`/news/${news.id}`}
-                            className="text-red-600 ml-1 hover:underline"
-                          >
-                            {localeText[langKey].ReadMore}
-                          </a>
-                        </p>
+              {displayedNews.length === 0 ? (
+                <div className="flex flex-1 justify-center items-center h-[400px]">
+                  <div className="text-center text-gray-500">
+                    <p className="text-lg font-medium mb-2">
+                      {categoryId && categoryId !== "all" 
+                        ? localeText[langKey].noNewsInCategory
+                        : localeText[langKey].noNews
+                      }
+                    </p>
+                    <p className="text-sm">{localeText[langKey].checkBackLater}</p>
+                  </div>
+                </div>
+              ) : (
+                displayedNews.map((news, id) => (
+                  <div
+                    key={id}
+                    className="relative group bg-white p-4 shadow-sm md:mr-5 hover:shadow-md"
+                  >
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <div className="w-full md:w-48">
+                        <img
+                          src={news.image || "/images/Prapancham-logo.png"}
+                          alt={news.title}
+                          className="w-full aspect-[1/1] object-cover"
+                        />
                       </div>
-                      <div className="flex items-center justify-between mt-4 text-xs text-gray-500">
-                        <span>{news.editorName}</span>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-red-600">{news.category}</span>
-                          <span>• {news.timeAgo}</span>
+                      <div className="w-full flex flex-col justify-between">
+                        <div>
+                          <h3 className="font-bold">{news.title}</h3>
+                          <p className="text-gray-600 mt-2 text-sm line-clamp-3">
+                            {news.description}
+                            <a
+                              href={`/news/${news.id}`}
+                              className="text-red-600 ml-1 hover:underline"
+                            >
+                              {localeText[langKey].ReadMore}
+                            </a>
+                          </p>
+                        </div>
+                        <div className="flex items-center justify-between mt-4 text-xs text-gray-500">
+                          <span>{news.editorName}</span>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-red-600">{news.category}</span>
+                            <span>• {news.timeAgo}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </ScrollArea>
         </div>
@@ -241,6 +272,8 @@ const localeText = {
     ReadMore: "Read more",
     ObituaryUpdates: "Obituary Updates",
     noObituaries: "No obituaries available",
+    noNews: "No news available",
+    noNewsInCategory: "No news available in this category",
     checkBackLater: "Check back later for updates",
     justNow: "just now",
     minute: "1 minute ago",
@@ -259,6 +292,8 @@ const localeText = {
     ReadMore: "மேலும் வாசிக்க",
     ObituaryUpdates: "மரண அறிவித்தல் புதுப்பிப்புகள்",
     noObituaries: "மரண அறிவித்தல்கள் இல்லை",
+    noNews: "செய்திகள் இல்லை",
+    noNewsInCategory: "இந்த வகைக்கான செய்திகள் இல்லை",
     checkBackLater: "புதுப்பிப்புகளுக்கு பின்னர் சரிபார்க்கவும்",
     justNow: "இப்போது",
     minute: "1 நிமிடம் முன்பு",
@@ -277,6 +312,8 @@ const localeText = {
     ReadMore: "වැඩිදුර කියවන්න",
     ObituaryUpdates: "මරණ දැනුම්දීම යාවත්කාලීන",
     noObituaries: "මරණ දැනුම්දීම් නොමැත",
+    noNews: "පුවත් නොමැත",
+    noNewsInCategory: "මෙම ප්‍රවර්ගයේ පුවත් නොමැත",
     checkBackLater: "යාවත්කාලීන කිරීම් සඳහා පසුව පරීක්ෂා කරන්න",
     justNow: "දැන්ම",
     minute: "මිනිත්තුවකට පෙර",

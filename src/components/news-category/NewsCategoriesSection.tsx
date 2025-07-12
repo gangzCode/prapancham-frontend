@@ -122,6 +122,7 @@ const NewsCategoriesSection: React.FC = () => {
             {data?.map((category, index) => (
               <NewsCategoryBlock
                 key={index}
+                categoryId={category.category._id}
                 title={getLocalizedValue(category.category.name[langKey], [
                   "Headline",
                   "தலைப்பு",

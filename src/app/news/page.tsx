@@ -3,7 +3,7 @@
 import AdvertisementBanner from "@/components/advertisement/AdvertisementBanner";
 import React, { useState, useEffect } from "react";
 import BreakingNewsHCard from "@/components/news/BreakingNewsHCard";
-import CountryMenu from "@/components/contact/CountryMenu";
+import NewsCategoryTabs from "@/components/contact/NewsCategoryTabs";
 import NewsTabsSection from "@/components/news/NewsTabsSection";
 import TrendingNewsSection from "@/components/trending-news/TrendingNewsSection";
 import HAdCarousel from "@/components/advertisement/HAdCarousel";
@@ -16,6 +16,7 @@ import PaginationSection from "@/components/category/PaginationSection";
 import useSWR from 'swr';
 import { useLanguage } from "@/components/ui/LanguageProvider";
 import { getTimeDifference } from "@/lib/utils";
+import { useSearchParams, useRouter } from "next/navigation";
 
 interface AdType {
   _id: string;
@@ -45,20 +46,38 @@ const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const NewsPage: React.FC = () => {
   const { language } = useLanguage();
-  const [activeCountry, setActiveCountry] = useState("all");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const categoryFromUrl = searchParams.get('category');
+
+  const [activeCategory, setActiveCategory] = useState(categoryFromUrl || "all");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [dynamicAds, setDynamicAds] = useState<FeaturedAd[]>([]);
   const [adsLoading, setAdsLoading] = useState(true);
+
+  // Custom handler for category changes that updates URL
+  const handleCategoryChange = (categoryId: string) => {
+    setActiveCategory(categoryId);
+
+    // Update URL without page reload
+    const url = new URL(window.location.href);
+    if (categoryId === "all") {
+      url.searchParams.delete('category');
+    } else {
+      url.searchParams.set('category', categoryId);
+    }
+    router.push(url.pathname + url.search, { scroll: false });
+  };
 
   // Fetch dynamic ads
   useEffect(() => {
     const fetchAds = async () => {
       try {
         setAdsLoading(true);
-        
+
         // Get access token from localStorage
         const accessToken = localStorage.getItem('accessToken');
-        
+
         // First, get the ad types to find the Sidebar Banner type
         const adTypesResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/advertistment/ad-type/active?page=1&limit=10`,
@@ -69,21 +88,21 @@ const NewsPage: React.FC = () => {
             },
           }
         );
-        
+
         if (!adTypesResponse.ok) {
           throw new Error('Failed to fetch ad types');
         }
-        
+
         const adTypesData = await adTypesResponse.json();
         const billboardAdType = adTypesData.adTypes.find(
           (type: AdType) => type.type === 'Sidebar Banner'
         );
-        
+
         if (!billboardAdType) {
           console.error('Sidebar Banner ad type not found');
           return;
         }
-        
+
         // Now fetch the advertisements for home page and Sidebar Banner ad type
         const adsResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/advertistment/by-ad-type-ad-page?adType=${billboardAdType._id}&adPageName=home`,
@@ -94,14 +113,14 @@ const NewsPage: React.FC = () => {
             },
           }
         );
-        
+
         if (!adsResponse.ok) {
           throw new Error('Failed to fetch advertisements');
         }
-        
+
         const adsData = await adsResponse.json();
         const fetchedAds = Array.isArray(adsData) ? adsData : [];
-        
+
         // Format the ads to match FeaturedAd structure
         const formattedAds: FeaturedAd[] = fetchedAds.slice(0, 5).map((ad: AdData, index: number) => ({
           id: index + 1,
@@ -110,9 +129,9 @@ const NewsPage: React.FC = () => {
           label: `Advertisement ${index + 1}`,
           link: ad.link
         }));
-        
+
         setDynamicAds(formattedAds);
-        
+
       } catch (error) {
         console.error('Error fetching advertisements:', error);
         setDynamicAds([]);
@@ -126,13 +145,47 @@ const NewsPage: React.FC = () => {
 
   const { data, error, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/news/news-category/active?page=1&limit=10`,
-    fetcher
+    fetcher,
+    {
+      onSuccess: (data) => {
+      },
+      onError: (error) => {
+        console.error('News category API error:', error);
+      }
+    }
   );
 
   const { data: breakingNewsData, error: breakingNewsError } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/news/breaking-news/10`,
-    fetcher
+    fetcher,
+    {
+      onSuccess: (data) => {
+      },
+      onError: (error) => {
+        console.error('Breaking news API error:', error);
+      }
+    }
   );
+
+  // Update active category when URL parameter changes or data loads
+  useEffect(() => {
+    if (categoryFromUrl && data?.newsCategory) {
+      // Validate that the category exists in the data
+      const categoryExists = data.newsCategory.some((cat: any) => cat._id === categoryFromUrl);
+      if (categoryExists) {
+        setActiveCategory(categoryFromUrl);
+      } else {
+        // Invalid category ID, redirect to "all"
+        setActiveCategory("all");
+        const url = new URL(window.location.href);
+        url.searchParams.delete('category');
+        router.replace(url.pathname + url.search, { scroll: false });
+      }
+    } else if (categoryFromUrl) {
+      // Category parameter exists but data not loaded yet, set it anyway
+      setActiveCategory(categoryFromUrl);
+    }
+  }, [categoryFromUrl, data, router]);
 
   const allLabels: Record<string, string> = {
     en: "All",
@@ -205,8 +258,8 @@ const NewsPage: React.FC = () => {
           hasPrevious={currentIndex > 0}
           hasNext={currentIndex < breakingNewsItems.length - 1}
         />
-        <CountryMenu
-          countries={[
+        <NewsCategoryTabs
+          categories={[
             {
               id: "all",
               name: [
@@ -224,38 +277,16 @@ const NewsPage: React.FC = () => {
               ],
             })) || []),
           ]}
-          activeCountry={activeCountry}
-          setActiveCountry={setActiveCountry}
+          activeCategory={activeCategory}
+          setActiveCategory={handleCategoryChange}
         />
 
-        {(activeCountry === "all") && <NewsTabsSection />}
-        {(activeCountry !== "all") &&
-          <PoliticalNews
-           countries={[
-            {
-              id: "all",
-              name: [
-                { lang: "en", value: allLabels["en"] },
-                { lang: "ta", value: allLabels["ta"] },
-                { lang: "si", value: allLabels["si"] },
-              ],
-            },
-            ...(data?.newsCategory?.map((cat: any) => ({
-              id: cat._id,
-              name: [
-                { lang: "en", value: cat.name.en?.[0]?.name || "" },
-                { lang: "ta", value: cat.name.ta?.[0]?.name || "" },
-                { lang: "si", value: cat.name.si?.[0]?.name || "" },
-              ],
-            })) || []),
-          ]}
-            activeCountry={activeCountry}
-          />
-        }
+        {(activeCategory === "all") && <NewsTabsSection />}
+        {(activeCategory !== "all") && <NewsTabsSection categoryId={activeCategory} />}
 
         {/* <Separator /> */}
         {/* {(activeCountry !== "all") && <PaginationSection />} */}
-        {(activeCountry === "all") && <TrendingNewsSection />}
+        {(activeCategory === "all") && <TrendingNewsSection />}
         <Separator />
         <HAdCarousel
           ads={adsLoading ? [] : dynamicAds}
@@ -264,9 +295,9 @@ const NewsPage: React.FC = () => {
           className="px-4 md:px-8 lg:px-16   max-md:px-5"
         />
         <Separator />
-        {(activeCountry === "all") && <NewsCategoriesSection />}
+        {(activeCategory === "all") && <NewsCategoriesSection />}
         <Separator className="mb-8" />
-        {(activeCountry !== "all") && <VideoNewsSection />}
+        {(activeCategory !== "all") && <VideoNewsSection />}
       </main>
     </div>
   );
