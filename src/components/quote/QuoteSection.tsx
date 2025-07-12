@@ -76,8 +76,18 @@ const QuoteSection: React.FC<QuoteSectionProps> = ({ className }) => {
       } catch (err) {
         console.error("Failed to fetch more quotes", err);
       }
+    } else {
+      setCurrentIndex(0);
     }
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNext();
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [currentIndex, quotes.length, totalItems]);
 
   if (error)
     return <div className="text-red-500 px-4">{localizedText.error[langKey]}</div>;
