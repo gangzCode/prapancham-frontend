@@ -1,7 +1,7 @@
 "use client";
 
 import AdvertisementBanner from "@/components/advertisement/AdvertisementBanner";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import BreakingNewsHCard from "@/components/news/BreakingNewsHCard";
 import NewsCategoryTabs from "@/components/contact/NewsCategoryTabs";
 import NewsTabsSection from "@/components/news/NewsTabsSection";
@@ -44,7 +44,87 @@ interface AdData {
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
-const NewsPage: React.FC = () => {
+const LoadingSpinner = ({ language }: { language?: string }) => {
+  const loadingText = {
+    english: "Loading latest news...",
+    tamil: "சமீபத்திய செய்திகள் ஏற்றப்படுகின்றன...",
+    sinhala: "නවතම පුවත් පූරණය වේ...",
+  };
+  
+  const text = loadingText[language as keyof typeof loadingText] || loadingText.english;
+  
+  return (
+    <div className="flex flex-col justify-center items-center py-8 space-y-4">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <p className="text-gray-600 text-sm">{text}</p>
+    </div>
+  );
+};
+
+// Loading component for Suspense fallback
+const NewsPageLoading = () => (
+  <div className="flex flex-col">
+    <main className="flex flex-col mt-0 w-full bg-white max-md:mt-0 gap-[24px]">
+      {/* Loading Spinner at top */}
+      <LoadingSpinner />
+      
+      <div className="animate-pulse">
+        {/* Breaking News Banner Skeleton */}
+        <div className="h-64 bg-gray-200 rounded-lg mb-6 mx-4 md:mx-8 lg:mx-16"></div>
+        
+        {/* Category Tabs Skeleton */}
+        <div className="h-16 bg-gray-200 rounded-lg mb-6 mx-4 md:mx-8 lg:mx-16"></div>
+        
+        {/* News Tabs Section Skeleton */}
+        <div className="mx-4 md:mx-8 lg:mx-16 mb-6">
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* Left Column - News */}
+            <div className="flex-1">
+              <div className="h-12 bg-gray-200 rounded mb-4"></div>
+              <div className="space-y-4">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="flex gap-4 p-4 bg-gray-100 rounded">
+                    <div className="w-32 h-24 bg-gray-200 rounded"></div>
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                      <div className="h-3 bg-gray-200 rounded w-full"></div>
+                      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Right Column - Obituary */}
+            <div className="w-full md:w-80">
+              <div className="h-8 bg-gray-200 rounded mb-4"></div>
+              <div className="space-y-3">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="h-24 bg-gray-200 rounded"></div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Trending News Skeleton */}
+        <div className="mx-4 md:mx-8 lg:mx-16 mb-6">
+          <div className="h-8 bg-gray-200 rounded mb-4 w-48"></div>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+            <div className="md:col-span-6 h-96 bg-gray-200 rounded"></div>
+            <div className="md:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="h-48 bg-gray-200 rounded"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+);
+
+const NewsPageContent: React.FC = () => {
   const { language } = useLanguage();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -54,6 +134,7 @@ const NewsPage: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [dynamicAds, setDynamicAds] = useState<FeaturedAd[]>([]);
   const [adsLoading, setAdsLoading] = useState(true);
+  const [pageLoading, setPageLoading] = useState(true);
 
   // Custom handler for category changes that updates URL
   const handleCategoryChange = (categoryId: string) => {
@@ -167,6 +248,24 @@ const NewsPage: React.FC = () => {
     }
   );
 
+  // Check if all data is loaded
+  useEffect(() => {
+    const allDataLoaded = (
+      !adsLoading && 
+      !isLoading && 
+      (breakingNewsData !== undefined || breakingNewsError) &&
+      (data !== undefined || error)
+    );
+    
+    if (allDataLoaded && pageLoading) {
+      // Add a small delay to ensure smooth transition
+      const timer = setTimeout(() => {
+        setPageLoading(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [adsLoading, isLoading, breakingNewsData, breakingNewsError, data, error, pageLoading]);
+
   // Update active category when URL parameter changes or data loads
   useEffect(() => {
     if (categoryFromUrl && data?.newsCategory) {
@@ -239,8 +338,58 @@ const NewsPage: React.FC = () => {
     timeAgo: "N/A",
   };
 
+  // Show loading state until all data is loaded
+  if (pageLoading) {
+    return (
+      <div className="flex flex-col">
+        <main className="flex flex-col mt-0 w-full bg-white max-md:mt-0 gap-[24px]">
+          <LoadingSpinner language={language} />
+          <div className="animate-pulse mx-4 md:mx-8 lg:mx-16">
+            {/* Breaking News Banner Skeleton */}
+            <div className="h-64 bg-gray-200 rounded-lg mb-6"></div>
+            
+            {/* Category Tabs Skeleton */}
+            <div className="h-16 bg-gray-200 rounded-lg mb-6"></div>
+            
+            {/* News Tabs Section Skeleton */}
+            <div className="mb-6">
+              <div className="flex flex-col md:flex-row gap-6">
+                {/* Left Column - News */}
+                <div className="flex-1">
+                  <div className="h-12 bg-gray-200 rounded mb-4"></div>
+                  <div className="space-y-4">
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="flex gap-4 p-4 bg-gray-100 rounded">
+                        <div className="w-32 h-24 bg-gray-200 rounded"></div>
+                        <div className="flex-1 space-y-2">
+                          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                          <div className="h-3 bg-gray-200 rounded w-full"></div>
+                          <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Right Column - Obituary */}
+                <div className="w-full md:w-80">
+                  <div className="h-8 bg-gray-200 rounded mb-4"></div>
+                  <div className="space-y-3">
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="h-24 bg-gray-200 rounded"></div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col transition-opacity duration-500 ease-in-out opacity-100">
       <main className="flex flex-col mt-0 w-full bg-white max-md:mt-0  gap-[24px]">
 
         {/* <AdvertisementBanner images={topAdImages} /> */}
@@ -300,6 +449,15 @@ const NewsPage: React.FC = () => {
         {(activeCategory !== "all") && <VideoNewsSection />}
       </main>
     </div>
+  );
+};
+
+// Main component wrapped in Suspense
+const NewsPage: React.FC = () => {
+  return (
+    <Suspense fallback={<NewsPageLoading />}>
+      <NewsPageContent />
+    </Suspense>
   );
 };
 
