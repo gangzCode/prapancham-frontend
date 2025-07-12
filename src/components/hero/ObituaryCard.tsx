@@ -101,7 +101,7 @@ const ObituaryCard: React.FC<ObituaryCardProps> = ({ entry }) => {
 
         <hr className="mt-2 w-full min-h-0 border border-solid border-neutral-400" />
 
-        <div className="flex gap-10 justify-between items-center py-1 mt-2 w-full text-xs rounded">
+        <div className="flex gap-4 justify-between items-center py-1 mt-2 w-full text-xs rounded">
           <p className="self-stretch shrink-0 my-auto text-body-xs text-secondary">
             {entry.condolences} {localizedText.condolences[langKey]}
           </p>
