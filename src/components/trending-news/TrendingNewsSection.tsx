@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
@@ -32,9 +32,17 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
   className,
 }) => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [isNewsPage, setIsNewsPage] = useState(false);
   const { language } = useLanguage();
 
   const langKey = language === "tamil" ? "ta" : language === "sinhala" ? "si" : "en";
+
+  // Check if current URL contains 'news'
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsNewsPage(window.location.pathname.includes('news'));
+    }
+  }, []);
 
   const { data, error, isLoading } = useSWR<NewsItem[]>(
     `${process.env.NEXT_PUBLIC_API_URL}/news/recent/5`,
@@ -166,17 +174,19 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
             underlineWidth={64}
           />
         </div>
-        <button className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors"
-          onClick={() => {
-            window.location.href = "/news";
-          }
-          }
-        >
-          <span className="text-sm sm:text-base md:text-heading-base">
-            {langKey === "ta" ? "மேலும் பார்க்க" : langKey === "si" ? "තවත් බලන්න" : "View more"}
-          </span>
-          <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
-        </button>
+        {!isNewsPage && (
+          <button className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors"
+            onClick={() => {
+              window.location.href = "/news";
+            }
+            }
+          >
+            <span className="text-sm sm:text-base md:text-heading-base">
+              {langKey === "ta" ? "மேலும் பார்க்க" : langKey === "si" ? "තවත් බලන්න" : "View more"}
+            </span>
+            <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+          </button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 w-full">
