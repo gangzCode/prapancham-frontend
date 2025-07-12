@@ -155,8 +155,16 @@ const HeroSection = () => {
   }, []);
 
   const handleNext = useCallback(() => {
-    setCurrentIndex((prev) => Math.min(newsDataList.length - 1, prev + 1));
-  }, [newsDataList]);
+    setCurrentIndex((prev) => (prev + 1) % newsDataList.length);
+  }, [newsDataList.length]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNext();
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [handleNext]);
 
   const currentNews = newsDataList[currentIndex];
   const hasPrevious = currentIndex > 0;

@@ -3,7 +3,6 @@ import 'react-phone-input-2/lib/style.css';
 import React, { useState, useEffect } from "react";
 import PhoneInput from 'react-phone-input-2';
 import { Metadata } from "next";
-import CountryMenu from "@/components/contact/CountryMenu";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -310,7 +309,7 @@ const ContactPage: React.FC = () => {
         {contactAds && contactAds.length > 0 ? (
           <a href={contactAds[0].link} target="_blank" rel="noopener noreferrer">
             <img
-              src={contactAds[0].image}
+              src={contactAds[0].image || "/images/Prapancham-logo.png"}
               alt="Advertisement"
               className="w-full max-h-[232px] object-cover"
             />
