@@ -47,8 +47,8 @@ const usePackages = (type: 'Obituary' | 'Rememberence', language: 'en' | 'ta' | 
             const mainFeatures = pkg.description[language]?.map((desc: any) => desc.value) || [];
             const addonFeatures =
                 pkg.addons?.flatMap((addon: any) =>
-                    addon.name?.[language]?.map((n: any) => n.name) ||
-                    addon.name?.en?.map((n: any) => n.name) ||
+                    addon.name?.[language]?.map((n: any) => n.value) ||
+                    addon.name?.en?.map((n: any) => n.value) ||
                     []
                 ) || [];
             const matchedPrice = pkg.priceList?.find(
