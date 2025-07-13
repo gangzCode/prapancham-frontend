@@ -50,9 +50,9 @@ const LoadingSpinner = ({ language }: { language?: string }) => {
     tamil: "சமீபத்திய செய்திகள் ஏற்றப்படுகின்றன...",
     sinhala: "නවතම පුවත් පූරණය වේ...",
   };
-  
+
   const text = loadingText[language as keyof typeof loadingText] || loadingText.english;
-  
+
   return (
     <div className="flex flex-col justify-center items-center py-8 space-y-4">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -67,14 +67,14 @@ const NewsPageLoading = () => (
     <main className="flex flex-col mt-0 w-full bg-white max-md:mt-0 gap-[24px]">
       {/* Loading Spinner at top */}
       <LoadingSpinner />
-      
+
       <div className="animate-pulse">
         {/* Breaking News Banner Skeleton */}
         <div className="h-64 bg-gray-200 rounded-lg mb-6 mx-4 md:mx-8 lg:mx-16"></div>
-        
+
         {/* Category Tabs Skeleton */}
         <div className="h-16 bg-gray-200 rounded-lg mb-6 mx-4 md:mx-8 lg:mx-16"></div>
-        
+
         {/* News Tabs Section Skeleton */}
         <div className="mx-4 md:mx-8 lg:mx-16 mb-6">
           <div className="flex flex-col md:flex-row gap-6">
@@ -94,7 +94,7 @@ const NewsPageLoading = () => (
                 ))}
               </div>
             </div>
-            
+
             {/* Right Column - Obituary */}
             <div className="w-full md:w-80">
               <div className="h-8 bg-gray-200 rounded mb-4"></div>
@@ -106,7 +106,7 @@ const NewsPageLoading = () => (
             </div>
           </div>
         </div>
-        
+
         {/* Trending News Skeleton */}
         <div className="mx-4 md:mx-8 lg:mx-16 mb-6">
           <div className="h-8 bg-gray-200 rounded mb-4 w-48"></div>
@@ -251,12 +251,12 @@ const NewsPageContent: React.FC = () => {
   // Check if all data is loaded
   useEffect(() => {
     const allDataLoaded = (
-      !adsLoading && 
-      !isLoading && 
+      !adsLoading &&
+      !isLoading &&
       (breakingNewsData !== undefined || breakingNewsError) &&
       (data !== undefined || error)
     );
-    
+
     if (allDataLoaded && pageLoading) {
       // Add a small delay to ensure smooth transition
       const timer = setTimeout(() => {
@@ -347,10 +347,10 @@ const NewsPageContent: React.FC = () => {
           <div className="animate-pulse mx-4 md:mx-8 lg:mx-16">
             {/* Breaking News Banner Skeleton */}
             <div className="h-64 bg-gray-200 rounded-lg mb-6"></div>
-            
+
             {/* Category Tabs Skeleton */}
             <div className="h-16 bg-gray-200 rounded-lg mb-6"></div>
-            
+
             {/* News Tabs Section Skeleton */}
             <div className="mb-6">
               <div className="flex flex-col md:flex-row gap-6">
@@ -370,7 +370,7 @@ const NewsPageContent: React.FC = () => {
                     ))}
                   </div>
                 </div>
-                
+
                 {/* Right Column - Obituary */}
                 <div className="w-full md:w-80">
                   <div className="h-8 bg-gray-200 rounded mb-4"></div>
@@ -431,7 +431,31 @@ const NewsPageContent: React.FC = () => {
         />
 
         {(activeCategory === "all") && <NewsTabsSection />}
-        {(activeCategory !== "all") && <NewsTabsSection categoryId={activeCategory} />}
+        {/* {(activeCategory !== "all") && <NewsTabsSection categoryId={activeCategory} />} */}
+
+        {(activeCategory !== "all") &&
+          <PoliticalNews
+            countries={[
+              {
+                id: "all",
+                name: [
+                  { lang: "en", value: allLabels["en"] },
+                  { lang: "ta", value: allLabels["ta"] },
+                  { lang: "si", value: allLabels["si"] },
+                ],
+              },
+              ...(data?.newsCategory?.map((cat: any) => ({
+                id: cat._id,
+                name: [
+                  { lang: "en", value: cat.name.en?.[0]?.name || "" },
+                  { lang: "ta", value: cat.name.ta?.[0]?.name || "" },
+                  { lang: "si", value: cat.name.si?.[0]?.name || "" },
+                ],
+              })) || []),
+            ]}
+            activeCountry={activeCategory}
+          />
+        }
 
         {/* <Separator /> */}
         {/* {(activeCountry !== "all") && <PaginationSection />} */}
