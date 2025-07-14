@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Play, ChevronRight, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -27,7 +27,7 @@ interface PodcastSectionProps {
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-const PodcastSection = ({
+const PodcastSectionContent = ({
   title = "Our Podcast",
   showViewMore = true,
 }: PodcastSectionProps) => {
@@ -227,6 +227,14 @@ const PodcastSection = ({
         ))}
       </div>
     </section>
+  );
+};
+
+const PodcastSection = (props: PodcastSectionProps) => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PodcastSectionContent {...props} />
+    </Suspense>
   );
 };
 
