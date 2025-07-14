@@ -182,11 +182,11 @@ const CreateMemorialPage: React.FC = () => {
                 }
             } catch (error) { }
         }
-        if (!isAuthValid && typeof window !== "undefined") {
-            window.history.back();
-        } else {
+        // Only close modal if user is authenticated
+        if (isAuthValid) {
             setIsModalOpen(false);
         }
+        // If user is not authenticated, do nothing (modal cannot be closed)
     };
 
     const handleWhatsAppClick = () => {
@@ -210,8 +210,9 @@ const CreateMemorialPage: React.FC = () => {
             setActiveStep(1);
         }
     };
-    if (!isModalOpen) {
-        return (
+
+    return (
+        <>
             <section className="flex flex-col justify-center px-4 md:px-8 lg:px-16  py-6 max-md:px-5">
                 {activeStep === 0 &&
                     <CountrySelector
@@ -484,9 +485,9 @@ const CreateMemorialPage: React.FC = () => {
                     </div>
                 }
             </section>
-        );
-    }
-    return <SignupModal isOpen={isModalOpen} onClose={handleClose} />;
+            <SignupModal isOpen={isModalOpen} onClose={handleClose} />
+        </>
+    );
 };
 
 export default CreateMemorialPage;
