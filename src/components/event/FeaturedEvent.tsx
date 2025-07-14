@@ -9,6 +9,7 @@ interface FeaturedEventProps {
   location: string;
   eventName: string;
   date: string;
+  eventLink?: string;
 }
 
 const FeaturedEvent: React.FC<FeaturedEventProps> = ({
@@ -16,7 +17,15 @@ const FeaturedEvent: React.FC<FeaturedEventProps> = ({
   location,
   eventName,
   date,
+  eventLink,
 }) => {
+
+  const handleClick = () => {
+    if (eventLink) {
+      window.open(eventLink, "_blank", "noopener,noreferrer");
+    }
+  }
+
   return (
     <article className="flex relative flex-col justify-center p-2 my-auto bg-white min-w-60 shadow-[0px_0px_12px_rgba(0,0,0,0.06)] w-full md:w-[573px] h-[560px] max-w-full mt-4">
       <Image
@@ -39,7 +48,10 @@ const FeaturedEvent: React.FC<FeaturedEventProps> = ({
             </div>
           </div>
         </div>
-        <ViewEventButton variant="white" />
+        <ViewEventButton 
+        variant="white" 
+        onClick={handleClick}
+        />
       </div>
     </article>
   );

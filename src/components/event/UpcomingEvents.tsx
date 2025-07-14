@@ -147,6 +147,7 @@ const UpcomingEvents: React.FC = () => {
             location={getLocalizedText(currentFeaturedEvent.description[langKey], langKey)}
             eventName={getLocalizedText(currentFeaturedEvent.name[langKey], langKey)}
             date={new Date(currentFeaturedEvent.eventDate).toLocaleDateString()}
+            eventLink={currentFeaturedEvent.eventLink}
           />
         </div>
       )}
