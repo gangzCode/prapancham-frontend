@@ -32,8 +32,7 @@ const SecondNavbar: React.FC = () => {
   const translations: Record<LanguageKey, { [key: string]: string }> = {
     en: {
       home: "Home",
-      youtube: "Youtube",
-      podcast: "Podcast",
+      createMemorial: "Create Memorial",
       events: "Events",
       advertisement: "Advertisement",
       setting: "Setting",
@@ -44,8 +43,7 @@ const SecondNavbar: React.FC = () => {
     },
     ta: {
       home: "முகப்பு",
-      youtube: "யூடியூப்",
-      podcast: "பாட்காஸ்ட்",
+      createMemorial: "நினைவு உருவாக்கு",
       events: "நிகழ்வுகள்",
       advertisement: "விளம்பரம்",
       setting: "அமைப்பு",
@@ -55,8 +53,7 @@ const SecondNavbar: React.FC = () => {
     },
     si: {
       home: "මුල් පිටුව",
-      youtube: "යූටියුබ්",
-      podcast: "පොඩ්කාස්ට්",
+      createMemorial: "අනුස්මරණය නිර්මාණය",
       events: "සිදුවීම්",
       advertisement: "ප්‍රචාරණය",
       setting: "සැකසීම",
@@ -145,22 +142,35 @@ const SecondNavbar: React.FC = () => {
               <Menu className="w-5 h-5 md:w-6 md:h-6" />
             </button>
             <div className="flex flex-wrap gap-2 items-center text-sm md:text-base text-center whitespace-nowrap text-zinc-900 overflow-x-auto scrollbar-hide">
-              {["Home", "Youtube", "Podcast", "Events", "Advertisement"].map(
-                (page, index) => (
-                  <React.Fragment key={page}>
-                    {index > 0 && (
-                      <Minus className="hidden md:block h-4 w-[1px] bg-black" />
-                    )}
-                    <Link
-                      href={page === "Home" ? "/" : `/${page.toLowerCase()}`}
-                      onClick={() => handlePageClick(page)}
-                      className={`flex justify-center items-center px-2 py-1 rounded-md transition-colors duration-200 hover:text-link-hover font-poppins 
-                        ${selectedPage === page.toLowerCase() ? "text-link-hover font-bold" : "text-link"}`}
-                    >
-                      {t[page.toLowerCase() as keyof typeof t]}
-                    </Link>
-                  </React.Fragment>
-                )
+              {["Home", "Create Memorial", "Events", "Advertisement"].map(
+                (page, index) => {
+                  // Create proper translation key mapping
+                  const getTranslationKey = (pageName: string) => {
+                    switch(pageName) {
+                      case "Home": return "home";
+                      case "Create Memorial": return "createMemorial";
+                      case "Events": return "events";
+                      case "Advertisement": return "advertisement";
+                      default: return pageName.toLowerCase();
+                    }
+                  };
+
+                  return (
+                    <React.Fragment key={page}>
+                      {index > 0 && (
+                        <Minus className="hidden md:block h-4 w-[1px] bg-black" />
+                      )}
+                      <Link
+                        href={page === "Home" ? "/" : `/${page.toLowerCase().replace(/\s+/g, '-')}`}
+                        onClick={() => handlePageClick(page)}
+                        className={`flex justify-center items-center px-2 py-1 rounded-md transition-colors duration-200 hover:text-link-hover font-poppins 
+                          ${selectedPage === page.toLowerCase().replace(/\s+/g, '-') ? "text-link-hover font-bold" : "text-link"}`}
+                      >
+                        {t[getTranslationKey(page) as keyof typeof t]}
+                      </Link>
+                    </React.Fragment>
+                  );
+                }
               )}
               {/* TODO: Remove commented code if not needed in future for usage */}
               {/* <button className="flex items-center gap-1 px-2 py-1 hover:bg-stone-100 rounded-md transition-colors">
