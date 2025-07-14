@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Play, ChevronRight, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { TitleWithUnderline } from "../ui/title-with-underline";
 import useSWR from "swr";
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import { useSearchParams } from "next/navigation";
 
 interface PodcastEpisode {
   id: number;
@@ -34,8 +35,37 @@ const PodcastSection = ({
   const [currentPodcast, setCurrentPodcast] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const { language } = useLanguage();
+  const searchParams = useSearchParams();
 
   const langKey = language === "tamil" ? "ta" : language === "sinhala" ? "si" : "en";
+
+  // Handle URL parameter for podcast category
+  useEffect(() => {
+    const podcastCategory = searchParams.get('podcastCategory');
+    if (podcastCategory) {
+      const decodedCategory = decodeURIComponent(podcastCategory);
+      setActiveCategory(decodedCategory);
+      
+      // Scroll to this section when coming from dropdown navigation
+      setTimeout(() => {
+        const section = document.querySelector('#podcast-section');
+        if (section) {
+          section.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start',
+            inline: 'nearest'
+          });
+        }
+      }, 100);
+      
+      // Remove the parameter from URL without triggering a navigation
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('podcastCategory');
+        window.history.replaceState({}, '', url.toString());
+      }
+    }
+  }, [searchParams]);
 
   const { data: categoryData } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/podcast/categories`,
@@ -97,7 +127,7 @@ const PodcastSection = ({
   };
 
   return (
-    <section className=" px-4 md:px-8 lg:px-16  space-y-8 py-8">
+    <section id="podcast-section" className=" px-4 md:px-8 lg:px-16  space-y-8 py-8" data-section="podcast">
       <div className="flex justify-between items-center">
         <div className="flex-shrink min-w-0">
           <TitleWithUnderline text={title} underlineWidth={64} />
