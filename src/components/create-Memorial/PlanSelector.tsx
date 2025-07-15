@@ -60,7 +60,7 @@ const usePackages = (type: 'Obituary' | 'Rememberence', language: 'en' | 'ta' | 
                 planName: pkg.duration,
                 price: matchedPrice?.price ?? pkg.basePrice?.price ?? 0,
                 currency: matchedPrice?.country?.currencyCode ?? pkg.basePrice?.country?.currencyCode ?? '',
-                features: [...mainFeatures, ...addonFeatures],
+                features: [...mainFeatures],
                 isPremium: pkg.isPremium ?? false,
                 isObituary: pkg.isObituary ?? false,
                 isRemembarace: pkg.isRemembarace ?? false,

@@ -27,20 +27,17 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
 }) => {
     const [isChecked, setIsChecked] = useState(false);
 
-    const { data, error, isLoading } = useSWR(
-        `${process.env.NEXT_PUBLIC_API_URL}/obituaryRemembarance-packages/addons/active?page=1&limit=100`,
-        fetcher
-    );
-    const additionalServices = (data?.addons || []).map((addon: any) => {
+    const availableAddons = (selectedPlan?.addons || []).map((addon: any) => {
         const id = addon._id;
         const nameObj = addon.name?.[language]?.[0];
-        const priceObj = addon.priceList?.find((p: any) => p.country === selectedCountryId);
+        const priceObj = addon.priceList?.find((p: any) => p.country === selectedCountryId);        
         return {
             id: id,
             name: nameObj?.name || '',
-            price: priceObj?.price || '',
+            price: priceObj?.price || 0,
         };
     });
+    
     const addonsTotal = selectedAddon && Array.isArray(selectedAddon)
         ? selectedAddon.reduce((sum: number, addon: any) => {
             const addonPrice = typeof addon.price === 'number' ? addon.price : parseFloat(addon.price || '0');
@@ -132,14 +129,11 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
                     </div>
                     <Separator />
 
-                    {additionalServices
+                    {availableAddons
                         .filter((service: { id: any; }) => {
-                            const selectedAddonIds = [
-                                ...(selectedPlan.addons || []).map((a: any) => a._id),
-                                ...(selectedAddon ? selectedAddon.map((a: any) => a.id) : [])
-                            ];
-
-                            return !selectedAddonIds.includes(service.id);
+                            // Only filter out addons that the user has manually selected
+                            const userSelectedAddonIds = selectedAddon ? selectedAddon.map((a: any) => a.id) : [];
+                            return !userSelectedAddonIds.includes(service.id);
                         })
                         .map(
                             (
@@ -165,12 +159,10 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
                             )
                         )
                     }
-                    {additionalServices.filter((service: { id: any; }) => {
-                        const selectedAddonIds = [
-                            ...(selectedPlan.addons || []).map((a: any) => a._id),
-                            ...(selectedAddon ? selectedAddon.map((a: any) => a.id) : [])
-                        ];
-                        return !selectedAddonIds.includes(service.id);
+                    {availableAddons.filter((service: { id: any; }) => {
+                        // Only filter out addons that the user has manually selected
+                        const userSelectedAddonIds = selectedAddon ? selectedAddon.map((a: any) => a.id) : [];
+                        return !userSelectedAddonIds.includes(service.id);
                     }).length === 0 && (
                             <div className="text-center text-gray-500 mt-4">
                                 {language === 'en' && 'No more add-ons available'}
