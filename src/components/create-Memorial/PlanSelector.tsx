@@ -61,6 +61,7 @@ const usePackages = (type: 'Obituary' | 'Rememberence', language: 'en' | 'ta' | 
                 price: matchedPrice?.price ?? pkg.basePrice?.price ?? 0,
                 currency: matchedPrice?.country?.currencyCode ?? pkg.basePrice?.country?.currencyCode ?? '',
                 features: [...mainFeatures],
+                addonsFeatures: [...addonFeatures],
                 isPremium: pkg.isPremium ?? false,
                 isObituary: pkg.isObituary ?? false,
                 isRemembarace: pkg.isRemembarace ?? false,
@@ -136,6 +137,7 @@ const PlanSelector: React.FC<PlanSelectorProps> = ({
                                     planName: string;
                                     price: any;
                                     features: string[];
+                                    addonsFeatures?: string[];
                                     isPremium: any;
                                 },
                                 index: React.Key | null | undefined
@@ -153,6 +155,7 @@ const PlanSelector: React.FC<PlanSelectorProps> = ({
                                     price={Number(plan.price)}
                                     currency={plan.currency}
                                     features={plan.features}
+                                    addons={plan.addonsFeatures || []}
                                     isPremium={plan.isPremium ?? false}
                                     setActiveStep={setActiveStep}
                                     language={language}

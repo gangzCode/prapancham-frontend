@@ -33,7 +33,7 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
         const priceObj = addon.priceList?.find((p: any) => p.country === selectedCountryId);        
         return {
             id: id,
-            name: nameObj?.name || '',
+            name: nameObj?.value || '',
             price: priceObj?.price || 0,
         };
     });
