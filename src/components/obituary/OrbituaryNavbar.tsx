@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Search, X } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import FilterObituary, { FilterOptions } from "./FilterObituary";
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import SignupModal from "../siginin/SignupModal ";
 
 type LanguageKey = "en" | "ta" | "si";
 
@@ -17,6 +19,12 @@ interface OrbituaryNavbarProps {
 
 const OrbituaryNavbar = ({ onSearch, onFilter, onReset, isLoading = false }: OrbituaryNavbarProps) => {
     const { language } = useLanguage();
+    const router = useRouter();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [authLoading, setAuthLoading] = useState(true);
+    const [redirectAfterLogin, setRedirectAfterLogin] = useState<string | undefined>(undefined);
+    
     let langKey: LanguageKey = "en";
     if (language === "tamil") langKey = "ta";
     else if (language === "sinhala") langKey = "si";
@@ -39,6 +47,49 @@ const OrbituaryNavbar = ({ onSearch, onFilter, onReset, isLoading = false }: Orb
     const t = translations[langKey];
     const [search, setSearch] = useState("");
     const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+
+    // Check authentication status
+    useEffect(() => {
+        const checkAuth = () => {
+            const user = localStorage.getItem("user");
+            if (user) {
+                try {
+                    const token = localStorage.getItem("accessToken");
+                    if (token) {
+                        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+                        const currentTime = Math.floor(Date.now() / 1000);
+                        if (decodedToken.exp && decodedToken.exp > currentTime) {
+                            setIsAuthenticated(true);
+                        } else {
+                            setIsAuthenticated(false);
+                        }
+                    } else {
+                        setIsAuthenticated(false);
+                    }
+                } catch (error) {
+                    setIsAuthenticated(false);
+                }
+            } else {
+                setIsAuthenticated(false);
+            }
+            setAuthLoading(false);
+        };
+
+        checkAuth();
+        const interval = setInterval(checkAuth, 1000);
+        return () => clearInterval(interval);
+    }, [isModalOpen]);
+
+    // Handle Create Memorial button click
+    const handleCreateMemorialClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        if (isAuthenticated) {
+            router.push('/create-memorial');
+        } else {
+            setRedirectAfterLogin('/create-memorial');
+            setIsModalOpen(true);
+        }
+    };
 
     // Handle search with debouncing
     const handleSearchChange = (value: string) => {
@@ -119,16 +170,25 @@ const OrbituaryNavbar = ({ onSearch, onFilter, onReset, isLoading = false }: Orb
 
                     <button
                         className="bg-[#880002] text-white py-4 px-6 rounded shadow w-full sm:w-auto"
+                        onClick={handleCreateMemorialClick}
+                        disabled={authLoading}
                     >
-                        <Link
-                            href={"/create-memorial"}>
-                            {t.createMemorial}
-                        </Link>
+                        {t.createMemorial}
                     </button>
                 </div>
 
 
             </div>
+            
+            {/* Signup Modal */}
+            <SignupModal 
+                isOpen={isModalOpen} 
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setRedirectAfterLogin(undefined);
+                }} 
+                redirectTo={redirectAfterLogin}
+            />
         </div>
     );
 };
