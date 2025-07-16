@@ -109,10 +109,24 @@ const DropMenu: React.FC<DropMenuProps> = ({ onClose }) => {
                               );
         
         if (podcastSection) {
-          podcastSection.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start',
-            inline: 'nearest'
+          // Get the height of any fixed headers/navbars
+          const fixedHeaders = document.querySelectorAll('nav, header, [class*="fixed"], [class*="sticky"]');
+          let headerHeight = 0;
+          
+          fixedHeaders.forEach(header => {
+            const rect = header.getBoundingClientRect();
+            const computedStyle = window.getComputedStyle(header);
+            if (computedStyle.position === 'fixed' || computedStyle.position === 'sticky') {
+              headerHeight = Math.max(headerHeight, rect.height);
+            }
+          });
+          
+          // Add some extra padding (20px) to ensure content is not hidden
+          const offsetTop = podcastSection.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+          
+          window.scrollTo({
+            top: offsetTop,
+            behavior: 'smooth'
           });
         } else {
           // If still not found, try again after a longer delay
@@ -120,10 +134,22 @@ const DropMenu: React.FC<DropMenuProps> = ({ onClose }) => {
             const retrySection = document.querySelector('#podcast-section') || 
                                 document.querySelector('[data-section="podcast"]');
             if (retrySection) {
-              retrySection.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start',
-                inline: 'nearest'
+              const fixedHeaders = document.querySelectorAll('nav, header, [class*="fixed"], [class*="sticky"]');
+              let headerHeight = 0;
+              
+              fixedHeaders.forEach(header => {
+                const rect = header.getBoundingClientRect();
+                const computedStyle = window.getComputedStyle(header);
+                if (computedStyle.position === 'fixed' || computedStyle.position === 'sticky') {
+                  headerHeight = Math.max(headerHeight, rect.height);
+                }
+              });
+              
+              const offsetTop = retrySection.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+              
+              window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
               });
             }
           }, 500);
@@ -132,7 +158,7 @@ const DropMenu: React.FC<DropMenuProps> = ({ onClose }) => {
 
       // Initial attempt
       scrollToPodcastSection();
-    }, 300);
+    }, 500); // Increased timeout for deployed sites
   };
 
   // Handle obituary menu click
