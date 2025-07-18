@@ -3,13 +3,15 @@ import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import toast from "react-hot-toast";
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import { useRouter } from "next/navigation";
 
 type SignupModalProps = {
     isOpen: boolean;
     onClose: () => void;
+    redirectTo?: string;
 };
 
-const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
+const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose, redirectTo }) => {
     const [activeTab, setActiveTab] = useState("signin");
     const [signupData, setSignupData] = useState({ username: "", email: "", password: "", confirmPassword: "" });
     const [signupLoading, setSignupLoading] = useState(false);
@@ -29,6 +31,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
     const [resetError, setResetError] = useState("");
     const [resetSuccess, setResetSuccess] = useState("");
     const { language } = useLanguage();
+    const router = useRouter();
 
     type LanguageKey = 'en' | 'ta' | 'si';
     const translations: Record<LanguageKey, { [key: string]: string }> = {
@@ -296,6 +299,11 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose }) => {
                 localStorage.setItem("user", JSON.stringify(userData));
                 toast.success(t.loginSuccessful);
                 handleClose();
+                
+                // Redirect if redirectTo prop is provided
+                if (redirectTo) {
+                    router.push(redirectTo);
+                }
             } else {
                 setLoginError(data?.message || t.login_failed);
                 toast.error(data?.message || t.login_failed);

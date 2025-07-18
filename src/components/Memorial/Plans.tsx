@@ -6,6 +6,7 @@ interface PlansProps {
     currency: string;
     language?: 'en' | 'ta' | 'si';
     features: string[];
+    addons: string[];
     plan: any;
     isPremium: boolean;
     setActiveStep: (step: number) => void;
@@ -17,6 +18,7 @@ const Plans: React.FC<PlansProps> = ({
     planName,
     price,
     features,
+    addons,
     isPremium,
     setActiveStep,
     currency,
@@ -54,6 +56,30 @@ const Plans: React.FC<PlansProps> = ({
                         </li>
                     ))}
                 </ul>
+
+                {/* Display Available Addons */}
+                {addons && addons.length > 0 && (
+                    <>
+                        <hr className="my-4" />
+                        <div className="mb-6">
+                            <h3 className="text-sm font-semibold text-gray-800 mb-3 text-center">
+                                {language === 'ta'
+                                    ? 'கூடுதல் சேவைகள்'
+                                    : language === 'si'
+                                        ? 'අමතර සේවා'
+                                        : 'Available Add-ons'}
+                            </h3>
+                            <ul className="text-gray-600 text-sm">
+                                {addons.map((addon, index) => (
+                                    <li key={index} className="flex items-center justify-center mb-2">
+                                        <div className="w-2 h-2 bg-teal-600 rounded-full mr-2"></div>
+                                        {addon}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </>
+                )}
                 <button
                     onClick={() => {
                         setActiveStep(2);

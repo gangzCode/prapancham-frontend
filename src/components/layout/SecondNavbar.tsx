@@ -22,6 +22,7 @@ const SecondNavbar: React.FC = () => {
   const [selectedPage, setSelectedPage] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [redirectAfterLogin, setRedirectAfterLogin] = useState<string | undefined>(undefined);
   const pathname = usePathname();
   const router = useRouter();
   const [showPopup, setShowPopup] = useState(false);
@@ -155,19 +156,43 @@ const SecondNavbar: React.FC = () => {
                     }
                   };
 
+                  const handleCreateMemorialClick = (e: React.MouseEvent) => {
+                    e.preventDefault();
+                    if (page === "Create Memorial") {
+                      if (isAuthenticated) {
+                        router.push('/create-memorial');
+                      } else {
+                        setRedirectAfterLogin('/create-memorial');
+                        setIsModalOpen(true);
+                      }
+                    } else {
+                      handlePageClick(page);
+                    }
+                  };
+
                   return (
                     <React.Fragment key={page}>
                       {index > 0 && (
                         <Minus className="hidden md:block h-4 w-[1px] bg-black" />
                       )}
-                      <Link
-                        href={page === "Home" ? "/" : `/${page.toLowerCase().replace(/\s+/g, '-')}`}
-                        onClick={() => handlePageClick(page)}
-                        className={`flex justify-center items-center px-2 py-1 rounded-md transition-colors duration-200 hover:text-link-hover font-poppins 
-                          ${selectedPage === page.toLowerCase().replace(/\s+/g, '-') ? "text-link-hover font-bold" : "text-link"}`}
-                      >
-                        {t[getTranslationKey(page) as keyof typeof t]}
-                      </Link>
+                      {page === "Create Memorial" ? (
+                        <button
+                          onClick={handleCreateMemorialClick}
+                          className={`flex justify-center items-center px-2 py-1 rounded-md transition-colors duration-200 hover:text-link-hover font-poppins 
+                            ${selectedPage === page.toLowerCase().replace(/\s+/g, '-') ? "text-link-hover font-bold" : "text-link"}`}
+                        >
+                          {t[getTranslationKey(page) as keyof typeof t]}
+                        </button>
+                      ) : (
+                        <Link
+                          href={page === "Home" ? "/" : `/${page.toLowerCase().replace(/\s+/g, '-')}`}
+                          onClick={() => handlePageClick(page)}
+                          className={`flex justify-center items-center px-2 py-1 rounded-md transition-colors duration-200 hover:text-link-hover font-poppins 
+                            ${selectedPage === page.toLowerCase().replace(/\s+/g, '-') ? "text-link-hover font-bold" : "text-link"}`}
+                        >
+                          {t[getTranslationKey(page) as keyof typeof t]}
+                        </Link>
+                      )}
                     </React.Fragment>
                   );
                 }
@@ -290,7 +315,14 @@ const SecondNavbar: React.FC = () => {
                   {t.signIn} / {t.signUp}
                 </button>
               ))}
-              <SignupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+              <SignupModal 
+                isOpen={isModalOpen} 
+                onClose={() => {
+                  setIsModalOpen(false);
+                  setRedirectAfterLogin(undefined);
+                }} 
+                redirectTo={redirectAfterLogin}
+              />
             </div>
           </div>
         </nav>
