@@ -69,14 +69,62 @@ const Advertisement = () => {
         en: {
             posts: "Posts",
             allCategories: "All Categories",
+            loadingAds: "Loading advertisements...",
+            pleaseWait: "Please wait while we fetch the latest ads",
+            noAdsFound: "No Advertisements Found",
+            noAdsCategory: "There are currently no advertisements in this category. Try browsing other categories.",
+            noAds: "There are currently no advertisements available. Please check back later.",
+            wantToAdvertise: "Want to Advertise Here?",
+            contactToPost: "Contact us to post your advertisements and reach thousands of viewers",
+            clickToWhatsApp: "Click to message us on WhatsApp!",
+            clickToMessage: "Click to message us!",
+            contactToPostShort: "Contact us to post your advertisements",
+            submitted: "Submitted",
+            submitting: "Submitting...",
+            errorLoading: "Error loading advertisements.",
+            notProvided: "Not provided",
+            ads: "Ads",
+            additionalFullWidth: "Additional Full Width Ads",
         },
         ta: {
             posts: "பதிவுகள்",
             allCategories: "அனைத்து வகைகள்",
+            loadingAds: "விளம்பரங்கள் ஏற்றப்படுகின்றன...",
+            pleaseWait: "தயவுசெய்து காத்திருங்கள்",
+            noAdsFound: "விளம்பரங்கள் எதுவும் கிடைக்கவில்லை",
+            noAdsCategory: "இந்த வகையில் தற்போது விளம்பரங்கள் எதுவும் இல்லை. வேறு வகையை முயற்சிக்கவும்.",
+            noAds: "தற்போது விளம்பரங்கள் எதுவும் கிடைக்கவில்லை. பின்னர் மீண்டும் சரிபார்க்கவும்.",
+            wantToAdvertise: "விளம்பரம் செய்ய விரும்புகிறீர்களா?",
+            contactToPost: "உங்கள் விளம்பரங்களை இடுகையிட எங்களை தொடர்பு கொள்ளுங்கள்",
+            clickToWhatsApp: "WhatsApp இல் செய்தி அனுப்ப கிளிக் செய்யவும்!",
+            clickToMessage: "செய்தி அனுப்ப கிளிக் செய்யவும்!",
+            contactToPostShort: "உங்கள் விளம்பரங்களை இடுகையிட எங்களை தொடர்பு கொள்ளுங்கள்",
+            submitted: "சமர்ப்பிக்கப்பட்டது",
+            submitting: "சமர்ப்பிக்கப்படுகிறது...",
+            errorLoading: "விளம்பரங்களை ஏற்றுவதில் பிழை.",
+            notProvided: "வழங்கப்படவில்லை",
+            ads: "விளம்பரங்கள்",
+            additionalFullWidth: "கூடுதல் முழு அகலம் விளம்பரங்கள்",
         },
         si: {
             posts: "පිටු",
             allCategories: "සියලුම කාණ්ඩ",
+            loadingAds: "දැන්වීම් පූරණය වෙමින්...",
+            pleaseWait: "කරුණාකර රැඳී සිටින්න",
+            noAdsFound: "දැන්වීම් සොයා ගත නොහැකි විය",
+            noAdsCategory: "මෙම කාණ්ඩයේ දැනට දැන්වීම් නොමැත. වෙනත් කාණ්ඩයක් උත්සාහ කරන්න.",
+            noAds: "දැනට දැන්වීම් නොමැත. කරුණාකර පසුව නැවත පරීක්ෂා කරන්න.",
+            wantToAdvertise: "ප්‍රචාරණය කිරීමට අවශ්‍යද?",
+            contactToPost: "ඔබේ දැන්වීම් පළ කිරීමට අප හා සම්බන්ධ වන්න",
+            clickToWhatsApp: "WhatsApp මගින් පණිවිඩ යැවීමට ක්ලික් කරන්න!",
+            clickToMessage: "පණිවිඩ යැවීමට ක්ලික් කරන්න!",
+            contactToPostShort: "ඔබේ දැන්වීම් පළ කිරීමට අප හා සම්බන්ධ වන්න",
+            submitted: "ඉදිරිපත් කරන ලදී",
+            submitting: "ඉදිරිපත් කරමින්...",
+            errorLoading: "දැන්වීම් පූරණය කිරීමේ දෝෂයක්.",
+            notProvided: "නොපවතින",
+            ads: "දැන්වීම්",
+            additionalFullWidth: "අමතර සම්පූර්ණ පළල දැන්වීම්",
         },
     };
     const t = translations[langKey];
@@ -168,21 +216,15 @@ const Advertisement = () => {
                         <div className="w-12 h-12 border-4 border-gray-200 border-t-primary rounded-full animate-spin"></div>
                         <div className="absolute inset-0 w-12 h-12 border-4 border-transparent border-r-teal-300 rounded-full animate-ping"></div>
                     </div>
-                    
                     {/* Loading text with fade animation */}
                     <div className="text-center space-y-2">
                         <h2 className="text-xl font-semibold text-gray-700 animate-pulse">
-                            {language === "tamil" ? "விளம்பரங்கள் ஏற்றப்படுகின்றன..." : 
-                             language === "sinhala" ? "දැන්වීම් පූරණය වෙමින්..." : 
-                             "Loading advertisements..."}
+                            {t.loadingAds}
                         </h2>
                         <p className="text-sm text-gray-500">
-                            {language === "tamil" ? "தயவுசெய்து காத்திருங்கள்" : 
-                             language === "sinhala" ? "කරුණාකර රැඳී සිටින්න" : 
-                             "Please wait while we fetch the latest ads"}
+                            {t.pleaseWait}
                         </p>
                     </div>
-                    
                     {/* Loading bars animation */}
                     <div className="flex space-x-1">
                         <div className="w-2 h-8 bg-primary rounded animate-pulse" style={{animationDelay: '0ms'}}></div>
@@ -199,7 +241,7 @@ const Advertisement = () => {
     if (adsError) {
         return (
             <div className="mt-8 py-8 px-4 md:px-8 lg:px-16">
-                <div className="text-center text-red-500">Error loading advertisements.</div>
+                <div className="text-center text-red-500">{t.errorLoading}</div>
             </div>
         );
     }
@@ -222,7 +264,6 @@ const Advertisement = () => {
                         >
                             {t.allCategories} ({totalAdCount} {t.posts})
                         </button>
-                        
                         {/* Category Tabs */}
                         {categoriesData?.map((category: any) => {
                             const langObj = category.name[langKey]?.[0] || category.name["en"]?.[0];
@@ -242,7 +283,6 @@ const Advertisement = () => {
                         })}
                     </div>
                 </div>
-
                 {/* No Ads Message */}
                 <div className="py-8 px-4 md:px-8 lg:px-16">
                     <div className="flex flex-col items-center justify-center min-h-[400px] space-y-6">
@@ -254,51 +294,31 @@ const Advertisement = () => {
                                 </svg>
                             </div>
                         </div>
-                        
                         {/* No ads text */}
                         <div className="text-center space-y-3">
                             <h2 className="text-2xl font-semibold text-gray-700">
-                                {language === "tamil" ? "விளம்பரங்கள் எதுவும் கிடைக்கவில்லை" : 
-                                 language === "sinhala" ? "දැන්වීම් සොයා ගත නොහැකි විය" : 
-                                 "No Advertisements Found"}
+                                {t.noAdsFound}
                             </h2>
                             <p className="text-gray-500 max-w-md">
-                                {language === "tamil" ? 
-                                    selectedAdCategory 
-                                        ? "இந்த வகையில் தற்போது விளம்பரங்கள் எதுவும் இல்லை. வேறு வகையை முயற்சிக்கவும்." 
-                                        : "தற்போது விளம்பரங்கள் எதுவும் கிடைக்கவில்லை. பின்னர் மீண்டும் சரிபார்க்கவும்."
-                                 : language === "sinhala" ? 
-                                    selectedAdCategory 
-                                        ? "මෙම කාණ්ඩයේ දැනට දැන්වීම් නොමැත. වෙනත් කාණ්ඩයක් උත්සාහ කරන්න." 
-                                        : "දැනට දැන්වීම් නොමැත. කරුණාකර පසුව නැවත පරීක්ෂා කරන්න."
-                                 : selectedAdCategory 
-                                    ? "There are currently no advertisements in this category. Try browsing other categories." 
-                                    : "There are currently no advertisements available. Please check back later."}
+                                {selectedAdCategory ? t.noAdsCategory : t.noAds}
                             </p>
                         </div>
-
                         {/* Call to action */}
                         <div className="bg-gradient-to-br from-teal-600 to-teal-800 rounded-lg p-6 text-center text-white max-w-md cursor-pointer hover:from-teal-700 hover:to-teal-900 transition-colors"
                             onClick={handleWhatsAppClick}
                         >
                             <h3 className="text-lg font-bold mb-3">
-                                {language === "tamil" ? "விளம்பரம் செய்ய விரும்புகிறீர்களா?" : 
-                                 language === "sinhala" ? "ප්‍රචාරණය කිරීමට අවශ්‍යද?" : 
-                                 "Want to Advertise Here?"}
+                                {t.wantToAdvertise}
                             </h3>
                             <p className="text-sm mb-4 opacity-90">
-                                {language === "tamil" ? "உங்கள் விளம்பரங்களை இடுகையிட எங்களை தொடர்பு கொள்ளுங்கள்" : 
-                                 language === "sinhala" ? "ඔබේ දැන්වීම් පළ කිරීමට අප හා සම්බන්ධ වන්න" : 
-                                 "Contact us to post your advertisements and reach thousands of viewers"}
+                                {t.contactToPost}
                             </p>
                             <div className="flex items-center justify-center gap-2">
                                 <span className="text-green-300">💬</span>
                                 <span className="font-medium">+94 77 002 33 23</span>
                             </div>
                             <p className="text-xs mt-2 opacity-80">
-                                {language === "tamil" ? "WhatsApp இல் செய்தி அனுப்ப கிளிக் செய்யவும்!" : 
-                                 language === "sinhala" ? "WhatsApp මගින් පණිවිඩ යැවීමට ක්ලික් කරන්න!" : 
-                                 "Click to message us on WhatsApp!"}
+                                {t.clickToWhatsApp}
                             </p>
                         </div>
                     </div>
@@ -381,10 +401,10 @@ const Advertisement = () => {
                                     <div className="aspect-video w-full h-full relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
                                         <div className="text-center text-white p-6">
                                             <h3 className="text-xl md:text-2xl font-bold mb-4">
-                                                Want to Advertise Here?
+                                                {t.wantToAdvertise}
                                             </h3>
                                             <p className="text-sm md:text-base mb-4 opacity-90">
-                                                Contact us to post your advertisements and reach thousands of viewers
+                                                {t.contactToPost}
                                             </p>
                                             <div className="space-y-2">
                                                 <p className="text-sm md:text-base font-medium flex items-center justify-center gap-2">
@@ -392,7 +412,7 @@ const Advertisement = () => {
                                                     +94 77 002 33 23
                                                 </p>
                                                 <p className="text-xs md:text-sm opacity-80">
-                                                    Click to message us on WhatsApp!
+                                                    {t.clickToWhatsApp}
                                                 </p>
                                             </div>
                                         </div>
@@ -409,10 +429,10 @@ const Advertisement = () => {
                                         <div className="aspect-video w-full h-full relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
                                             <div className="text-center text-white p-6">
                                                 <h3 className="text-xl md:text-2xl font-bold mb-4">
-                                                    Want to Advertise Here?
+                                                    {t.wantToAdvertise}
                                                 </h3>
                                                 <p className="text-sm md:text-base mb-4 opacity-90">
-                                                    Contact us to post your advertisements and reach thousands of viewers
+                                                    {t.contactToPost}
                                                 </p>
                                                 <div className="space-y-2">
                                                     <p className="text-sm md:text-base font-medium flex items-center justify-center gap-2">
@@ -420,7 +440,7 @@ const Advertisement = () => {
                                                         +94 77 002 33 23
                                                     </p>
                                                     <p className="text-xs md:text-sm opacity-80">
-                                                        Click to message us on WhatsApp!
+                                                        {t.clickToWhatsApp}
                                                     </p>
                                                 </div>
                                             </div>
@@ -434,10 +454,10 @@ const Advertisement = () => {
                                         <div className="aspect-video w-full h-full relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
                                             <div className="text-center text-white p-6">
                                                 <h3 className="text-xl md:text-2xl font-bold mb-4">
-                                                    Want to Advertise Here?
+                                                    {t.wantToAdvertise}
                                                 </h3>
                                                 <p className="text-sm md:text-base mb-4 opacity-90">
-                                                    Contact us to post your advertisements and reach thousands of viewers
+                                                    {t.contactToPost}
                                                 </p>
                                                 <div className="space-y-2">
                                                     <p className="text-sm md:text-base font-medium flex items-center justify-center gap-2">
@@ -445,7 +465,7 @@ const Advertisement = () => {
                                                         +94 77 002 33 23
                                                     </p>
                                                     <p className="text-xs md:text-sm opacity-80">
-                                                        Click to message us on WhatsApp!
+                                                        {t.clickToWhatsApp}
                                                     </p>
                                                 </div>
                                             </div>
@@ -462,10 +482,10 @@ const Advertisement = () => {
                                     <div className="aspect-video w-full h-full relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
                                         <div className="text-center text-white p-6">
                                             <h3 className="text-xl md:text-2xl font-bold mb-4">
-                                                Want to Advertise Here?
+                                                {t.wantToAdvertise}
                                             </h3>
                                             <p className="text-sm md:text-base mb-4 opacity-90">
-                                                Contact us to post your advertisements and reach thousands of viewers
+                                                {t.contactToPost}
                                             </p>
                                             <div className="space-y-2">
                                                 <p className="text-sm md:text-base font-medium flex items-center justify-center gap-2">
@@ -473,7 +493,7 @@ const Advertisement = () => {
                                                     +94 77 002 33 23
                                                 </p>
                                                 <p className="text-xs md:text-sm opacity-80">
-                                                    Click to message us on WhatsApp!
+                                                    {t.clickToWhatsApp}
                                                 </p>
                                             </div>
                                         </div>
@@ -520,10 +540,10 @@ const Advertisement = () => {
                                     <div className="aspect-video w-full h-full relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
                                         <div className="text-center text-white p-6">
                                             <h3 className="text-xl md:text-2xl font-bold mb-4">
-                                                Want to Advertise Here?
+                                                {t.wantToAdvertise}
                                             </h3>
                                             <p className="text-sm md:text-base mb-4 opacity-90">
-                                                Contact us to post your advertisements and reach thousands of viewers
+                                                {t.contactToPost}
                                             </p>
                                             <div className="space-y-2">
                                                 <p className="text-sm md:text-base font-medium flex items-center justify-center gap-2">
@@ -531,7 +551,7 @@ const Advertisement = () => {
                                                     +94 77 002 33 23
                                                 </p>
                                                 <p className="text-xs md:text-sm opacity-80">
-                                                    Click to message us on WhatsApp!
+                                                    {t.clickToWhatsApp}
                                                 </p>
                                             </div>
                                         </div>
@@ -565,10 +585,10 @@ const Advertisement = () => {
                                     <div className="aspect-square w-full h-full relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
                                         <div className="text-center text-white p-4">
                                             <h3 className="text-lg font-bold mb-2">
-                                                Want to Advertise Here?
+                                                {t.wantToAdvertise}
                                             </h3>
                                             <p className="text-xs mb-2 opacity-90">
-                                                Contact us to post your advertisements
+                                                {t.contactToPost}
                                             </p>
                                             <div className="space-y-1">
                                                 <p className="text-xs font-medium flex items-center justify-center gap-1">
@@ -576,7 +596,7 @@ const Advertisement = () => {
                                                     +94 77 002 33 23
                                                 </p>
                                                 <p className="text-xs opacity-80">
-                                                    Click to message us!
+                                                    {t.clickToMessage}
                                                 </p>
                                             </div>
                                         </div>

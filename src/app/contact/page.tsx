@@ -185,9 +185,7 @@ const ContactPage: React.FC = () => {
               Get In Touch With Us
             </h1>
             <p className="text-center text-sm sm:text-base md:text-lg max-w-xl md:max-w-2xl lg:max-w-3xl">
-              Lorem ipsum dolor sit amet consectetur. Tellus nisi risus tellus
-              ac hendrerit nisi convallis Lorem ipsum dolor sit amet
-              consectetur. Tellus nisi risus tellus ac hendrerit.
+              
             </p>
           </div>
         </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
+import { useLanguage } from "@/components/ui/LanguageProvider";
 
 interface ContactCardProps {
   title: string;
@@ -86,6 +87,45 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
 }) => {
   const [adData, setAdData] = useState<AdData[]>([]);
   const [loading, setLoading] = useState(true);
+  const { language } = useLanguage();
+  type LanguageKey = 'en' | 'ta' | 'si';
+  let langKey: LanguageKey;
+  if (language === "tamil") langKey = "ta";
+  else if (language === "sinhala") langKey = "si";
+  else langKey = "en";
+  const translations: Record<LanguageKey, { [key: string]: string }> = {
+    en: {
+      wantToAdvertise: "Want to Advertise Here?",
+      contactToPost: "Contact us to post your advertisements",
+      clickToMessage: "Click to message us!",
+      contactAds: "Contact Us For Advertisements",
+      contactObituary: "Contact Us For Obituary News",
+      forMoreDetails: "For More Details Contact Us",
+      listenPodcast: "Listen To Our Podcast Now",
+      visitYouTube: "Visit our YouTube Now",
+    },
+    ta: {
+      wantToAdvertise: "விளம்பரம் செய்ய விரும்புகிறீர்களா?",
+      contactToPost: "உங்கள் விளம்பரங்களை இடுகையிட எங்களை தொடர்பு கொள்ளுங்கள்",
+      clickToMessage: "செய்தி அனுப்ப கிளிக் செய்யவும்!",
+      contactAds: "விளம்பரங்களுக்கு எங்களை தொடர்பு கொள்ளுங்கள்",
+      contactObituary: "மரண அறிவிப்புகளுக்கு எங்களை தொடர்பு கொள்ளுங்கள்",
+      forMoreDetails: "மேலும் விவரங்களுக்கு எங்களை தொடர்பு கொள்ளுங்கள்",
+      listenPodcast: "எங்கள் பாட்காஸ்டை இப்போது கேளுங்கள்",
+      visitYouTube: "எங்கள் YouTube இப்போது பார்வையிடுங்கள்",
+    },
+    si: {
+      wantToAdvertise: "ප්‍රචාරණය කිරීමට අවශ්‍යද?",
+      contactToPost: "ඔබේ දැන්වීම් පළ කිරීමට අප හා සම්බන්ධ වන්න",
+      clickToMessage: "පණිවිඩ යැවීමට ක්ලික් කරන්න!",
+      contactAds: "ප්‍රචාරණ සඳහා අපව අමතන්න",
+      contactObituary: "මරණ දැන්වීම් සඳහා අපව අමතන්න",
+      forMoreDetails: "වැඩි විස්තර සඳහා අපව අමතන්න",
+      listenPodcast: "අපගේ පොඩ්කාස්ට් දැන් අහන්න",
+      visitYouTube: "අපගේ YouTube දැන් බලන්න",
+    },
+  };
+  const t = translations[langKey];
 
   useEffect(() => {
     const fetchAds = async () => {
@@ -167,14 +207,14 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
     >
       <div className="space-y-2 sm:space-y-3 md:space-y-4">
         <ContactCard
-          title="Contact Us For Advertisements"
+          title={t.contactAds}
           phone="+94 77 002 33 23"
         />
 
         <Separator className="hidden sm:block" />
 
         <ContactCard
-          title="Contact Us For Obituary News"
+          title={t.contactObituary}
           phone="+94 77 002 33 23"
         />
       </div>
@@ -215,10 +255,10 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
                   <div className="aspect-[21/9] sm:aspect-[16/9] md:aspect-[21/9] relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
                     <div className="text-center text-white p-2 sm:p-3">
                       <h3 className="text-xs sm:text-sm font-bold mb-1 sm:mb-2">
-                        Want to Advertise Here?
+                        {t.wantToAdvertise}
                       </h3>
                       <p className="text-xs mb-1 opacity-90 hidden sm:block">
-                        Contact us to post your advertisements
+                        {t.contactToPost}
                       </p>
                       <div className="space-y-1">
                         <p className="text-xs font-medium flex items-center justify-center gap-1">
@@ -226,7 +266,7 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
                           +94 77 002 33 23
                         </p>
                         <p className="text-xs opacity-80 hidden sm:block">
-                          Click to message us!
+                          {t.clickToMessage}
                         </p>
                       </div>
                     </div>
@@ -240,7 +280,7 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
 
       <div className="mt-4 sm:mt-4 md:mt-4">
         <h3 className="text-sm sm:text-base md:text-heading-base text-secondary mb-2">
-          For More Details Contact Us
+          {t.forMoreDetails}
         </h3>
         <div className="space-y-1 sm:space-y-2">
           {[1, 2, 3, 4].map((_, index) => (
@@ -266,7 +306,7 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
             height={24}
             className="w-6 h-6 sm:w-8 sm:h-8"
           />
-          <span>Listen To Our Podcast Now</span>
+          <span>{t.listenPodcast}</span>
         </a>
         
         <a
@@ -280,7 +320,7 @@ const AdvertisementSidebar: React.FC<AdvertisementSidebarProps> = ({
             height={24}
             className="w-6 h-6 sm:w-8 sm:h-8"
           />
-          <span>Visit our YouTube Now</span>
+          <span>{t.visitYouTube}</span>
         </a>
       </div>
     </div>
