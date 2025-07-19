@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from "@/components/ui/LanguageProvider";
 import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { ObituaryEntry } from '../hero/types';
 
@@ -13,12 +14,131 @@ interface cardTemplateData {
     __v: number;
 }
 
+type LanguageKey = "en" | "ta" | "si";
+
 const CardFormWithStepper = (
     props: {
         cardTemplates: cardTemplateData[];
         obituaryEntry: ObituaryEntry;
     }
 ) => {
+    const { language } = useLanguage();
+    let langKey: LanguageKey = "en";
+    if (language === "tamil") langKey = "ta";
+    else if (language === "sinhala") langKey = "si";
+
+    const translations: Record<LanguageKey, { [key: string]: string }> = {
+        en: {
+            chooseCardDesign: "Choose a Card Design",
+            selectDesign: "You can select a design from the options below",
+            loadingTemplates: "Loading card templates...",
+            noTemplates: "No card templates available at the moment.",
+            selectTemplatePreview: "Select a template to preview",
+            cardDesignAppear: "Your card design will appear here",
+            message: "Message",
+            messagePlaceholder: "Write your message for the card...",
+            maxChars: "Maximum 2000 characters allowed",
+            name: "Name",
+            namePlaceholder: "Your full name",
+            relationship: "Relationship/Organization",
+            relationshipPlaceholder: "e.g., Friend, Colleague, Family member",
+            country: "Country",
+            countryPlaceholder: "Your country",
+            next: "Next",
+            back: "Back",
+            close: "Close",
+            submitCard: "Submit Card",
+            submitting: "Submitting...",
+            submitted: "Submitted",
+            reviewCard: "Review Your Card",
+            reviewCardDetails: "Please review your card details before submitting",
+            cardSubmitted: "Card submitted successfully!",
+            cardSent: "Your tribute card has been sent.",
+            submissionFailed: "Submission failed",
+            cardDetailsSummary: "Card Details Summary",
+            selectedTemplate: "Selected Template:",
+            from: "From:",
+            notProvided: "Not provided",
+            relationshipSummary: "Relationship:",
+            countrySummary: "Country:",
+            messageSummary: "Message:",
+            noDesignSelected: "No design selected"
+        },
+        ta: {
+            chooseCardDesign: "அட்டையின் வடிவமைப்பைத் தேர்ந்தெடுக்கவும்",
+            selectDesign: "கீழே உள்ள விருப்பங்களில் இருந்து ஒரு வடிவமைப்பைத் தேர்ந்தெடுக்கலாம்",
+            loadingTemplates: "அட்டை வடிவமைப்புகள் ஏற்றப்படுகிறது...",
+            noTemplates: "தற்போது அட்டை வடிவமைப்புகள் இல்லை.",
+            selectTemplatePreview: "முன்னோட்டத்திற்கு ஒரு வடிவமைப்பைத் தேர்ந்தெடுக்கவும்",
+            cardDesignAppear: "உங்கள் அட்டை வடிவமைப்பு இங்கே தோன்றும்",
+            message: "செய்தி",
+            messagePlaceholder: "அட்டைக்கான உங்கள் செய்தியை எழுதவும்...",
+            maxChars: "அதிகபட்சம் 2000 எழுத்துகள் அனுமதிக்கப்படுகிறது",
+            name: "பெயர்",
+            namePlaceholder: "உங்கள் முழுப் பெயர்",
+            relationship: "உறவு/நிறுவனம்",
+            relationshipPlaceholder: "எ.கா., நண்பர், சக ஊழியர், குடும்ப உறுப்பினர்",
+            country: "நாடு",
+            countryPlaceholder: "உங்கள் நாடு",
+            next: "அடுத்தது",
+            back: "பின்னால்",
+            close: "மூடு",
+            submitCard: "அட்டையை சமர்ப்பிக்கவும்",
+            submitting: "சமர்ப்பிக்கப்படுகிறது...",
+            submitted: "சமர்ப்பிக்கப்பட்டது",
+            reviewCard: "உங்கள் அட்டையை மதிப்பாய்வு செய்யவும்",
+            reviewCardDetails: "சமர்ப்பிப்பதற்கு முன் உங்கள் அட்டை விவரங்களை மதிப்பாய்வு செய்யவும்",
+            cardSubmitted: "அட்டை வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது!",
+            cardSent: "உங்கள் இரங்கல் அட்டை அனுப்பப்பட்டது.",
+            submissionFailed: "சமர்ப்பிப்பு தோல்வியடைந்தது",
+            cardDetailsSummary: "அட்டை விவரங்கள் சுருக்கம்",
+            selectedTemplate: "தேர்ந்தெடுக்கப்பட்ட வடிவமைப்பு:",
+            from: "அனுப்புநர்:",
+            notProvided: "வழங்கப்படவில்லை",
+            relationshipSummary: "உறவு:",
+            countrySummary: "நாடு:",
+            messageSummary: "செய்தி:",
+            noDesignSelected: "வடிவமைப்பு தேர்ந்தெடுக்கப்படவில்லை"
+        },
+        si: {
+            chooseCardDesign: "කාඩ්පත් නිර්මාණය තෝරන්න",
+            selectDesign: "පහත විකල්ප වලින් නිර්මාණයක් තෝරා ගත හැකියි",
+            loadingTemplates: "කාඩ්පත් නිර්මාණ පූරණය වෙමින්...",
+            noTemplates: "දැනට කාඩ්පත් නිර්මාණ නොමැත.",
+            selectTemplatePreview: "පෙරදසුන සඳහා නිර්මාණයක් තෝරන්න",
+            cardDesignAppear: "ඔබේ කාඩ්පත් නිර්මාණය මෙහි පෙනේ",
+            message: "පණිවිඩය",
+            messagePlaceholder: "කාඩ්පත සඳහා ඔබේ පණිවිඩය ලියන්න...",
+            maxChars: "උපරිම අක්ෂර 2000ක් ඉඩ ඇත",
+            name: "නම",
+            namePlaceholder: "ඔබේ සම්පූර්ණ නම",
+            relationship: "සම්බන්ධය/ආයතනය",
+            relationshipPlaceholder: "උදා: මිතුරා, සහකර්මිකයා, පවුලේ සාමාජිකයා",
+            country: "රට",
+            countryPlaceholder: "ඔබේ රට",
+            next: "ඊළඟ",
+            back: "ආපසු",
+            close: "වසන්න",
+            submitCard: "කාඩ්පත ඉදිරිපත් කරන්න",
+            submitting: "ඉදිරිපත් කරමින්...",
+            submitted: "ඉදිරිපත් කරන ලදී",
+            reviewCard: "ඔබේ කාඩ්පත සමාලෝචනය කරන්න",
+            reviewCardDetails: "ඉදිරිපත් කිරීමට පෙර ඔබේ කාඩ්පත් විස්තර සමාලෝචනය කරන්න",
+            cardSubmitted: "කාඩ්පත සාර්ථකව ඉදිරිපත් කරන ලදී!",
+            cardSent: "ඔබේ ශෝක කාඩ්පත යවා ඇත.",
+            submissionFailed: "ඉදිරිපත් කිරීම අසාර්ථකයි",
+            cardDetailsSummary: "කාඩ්පත් විස්තර සාරාංශය",
+            selectedTemplate: "තෝරාගත් නිර්මාණය:",
+            from: "වෙතින්:",
+            notProvided: "සපයා නොමැත",
+            relationshipSummary: "සම්බන්ධය:",
+            countrySummary: "රට:",
+            messageSummary: "පණිවිඩය:",
+            noDesignSelected: "නිර්මාණය තෝරා නොමැත"
+        }
+    };
+
+    const t = translations[langKey];
     const [currentStep, setCurrentStep] = useState(1);
 
     // Card form state
@@ -156,7 +276,7 @@ const CardFormWithStepper = (
                     </div>
                     <span className={`ml-2 text-sm font-medium ${currentStep >= 1 ? 'text-teal-600' : 'text-gray-500'
                         }`}>
-                        Design Card
+                        {t.chooseCardDesign}
                     </span>
                 </div>
 
@@ -172,7 +292,7 @@ const CardFormWithStepper = (
                     </div>
                     <span className={`ml-2 text-sm font-medium ${currentStep >= 2 ? 'text-teal-600' : 'text-gray-500'
                         }`}>
-                        Confirm
+                        {t.reviewCard}
                     </span>
                 </div>
             </div>
@@ -191,8 +311,8 @@ const CardFormWithStepper = (
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
-                        <p className="text-gray-500 font-medium">Select a template to preview</p>
-                        <p className="text-gray-400 text-sm mt-2">Your card design will appear here</p>
+                        <p className="text-gray-500 font-medium">{t.selectTemplatePreview}</p>
+                        <p className="text-gray-400 text-sm mt-2">{t.cardDesignAppear}</p>
                     </div>
                 </div>
             );
@@ -317,15 +437,15 @@ const CardFormWithStepper = (
                 {currentStep === 1 && (
                     <>
                         <div className="p-4 mb-6">
-                            <h3 className="text-xl font-semibold text-center mb-4 text-primary">Choose a Card Design</h3>
+                            <h3 className="text-xl font-semibold text-center mb-4 text-primary">{t.chooseCardDesign}</h3>
                             <p className="text-center text-gray-500 mb-4 text-primary">
-                                You can select a design from the options below
+                                {t.selectDesign}
                             </p>
                             <div className="flex flex-wrap justify-center md:justify-between gap-2 md:gap-4 mb-4">
                                 {loadingTemplates ? (
                                     <div className="flex justify-center items-center w-full h-32">
                                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
-                                        <span className="ml-2 text-gray-500">Loading card templates...</span>
+                                        <span className="ml-2 text-gray-500">{t.loadingTemplates}</span>
                                     </div>
                                 ) : cardTemplates.length > 0 ? (
                                     cardTemplates.map((template, index) => (
@@ -364,7 +484,7 @@ const CardFormWithStepper = (
                                     ))
                                 ) : (
                                     <div className="text-center text-gray-500 py-8 w-full">
-                                        No card templates available at the moment.
+                                        {t.noTemplates}
                                     </div>
                                 )}
                             </div>
@@ -390,7 +510,7 @@ const CardFormWithStepper = (
 
                         <div className="mb-4">
                             <label htmlFor="card-message" className="block text-gray-700 mb-2">
-                                Message
+                                {t.message}
                             </label>
                             <textarea
                                 id="card-message"
@@ -400,14 +520,14 @@ const CardFormWithStepper = (
                                 rows={4}
                                 maxLength={2000}
                                 className="w-full p-2 border border-teal-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                placeholder="Write your message for the card..."
+                                placeholder={t.messagePlaceholder}
                             />
-                            <p className="text-xs text-gray-500 mt-1">Maximum 2000 characters allowed ({cardFormData.message.length}/2000)</p>
+                            <p className="text-xs text-gray-500 mt-1">{t.maxChars} ({cardFormData.message.length}/2000)</p>
                         </div>
 
                         <div className="mb-4">
                             <label htmlFor="card-name" className="pb-2 block text-gray-700">
-                                Name
+                                {t.name}
                             </label>
                             <input
                                 type="text"
@@ -416,13 +536,13 @@ const CardFormWithStepper = (
                                 value={cardFormData.name}
                                 onChange={handleCardInputChange}
                                 className="w-full h-[3.5rem] px-3 py-2 border border-teal-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                placeholder="Your full name"
+                                placeholder={t.namePlaceholder}
                             />
                         </div>
 
                         <div className="mb-4">
                             <label htmlFor="card-relationship" className="pb-2 block text-gray-700">
-                                Relationship/Organization
+                                {t.relationship}
                             </label>
                             <input
                                 type="text"
@@ -431,13 +551,13 @@ const CardFormWithStepper = (
                                 value={cardFormData.relationship}
                                 onChange={handleCardInputChange}
                                 className="w-full h-[3.5rem] px-3 py-2 border border-teal-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                placeholder="e.g., Friend, Colleague, Family member"
+                                placeholder={t.relationshipPlaceholder}
                             />
                         </div>
 
                         <div className="mb-4">
                             <label htmlFor="card-country" className="pb-2 block text-gray-700">
-                                Country
+                                {t.country}
                             </label>
                             <input
                                 type="text"
@@ -446,7 +566,7 @@ const CardFormWithStepper = (
                                 value={cardFormData.country}
                                 onChange={handleCardInputChange}
                                 className="w-full h-[3.5rem] px-3 py-2 border border-teal-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                placeholder="Your country"
+                                placeholder={t.countryPlaceholder}
                             />
                         </div>
                     </>
@@ -455,8 +575,8 @@ const CardFormWithStepper = (
                 {currentStep === 2 && (
                     <div className="space-y-6">
                         <div className="text-center">
-                            <h3 className="text-2xl font-semibold text-gray-800 mb-2">Review Your Card</h3>
-                            <p className="text-gray-600">Please review your card details before submitting</p>
+                            <h3 className="text-2xl font-semibold text-gray-800 mb-2">{t.reviewCard}</h3>
+                            <p className="text-gray-600">{t.reviewCardDetails}</p>
                         </div>
 
                         {/* Success Message */}
@@ -466,9 +586,9 @@ const CardFormWithStepper = (
                                     <svg className="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                                     </svg>
-                                    <p className="text-green-800 font-medium">Card submitted successfully!</p>
+                                    <p className="text-green-800 font-medium">{t.cardSubmitted}</p>
                                 </div>
-                                <p className="text-green-700 text-sm mt-1">Your tribute card has been sent.</p>
+                                <p className="text-green-700 text-sm mt-1">{t.cardSent}</p>
                             </div>
                         )}
 
@@ -479,7 +599,7 @@ const CardFormWithStepper = (
                                     <svg className="w-5 h-5 text-red-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                                     </svg>
-                                    <p className="text-red-800 font-medium">Submission failed</p>
+                                    <p className="text-red-800 font-medium">{t.submissionFailed}</p>
                                 </div>
                                 <p className="text-red-700 text-sm mt-1">{submitError}</p>
                             </div>
@@ -489,28 +609,28 @@ const CardFormWithStepper = (
                         <CardPreview />
 
                         <div className="bg-gray-50 p-6 rounded-lg">
-                            <h4 className="font-semibold text-gray-800 mb-4">Card Details Summary</h4>
+                            <h4 className="font-semibold text-gray-800 mb-4">{t.cardDetailsSummary}</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <span className="text-sm font-medium text-gray-500">Selected Template:</span>
-                                    <p className="text-gray-800">{getSelectedTemplate()?.name || 'No design selected'}</p>
+                                    <span className="text-sm font-medium text-gray-500">{t.selectedTemplate}</span>
+                                    <p className="text-gray-800">{getSelectedTemplate()?.name || t.noDesignSelected}</p>
                                 </div>
                                 <div>
-                                    <span className="text-sm font-medium text-gray-500">From:</span>
-                                    <p className="text-gray-800">{cardFormData.name || 'Not provided'}</p>
+                                    <span className="text-sm font-medium text-gray-500">{t.from}</span>
+                                    <p className="text-gray-800">{cardFormData.name || t.notProvided}</p>
                                 </div>
                                 <div>
-                                    <span className="text-sm font-medium text-gray-500">Relationship:</span>
-                                    <p className="text-gray-800">{cardFormData.relationship || 'Not provided'}</p>
+                                    <span className="text-sm font-medium text-gray-500">{t.relationshipSummary}</span>
+                                    <p className="text-gray-800">{cardFormData.relationship || t.notProvided}</p>
                                 </div>
                                 <div>
-                                    <span className="text-sm font-medium text-gray-500">Country:</span>
-                                    <p className="text-gray-800">{cardFormData.country || 'Not provided'}</p>
+                                    <span className="text-sm font-medium text-gray-500">{t.countrySummary}</span>
+                                    <p className="text-gray-800">{cardFormData.country || t.notProvided}</p>
                                 </div>
                             </div>
                             {cardFormData.message && (
                                 <div className="mt-4">
-                                    <span className="text-sm font-medium text-gray-500">Message:</span>
+                                    <span className="text-sm font-medium text-gray-500">{t.messageSummary}</span>
                                     <p className="text-gray-800 mt-1">{cardFormData.message}</p>
                                 </div>
                             )}
@@ -524,7 +644,7 @@ const CardFormWithStepper = (
                         onClick={currentStep === 1 ? handleClose : handleBack}
                         className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6"
                     >
-                        {currentStep === 1 ? 'Close' : 'Back'}
+                        {currentStep === 1 ? t.close : t.back}
                     </button>
                     <button
                         type="button"
@@ -538,17 +658,17 @@ const CardFormWithStepper = (
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                Submitting...
+                                {t.submitting}
                             </>
                         ) : submitSuccess ? (
                             <>
                                 <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                                 </svg>
-                                Submitted
+                                {t.submitted}
                             </>
                         ) : (
-                            currentStep === 1 ? 'Next' : 'Submit Card'
+                            currentStep === 1 ? t.next : t.submitCard
                         )}
                     </button>
                 </div>

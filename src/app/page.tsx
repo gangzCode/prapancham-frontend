@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useLanguage } from "@/components/ui/LanguageProvider";
 import HeroSection from "@/components/hero/HeroSection";
 import AdvertisementBanner from "@/components/advertisement/AdvertisementBanner";
 import { Separator } from "@/components/ui/separator";
@@ -80,6 +81,30 @@ interface AdData {
 const HomePage: React.FC = () => {
   const [dynamicAds, setDynamicAds] = useState<FeaturedAd[]>([]);
   const [adsLoading, setAdsLoading] = useState(true);
+  const { language } = useLanguage();
+  type LanguageKey = 'en' | 'ta' | 'si';
+  let langKey: LanguageKey;
+  if (language === "tamil") langKey = "ta";
+  else if (language === "sinhala") langKey = "si";
+  else langKey = "en";
+  const translations: Record<LanguageKey, { [key: string]: string }> = {
+    en: {
+      wantToAdvertise: "Want to Advertise Here?",
+      contactToPost: "Contact us to post your advertisements and reach thousands of viewers",
+      clickToWhatsApp: "Click to message us on WhatsApp!",
+    },
+    ta: {
+      wantToAdvertise: "விளம்பரம் செய்ய விரும்புகிறீர்களா?",
+      contactToPost: "உங்கள் விளம்பரங்களை இடுகையிட எங்களை தொடர்பு கொள்ளுங்கள்",
+      clickToWhatsApp: "WhatsApp இல் செய்தி அனுப்ப கிளிக் செய்யவும்!",
+    },
+    si: {
+      wantToAdvertise: "ප්‍රචාරණය කිරීමට අවශ්‍යද?",
+      contactToPost: "ඔබේ දැන්වීම් පළ කිරීමට අප හා සම්බන්ධ වන්න",
+      clickToWhatsApp: "WhatsApp මගින් පණිවිඩ යැවීමට ක්ලික් කරන්න!",
+    },
+  };
+  const t = translations[langKey];
 
   // Fetch ad types to get Full Width ad type ID for bottom advertisement
   const { data: adTypesData } = useSWR<AdTypesResponse>(
@@ -218,10 +243,10 @@ const HomePage: React.FC = () => {
               <div className="w-full md:max-h-[232px] max-h-[116px] relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
                 <div className="text-center text-white p-6">
                   <h3 className="text-xl md:text-2xl font-bold mb-4">
-                    Want to Advertise Here?
+                    {t.wantToAdvertise}
                   </h3>
                   <p className="text-sm md:text-base mb-4 opacity-90">
-                    Contact us to post your advertisements and reach thousands of viewers
+                    {t.contactToPost}
                   </p>
                   <div className="space-y-2">
                     <p className="text-sm md:text-base font-medium flex items-center justify-center gap-2">
@@ -229,7 +254,7 @@ const HomePage: React.FC = () => {
                       +94 77 002 33 23
                     </p>
                     <p className="text-xs md:text-sm opacity-80">
-                      Click to message us on WhatsApp!
+                      {t.clickToWhatsApp}
                     </p>
                   </div>
                 </div>

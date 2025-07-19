@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from "@/components/ui/LanguageProvider";
 import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { ObituaryEntry } from '../hero/types';
 
@@ -13,12 +14,149 @@ interface letterTemplateData {
     __v: number;
 }
 
+type LanguageKey = "en" | "ta" | "si";
+
 const LetterFormWithStepper = (
     props: {
         letterTemplates: letterTemplateData[];
         obituaryEntry: ObituaryEntry;
     }
 ) => {
+    const { language } = useLanguage();
+    let langKey: LanguageKey = "en";
+    if (language === "tamil") langKey = "ta";
+    else if (language === "sinhala") langKey = "si";
+
+    const translations: Record<LanguageKey, { [key: string]: string }> = {
+        en: {
+            chooseLetterDesign: "Choose a Letter Design",
+            selectDesign: "You can select a design from the options below",
+            loadingTemplates: "Loading letter templates...",
+            noTemplates: "No letter templates available at the moment.",
+            selectTemplatePreview: "Select a template to preview your letter",
+            letterDesignAppear: "Your beautifully crafted letter will appear here",
+            message: "Message",
+            messagePlaceholder: "Write your message for the letter...",
+            maxChars: "Maximum 2000 characters allowed",
+            name: "Name",
+            namePlaceholder: "Your full name",
+            relationship: "Relationship/Organization",
+            relationshipPlaceholder: "e.g., Friend, Colleague, Family member",
+            country: "Country",
+            countryPlaceholder: "Your country",
+            next: "Next",
+            back: "Back",
+            close: "Close",
+            submitLetter: "Submit Letter",
+            submitting: "Submitting...",
+            submitted: "Submitted",
+            reviewLetter: "Review Your Letter",
+            reviewLetterDetails: "Please review your letter details before submitting",
+            letterSubmitted: "Letter submitted successfully!",
+            letterSent: "Your tribute letter has been sent.",
+            submissionFailed: "Submission failed",
+            letterDetailsSummary: "Letter Details Summary",
+            selectedTemplate: "Selected Template:",
+            from: "From:",
+            notProvided: "Not provided",
+            relationshipSummary: "Relationship:",
+            countrySummary: "Country:",
+            messageSummary: "Message:",
+            noDesignSelected: "No design selected",
+            dear: "Dear",
+            personalLetter: "Personal Letter",
+            fromComma: "From,",
+            yourSignature: "Your signature",
+            yourRelationship: "Your relationship",
+            yourCountry: "Your country"
+        },
+        ta: {
+            chooseLetterDesign: "கடித வடிவமைப்பைத் தேர்ந்தெடுக்கவும்",
+            selectDesign: "கீழே உள்ள விருப்பங்களில் இருந்து ஒரு வடிவமைப்பைத் தேர்ந்தெடுக்கலாம்",
+            loadingTemplates: "கடித வடிவமைப்புகள் ஏற்றப்படுகிறது...",
+            noTemplates: "தற்போது கடித வடிவமைப்புகள் இல்லை.",
+            selectTemplatePreview: "உங்கள் கடிதத்திற்கு ஒரு வடிவமைப்பைத் தேர்ந்தெடுக்கவும்",
+            letterDesignAppear: "உங்கள் அழகாக வடிவமைக்கப்பட்ட கடிதம் இங்கே தோன்றும்",
+            message: "செய்தி",
+            messagePlaceholder: "கடிதத்திற்கான உங்கள் செய்தியை எழுதவும்...",
+            maxChars: "அதிகபட்சம் 2000 எழுத்துகள் அனுமதிக்கப்படுகிறது",
+            name: "பெயர்",
+            namePlaceholder: "உங்கள் முழுப் பெயர்",
+            relationship: "உறவு/நிறுவனம்",
+            relationshipPlaceholder: "எ.கா., நண்பர், சக ஊழியர், குடும்ப உறுப்பினர்",
+            country: "நாடு",
+            countryPlaceholder: "உங்கள் நாடு",
+            next: "அடுத்தது",
+            back: "பின்னால்",
+            close: "மூடு",
+            submitLetter: "கடிதத்தை சமர்ப்பிக்கவும்",
+            submitting: "சமர்ப்பிக்கப்படுகிறது...",
+            submitted: "சமர்ப்பிக்கப்பட்டது",
+            reviewLetter: "உங்கள் கடிதத்தை மதிப்பாய்வு செய்யவும்",
+            reviewLetterDetails: "சமர்ப்பிப்பதற்கு முன் உங்கள் கடித விவரங்களை மதிப்பாய்வு செய்யவும்",
+            letterSubmitted: "கடிதம் வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது!",
+            letterSent: "உங்கள் இரங்கல் கடிதம் அனுப்பப்பட்டது.",
+            submissionFailed: "சமர்ப்பிப்பு தோல்வியடைந்தது",
+            letterDetailsSummary: "கடித விவரங்கள் சுருக்கம்",
+            selectedTemplate: "தேர்ந்தெடுக்கப்பட்ட வடிவமைப்பு:",
+            from: "அனுப்புநர்:",
+            notProvided: "வழங்கப்படவில்லை",
+            relationshipSummary: "உறவு:",
+            countrySummary: "நாடு:",
+            messageSummary: "செய்தி:",
+            noDesignSelected: "வடிவமைப்பு தேர்ந்தெடுக்கப்படவில்லை",
+            dear: "அன்புள்ள",
+            personalLetter: "தனிப்பட்ட கடிதம்",
+            fromComma: "அனுப்புநர்,",
+            yourSignature: "உங்கள் கையொப்பம்",
+            yourRelationship: "உங்கள் உறவு",
+            yourCountry: "உங்கள் நாடு"
+        },
+        si: {
+            chooseLetterDesign: "ලිපි නිර්මාණය තෝරන්න",
+            selectDesign: "පහත විකල්ප වලින් නිර්මාණයක් තෝරා ගත හැකියි",
+            loadingTemplates: "ලිපි නිර්මාණ පූරණය වෙමින්...",
+            noTemplates: "දැනට ලිපි නිර්මාණ නොමැත.",
+            selectTemplatePreview: "ඔබේ ලිපිය සඳහා නිර්මාණයක් තෝරන්න",
+            letterDesignAppear: "ඔබේ සුන්දර ලෙස නිර්මාණය කළ ලිපිය මෙහි පෙනේ",
+            message: "පණිවිඩය",
+            messagePlaceholder: "ලිපිය සඳහා ඔබේ පණිවිඩය ලියන්න...",
+            maxChars: "උපරිම අක්ෂර 2000ක් ඉඩ ඇත",
+            name: "නම",
+            namePlaceholder: "ඔබේ සම්පූර්ණ නම",
+            relationship: "සම්බන්ධය/ආයතනය",
+            relationshipPlaceholder: "උදා: මිතුරා, සහකර්මිකයා, පවුලේ සාමාජිකයා",
+            country: "රට",
+            countryPlaceholder: "ඔබේ රට",
+            next: "ඊළඟ",
+            back: "ආපසු",
+            close: "වසන්න",
+            submitLetter: "ලිපිය ඉදිරිපත් කරන්න",
+            submitting: "ඉදිරිපත් කරමින්...",
+            submitted: "ඉදිරිපත් කරන ලදී",
+            reviewLetter: "ඔබේ ලිපිය සමාලෝචනය කරන්න",
+            reviewLetterDetails: "ඉදිරිපත් කිරීමට පෙර ඔබේ ලිපි විස්තර සමාලෝචනය කරන්න",
+            letterSubmitted: "ලිපිය සාර්ථකව ඉදිරිපත් කරන ලදී!",
+            letterSent: "ඔබේ ශෝක ලිපිය යවා ඇත.",
+            submissionFailed: "ඉදිරිපත් කිරීම අසාර්ථකයි",
+            letterDetailsSummary: "ලිපි විස්තර සාරාංශය",
+            selectedTemplate: "තෝරාගත් නිර්මාණය:",
+            from: "වෙතින්:",
+            notProvided: "සපයා නොමැත",
+            relationshipSummary: "සම්බන්ධය:",
+            countrySummary: "රට:",
+            messageSummary: "පණිවිඩය:",
+            noDesignSelected: "නිර්මාණය තෝරා නොමැත",
+            dear: "ප්‍රියතම",
+            personalLetter: "පුද්ගලික ලිපිය",
+            fromComma: "වෙතින්,",
+            yourSignature: "ඔබේ අත්සන",
+            yourRelationship: "ඔබේ සම්බන්ධය",
+            yourCountry: "ඔබේ රට"
+        }
+    };
+
+    const t = translations[langKey];
     const [currentStep, setCurrentStep] = useState(1);
 
     // Letter form state
@@ -158,7 +296,7 @@ const LetterFormWithStepper = (
                     </div>
                     <span className={`ml-2 text-sm font-medium ${currentStep >= 1 ? 'text-teal-600' : 'text-gray-500'
                         }`}>
-                        Design Letter
+                        {t.chooseLetterDesign}
                     </span>
                 </div>
 
@@ -174,7 +312,7 @@ const LetterFormWithStepper = (
                     </div>
                     <span className={`ml-2 text-sm font-medium ${currentStep >= 2 ? 'text-teal-600' : 'text-gray-500'
                         }`}>
-                        Confirm
+                        {t.reviewLetter}
                     </span>
                 </div>
             </div>
@@ -193,8 +331,8 @@ const LetterFormWithStepper = (
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
                         </div>
-                        <p className="text-amber-700 font-medium text-lg">Select a template to preview your letter</p>
-                        <p className="text-amber-600 text-sm mt-2">Your beautifully crafted letter will appear here</p>
+                        <p className="text-amber-700 font-medium text-lg">{t.selectTemplatePreview}</p>
+                        <p className="text-amber-600 text-sm mt-2">{t.letterDesignAppear}</p>
                     </div>
                 </div>
             );
@@ -229,7 +367,7 @@ const LetterFormWithStepper = (
                                             <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
                                         </svg>
                                     </div>
-                                    <h2 className="text-amber-900 font-serif text-xl font-bold">Personal Letter</h2>
+                                    <h2 className="text-amber-900 font-serif text-xl font-bold">{t.personalLetter}</h2>
                                 </div>
                                 <div className="text-amber-700 text-sm font-medium">
                                     {new Date().toLocaleDateString('en-US', {
@@ -245,7 +383,7 @@ const LetterFormWithStepper = (
                         <div className="relative p-8">
                             {/* Greeting */}
                             <div className="mb-6">
-                                <p className="text-amber-900 font-serif text-lg">Dear {props.obituaryEntry.name || 'Friend'},</p>
+                                <p className="text-amber-900 font-serif text-lg">{t.dear} {props.obituaryEntry.name || 'Friend'},</p>
                             </div>
 
                             {/* Message body */}
@@ -263,18 +401,18 @@ const LetterFormWithStepper = (
 
                             {/* Letter closing */}
                             <div className="text-right">
-                                <p className="text-amber-900 font-serif text-base mb-2">From,</p>
+                                <p className="text-amber-900 font-serif text-base mb-2">{t.fromComma}</p>
                                 <div>
                                     <div className="w-40 h-12 ml-auto border-b-2 border-amber-300 flex items-end justify-center pb-2">
                                         <p className="text-amber-700 font-serif italic text-sm">
-                                            {letterFormData.name || 'Your signature'}
+                                            {letterFormData.name || t.yourSignature}
                                         </p>
                                     </div>
                                     <p className="text-amber-700 font-serif text-sm mt-1">
-                                        {letterFormData.relationship || 'Your relationship'}
+                                        {letterFormData.relationship || t.yourRelationship}
                                     </p>
                                     <p className="text-amber-700 font-serif text-sm">
-                                        {letterFormData.country || 'Your country'}
+                                        {letterFormData.country || t.yourCountry}
                                     </p>
                                 </div>
                             </div>
@@ -301,15 +439,15 @@ const LetterFormWithStepper = (
                 {currentStep === 1 && (
                     <>
                         <div className="p-4 mb-6">
-                            <h3 className="text-xl font-semibold text-center mb-4 text-primary">Choose a Letter Design</h3>
+                            <h3 className="text-xl font-semibold text-center mb-4 text-primary">{t.chooseLetterDesign}</h3>
                             <p className="text-center text-gray-500 mb-4 text-primary">
-                                You can select a design from the options below
+                                {t.selectDesign}
                             </p>
                             <div className="flex flex-wrap justify-center md:justify-between gap-2 md:gap-4 mb-4">
                                 {loadingTemplates ? (
                                     <div className="flex justify-center items-center w-full h-32">
                                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
-                                        <span className="ml-2 text-gray-500">Loading letter templates...</span>
+                                        <span className="ml-2 text-gray-500">{t.loadingTemplates}</span>
                                     </div>
                                 ) : letterTemplates.length > 0 ? (
                                     letterTemplates.map((template, index) => (
@@ -348,7 +486,7 @@ const LetterFormWithStepper = (
                                     ))
                                 ) : (
                                     <div className="text-center text-gray-500 py-8 w-full">
-                                        No letter templates available at the moment.
+                                        {t.noTemplates}
                                     </div>
                                 )}
                             </div>
@@ -374,7 +512,7 @@ const LetterFormWithStepper = (
 
                         <div className="mb-4">
                             <label htmlFor="letter-message" className="block text-gray-700 mb-2">
-                                Message
+                                {t.message}
                             </label>
                             <textarea
                                 id="letter-message"
@@ -384,14 +522,14 @@ const LetterFormWithStepper = (
                                 rows={4}
                                 maxLength={2000}
                                 className="w-full p-2 border border-teal-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                placeholder="Write your message for the letter..."
+                                placeholder={t.messagePlaceholder}
                             />
-                            <p className="text-xs text-gray-500 mt-1">Maximum 2000 characters allowed ({letterFormData.message.length}/2000)</p>
+                            <p className="text-xs text-gray-500 mt-1">{t.maxChars} ({letterFormData.message.length}/2000)</p>
                         </div>
 
                         <div className="mb-4">
                             <label htmlFor="letter-name" className="pb-2 block text-gray-700">
-                                Name
+                                {t.name}
                             </label>
                             <input
                                 type="text"
@@ -400,13 +538,13 @@ const LetterFormWithStepper = (
                                 value={letterFormData.name}
                                 onChange={handleLetterInputChange}
                                 className="w-full h-[3.5rem] px-3 py-2 border border-teal-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                placeholder="Your full name"
+                                placeholder={t.namePlaceholder}
                             />
                         </div>
 
                         <div className="mb-4">
                             <label htmlFor="letter-relationship" className="pb-2 block text-gray-700">
-                                Relationship/Organization
+                                {t.relationship}
                             </label>
                             <input
                                 type="text"
@@ -415,13 +553,13 @@ const LetterFormWithStepper = (
                                 value={letterFormData.relationship}
                                 onChange={handleLetterInputChange}
                                 className="w-full h-[3.5rem] px-3 py-2 border border-teal-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                placeholder="e.g., Friend, Colleague, Family member"
+                                placeholder={t.relationshipPlaceholder}
                             />
                         </div>
 
                         <div className="mb-4">
                             <label htmlFor="letter-country" className="pb-2 block text-gray-700">
-                                Country
+                                {t.country}
                             </label>
                             <input
                                 type="text"
@@ -430,7 +568,7 @@ const LetterFormWithStepper = (
                                 value={letterFormData.country}
                                 onChange={handleLetterInputChange}
                                 className="w-full h-[3.5rem] px-3 py-2 border border-teal-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                placeholder="Your country"
+                                placeholder={t.countryPlaceholder}
                             />
                         </div>
                     </>
@@ -439,8 +577,8 @@ const LetterFormWithStepper = (
                 {currentStep === 2 && (
                     <div className="space-y-6">
                         <div className="text-center">
-                            <h3 className="text-2xl font-semibold text-gray-800 mb-2">Review Your Letter</h3>
-                            <p className="text-gray-600">Please review your letter details before submitting</p>
+                            <h3 className="text-2xl font-semibold text-gray-800 mb-2">{t.reviewLetter}</h3>
+                            <p className="text-gray-600">{t.reviewLetterDetails}</p>
                         </div>
 
                         {/* Success Message */}
@@ -450,9 +588,9 @@ const LetterFormWithStepper = (
                                     <svg className="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                                     </svg>
-                                    <p className="text-green-800 font-medium">Letter submitted successfully!</p>
+                                    <p className="text-green-800 font-medium">{t.letterSubmitted}</p>
                                 </div>
-                                <p className="text-green-700 text-sm mt-1">Your tribute letter has been sent.</p>
+                                <p className="text-green-700 text-sm mt-1">{t.letterSent}</p>
                             </div>
                         )}
 
@@ -463,7 +601,7 @@ const LetterFormWithStepper = (
                                     <svg className="w-5 h-5 text-red-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                                     </svg>
-                                    <p className="text-red-800 font-medium">Submission failed</p>
+                                    <p className="text-red-800 font-medium">{t.submissionFailed}</p>
                                 </div>
                                 <p className="text-red-700 text-sm mt-1">{submitError}</p>
                             </div>
@@ -473,28 +611,28 @@ const LetterFormWithStepper = (
                         <LetterPreview />
 
                         <div className="bg-gray-50 p-6 rounded-lg">
-                            <h4 className="font-semibold text-gray-800 mb-4">Letter Details Summary</h4>
+                            <h4 className="font-semibold text-gray-800 mb-4">{t.letterDetailsSummary}</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <span className="text-sm font-medium text-gray-500">Selected Template:</span>
-                                    <p className="text-gray-800">{getSelectedTemplate()?.name || 'No design selected'}</p>
+                                    <span className="text-sm font-medium text-gray-500">{t.selectedTemplate}</span>
+                                    <p className="text-gray-800">{getSelectedTemplate()?.name || t.noDesignSelected}</p>
                                 </div>
                                 <div>
-                                    <span className="text-sm font-medium text-gray-500">From:</span>
-                                    <p className="text-gray-800">{letterFormData.name || 'Not provided'}</p>
+                                    <span className="text-sm font-medium text-gray-500">{t.from}</span>
+                                    <p className="text-gray-800">{letterFormData.name || t.notProvided}</p>
                                 </div>
                                 <div>
-                                    <span className="text-sm font-medium text-gray-500">Relationship:</span>
-                                    <p className="text-gray-800">{letterFormData.relationship || 'Not provided'}</p>
+                                    <span className="text-sm font-medium text-gray-500">{t.relationshipSummary}</span>
+                                    <p className="text-gray-800">{letterFormData.relationship || t.notProvided}</p>
                                 </div>
                                 <div>
-                                    <span className="text-sm font-medium text-gray-500">Country:</span>
-                                    <p className="text-gray-800">{letterFormData.country || 'Not provided'}</p>
+                                    <span className="text-sm font-medium text-gray-500">{t.countrySummary}</span>
+                                    <p className="text-gray-800">{letterFormData.country || t.notProvided}</p>
                                 </div>
                             </div>
                             {letterFormData.message && (
                                 <div className="mt-4">
-                                    <span className="text-sm font-medium text-gray-500">Message:</span>
+                                    <span className="text-sm font-medium text-gray-500">{t.messageSummary}</span>
                                     <p className="text-gray-800 mt-1">{letterFormData.message}</p>
                                 </div>
                             )}
@@ -508,7 +646,7 @@ const LetterFormWithStepper = (
                         onClick={currentStep === 1 ? handleClose : handleBack}
                         className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6"
                     >
-                        {currentStep === 1 ? 'Close' : 'Back'}
+                        {currentStep === 1 ? t.close : t.back}
                     </button>
                     <button
                         type="button"
@@ -522,17 +660,17 @@ const LetterFormWithStepper = (
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                Submitting...
+                                {t.submitting}
                             </>
                         ) : submitSuccess ? (
                             <>
                                 <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                                 </svg>
-                                Submitted
+                                {t.submitted}
                             </>
                         ) : (
-                            currentStep === 1 ? 'Next' : 'Submit Letter'
+                            currentStep === 1 ? t.next : t.submitLetter
                         )}
                     </button>
                 </div>

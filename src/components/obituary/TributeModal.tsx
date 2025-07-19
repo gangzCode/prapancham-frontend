@@ -1,4 +1,5 @@
 import { useEffect, useState, DragEvent } from "react";
+import { useLanguage } from "@/components/ui/LanguageProvider";
 import { createPortal } from "react-dom";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
@@ -19,6 +20,8 @@ type TributeModalProps = {
     date: string;
 };
 
+type LanguageKey = "en" | "ta" | "si";
+
 const TributeModal: React.FC<TributeModalProps> = ({
     isOpen,
     onClose,
@@ -29,6 +32,141 @@ const TributeModal: React.FC<TributeModalProps> = ({
     eventName,
     date
 }) => {
+    const { language } = useLanguage();
+    let langKey: LanguageKey = "en";
+    if (language === "tamil") langKey = "ta";
+    else if (language === "sinhala") langKey = "si";
+
+    const translations: Record<LanguageKey, { [key: string]: string }> = {
+        en: {
+            selectTributeType: "Select a Tribute Type",
+            messageTab: "Message",
+            messageTabSubtitle: "Share your thoughts",
+            cardsTab: "Cards",
+            cardsTabSubtitle: "Send a card",
+            letterTab: "Letter",
+            letterTabSubtitle: "Write a letter",
+            memoryTab: "Memory",
+            memoryTabSubtitle: "Share a memory",
+            flowersTab: "Send Flowers",
+            flowersTabSubtitle: "Send flowers",
+            writeMessage: "Write Your Message Here ",
+            shareThoughts: "Share your thoughts and condolences",
+            messageLabel: "Message",
+            messageRequired: "Please enter a message.",
+            messagePlaceholder: "Share your thoughts, condolences, or memories...",
+            maxChars: "Maximum 2000 characters allowed",
+            nameLabel: "Name",
+            namePlaceholder: "Your full name",
+            relationshipLabel: "Relationship/Organization",
+            relationshipPlaceholder: "e.g., Friend, Colleague, Family member",
+            countryLabel: "Country",
+            countryPlaceholder: "Your country",
+            cancel: "Cancel",
+            submitTribute: "Submit Tribute",
+            submitting: "Submitting...",
+            success: "Your tribute has been submitted successfully!",
+            error: "Failed to submit tribute. Please try again.",
+            networkError: "Network error. Please check your connection and try again.",
+            back: "Back",
+            next: "Next",
+            shareMemories: "Share Your Memories as Images",
+            selectDesign: "You can select a design from the options below",
+            dragDrop: "Drag & drop images here or click to browse",
+            browseFiles: "Browse Files...",
+            chooseType: "Choose a Type",
+            flowerType1: "Flower Type 1",
+            flowerType2: "Flower Type 2",
+            bouquet: "Bouquet",
+            wreath: "Wreath"
+        },
+        ta: {
+            selectTributeType: "ஒரு இரங்கல் வகையைத் தேர்ந்தெடுக்கவும்",
+            messageTab: "செய்தி",
+            messageTabSubtitle: "உங்கள் எண்ணங்களை பகிரவும்",
+            cardsTab: "அட்டைகள்",
+            cardsTabSubtitle: "ஒரு அட்டையை அனுப்பவும்",
+            letterTab: "கடிதம்",
+            letterTabSubtitle: "ஒரு கடிதம் எழுதவும்",
+            memoryTab: "நினைவுகள்",
+            memoryTabSubtitle: "ஒரு நினைவை பகிரவும்",
+            flowersTab: "மலர்கள் அனுப்பு",
+            flowersTabSubtitle: "மலர்கள் அனுப்பு",
+            writeMessage: "உங்கள் செய்தியை இங்கே எழுதவும்",
+            shareThoughts: "உங்கள் எண்ணங்கள் மற்றும் இரங்கல்களை பகிரவும்",
+            messageLabel: "செய்தி",
+            messageRequired: "தயவுசெய்து ஒரு செய்தியை உள்ளிடவும்.",
+            messagePlaceholder: "உங்கள் எண்ணங்கள், இரங்கல்கள் அல்லது நினைவுகளை பகிரவும்...",
+            maxChars: "அதிகபட்சம் 2000 எழுத்துகள் அனுமதிக்கப்படுகிறது",
+            nameLabel: "பெயர்",
+            namePlaceholder: "உங்கள் முழுப் பெயர்",
+            relationshipLabel: "உறவு/நிறுவனம்",
+            relationshipPlaceholder: "எ.கா., நண்பர், சக ஊழியர், குடும்ப உறுப்பினர்",
+            countryLabel: "நாடு",
+            countryPlaceholder: "உங்கள் நாடு",
+            cancel: "ரத்து செய்",
+            submitTribute: "இரங்கலை சமர்ப்பிக்கவும்",
+            submitting: "சமர்ப்பிக்கப்படுகிறது...",
+            success: "உங்கள் இரங்கல் வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது!",
+            error: "இரங்கலை சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+            networkError: "பிணைய பிழை. உங்கள் இணைப்பை சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
+            back: "பின்னால்",
+            next: "அடுத்தது",
+            shareMemories: "உங்கள் நினைவுகளை படங்களாக பகிரவும்",
+            selectDesign: "கீழே உள்ள விருப்பங்களில் இருந்து ஒரு வடிவமைப்பைத் தேர்ந்தெடுக்கலாம்",
+            dragDrop: "படங்களை இங்கே இழுத்து விடவும் அல்லது கிளிக் செய்து தேர்ந்தெடுக்கவும்",
+            browseFiles: "கோப்புகளைத் தேடு...",
+            chooseType: "வகையைத் தேர்ந்தெடுக்கவும்",
+            flowerType1: "மலர் வகை 1",
+            flowerType2: "மலர் வகை 2",
+            bouquet: "மலர் கொத்து",
+            wreath: "மலர் மாலை"
+        },
+        si: {
+            selectTributeType: "ශෝක ප්‍රකාශ වර්ගයක් තෝරන්න",
+            messageTab: "පණිවිඩය",
+            messageTabSubtitle: "ඔබේ සිතුවිලි බෙදා ගන්න",
+            cardsTab: "කාඩ්පත්",
+            cardsTabSubtitle: "කාඩ්පතක් යවන්න",
+            letterTab: "ලිපිය",
+            letterTabSubtitle: "ලිපියක් ලියන්න",
+            memoryTab: "මතකය",
+            memoryTabSubtitle: "මතකයක් බෙදා ගන්න",
+            flowersTab: "මල් යවන්න",
+            flowersTabSubtitle: "මල් යවන්න",
+            writeMessage: "ඔබේ පණිවිඩය මෙහි ලියන්න",
+            shareThoughts: "ඔබේ සිතුවිලි සහ ශෝකය බෙදා ගන්න",
+            messageLabel: "පණිවිඩය",
+            messageRequired: "කරුණාකර පණිවිඩයක් ඇතුළත් කරන්න.",
+            messagePlaceholder: "ඔබේ සිතුවිලි, ශෝකය හෝ මතකයන් බෙදා ගන්න...",
+            maxChars: "උපරිම අක්ෂර 2000ක් ඉඩ ඇත",
+            nameLabel: "නම",
+            namePlaceholder: "ඔබේ සම්පූර්ණ නම",
+            relationshipLabel: "සම්බන්ධය/ආයතනය",
+            relationshipPlaceholder: "උදා: මිතුරා, සහකර්මිකයා, පවුලේ සාමාජිකයා",
+            countryLabel: "රට",
+            countryPlaceholder: "ඔබේ රට",
+            cancel: "අවලංගු කරන්න",
+            submitTribute: "ශෝක ප්‍රකාශය ඉදිරිපත් කරන්න",
+            submitting: "ඉදිරිපත් කරමින්...",
+            success: "ඔබේ ශෝක ප්‍රකාශය සාර්ථකව ඉදිරිපත් කරන ලදී!",
+            error: "ශෝක ප්‍රකාශය ඉදිරිපත් කිරීමට අසමත් විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+            networkError: "ජාල දෝෂයක්. කරුණාකර ඔබේ සම්බන්ධතාවය පරීක්ෂා කර නැවත උත්සාහ කරන්න.",
+            back: "ආපසු",
+            next: "ඊළඟ",
+            shareMemories: "ඔබේ මතකයන් පින්තූර ලෙස බෙදා ගන්න",
+            selectDesign: "පහත විකල්ප වලින් නිර්මාණයක් තෝරා ගත හැකියි",
+            dragDrop: "පින්තූර මෙහි ඇද දමන්න හෝ ක්ලික් කර තෝරන්න",
+            browseFiles: "ගොනු පිරික්සන්න...",
+            chooseType: "වර්ගයක් තෝරන්න",
+            flowerType1: "මල් වර්ගය 1",
+            flowerType2: "මල් වර්ගය 2",
+            bouquet: "මල් කදම",
+            wreath: "මල් මාලය"
+        }
+    };
+
+    const t = translations[langKey];
     const [activeTab, setActiveTab] = useState("message");
     const [images, setImages] = useState<File[]>([]);
     const [previews, setPreviews] = useState<string[]>([]);
@@ -108,7 +246,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
         e.preventDefault();
 
         if (!formData.message.trim()) {
-            setSubmitMessage({ type: 'error', text: 'Please enter a message.' });
+            setSubmitMessage({ type: 'error', text: t.messageRequired });
             return;
         }
 
@@ -133,7 +271,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
             });
 
             if (response.ok) {
-                setSubmitMessage({ type: 'success', text: 'Your tribute has been submitted successfully!' });
+                setSubmitMessage({ type: 'success', text: t.success });
                 // Reset form
                 setFormData({
                     message: "",
@@ -147,11 +285,11 @@ const TributeModal: React.FC<TributeModalProps> = ({
                 }, 2000);
             } else {
                 const errorData = await response.json();
-                setSubmitMessage({ type: 'error', text: errorData.message || 'Failed to submit tribute. Please try again.' });
+                setSubmitMessage({ type: 'error', text: errorData.message || t.error });
             }
         } catch (error) {
             console.error('Error submitting tribute:', error);
-            setSubmitMessage({ type: 'error', text: 'Network error. Please check your connection and try again.' });
+            setSubmitMessage({ type: 'error', text: t.networkError });
         } finally {
             setIsSubmitting(false);
         }
@@ -179,11 +317,11 @@ const TributeModal: React.FC<TributeModalProps> = ({
     };
 
     const tabs = [
-        { id: "message", title: "Message", subtitle: "Share your thoughts" },
-        { id: "cards", title: "Cards", subtitle: "Send a card" },
-        { id: "letter", title: "Letter", subtitle: "Write a letter" },
-        { id: "memory", title: "Memory", subtitle: "Share a memory" },
-        { id: "flowers", title: "Send Flowers", subtitle: "Send flowers" },
+        { id: "message", title: t.messageTab, subtitle: t.messageTabSubtitle },
+        { id: "cards", title: t.cardsTab, subtitle: t.cardsTabSubtitle },
+        { id: "letter", title: t.letterTab, subtitle: t.letterTabSubtitle },
+        { id: "memory", title: t.memoryTab, subtitle: t.memoryTabSubtitle },
+        { id: "flowers", title: t.flowersTab, subtitle: t.flowersTabSubtitle },
     ];
 
     const handleDrop = (e: DragEvent<HTMLDivElement>) => {
@@ -271,8 +409,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                     </div>
 
                     <div className="text-center my-5">
-                        <h3 className="text-2xl font-semibold mb-4 text-primary">Select a Tribute Type</h3>
-
+                        <h3 className="text-2xl font-semibold mb-4 text-primary">{t.selectTributeType}</h3>
                         <div className="overflow-x-auto md:flex md:justify-center">
                             <div className="flex gap-2 md:gap-4 w-max md:w-auto px-2">
                                 {tabs.map((tab) => (
@@ -296,22 +433,20 @@ const TributeModal: React.FC<TributeModalProps> = ({
                         <div className="pb-8">
                             <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" onSubmit={handleSubmitTribute}>
                                 <div className="p-4 mb-6">
-                                    <h3 className="text-xl font-semibold text-center mb-4 text-primary">Write Your Message Here </h3>
+                                    <h3 className="text-xl font-semibold text-center mb-4 text-primary">{t.writeMessage}</h3>
                                     <p className="text-center text-gray-500 mb-4 text-primary">
-                                        Share your thoughts and condolences
+                                        {t.shareThoughts}
                                     </p>
                                 </div>
-
                                 {/* Display success/error messages */}
                                 {submitMessage && (
                                     <div className={`mb-4 p-3 rounded-lg ${submitMessage.type === 'success' ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-red-100 text-red-700 border border-red-300'}`}>
                                         {submitMessage.text}
                                     </div>
                                 )}
-
                                 <div className="mb-4">
                                     <label htmlFor="message" className="block text-gray-700 mb-2">
-                                        Message <span className="text-red-500">*</span>
+                                        {t.messageLabel} <span className="text-red-500">*</span>
                                     </label>
                                     <textarea
                                         id="message"
@@ -322,14 +457,13 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                         maxLength={2000}
                                         required
                                         className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                        placeholder="Share your thoughts, condolences, or memories..."
+                                        placeholder={t.messagePlaceholder}
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">Maximum 2000 characters allowed ({formData.message.length}/2000)</p>
+                                    <p className="text-xs text-gray-500 mt-1">{t.maxChars} ({formData.message.length}/2000)</p>
                                 </div>
-
                                 <div className="mb-4">
                                     <label htmlFor="tribute-name" className="pb-2 block text-gray-700">
-                                        Name <span className="text-red-500">*</span>
+                                        {t.nameLabel} <span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="text"
@@ -339,13 +473,12 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                         onChange={handleInputChange}
                                         required
                                         className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                        placeholder="Your full name"
+                                        placeholder={t.namePlaceholder}
                                     />
                                 </div>
-
                                 <div className="mb-4">
                                     <label htmlFor="relationship" className="pb-2 block text-gray-700">
-                                        Relationship/Organization
+                                        {t.relationshipLabel}
                                     </label>
                                     <input
                                         type="text"
@@ -354,13 +487,12 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                         value={formData.relationship}
                                         onChange={handleInputChange}
                                         className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                        placeholder="e.g., Friend, Colleague, Family member"
+                                        placeholder={t.relationshipPlaceholder}
                                     />
                                 </div>
-
                                 <div className="mb-4">
                                     <label htmlFor="country" className="pb-2 block text-gray-700">
-                                        Country
+                                        {t.countryLabel}
                                     </label>
                                     <input
                                         type="text"
@@ -369,10 +501,9 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                         value={formData.country}
                                         onChange={handleInputChange}
                                         className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                        placeholder="Your country"
+                                        placeholder={t.countryPlaceholder}
                                     />
                                 </div>
-
                                 <div className="flex justify-end gap-2 items-center self-stretch mt-16">
                                     <button
                                         type="button"
@@ -380,14 +511,14 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                         className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6"
                                         disabled={isSubmitting}
                                     >
-                                        Cancel
+                                        {t.cancel}
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={isSubmitting || !formData.message.trim() || !formData.name.trim()}
                                         className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 disabled:bg-gray-400 disabled:cursor-not-allowed"
                                     >
-                                        {isSubmitting ? 'Submitting...' : 'Submit Tribute'}
+                                        {isSubmitting ? t.submitting : t.submitTribute}
                                     </button>
                                 </div>
                             </form>
@@ -409,9 +540,9 @@ const TributeModal: React.FC<TributeModalProps> = ({
                         <div className="pb-8">
                             <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
                                 <div className=" p-4  mb-6">
-                                    <h3 className="text-xl font-semibold text-center mb-4 text-primary">Share Your Memories as Images</h3>
+                                    <h3 className="text-xl font-semibold text-center mb-4 text-primary">{t.shareMemories}</h3>
                                     <p className="text-center text-gray-500 mb-4 text-primary">
-                                        You can select a design from the options below
+                                        {t.selectDesign}
                                     </p>
                                     <div className="w-full">
                                         <div
@@ -439,9 +570,9 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                                     ))}
                                                 </div>
                                             )}
-                                            <p className="text-gray-500 mb-2">Drag & drop images here or click to browse</p>
+                                            <p className="text-gray-500 mb-2">{t.dragDrop}</p>
                                             <label className="cursor-pointer text-white bg-primary px-8 py-2">
-                                                Browse Files...
+                                                {t.browseFiles}
                                                 <input
                                                     type="file"
                                                     accept="image/*"
@@ -455,7 +586,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                 </div>
                                 <div className="mb-4">
                                     <label htmlFor="message" className="block text-gray-700 mb-2">
-                                        Message
+                                        {t.messageLabel}
                                     </label>
                                     <textarea
                                         id="message"
@@ -463,11 +594,11 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                         maxLength={2000}
                                         className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                                     />
-                                    <p className="text-xs">Maximum 2000 characters allowed</p>
+                                    <p className="text-xs">{t.maxChars}</p>
                                 </div>
                                 <div className="mb-4">
                                     <label htmlFor="name" className={`pb-2 block`}>
-                                        Name
+                                        {t.nameLabel}
                                     </label>
                                     <input
                                         type="text"
@@ -477,7 +608,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                 </div>
                                 <div className="mb-4">
                                     <label htmlFor="name" className={`pb-2 block`}>
-                                        Relationship/Organization
+                                        {t.relationshipLabel}
                                     </label>
                                     <input
                                         type="text"
@@ -487,7 +618,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                 </div>
                                 <div className="mb-4">
                                     <label htmlFor="name" className={`pb-2 block`}>
-                                        Country
+                                        {t.countryLabel}
                                     </label>
                                     <input
                                         type="text"
@@ -499,7 +630,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                     <button
                                         onClick={handleClose}
                                         className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
-                                        Back
+                                        {t.back}
                                     </button>
                                     <button
                                         className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
@@ -509,7 +640,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                         }
                                         )}
                                     >
-                                        Next
+                                        {t.next}
                                     </button>
                                 </div>
                             </form>
@@ -519,29 +650,28 @@ const TributeModal: React.FC<TributeModalProps> = ({
                         <div className="pb-8">
                             <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
                                 <div className="p-4 mb-6">
-                                    <h3 className="text-xl font-semibold text-center mb-4 text-primary">Choose a Type</h3>
+                                    <h3 className="text-xl font-semibold text-center mb-4 text-primary">{t.chooseType}</h3>
                                     <p className="text-center text-gray-500 mb-4 text-primary">
-                                        You can select a design from the options below
+                                        {t.selectDesign}
                                     </p>
                                     <div className="flex flex-wrap justify-between text-center mb-4">
                                         <div className="w-1/2">
                                             <div className="w-full pr-2 h-32 bg-gray-200 rounded flex items-center justify-center">
-                                                <span className="text-gray-500">Flower Type 1</span>
+                                                <span className="text-gray-500">{t.flowerType1}</span>
                                             </div>
-                                            <p>Bouquet</p>
+                                            <p>{t.bouquet}</p>
                                         </div>
-
                                         <div className="w-1/2">
                                             <div className="w-full pl-2 h-32 bg-gray-200 rounded flex items-center justify-center">
-                                                <span className="text-gray-500">Flower Type 2</span>
+                                                <span className="text-gray-500">{t.flowerType2}</span>
                                             </div>
-                                            <p>Wreath</p>
+                                            <p>{t.wreath}</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="mb-4">
                                     <label htmlFor="message" className="block text-gray-700 mb-2">
-                                        Message
+                                        {t.messageLabel}
                                     </label>
                                     <textarea
                                         id="message"
@@ -549,11 +679,11 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                         maxLength={2000}
                                         className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                                     />
-                                    <p className="text-xs">Maximum 2000 characters allowed</p>
+                                    <p className="text-xs">{t.maxChars}</p>
                                 </div>
                                 <div className="mb-4">
                                     <label htmlFor="name" className={`pb-2 block`}>
-                                        Name
+                                        {t.nameLabel}
                                     </label>
                                     <input
                                         type="text"
@@ -563,7 +693,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                 </div>
                                 <div className="mb-4">
                                     <label htmlFor="name" className={`pb-2 block`}>
-                                        Relationship/Organization
+                                        {t.relationshipLabel}
                                     </label>
                                     <input
                                         type="text"
@@ -573,7 +703,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                 </div>
                                 <div className="mb-4">
                                     <label htmlFor="name" className={`pb-2 block`}>
-                                        Country
+                                        {t.countryLabel}
                                     </label>
                                     <input
                                         type="text"
@@ -585,7 +715,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                     <button
                                         onClick={handleClose}
                                         className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
-                                        Back
+                                        {t.back}
                                     </button>
                                     <button
                                         className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
@@ -595,7 +725,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                         }
                                         )}
                                     >
-                                        Next
+                                        {t.next}
                                     </button>
                                 </div>
                             </form>

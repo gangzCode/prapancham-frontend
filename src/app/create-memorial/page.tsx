@@ -119,6 +119,30 @@ const CreateMemorialPage: React.FC = () => {
     else if (language === "sinhala") langKey = "si";
     else langKey = "en";
     type LanguageKey = 'en' | 'ta' | 'si';
+    const translations: Record<LanguageKey, { [key: string]: string }> = {
+        en: {
+            wantToAdvertise: "Want to Advertise Here?",
+            contactToPost: "Contact us to post your advertisements and reach thousands of viewers",
+            clickToWhatsApp: "Click to message us on WhatsApp!",
+            contactToPostShort: "Contact us to post your advertisements",
+            clickToMessage: "Click to message us!",
+        },
+        ta: {
+            wantToAdvertise: "விளம்பரம் செய்ய விரும்புகிறீர்களா?",
+            contactToPost: "உங்கள் விளம்பரங்களை இடுகையிட எங்களை தொடர்பு கொள்ளுங்கள்",
+            clickToWhatsApp: "WhatsApp இல் செய்தி அனுப்ப கிளிக் செய்யவும்!",
+            contactToPostShort: "உங்கள் விளம்பரங்களை இடுகையிட எங்களை தொடர்பு கொள்ளுங்கள்",
+            clickToMessage: "செய்தி அனுப்ப கிளிக் செய்யவும்!",
+        },
+        si: {
+            wantToAdvertise: "ප්‍රචාරණය කිරීමට අවශ්‍යද?",
+            contactToPost: "ඔබේ දැන්වීම් පළ කිරීමට අප හා සම්බන්ධ වන්න",
+            clickToWhatsApp: "WhatsApp මගින් පණිවිඩ යැවීමට ක්ලික් කරන්න!",
+            contactToPostShort: "ඔබේ දැන්වීම් පළ කිරීමට අප හා සම්බන්ධ වන්න",
+            clickToMessage: "පණිවිඩ යැවීමට ක්ලික් කරන්න!",
+        },
+    };
+    const t = translations[langKey];
 
     const [profile, setProfile] = useState({
         username: '',
@@ -408,10 +432,10 @@ const CreateMemorialPage: React.FC = () => {
                                         <div className="w-full md:max-h-[232px] max-h-[232px] relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
                                             <div className="text-center text-white p-4">
                                                 <h3 className="text-lg md:text-xl font-bold mb-2">
-                                                    Want to Advertise Here?
+                                                    {t.wantToAdvertise}
                                                 </h3>
                                                 <p className="text-xs md:text-sm mb-2 opacity-90">
-                                                    Contact us to post your advertisements and reach thousands of viewers
+                                                    {t.contactToPost}
                                                 </p>
                                                 <div className="space-y-1">
                                                     <p className="text-xs md:text-sm font-medium flex items-center justify-center gap-2">
@@ -419,7 +443,7 @@ const CreateMemorialPage: React.FC = () => {
                                                         +94 77 002 33 23
                                                     </p>
                                                     <p className="text-xs opacity-80">
-                                                        Click to message us on WhatsApp!
+                                                        {t.clickToWhatsApp}
                                                     </p>
                                                 </div>
                                             </div>
@@ -449,10 +473,10 @@ const CreateMemorialPage: React.FC = () => {
                                         <div className="w-full md:max-h-[232px] max-h-[232px] relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
                                             <div className="text-center text-white p-3">
                                                 <h3 className="text-sm md:text-lg font-bold mb-2">
-                                                    Want to Advertise Here?
+                                                    {t.wantToAdvertise}
                                                 </h3>
                                                 <p className="text-xs mb-2 opacity-90">
-                                                    Contact us to post your advertisements
+                                                    {t.contactToPostShort}
                                                 </p>
                                                 <div className="space-y-1">
                                                     <p className="text-xs font-medium flex items-center justify-center gap-1">
@@ -460,7 +484,7 @@ const CreateMemorialPage: React.FC = () => {
                                                         +94 77 002 33 23
                                                     </p>
                                                     <p className="text-xs opacity-80">
-                                                        Click to message us!
+                                                        {t.clickToMessage}
                                                     </p>
                                                 </div>
                                             </div>
