@@ -45,6 +45,7 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
         }, 0)
         : 0;
     const totalAmount = (typeof selectedPlan.price === 'number' ? selectedPlan.price : parseFloat(selectedPlan.price || '0')) + addonsTotal;
+    const roundedTotalAmount = Math.round(totalAmount * 100) / 100;
 
     return (
         <div className='p-4 md:p-8 lg:px-16 bg-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)]'>
@@ -81,7 +82,7 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
                             {language === 'si' && `ගෙවිය යුතු මුළු මුදල`}
                             {language === 'ta' && `செலுத்த வேண்டிய மொத்த தொகை`}
                         </p>
-                        <h1 className="text-xl font-bold">{selectedPlan.currency} {totalAmount}</h1>
+                        <h1 className="text-xl font-bold">{selectedPlan.currency} {roundedTotalAmount.toFixed(2)}</h1>
                     </div>
                     <Separator />
                     {selectedPlan.features.map((feature: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined, index: React.Key | null | undefined) => (
