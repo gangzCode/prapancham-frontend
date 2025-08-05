@@ -1,4 +1,4 @@
-import { useEffect, useState, DragEvent } from "react";
+import { useEffect, useState, DragEvent, act } from "react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 import { createPortal } from "react-dom";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import type { ObituaryEntry } from "../hero/types";
 import CardFormWithStepper from "./CardFormWithStepper";
 import LetterFormWithStepper from "./LetterFormWithStepper";
+import CountrySelect from "./CountrySelect";
 
 type TributeModalProps = {
     isOpen: boolean;
@@ -174,6 +175,78 @@ const TributeModal: React.FC<TributeModalProps> = ({
     const [cardTemplates, setCardTemplates] = useState<any[]>([]);
     const [loadingTemplates, setLoadingTemplates] = useState(false);
     const [letterTemplates, setLetterTemplates] = useState<any[]>([]);
+    const [flowerImages, setFlowerImages] = useState<any[]>([]);
+    const [selectedFlower, setSelectedFlower] = useState<any>(null);
+    const [countries, setCountries] = useState<any[]>([]);
+
+    const [country, setCountry] = useState<string>("");
+    const [canadaCountryId, setCanadaCountryId] = useState<string>("");
+    const [currency, setCurrency] = useState<string>("");
+    const [isConversionLoading, setIsConversionLoading] = useState(false);
+    const [convertedAmount, setConvertedAmount] = useState<number | null>(null);
+
+    const handleCountryChange = (selectedCountry: string, currencyCode: string) => {
+        setCountry(selectedCountry);
+        setCurrency(currencyCode);
+    };
+
+    const fetchConversionRate = async (
+        fromCurrency: string,
+        toCurrency: string,
+        amount: number
+    ) => {
+        if (!currency) return;
+        try {
+            setIsConversionLoading(true);
+            const response = await fetch(`https://api.exchangerate.host/convert?from=${fromCurrency}&to=${toCurrency}&amount=${amount}&access_key=${process.env.NEXT_PUBLIC_EXCHANGE_RATE_KEY}`);
+            if (response.ok) {
+                const data = await response.json();
+                setConvertedAmount(data.result);
+                setIsConversionLoading(false);
+            } else {
+                console.error('Failed to fetch conversion rate');
+                setConvertedAmount(null);
+                setIsConversionLoading(false);
+            }
+        } catch (error) {
+            console.error('Error fetching conversion rate:', error);
+            setConvertedAmount(null);
+            setIsConversionLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (country && currency && selectedFlower && canadaCountryId) {
+            fetchConversionRate("CAD", currency, selectedFlower?.priceList.find((p: any) => p.country === canadaCountryId)?.price);
+        }
+    }, [country, currency, selectedFlower]);
+
+    // fetch countries
+    useEffect(() => {
+        const fetchCountries = async () => {
+            if (activeTab !== "flowers") return;
+            const token = localStorage.getItem('token');
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/country/active?page=1&limit=10`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setCountries(data.countries || []);
+                    const canada = data.countries.find((c: any) => c.currencyCode === "CAD");
+                    setCanadaCountryId(canada?._id || "");
+                } else {
+                    console.error('Failed to fetch countries');
+                }
+            } catch (error) {
+                console.error('Error fetching countries:', error);
+            }
+        };
+
+        fetchCountries();
+    }, [activeTab]);
 
     // Fetch card templates when cards tab is active
     useEffect(() => {
@@ -223,6 +296,34 @@ const TributeModal: React.FC<TributeModalProps> = ({
         fetchLetterTemplates();
     }, [activeTab, letterTemplates.length]);
 
+    // fetch flower images when flowers tab is active
+    useEffect(() => {
+        const fetchFlowerImages = async () => {
+            if (activeTab === "flowers" && flowerImages.length === 0) {
+                setLoadingTemplates(true);
+                try {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tribute-items/flower-type/active?page=1&limit=10`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        setFlowerImages(data.tributeFlowerType || []);
+                    } else {
+                        console.error('Failed to fetch flower images');
+                    }
+                } catch (error) {
+                    console.error('Error fetching flower images:', error);
+                } finally {
+                    setLoadingTemplates(false);
+                }
+            }
+        };
+
+        fetchFlowerImages();
+    }, [activeTab, flowerImages.length]);
+
+    const getCurrencyCodeByCountryId = (countryId: string) => {
+        const country = countries.find(c => c._id === countryId);
+        return country ? country.currencyCode : null;
+    };
 
     // Form state for message submission
     const [formData, setFormData] = useState({
@@ -528,12 +629,14 @@ const TributeModal: React.FC<TributeModalProps> = ({
                         <CardFormWithStepper
                             cardTemplates={cardTemplates}
                             obituaryEntry={obituaryEntry}
+                            onClose={handleClose}
                         />
                     }
                     {activeTab === "letter" && !loadingTemplates &&
                         <LetterFormWithStepper
                             letterTemplates={letterTemplates}
                             obituaryEntry={obituaryEntry}
+                            onClose={handleClose}
                         />
                     }
                     {activeTab === "memory" &&
@@ -646,7 +749,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                             </form>
                         </div>
                     }
-                    {activeTab === "flowers" &&
+                    {activeTab === "flowers" && !loadingTemplates && (
                         <div className="pb-8">
                             <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
                                 <div className="p-4 mb-6">
@@ -654,20 +757,75 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                     <p className="text-center text-gray-500 mb-4 text-primary">
                                         {t.selectDesign}
                                     </p>
-                                    <div className="flex flex-wrap justify-between text-center mb-4">
-                                        <div className="w-1/2">
-                                            <div className="w-full pr-2 h-32 bg-gray-200 rounded flex items-center justify-center">
-                                                <span className="text-gray-500">{t.flowerType1}</span>
+                                    <div
+                                        className="flex flex-wrap  text-center mb-4 gap-4"
+                                    >
+                                        {flowerImages.map((flower, index) => (
+                                            <div
+                                                key={index}
+                                                className={`w-1/8 cursor-pointer transition-all duration-200 
+                                                        ${selectedFlower?._id === flower._id
+                                                        ? "border-4 border-teal-600 bg-teal-50 shadow-lg scale-105 ring-2 ring-teal-300"
+                                                        : "border bg-white hover:border-teal-400 hover:bg-teal-50"
+                                                    }`}
+                                                onClick={() => setSelectedFlower(flower)}
+                                                style={{ position: "relative" }}
+                                            >
+                                                <div className="w-56 h-32 bg-gray-200 rounded flex items-center justify-center relative">
+                                                    <img src={flower.image} alt={flower.name} className="object-cover h-full w-56 rounded" />
+                                                    {selectedFlower?._id === flower._id && (
+                                                        <span className="absolute top-2 right-2 bg-teal-600 text-white text-xs px-2 py-1 rounded-full shadow">
+                                                            ✓ Selected
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className={`font-semibold mt-2 ${selectedFlower?._id === flower._id ? "text-teal-700" : ""}`}>{flower.name}</p>
+                                                <p className="text-sm text-gray-500">Price:</p>
+                                                {flower.priceList.map((priceObj: any, priceIndex: number) => {
+                                                    const currency = getCurrencyCodeByCountryId(priceObj.country) || "";
+                                                    return (
+                                                        <span
+                                                            key={priceIndex}
+                                                            className="mt-2 mb-2 inline-block bg-gray-100 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mt-1 mr-2"
+                                                            title={`${currency} ${priceObj.price}`}
+                                                        >
+                                                            {currency && (
+                                                                <span className="font-bold">{currency}</span>
+                                                            )}{" "}
+                                                            <span>{priceObj.price}</span>
+                                                        </span>
+                                                    );
+                                                })}
                                             </div>
-                                            <p>{t.bouquet}</p>
-                                        </div>
-                                        <div className="w-1/2">
-                                            <div className="w-full pl-2 h-32 bg-gray-200 rounded flex items-center justify-center">
-                                                <span className="text-gray-500">{t.flowerType2}</span>
-                                            </div>
-                                            <p>{t.wreath}</p>
-                                        </div>
+                                        ))}
                                     </div>
+                                </div>
+                                <div>
+                                    <p className="text-center text-gray-500 mb-4 text-primary">Select your country to see the price in your currency</p>
+                                    {/* CountrySelect component to select country and show currency */}
+                                    <CountrySelect onChange={handleCountryChange} />
+
+                                    {isConversionLoading && (
+                                        <div className="text-center mt-4">
+                                            <p className="text-lg">Converting</p>
+                                            <div className="loader"></div>
+                                        </div>
+                                    )}
+
+                                    {!isConversionLoading && country && currency && selectedFlower && (
+                                        <div className="mt-4 text-center">
+                                            <p className="text-lg">{selectedFlower.name}</p>
+                                            {convertedAmount !== null && (
+                                                <p className="text-lg">
+                                                    {t.convertedPrice}
+                                                    <span className="font-bold">
+                                                        {currency} {convertedAmount.toFixed(2)}
+                                                    </span>
+                                                </p>
+                                            )}
+                                        </div>
+
+                                    )}
                                 </div>
                                 <div className="mb-4">
                                     <label htmlFor="message" className="block text-gray-700 mb-2">
@@ -730,6 +888,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                                 </div>
                             </form>
                         </div>
+                    )
                     }
                 </div>
             </div>

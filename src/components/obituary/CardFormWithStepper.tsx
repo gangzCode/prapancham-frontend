@@ -20,6 +20,7 @@ const CardFormWithStepper = (
     props: {
         cardTemplates: cardTemplateData[];
         obituaryEntry: ObituaryEntry;
+        onClose?: () => void;
     }
 ) => {
     const { language } = useLanguage();
@@ -201,7 +202,9 @@ const CardFormWithStepper = (
     };
 
     const handleClose = () => {
-        console.log('Close modal');
+        if (props.onClose) {
+            props.onClose();
+        }
     };
 
     const handleSubmitCard = async () => {
