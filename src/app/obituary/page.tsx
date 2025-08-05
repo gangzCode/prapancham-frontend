@@ -30,6 +30,12 @@ interface ApiOrder {
     recievedDonations: string[];
     createdAt: string;
     updatedAt: string;
+    accountDetails?: {
+        bankName: string;
+        branchName: string;
+        accountNumber: string | null;
+        accountHolderName: string;
+    };
 }
 
 interface ApiResponse {
@@ -369,6 +375,7 @@ const Obituary: React.FC = () => {
         imageUrl: order.thumbnailImage || order.primaryImage || "/images/tribute.jpg",
         condolences: order.tributeItems? order.tributeItems.length : 0,
         donations: order.recievedDonations ? order.recievedDonations.length : 0,
+        accountDetails: order.accountDetails || null,
     });
 
     return (
