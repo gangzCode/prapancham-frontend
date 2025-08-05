@@ -712,6 +712,18 @@ const ObituaryDetail: React.FC = () => {
         }
     };
 
+    // Function to check if account details are valid for donation
+    const hasValidAccountDetails = (accountDetails: any): boolean => {
+        if (!accountDetails) return false;
+        
+        return !!(
+            accountDetails.bankName?.trim() &&
+            accountDetails.branchName?.trim() &&
+            accountDetails.accountNumber &&
+            accountDetails.accountHolderName?.trim()
+        );
+    };
+
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -835,12 +847,14 @@ const ObituaryDetail: React.FC = () => {
 
                                 🕯️ {t.postTribute}
                             </button>
-                            <button
-                                onClick={openModal}
-                                className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
-                            >
-                                💝 {t.donate}
-                            </button>
+                            {hasValidAccountDetails(obituaryData.accountDetails) && (
+                                <button
+                                    onClick={openModal}
+                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
+                                >
+                                    💝 {t.donate}
+                                </button>
+                            )}
                         </div>
 
                         <Separator className="mt-4 !w-full" />

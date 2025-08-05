@@ -6,6 +6,13 @@ export interface ObituaryEntry {
   address: string;
   imageUrl: string;
   condolences: number;
+  donations?: number;
+  accountDetails?: {
+    bankName: string;
+    branchName: string;
+    accountNumber: string | null;
+    accountHolderName: string;
+  } | null;
 }
 
 export interface NewsItem {

@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import ContactSection from "@/components/contact/ContactSection";
 import toast from "react-hot-toast";
 import useSWR from 'swr';
+import { useLanguage } from "@/components/ui/LanguageProvider";
+
+type LanguageKey = "en" | "ta" | "si";
 
 // Define interfaces for ad types and advertisements
 interface AdType {
@@ -68,6 +71,88 @@ const countries = [
 ];
 
 const ContactPage: React.FC = () => {
+  const { language } = useLanguage();
+  let langKey: LanguageKey = "en";
+  if (language === "tamil") langKey = "ta";
+  else if (language === "sinhala") langKey = "si";
+
+  const translations: Record<LanguageKey, { [key: string]: string }> = {
+    en: {
+      getInTouch: "Get In Touch With Us",
+      disclaimer: "Disclaimer about the country selection",
+      firstName: "First Name",
+      lastName: "Last Name",
+      email: "Email",
+      phoneNumber: "Phone Number",
+      description: "Description",
+      submit: "Submit",
+      submitting: "Submitting...",
+      submitSuccess: "Submitted successfully!",
+      submitFailed: "Failed to submit",
+      firstNameRequired: "First name is required",
+      lastNameRequired: "Last name is required",
+      emailRequired: "Email is required",
+      phoneRequired: "Phone number is required",
+      countryRequired: "Country is required",
+      descriptionRequired: "Description is required",
+      contactUsTitle: "For More Details Contact Us",
+      emailAddresses: "E mail addressess",
+      advertiseHere: "Want to Advertise Here?",
+      advertiseDescription: "Contact us to post your advertisements and reach thousands of viewers",
+      whatsappMessage: "Click to message us on WhatsApp!"
+    },
+    ta: {
+      getInTouch: "எங்களுடன் தொடர்பு கொள்ளுங்கள்",
+      disclaimer: "நாட்டு தேர்வு பற்றிய மறுப்பு",
+      firstName: "முதல் பெயர்",
+      lastName: "கடைசி பெயர்",
+      email: "மின்னஞ்சல்",
+      phoneNumber: "தொலைபேசி எண்",
+      description: "விளக்கம்",
+      submit: "சமர்ப்பிக்கவும்",
+      submitting: "சமர்ப்பிக்கப்படுகிறது...",
+      submitSuccess: "வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது!",
+      submitFailed: "சமர்ப்பிக்க முடியவில்லை",
+      firstNameRequired: "முதல் பெயர் தேவை",
+      lastNameRequired: "கடைசி பெயர் தேவை",
+      emailRequired: "மின்னஞ்சல் தேவை",
+      phoneRequired: "தொலைபேசி எண் தேவை",
+      countryRequired: "நாடு தேவை",
+      descriptionRequired: "விளக்கம் தேவை",
+      contactUsTitle: "மேலும் விவரங்களுக்கு எங்களை தொடர்பு கொள்ளுங்கள்",
+      emailAddresses: "மின்னஞ்சல் முகவரிகள்",
+      advertiseHere: "இங்கே விளம்பரம் செய்ய விரும்புகிறீர்களா?",
+      advertiseDescription: "உங்கள் விளம்பரங்களை வெளியிட எங்களை தொடர்பு கொண்டு ஆயிரக்கணக்கான பார்வையாளர்களை அடையுங்கள்",
+      whatsappMessage: "வாட்ஸ்அப்பில் எங்களுக்கு செய்தி அனுப்ப கிளிக் செய்யுங்கள்!"
+    },
+    si: {
+      getInTouch: "අප සමඟ සම්බන්ධ වන්න",
+      disclaimer: "රට තේරීම පිළිබඳ වියාචනය",
+      firstName: "මුල් නම",
+      lastName: "අවසාන නම",
+      email: "විද්‍යුත් තැපෑල",
+      phoneNumber: "දුරකථන අංකය",
+      description: "විස්තරය",
+      submit: "ඉදිරිපත් කරන්න",
+      submitting: "ඉදිරිපත් කරමින්...",
+      submitSuccess: "සාර්ථකව ඉදිරිපත් කරන ලදී!",
+      submitFailed: "ඉදිරිපත් කිරීමට අසමත් විය",
+      firstNameRequired: "මුල් නම අවශ්‍යය",
+      lastNameRequired: "අවසාන නම අවශ්‍යය",
+      emailRequired: "විද්‍යුත් තැපෑල අවශ්‍යය",
+      phoneRequired: "දුරකථන අංකය අවශ්‍යය",
+      countryRequired: "රට අවශ්‍යය",
+      descriptionRequired: "විස්තරය අවශ්‍යය",
+      contactUsTitle: "වැඩිදුර විස්තර සඳහා අප සමඟ සම්බන්ධ වන්න",
+      emailAddresses: "විද්‍යුත් තැපැල් ලිපින",
+      advertiseHere: "මෙහි ප්‍රචාරණය කිරීමට කැමතිද?",
+      advertiseDescription: "ඔබේ ප්‍රචාරණ පළ කිරීමට අප සමඟ සම්බන්ධ වී දහස් ගණන් නරඹන්නන් වෙත ළඟා වන්න",
+      whatsappMessage: "WhatsApp හරහා අපට පණිවිඩයක් යැවීමට ක්ලික් කරන්න!"
+    }
+  };
+
+  const t = translations[langKey];
+
   const phoneContacts = [
     "+94 77 002 33 23",
     "+94 77 002 33 24",
@@ -114,12 +199,12 @@ const ContactPage: React.FC = () => {
 
   const validate = () => {
     const newErrors: any = {};
-    if (!firstName) newErrors.firstName = "First name is required";
-    if (!lastName) newErrors.lastName = "Last name is required";
-    if (!email) newErrors.email = "Email is required";
-    if (!phoneNumber) newErrors.phoneNumber = "Phone number is required";
-    if (!activeCountry) newErrors.country = "Country is required";
-    if (!description) newErrors.description = "Description is required";
+    if (!firstName) newErrors.firstName = t.firstNameRequired;
+    if (!lastName) newErrors.lastName = t.lastNameRequired;
+    if (!email) newErrors.email = t.emailRequired;
+    if (!phoneNumber) newErrors.phoneNumber = t.phoneRequired;
+    if (!activeCountry) newErrors.country = t.countryRequired;
+    if (!description) newErrors.description = t.descriptionRequired;
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -150,15 +235,15 @@ const ContactPage: React.FC = () => {
         setDescription("");
         setSuccess(true);
         setErrors({});
-        toast.success("Submitted successfully!");
+        toast.success(t.submitSuccess);
       } else {
         const data = await res.json();
-        setErrors({ api: data.message || "Failed to submit" });
-        toast.error(data.message || "Failed to submit");
+        setErrors({ api: data.message || t.submitFailed });
+        toast.error(data.message || t.submitFailed);
       }
     } catch (err) {
-      setErrors({ api: "Failed to submit" });
-      toast.error("Failed to submit");
+      setErrors({ api: t.submitFailed });
+      toast.error(t.submitFailed);
     } finally {
       setSubmitting(false);
     }
@@ -182,7 +267,7 @@ const ContactPage: React.FC = () => {
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-4 md:px-8">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-poppins font-bold mb-2 md:mb-4 text-center">
-              Get In Touch With Us
+              {t.getInTouch}
             </h1>
             <p className="text-center text-sm sm:text-base md:text-lg max-w-xl md:max-w-2xl lg:max-w-3xl">
               
@@ -205,13 +290,13 @@ const ContactPage: React.FC = () => {
             <div className="md:col-span-2 ">
               <div className="text-center mb-4">
                 <p className="text-[#880002] text-body-base">
-                  Disclaimer about the country selection
+                  {t.disclaimer}
                 </p>
               </div>
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
                   <Input
-                    placeholder="First Name"
+                    placeholder={t.firstName}
                     className="w-full placeholder:text-body-sm px-6 py-4 h-[48px]"
                     value={firstName}
                     onChange={e => setFirstName(e.target.value)}
@@ -220,7 +305,7 @@ const ContactPage: React.FC = () => {
                 </div>
                 <div>
                   <Input
-                    placeholder="Last Name"
+                    placeholder={t.lastName}
                     className="w-full placeholder:text-body-sm px-6 py-4 h-[48px]"
                     value={lastName}
                     onChange={e => setLastName(e.target.value)}
@@ -229,7 +314,7 @@ const ContactPage: React.FC = () => {
                 </div>
                 <div>
                   <Input
-                    placeholder="Email"
+                    placeholder={t.email}
                     type="email"
                     className="w-full placeholder:text-body-sm px-6 py-4 h-[48px]"
                     value={email}
@@ -240,7 +325,7 @@ const ContactPage: React.FC = () => {
                 <div>
                   <PhoneInput
                     country={'lk'}
-                    placeholder="Phone Number"
+                    placeholder={t.phoneNumber}
                     containerClass="phone-input"
                     inputClass="form-control"
                     value={phoneNumber}
@@ -250,7 +335,7 @@ const ContactPage: React.FC = () => {
                 </div>
                 <div>
                   <Textarea
-                    placeholder="Description"
+                    placeholder={t.description}
                     className="w-full placeholder:text-body-sm"
                     rows={5}
                     value={description}
@@ -259,10 +344,10 @@ const ContactPage: React.FC = () => {
                   {errors.description && <span className="text-red-500 text-xs">{errors.description}</span>}
                 </div>
                 {errors.api && <div className="text-red-500 text-xs text-center">{errors.api}</div>}
-                {success && <div className="text-green-600 text-xs text-center">Submitted successfully!</div>}
+                {success && <div className="text-green-600 text-xs text-center">{t.submitSuccess}</div>}
                 <div className="pt-2 flex justify-center">
                   <Button className="w-64 bg-primary hover:bg-[#00506f] text-white font-bold text-sm" type="submit" disabled={submitting}>
-                    {submitting ? "Submitting..." : "Submit"}
+                    {submitting ? t.submitting : t.submit}
                   </Button>
                 </div>
               </form>
@@ -282,7 +367,7 @@ const ContactPage: React.FC = () => {
             {/* Right side - Contact details */}
             <div className="flex flex-col items-center md:border-l md:border-gray-300 md:pl-8">
               <ContactSection
-                title="For More Details Contact Us"
+                title={t.contactUsTitle}
                 contacts={phoneContacts}
                 containerClassName="w-full"
                 titleClassName="text-center"
@@ -290,7 +375,7 @@ const ContactPage: React.FC = () => {
               />
               <div className="mt-8 w-full">
                 <ContactSection
-                  title="E mail addressess"
+                  title={t.emailAddresses}
                   contacts={emailContacts}
                   containerClassName="w-full"
                   titleClassName="text-center"
@@ -320,10 +405,10 @@ const ContactPage: React.FC = () => {
             <div className="w-full md:max-h-[232px] max-h-[116px] relative bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center hover:from-teal-700 hover:to-teal-900 transition-colors">
               <div className="text-center text-white p-6">
                 <h3 className="text-xl md:text-2xl font-bold mb-4">
-                  Want to Advertise Here?
+                  {t.advertiseHere}
                 </h3>
                 <p className="text-sm md:text-base mb-4 opacity-90">
-                  Contact us to post your advertisements and reach thousands of viewers
+                  {t.advertiseDescription}
                 </p>
                 <div className="space-y-2">
                   <p className="text-sm md:text-base font-medium flex items-center justify-center gap-2">
@@ -331,7 +416,7 @@ const ContactPage: React.FC = () => {
                     +94 77 002 33 23
                   </p>
                   <p className="text-xs md:text-sm opacity-80">
-                    Click to message us on WhatsApp!
+                    {t.whatsappMessage}
                   </p>
                 </div>
               </div>

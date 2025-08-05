@@ -16,6 +16,8 @@ interface PaymentFormData {
     phoneNumber: string;
     countryId: string;
     packageAmount: number;
+    tempOrderId?: string;
+    paymentIntentId?: string;
 }
 
 interface PaymentFormProps {

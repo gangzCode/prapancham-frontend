@@ -182,83 +182,84 @@ const Summary: React.FC<SummaryProps> = ({
         setSubmitMessage(null);
 
         try {
-            const formData = createFormData();
-            console.log('Form Data:', formData);
-
-            // Create FormData for file upload
-            const uploadFormData = new FormData();
-
-            // Append non-file fields
-            uploadFormData.append('information', JSON.stringify(formData.information));
-            uploadFormData.append('selectedCountry', formData.selectedCountry);
-            uploadFormData.append('selectedPackage', formData.selectedPackage);
-            uploadFormData.append('username', formData.username);
-            uploadFormData.append('contactDetails', JSON.stringify(formData.contactDetails));
-            uploadFormData.append('selectedAddons', JSON.stringify(formData.selectedAddons));
-            uploadFormData.append('selectedPrimaryImageBgFrame', formData.selectedPrimaryImageBgFrame);
-            uploadFormData.append('selectedBgColor', formData.selectedBgColor);
-            uploadFormData.append('accountDetails', JSON.stringify(formData.accountDetails));
-
-            // Append file fields
-            if (formData.primaryImage) {
-                uploadFormData.append('primaryImage', formData.primaryImage);
-            }
-            if (formData.thumbnailImage) {
-                uploadFormData.append('thumbnailImage', formData.thumbnailImage);
-            }
-            if (formData.additionalImages && formData.additionalImages.length > 0) {
-                formData.additionalImages.forEach((file, index) => {
-                    uploadFormData.append('additionalImages', file);
-                });
-            }
-            if (formData.slideshowImages && formData.slideshowImages.length > 0) {
-                formData.slideshowImages.forEach((file, index) => {
-                    uploadFormData.append('slideshowImages', file);
-                });
-            }
-
             // Get access token from local storage
             const accessToken = localStorage.getItem('accessToken');
+            const loggedInUser = JSON.parse(localStorage.getItem('user') || '{}');
 
-            const headers: HeadersInit = {};
+            const headers: HeadersInit = {
+                'Content-Type': 'application/json'
+            };
             if (accessToken) {
                 headers['Authorization'] = `Bearer ${accessToken}`;
             }
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
+            // Step 1: Create payment intent
+            const paymentIntentData = {
+                username: profile?.username || '',
+                selectedPackage: selectedPlan?._id || '',
+                selectedCountry: selectedCountryId || '',
+                selectedAddons: selectedAddon?.map((addon: any) => addon.id) || [],
+                accountDetails: {
+                    firstName: loggedInUser.firstName || loggedInUser.name?.split(' ')[0] || '',
+                    lastName: loggedInUser.lastName || loggedInUser.name?.split(' ').slice(1).join(' ') || '',
+                    email: loggedInUser.email || '',
+                    phone: loggedInUser.phone || ''
+                },
+                information: informationFormData ? {
+                    title: informationFormData.title || '',
+                    address: informationFormData.address || '',
+                    dateofBirth: informationFormData.dateofBirth ? new Date(informationFormData.dateofBirth).toISOString().split('T')[0] : '',
+                    dateofDeath: informationFormData.dateofDeath ? new Date(informationFormData.dateofDeath).toISOString().split('T')[0] : '',
+                    description: informationFormData.description || '',
+                    tributeVideo: informationFormData.tributeVideo || '',
+                    shortDescription: informationFormData.shortDescription || '',
+                } : {},
+                contactDetails: contactData ? contactData.map((contact: any) => ({
+                    country: contact.country || '',
+                    address: contact.address || '',
+                    phoneNumber: contact.phone || '',
+                    name: contact.name || '',
+                    relationship: contact.relationship || '',
+                    email: contact.email || '',
+                })) : []
+            };
+
+            console.log('Payment Intent Data:', paymentIntentData);
+
+            const paymentIntentResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order/create-payment-intent`, {
                 method: 'POST',
                 headers: headers,
-                body: uploadFormData,
+                body: JSON.stringify(paymentIntentData),
             });
 
-            if (response.ok) {
-                const result = await response.json();
-                setSubmitMessage({ type: 'success', message: 'Order submitted successfully!' });
+            if (paymentIntentResponse.ok) {
+                const paymentIntentResult = await paymentIntentResponse.json();
+                console.log('Payment Intent Result:', paymentIntentResult);
 
-                const loggedInUser = JSON.parse(localStorage.getItem('user') || '{}');
-
-                // Create obituary entry object for DonateModal
+                // Create stripe payment data for the modal
                 const stripePaymentData = {
                     email: loggedInUser.email || '',
                     name: loggedInUser.name || '',
                     address: loggedInUser.address || '',
                     phoneNumber: loggedInUser.phone || '',
                     countryId: selectedCountryId,
-                    packageAmount: getTotalPrice(),
+                    packageAmount: paymentIntentResult.amount || getTotalPrice(),
+                    tempOrderId: paymentIntentResult.tempOrderId,
+                    paymentIntentId: paymentIntentResult.paymentIntentId
                 };
 
                 setStripePaymentProp(stripePaymentData);
-                setStripeClientSecret(result.paymentIntentClientSecret || null);
+                setStripeClientSecret(paymentIntentResult.clientSecret || null);
                 openPaymentModal();
             } else {
-                const errorData = await response.json();
+                const errorData = await paymentIntentResponse.json();
                 setSubmitMessage({
                     type: 'error',
-                    message: errorData.message || 'Failed to submit order. Please try again.'
+                    message: errorData.message || 'Failed to create payment intent. Please try again.'
                 });
             }
         } catch (error) {
-            console.error('Error submitting order:', error);
+            console.error('Error creating payment intent:', error);
             setSubmitMessage({
                 type: 'error',
                 message: 'Network error. Please check your connection and try again.'
@@ -358,12 +359,92 @@ const Summary: React.FC<SummaryProps> = ({
     };
 
     // Handle successful payment
-    const handlePaymentSuccess = () => {
-        closePaymentModal();
-        setStripePaymentProp(null);
-        setStripeClientSecret(null);
-        // Show success popup
-        setShowSuccessPopup(true);
+    const handlePaymentSuccess = async () => {
+        try {
+            // Step 2: Confirm order after successful payment
+            await confirmOrder();
+            
+            closePaymentModal();
+            setStripePaymentProp(null);
+            setStripeClientSecret(null);
+            // Show success popup
+            setShowSuccessPopup(true);
+        } catch (error) {
+            console.error('Error confirming order:', error);
+            setSubmitMessage({
+                type: 'error',
+                message: 'Payment was successful, but order confirmation failed. Please contact support.'
+            });
+        }
+    };
+
+    // Confirm order after successful payment
+    const confirmOrder = async () => {
+        const formData = createFormData();
+        console.log('Confirming Order with Form Data:', formData);
+
+        // Create FormData for file upload
+        const uploadFormData = new FormData();
+
+        // Append non-file fields
+        uploadFormData.append('information', JSON.stringify(formData.information));
+        uploadFormData.append('selectedCountry', formData.selectedCountry);
+        uploadFormData.append('selectedPackage', formData.selectedPackage);
+        uploadFormData.append('username', formData.username);
+        uploadFormData.append('contactDetails', JSON.stringify(formData.contactDetails));
+        uploadFormData.append('selectedAddons', JSON.stringify(formData.selectedAddons));
+        uploadFormData.append('selectedPrimaryImageBgFrame', formData.selectedPrimaryImageBgFrame);
+        uploadFormData.append('selectedBgColor', formData.selectedBgColor);
+        uploadFormData.append('accountDetails', JSON.stringify(formData.accountDetails));
+
+        // Append additional fields for order confirmation
+        if (stripePaymentProp?.tempOrderId) {
+            uploadFormData.append('tempOrderId', stripePaymentProp.tempOrderId);
+        }
+        if (stripePaymentProp?.paymentIntentId) {
+            uploadFormData.append('paymentIntentId', stripePaymentProp.paymentIntentId);
+        }
+
+        // Append file fields
+        if (formData.primaryImage) {
+            uploadFormData.append('primaryImage', formData.primaryImage);
+        }
+        if (formData.thumbnailImage) {
+            uploadFormData.append('thumbnailImage', formData.thumbnailImage);
+        }
+        if (formData.additionalImages && formData.additionalImages.length > 0) {
+            formData.additionalImages.forEach((file, index) => {
+                uploadFormData.append('additionalImages', file);
+            });
+        }
+        if (formData.slideshowImages && formData.slideshowImages.length > 0) {
+            formData.slideshowImages.forEach((file, index) => {
+                uploadFormData.append('slideshowImages', file);
+            });
+        }
+
+        // Get access token from local storage
+        const accessToken = localStorage.getItem('accessToken');
+
+        const headers: HeadersInit = {};
+        if (accessToken) {
+            headers['Authorization'] = `Bearer ${accessToken}`;
+        }
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order/confirm-order`, {
+            method: 'POST',
+            headers: headers,
+            body: uploadFormData,
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to confirm order');
+        }
+
+        const result = await response.json();
+        console.log('Order confirmation result:', result);
+        return result;
     };
 
     // Handle success popup OK button

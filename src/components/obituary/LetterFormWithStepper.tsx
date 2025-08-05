@@ -20,6 +20,7 @@ const LetterFormWithStepper = (
     props: {
         letterTemplates: letterTemplateData[];
         obituaryEntry: ObituaryEntry;
+        onClose?: () => void;
     }
 ) => {
     const { language } = useLanguage();
@@ -221,7 +222,9 @@ const LetterFormWithStepper = (
     };
 
     const handleClose = () => {
-        console.log('Close modal');
+        if (props.onClose) {
+            props.onClose();
+        }
     };
 
     const handleSubmitLetter = async () => {

@@ -36,6 +36,7 @@ const AccoundDetails: React.FC<AccoundDetailsProps> = ({
     onAccountDataChange,
     setActiveStep 
 }) => {
+    const [skipAccountDetails, setSkipAccountDetails] = useState(false);
     const [accountData, setAccountData] = useState({
         bankName: initialAccountData?.bankName || '',
         branch: initialAccountData?.branch || '',
@@ -63,13 +64,55 @@ const AccoundDetails: React.FC<AccoundDetailsProps> = ({
     };
 
     const handleInputChange = (field: string, value: string) => {
-        const updatedData = { ...accountData, [field]: value };
-        setAccountData(updatedData);
-        
-        // Notify parent component of changes
-        if (onAccountDataChange) {
-            onAccountDataChange(updatedData);
+        // For account number, only allow numbers
+        if (field === 'accountNumber') {
+            const numericValue = value.replace(/[^0-9]/g, '');
+            const updatedData = { ...accountData, [field]: numericValue };
+            setAccountData(updatedData);
+            
+            // Notify parent component of changes
+            if (onAccountDataChange) {
+                onAccountDataChange(updatedData);
+            }
+        } else {
+            const updatedData = { ...accountData, [field]: value };
+            setAccountData(updatedData);
+            
+            // Notify parent component of changes
+            if (onAccountDataChange) {
+                onAccountDataChange(updatedData);
+            }
         }
+    };
+
+    const handleToggleSkip = () => {
+        const newSkipValue = !skipAccountDetails;
+        setSkipAccountDetails(newSkipValue);
+        
+        if (newSkipValue) {
+            // If skipping, clear account data and notify parent
+            const emptyData = {
+                bankName: '',
+                branch: '',
+                accountNumber: '',
+                accountHolder: ''
+            };
+            setAccountData(emptyData);
+            if (onAccountDataChange) {
+                onAccountDataChange(emptyData);
+            }
+        }
+    };
+
+    // Check if all required fields are filled
+    const isFormValid = () => {
+        if (skipAccountDetails) {
+            return true; // If skipping, always valid
+        }
+        return accountData.bankName.trim() !== '' &&
+               accountData.branch.trim() !== '' &&
+               accountData.accountNumber.trim() !== '' &&
+               accountData.accountHolder.trim() !== '';
     };
 
     // Log the received data for debugging
@@ -103,6 +146,34 @@ const AccoundDetails: React.FC<AccoundDetailsProps> = ({
                 <div className="flex-shrink min-w-0 mb-8">
                     <TitleWithUnderline text="Accound Details" underlineWidth={64} />
                 </div>
+                
+                {/* Toggle Button */}
+                <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h4 className="text-lg font-medium text-gray-900 mb-1">
+                                Skip Account Details
+                            </h4>
+                            <p className="text-sm text-gray-600">
+                                Toggle this if you don't want to provide bank account details.
+                            </p>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={handleToggleSkip}
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 ${
+                                skipAccountDetails ? 'bg-teal-600' : 'bg-gray-200'
+                            }`}
+                        >
+                            <span
+                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                    skipAccountDetails ? 'translate-x-6' : 'translate-x-1'
+                                }`}
+                            />
+                        </button>
+                    </div>
+                </div>
+
                 <p className='text-primary mb-8'>To receive donations from others please include your account details.</p>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                     <div className="mb-4 col-span-1">
@@ -114,7 +185,10 @@ const AccoundDetails: React.FC<AccoundDetailsProps> = ({
                             id="bankName"
                             value={accountData.bankName}
                             onChange={(e) => handleInputChange('bankName', e.target.value)}
-                            className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                            disabled={skipAccountDetails}
+                            className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${
+                                skipAccountDetails ? 'bg-gray-100 cursor-not-allowed' : ''
+                            }`}
                         />
                     </div>
                     <div className="mb-4 col-span-1">
@@ -126,7 +200,10 @@ const AccoundDetails: React.FC<AccoundDetailsProps> = ({
                             id="branch"
                             value={accountData.branch}
                             onChange={(e) => handleInputChange('branch', e.target.value)}
-                            className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                            disabled={skipAccountDetails}
+                            className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${
+                                skipAccountDetails ? 'bg-gray-100 cursor-not-allowed' : ''
+                            }`}
                         />
                     </div>
                     <div className="mb-4 col-span-1">
@@ -138,7 +215,11 @@ const AccoundDetails: React.FC<AccoundDetailsProps> = ({
                             id="accountNumber"
                             value={accountData.accountNumber}
                             onChange={(e) => handleInputChange('accountNumber', e.target.value)}
-                            className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                            disabled={skipAccountDetails}
+                            placeholder="Enter numbers only"
+                            className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${
+                                skipAccountDetails ? 'bg-gray-100 cursor-not-allowed' : ''
+                            }`}
                         />
                     </div>
                     <div className="mb-4 col-span-1">
@@ -150,8 +231,11 @@ const AccoundDetails: React.FC<AccoundDetailsProps> = ({
                             id="accountHolder"
                             value={accountData.accountHolder}
                             onChange={(e) => handleInputChange('accountHolder', e.target.value)}
-                            required
-                            className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                            disabled={skipAccountDetails}
+                            required={!skipAccountDetails}
+                            className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${
+                                skipAccountDetails ? 'bg-gray-100 cursor-not-allowed' : ''
+                            }`}
                         />
                     </div>
                 </div>
@@ -165,8 +249,13 @@ const AccoundDetails: React.FC<AccoundDetailsProps> = ({
                     </button>
                     <button
                         type="button"
-                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6"
-                        onClick={() => setActiveStep(10)}
+                        className={`gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap rounded min-h-6 transition-colors ${
+                            isFormValid() 
+                                ? 'bg-[#0D1322] hover:bg-[#0D1322]/90 cursor-pointer' 
+                                : 'bg-gray-400 cursor-not-allowed'
+                        }`}
+                        onClick={() => isFormValid() && setActiveStep(10)}
+                        disabled={!isFormValid()}
                     >
                         Next
                     </button>
