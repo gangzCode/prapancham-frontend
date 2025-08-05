@@ -36,6 +36,9 @@ interface CheckoutFormProps {
     onError: (error: string) => void;
     onBack: () => void;
     t: { [key: string]: string };
+    formData: PaymentFormData;
+    isAnonymous: boolean;
+    paymentIntentId: string;
 }
 
 // Checkout form component that uses Stripe Elements
@@ -44,12 +47,48 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
     onSuccess,
     onError,
     onBack,
-    t
+    t,
+    formData,
+    isAnonymous,
+    paymentIntentId
 }) => {
     const stripe = useStripe();
     const elements = useElements();
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+    const confirmDonation = async () => {
+        try {
+            const donationData = {
+                email: formData.email,
+                name: isAnonymous ? '' : formData.name,
+                address: isAnonymous ? '' : formData.address,
+                phoneNumber: isAnonymous ? '' : formData.phoneNumber,
+                countryId: formData.countryId,
+                donationAmount: formData.donationAmount,
+                orderId: formData.orderId || null,
+                paymentIntentId: paymentIntentId,
+            };
+
+            console.log('Confirming donation with data:', donationData);
+
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/order/donation`,
+                donationData,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
+            console.log('Donation confirmed successfully:', response.data);
+            return response.data;
+        } catch (err: any) {
+            const errorMessage = err.response?.data?.message || err.message || 'Failed to confirm donation';
+            throw new Error(errorMessage);
+        }
+    };
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -76,8 +115,14 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                 setErrorMessage(error.message || 'An unexpected error occurred.');
                 onError(error.message || 'Payment failed');
             } else {
-                // Payment succeeded
-                onSuccess();
+                // Payment succeeded, now confirm the donation
+                try {
+                    await confirmDonation();
+                    onSuccess();
+                } catch (donationError: any) {
+                    setErrorMessage('Payment was successful, but donation confirmation failed. Please contact support.');
+                    onError(donationError.message || 'Donation confirmation failed');
+                }
             }
         } catch (err) {
             setErrorMessage('An unexpected error occurred.');
@@ -136,6 +181,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     t
 }) => {
     const [clientSecret, setClientSecret] = useState<string>('');
+    const [paymentIntentId, setPaymentIntentId] = useState<string>('');
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string>('');
 
@@ -148,19 +194,18 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             setIsLoading(true);
             setError('');
 
-            const paymentData = {
-                email: formData.email,
-                name: isAnonymous ? '' : formData.name,
-                address: isAnonymous ? '' : formData.address,
-                phoneNumber: isAnonymous ? '' : formData.phoneNumber,
-                countryId: formData.countryId,
+            // Step 1: Create payment intent
+            const paymentIntentData = {
                 donationAmount: formData.donationAmount,
+                countryId: formData.countryId,
                 orderId: formData.orderId || null,
             };
 
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}/order/donation`,
-                paymentData,
+            console.log('Creating payment intent with data:', paymentIntentData);
+
+            const paymentIntentResponse = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/order/donation/create-payment-intent`,
+                paymentIntentData,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -168,13 +213,19 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                 }
             );
 
-            if (response.data.paymentIntentClientSecret) {
-                setClientSecret(response.data.paymentIntentClientSecret);
+            if (paymentIntentResponse.data.clientSecret) {
+                setClientSecret(paymentIntentResponse.data.clientSecret);
+                
+                // Store paymentIntentId for later use in donation confirmation
+                const paymentIntentId = paymentIntentResponse.data.paymentIntentId;
+                setPaymentIntentId(paymentIntentId);
+                console.log('Payment intent created successfully, ID:', paymentIntentId);
+                
             } else {
-                throw new Error('No client secret received');
+                throw new Error('No client secret received from payment intent creation');
             }
         } catch (err: any) {
-            const errorMessage = err.response?.data || err.message || 'Failed to initialize payment';
+            const errorMessage = err.response?.data?.message || err.message || 'Failed to create payment intent';
             setError(errorMessage);
             onError(errorMessage);
         } finally {
@@ -252,7 +303,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                     )}
                 </div>
 
-                {clientSecret && (
+                {clientSecret && paymentIntentId && (
                     <Elements options={options} stripe={stripePromise}>
                         <CheckoutForm
                             clientSecret={clientSecret}
@@ -260,6 +311,9 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                             onError={onError}
                             onBack={onBack}
                             t={t}
+                            formData={formData}
+                            isAnonymous={isAnonymous}
+                            paymentIntentId={paymentIntentId}
                         />
                     </Elements>
                 )}
