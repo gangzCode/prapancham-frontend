@@ -226,8 +226,8 @@ const TopBar: React.FC = () => {
             </LanguageSelectContent>
           </LanguageSelect>
         </div>
-        <Minus className="h-5 w-[1px] bg-white" />
-        <div className=" flex gap-1 justify-center items-left text-[#1A1D1F] whitespace-nowrap">
+        {/* <Minus className="h-5 w-[1px] bg-white" /> */}
+        {/* <div className=" flex gap-1 justify-center items-left text-[#1A1D1F] whitespace-nowrap">
           <CountrySelect
             value={countrySelectValue}
             onValueChange={(value) => {
@@ -265,7 +265,7 @@ const TopBar: React.FC = () => {
 
             </CountrySelectContent>
           </CountrySelect>
-        </div>
+        </div> */}
       </div>
     </div>
   );
