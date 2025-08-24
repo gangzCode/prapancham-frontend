@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Separator } from '../ui/separator';
 import StripePaymentMemorial, { useStripePaymentModal } from './StripePaymentMemorial';
 import { add } from 'date-fns';
+import { useRouter } from 'next/navigation';
 interface SummaryProps {
     selectedPlan: any;
     profile: any;
@@ -37,6 +38,8 @@ const Summary: React.FC<SummaryProps> = ({
     accountDetailsData,
     setActiveStep
 }) => {
+    const router = useRouter();
+
     const [activeColor, setActiveColor] = useState("#ffffff");
     const [activeColorId, setActiveColorId] = useState<string>("");
     const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
@@ -363,7 +366,7 @@ const Summary: React.FC<SummaryProps> = ({
         try {
             // Step 2: Confirm order after successful payment
             await confirmOrder();
-            
+
             closePaymentModal();
             setStripePaymentProp(null);
             setStripeClientSecret(null);
@@ -809,7 +812,7 @@ const Summary: React.FC<SummaryProps> = ({
                 </section>
 
                 <div className='text-end'>
-                    I have read and accept the <span className='text-[#880002] underline'>Terms & Conditions</span>
+                    I have read and accept the <span className='text-[#880002] underline' onClick={() => router.push('/terms')}>Terms & Conditions</span>
                 </div>
 
                 {/* Display success/error message */}

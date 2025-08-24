@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Check, Plus } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 
 interface PlanSummaryProps {
@@ -26,6 +27,7 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
     selectedPlan
 }) => {
     const [isChecked, setIsChecked] = useState(false);
+    const router = useRouter();
 
     const availableAddons = (selectedPlan?.addons || []).map((addon: any) => {
         const id = addon._id;
@@ -182,7 +184,10 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
                     {language === 'ta' && 'நான் படித்து ஏற்றுக்கொண்டேன்'}
                     {language === 'si' && 'මම කියවා පිළිගත්තා'}
                     {' '}
-                    <span className='text-[#880002] underline'>
+                    <span 
+                        className='text-[#880002] underline cursor-pointer hover:text-[#660001] transition-colors'
+                        onClick={() => router.push('/terms')}
+                    >
                         {language === 'en' && 'Terms & Conditions'}
                         {language === 'si' && 'නියමයන් සහ කොන්දේසි'}
                         {language === 'ta' && 'விதிமுறைகளும் நிபந்தனைகளும்'}
