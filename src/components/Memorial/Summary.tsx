@@ -545,28 +545,25 @@ const Summary: React.FC<SummaryProps> = ({
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div className="md:col-span-2">
-                            <div
-                                className="md:p-10 p-4"
-                                style={{ backgroundColor: activeColor }}
+                            <div className="md:p-10 p-4" style={{ backgroundColor: activeColor }}>
+                                <div className="bg-black w-full shadow-md flex justify-center">
+                                    <div className="pt-4 pb-2 text-center w-full max-w-5xl px-4">
+                                        <div className="w-full flex justify-center">
+                                            <h1 className="text-2xl md:text-3xl font-serif font-light text-white mb-8 leading-relaxed tracking-wide text-center max-w-3xl">
+                                                {informationFormData?.shortDescription || 'Our deepest condolences'}
+                                            </h1>
+                                        </div>
 
-                            >
-                                <div
-                                    className="bg-white w-full  shadow-md"
-                                >
-                                    <div className="pt-4 pb-2 text-center max-w-lg mx-auto px-4">
-                                        <h1 className="text-2xl md:text-3xl font-serif font-light text-gray-800 mb-8 leading-relaxed tracking-wide">
-                                            {informationFormData?.shortDescription || 'Our deepest condolences'}
-                                        </h1>
-
-                                        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-8">
-                                            <div className="text-gray-500 text-center flex md:flex-col">
-                                                <p className="text-sm uppercase tracking-wider text-gray-500 font-sans">
-                                                    Birth<span className="md:hidden mr-1 ml-1">:</span></p>
-                                                <p>{informationFormData?.dateofBirth ? new Date(informationFormData.dateofBirth).toLocaleDateString() : 'Birth date'}</p>
+                                        <div className="flex flex-col sm:flex-row justify-center items-center mb-6 gap-8 sm:gap-12 w-full">
+                                            <div className="text-white text-center flex flex-col items-center">
+                                                <p className="text-sm uppercase tracking-wider text-white font-sans">
+                                                    Birth</p>
+                                                <p className="text-lg font-serif text-white mt-1">
+                                                    {informationFormData?.dateofBirth ? new Date(informationFormData.dateofBirth).toLocaleDateString() : 'Birth date'}</p>
                                             </div>
 
                                             {primaryPreview && (
-                                                <div className="relative">
+                                                <div className="relative flex justify-center">
                                                     {frameData?.frameImage ? (
                                                         <div className="relative flex items-center justify-center">
                                                             {/* Frame background - slightly larger */}
@@ -576,7 +573,7 @@ const Summary: React.FC<SummaryProps> = ({
                                                                     backgroundImage: `url(${frameData.frameImage})`,
                                                                 }}
                                                             />
-                                                            {/* Primary image - centered and smaller than frame */}
+                                                            {/* Primary image - positioned absolutely inside frame */}
                                                             <img
                                                                 alt="Primary memorial image"
                                                                 className="absolute w-40 sm:w-60 aspect-square object-cover rounded shadow-md"
@@ -586,29 +583,33 @@ const Summary: React.FC<SummaryProps> = ({
                                                     ) : (
                                                         <img
                                                             alt="Primary memorial image"
-                                                            className="w-40 sm:w-60 shadow-md aspect-square object-cover mx-auto sm:mx-4 rounded"
+                                                            className="w-40 sm:w-60 shadow-md aspect-square object-cover rounded"
                                                             src={primaryPreview}
                                                         />
                                                     )}
                                                 </div>
                                             )}
                                             {!primaryPreview && (
-                                                <div className="w-40 sm:w-60 shadow-md aspect-square bg-gray-200 flex items-center justify-center mx-auto sm:mx-4">
-                                                    <p className="text-gray-500 text-sm">No image selected</p>
+                                                <div className="w-40 sm:w-60 shadow-md aspect-square bg-gray-200 flex items-center justify-center">
+                                                    <p className="text-white text-sm">No image selected</p>
                                                 </div>
                                             )}
 
-                                            <div className="text-gray-500 text-center flex md:flex-col">
-                                                <p className="text-sm uppercase tracking-wider text-gray-500 font-sans">Death<span className="md:hidden mr-1 ml-1">:</span></p>
-                                                <p>{informationFormData?.dateofDeath ? new Date(informationFormData.dateofDeath).toLocaleDateString() : 'Death date'}</p>
+                                            <div className="text-white text-center flex flex-col items-center">
+                                                <p className="text-sm uppercase tracking-wider text-white font-sans">
+                                                    Death</p>
+                                                <p className="text-lg font-serif text-white mt-1">
+                                                    {informationFormData?.dateofDeath ? new Date(informationFormData.dateofDeath).toLocaleDateString() : 'Death date'}
+                                                </p>
                                             </div>
                                         </div>
 
-                                        <h1 className="text-3xl md:text-4xl font-serif font-normal text-gray-800 mb-8 leading-tight">
-                                            {informationFormData?.title || 'Memorial Title'}
-                                        </h1>
+                                        <div className="w-full flex justify-center">
+                                            <h1 className="text-3xl md:text-4xl font-serif font-normal text-white mb-8 leading-tight text-center max-w-4xl">
+                                                {informationFormData?.title || 'Memorial Title'}
+                                            </h1>
+                                        </div>
                                     </div>
-
                                 </div>
                             </div>
                             <p className="text-justify mt-4">
