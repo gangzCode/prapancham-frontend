@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import type { ObituaryEntry } from "../hero/types";
 import CardFormWithStepper from "./CardFormWithStepper";
 import LetterFormWithStepper from "./LetterFormWithStepper";
-import CountrySelect from "./CountrySelect";
+import StripePaymentMemorial, { useStripePaymentModal } from "../Memorial/StripePaymentMemorial";
 
 type TributeModalProps = {
     isOpen: boolean;
@@ -59,6 +59,8 @@ const TributeModal: React.FC<TributeModalProps> = ({
             maxChars: "Maximum 2000 characters allowed",
             nameLabel: "Name",
             namePlaceholder: "Your full name",
+            emailLabel: "Email",
+            emailPlaceholder: "Your email address",
             relationshipLabel: "Relationship/Organization",
             relationshipPlaceholder: "e.g., Friend, Colleague, Family member",
             countryLabel: "Country",
@@ -71,15 +73,39 @@ const TributeModal: React.FC<TributeModalProps> = ({
             networkError: "Network error. Please check your connection and try again.",
             back: "Back",
             next: "Next",
-            shareMemories: "Share Your Memories as Images",
+            shareMemories: "Share Your Memory as an Image",
             selectDesign: "You can select a design from the options below",
-            dragDrop: "Drag & drop images here or click to browse",
+            dragDrop: "Drag & drop an image here or click to browse",
             browseFiles: "Browse Files...",
             chooseType: "Choose a Type",
             flowerType1: "Flower Type 1",
             flowerType2: "Flower Type 2",
             bouquet: "Bouquet",
-            wreath: "Wreath"
+            wreath: "Wreath",
+            memorySubmitSuccess: "Your memory has been shared successfully!",
+            memorySubmitError: "Failed to submit memory. Please try again.",
+            memorySubmitting: "Submitting memory...",
+            memorySubmit: "Share Memory",
+            memoryTributeOption: "Memory Tribute Option",
+            memoryOptionRequired: "Please select a memory option to continue.",
+            flowerSubmitSuccess: "Your flower tribute has been submitted successfully! Our team will reach out to you for the payment process.",
+            flowerSubmitError: "Failed to submit flower tribute. Please try again.",
+            flowerSubmitting: "Submitting flower tribute...",
+            flowerSubmit: "Send Flowers",
+            // Payment-related translations
+            proceedToPayment: "Proceed to Payment",
+            createMemoryFree: "Create Memory (Free)",
+            paymentRequired: "Payment Required",
+            completePayment: "Complete Payment",
+            packageAmount: "Memory Tribute Amount",
+            processing: "Processing...",
+            payNow: "Pay Now",
+            paymentSuccess: "Payment completed successfully!",
+            paymentError: "Payment failed. Please try again.",
+            noClientSecret: "Payment initialization required. Please try again.",
+            selectCountry: "Select Country",
+            countryRequired: "Please select a country to see pricing",
+            noCountryPricing: "Pricing not available for selected country"
         },
         ta: {
             selectTributeType: "ஒரு இரங்கல் வகையைத் தேர்ந்தெடுக்கவும்",
@@ -101,6 +127,8 @@ const TributeModal: React.FC<TributeModalProps> = ({
             maxChars: "அதிகபட்சம் 2000 எழுத்துகள் அனுமதிக்கப்படுகிறது",
             nameLabel: "பெயர்",
             namePlaceholder: "உங்கள் முழுப் பெயர்",
+            emailLabel: "மின்னஞ்சல்",
+            emailPlaceholder: "உங்கள் மின்னஞ்சல் முகவரி",
             relationshipLabel: "உறவு/நிறுவனம்",
             relationshipPlaceholder: "எ.கா., நண்பர், சக ஊழியர், குடும்ப உறுப்பினர்",
             countryLabel: "நாடு",
@@ -113,15 +141,39 @@ const TributeModal: React.FC<TributeModalProps> = ({
             networkError: "பிணைய பிழை. உங்கள் இணைப்பை சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
             back: "பின்னால்",
             next: "அடுத்தது",
-            shareMemories: "உங்கள் நினைவுகளை படங்களாக பகிரவும்",
+            shareMemories: "உங்கள் நினைவை படமாக பகிரவும்",
             selectDesign: "கீழே உள்ள விருப்பங்களில் இருந்து ஒரு வடிவமைப்பைத் தேர்ந்தெடுக்கலாம்",
-            dragDrop: "படங்களை இங்கே இழுத்து விடவும் அல்லது கிளிக் செய்து தேர்ந்தெடுக்கவும்",
+            dragDrop: "படத்தை இங்கே இழுத்து விடவும் அல்லது கிளிக் செய்து தேர்ந்தெடுக்கவும்",
             browseFiles: "கோப்புகளைத் தேடு...",
             chooseType: "வகையைத் தேர்ந்தெடுக்கவும்",
             flowerType1: "மலர் வகை 1",
             flowerType2: "மலர் வகை 2",
             bouquet: "மலர் கொத்து",
-            wreath: "மலர் மாலை"
+            wreath: "மலர் மாலை",
+            memorySubmitSuccess: "உங்கள் நினைவு வெற்றிகரமாக பகிரப்பட்டது!",
+            memorySubmitError: "நினைவை சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+            memorySubmitting: "நினைவு சமர்ப்பிக்கப்படுகிறது...",
+            memorySubmit: "நினைவை பகிரவும்",
+            memoryTributeOption: "நினைவு இரங்கல் விருப்பம்",
+            memoryOptionRequired: "தொடர நினைவு விருப்பத்தைத் தேர்ந்தெடுக்கவும்.",
+            flowerSubmitSuccess: "உங்கள் மலர் இரங்கல் வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது! பணம் செலுத்துதல் செயல்முறைக்காக எங்கள் குழு உங்களைத் தொடர்பு கொள்ளும்.",
+            flowerSubmitError: "மலர் இரங்கலை சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+            flowerSubmitting: "மலர் இரங்கல் சமர்ப்பிக்கப்படுகிறது...",
+            flowerSubmit: "மலர்கள் அனுப்பு",
+            // Payment-related translations
+            proceedToPayment: "பணம் செலுத்துவதற்கு தொடரவும்",
+            createMemoryFree: "நினைவை உருவாக்கவும் (இலவசம்)",
+            paymentRequired: "பணம் செலுத்த வேண்டும்",
+            completePayment: "பணம் செலுத்துதலை பூர்த்தி செய்யவும்",
+            packageAmount: "நினைவு இரங்கல் தொகை",
+            processing: "செயலாக்கப்படுகிறது...",
+            payNow: "இப்போது பணம் செலுத்துங்கள்",
+            paymentSuccess: "பணம் செலுத்துதல் வெற்றிகரமாக முடிந்தது!",
+            paymentError: "பணம் செலுத்துதல் தோல்வியடைந்தது. மீண்டும் முயற்சிக்கவும்.",
+            noClientSecret: "பணம் செலுத்துதல் துவக்கம் தேவை. மீண்டும் முயற்சிக்கவும்.",
+            selectCountry: "நாட்டைத் தேர்ந்தெடுக்கவும்",
+            countryRequired: "விலை காண நாட்டைத் தேர்ந்தெடுக்கவும்",
+            noCountryPricing: "தேர்ந்தெடுக்கப்பட்ட நாட்டிற்கு விலை கிடைக்கவில்லை"
         },
         si: {
             selectTributeType: "ශෝක ප්‍රකාශ වර්ගයක් තෝරන්න",
@@ -143,6 +195,8 @@ const TributeModal: React.FC<TributeModalProps> = ({
             maxChars: "උපරිම අක්ෂර 2000ක් ඉඩ ඇත",
             nameLabel: "නම",
             namePlaceholder: "ඔබේ සම්පූර්ණ නම",
+            emailLabel: "විද්‍යුත් ලිපිනය",
+            emailPlaceholder: "ඔබේ විද්‍යුත් ලිපිනය",
             relationshipLabel: "සම්බන්ධය/ආයතනය",
             relationshipPlaceholder: "උදා: මිතුරා, සහකර්මිකයා, පවුලේ සාමාජිකයා",
             countryLabel: "රට",
@@ -155,15 +209,39 @@ const TributeModal: React.FC<TributeModalProps> = ({
             networkError: "ජාල දෝෂයක්. කරුණාකර ඔබේ සම්බන්ධතාවය පරීක්ෂා කර නැවත උත්සාහ කරන්න.",
             back: "ආපසු",
             next: "ඊළඟ",
-            shareMemories: "ඔබේ මතකයන් පින්තූර ලෙස බෙදා ගන්න",
+            shareMemories: "ඔබේ මතකය පින්තූරයක් ලෙස බෙදා ගන්න",
             selectDesign: "පහත විකල්ප වලින් නිර්මාණයක් තෝරා ගත හැකියි",
-            dragDrop: "පින්තූර මෙහි ඇද දමන්න හෝ ක්ලික් කර තෝරන්න",
+            dragDrop: "පින්තූරය මෙහි ඇද දමන්න හෝ ක්ලික් කර තෝරන්න",
             browseFiles: "ගොනු පිරික්සන්න...",
             chooseType: "වර්ගයක් තෝරන්න",
             flowerType1: "මල් වර්ගය 1",
             flowerType2: "මල් වර්ගය 2",
             bouquet: "මල් කදම",
-            wreath: "මල් මාලය"
+            wreath: "මල් මාලය",
+            memorySubmitSuccess: "ඔබේ මතකය සාර්ථකව බෙදා ගන්නා ලදී!",
+            memorySubmitError: "මතකය ඉදිරිපත් කිරීමට අසමත් විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+            memorySubmitting: "මතකය ඉදිරිපත් කරමින්...",
+            memorySubmit: "මතකය බෙදා ගන්න",
+            memoryTributeOption: "මතක ශෝක ප්‍රකාශන විකල්පය",
+            memoryOptionRequired: "ඉදිරියට යාමට මතක විකල්පයක් තෝරන්න.",
+            flowerSubmitSuccess: "ඔබේ මල් ශෝක ප්‍රකාශය සාර්ථකව ඉදිරිපත් කරන ලදී! ගෙවීම් ක්‍රියාවලිය සඳහා අපගේ කණ්ඩායම ඔබව සම්බන්ධ කර ගනු ඇත.",
+            flowerSubmitError: "මල් ශෝක ප්‍රකාශය ඉදිරිපත් කිරීමට අසමත් විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+            flowerSubmitting: "මල් ශෝක ප්‍රකාශය ඉදිරිපත් කරමින්...",
+            flowerSubmit: "මල් යවන්න",
+            // Payment-related translations
+            proceedToPayment: "ගෙවීමට ඉදිරියට යන්න",
+            createMemoryFree: "මතකය සාදන්න (නොමිලේ)",
+            paymentRequired: "ගෙවීම අවශ්‍යයි",
+            completePayment: "ගෙවීම සම්පූර්ණ කරන්න",
+            packageAmount: "මතක ශෝක ප්‍රකාශන මුදල",
+            processing: "සැකසමින්...",
+            payNow: "දැන් ගෙවන්න",
+            paymentSuccess: "ගෙවීම සාර්ථකව සම්පූර්ණ විය!",
+            paymentError: "ගෙවීම අසාර්ථක විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+            noClientSecret: "ගෙවීම් ආරම්භකරණය අවශ්‍යයි. කරුණාකර නැවත උත්සාහ කරන්න.",
+            selectCountry: "රට තෝරන්න",
+            countryRequired: "මිල දැකීමට රටක් තෝරන්න",
+            noCountryPricing: "තෝරාගත් රට සඳහා මිල ගණන් නොමැත"
         }
     };
 
@@ -178,6 +256,15 @@ const TributeModal: React.FC<TributeModalProps> = ({
     const [flowerImages, setFlowerImages] = useState<any[]>([]);
     const [selectedFlower, setSelectedFlower] = useState<any>(null);
     const [countries, setCountries] = useState<any[]>([]);
+    
+    // Selected countries for Memory and Flower sections
+    const [selectedMemoryCountry, setSelectedMemoryCountry] = useState<any>(null);
+    const [selectedFlowerCountry, setSelectedFlowerCountry] = useState<any>(null);
+    
+    // Memory pricing state
+    const [memoryPricingOptions, setMemoryPricingOptions] = useState<any[]>([]);
+    const [selectedMemoryOption, setSelectedMemoryOption] = useState<any>(null);
+    const [loadingMemoryPricing, setLoadingMemoryPricing] = useState(false);
 
     const [country, setCountry] = useState<string>("");
     const [canadaCountryId, setCanadaCountryId] = useState<string>("");
@@ -221,32 +308,33 @@ const TributeModal: React.FC<TributeModalProps> = ({
         }
     }, [country, currency, selectedFlower]);
 
-    // fetch countries
+    // fetch countries for flower price matching
     useEffect(() => {
         const fetchCountries = async () => {
-            if (activeTab !== "flowers") return;
-            const token = localStorage.getItem('token');
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/country/active?page=1&limit=10`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
+            if ((activeTab === "flowers" || activeTab === "memory") && countries.length === 0) {
+                const token = localStorage.getItem('token');
+                try {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/country/active?page=1&limit=10`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        setCountries(data.countries || []);
+                        const canada = data.countries.find((c: any) => c.currencyCode === "CAD");
+                        setCanadaCountryId(canada?._id || "");
+                    } else {
+                        console.error('Failed to fetch countries');
                     }
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setCountries(data.countries || []);
-                    const canada = data.countries.find((c: any) => c.currencyCode === "CAD");
-                    setCanadaCountryId(canada?._id || "");
-                } else {
-                    console.error('Failed to fetch countries');
+                } catch (error) {
+                    console.error('Error fetching countries:', error);
                 }
-            } catch (error) {
-                console.error('Error fetching countries:', error);
             }
         };
 
         fetchCountries();
-    }, [activeTab]);
+    }, [activeTab, countries.length]);
 
     // Fetch card templates when cards tab is active
     useEffect(() => {
@@ -320,6 +408,72 @@ const TributeModal: React.FC<TributeModalProps> = ({
         fetchFlowerImages();
     }, [activeTab, flowerImages.length]);
 
+    // fetch memory pricing options when memory tab is active
+    useEffect(() => {
+        const fetchMemoryPricing = async () => {
+            if (activeTab === "memory" && memoryPricingOptions.length === 0) {
+                setLoadingMemoryPricing(true);
+                try {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tribute-items/memory-pricing/active`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        // Since there's only one memory option, set it directly
+                        if (data && data.length > 0) {
+                            setMemoryPricingOptions(data);
+                            setSelectedMemoryOption(data[0]); // Auto-select the single option
+                        }
+                    } else {
+                        console.error('Failed to fetch memory pricing options');
+                    }
+                } catch (error) {
+                    console.error('Error fetching memory pricing options:', error);
+                } finally {
+                    setLoadingMemoryPricing(false);
+                }
+            }
+        };
+
+        fetchMemoryPricing();
+    }, [activeTab, memoryPricingOptions.length]);
+
+    // Helper function to get price for current country from localStorage
+    // Helper function to get price for selected country in Memory section
+    const getPriceForSelectedCountry = (priceList: any[], selectedCountry: any) => {
+        if (!selectedCountry) {
+            // If no country selected, try to find CAD price as fallback
+            const cadPrice = priceList.find((price: any) => 
+                price.country.currencyCode === 'CAD'
+            );
+            return cadPrice || null;
+        }
+
+        // Find price for the selected country
+        const countryPrice = priceList.find((price: any) => {
+            return price.country._id === selectedCountry._id;
+        });
+
+        return countryPrice || null;
+    };
+
+    // Helper function specifically for flower pricing where price.country is just an ID
+    const getFlowerPriceForSelectedCountry = (priceList: any[], selectedCountry: any) => {
+        if (!selectedCountry) {
+            // If no country selected, try to find CAD price as fallback
+            const cadPrice = priceList.find((price: any) => {
+                const countryObj = countries.find(c => c._id === price.country);
+                return countryObj?.currencyCode === 'CAD';
+            });
+            return cadPrice || null;
+        }
+
+        // Since price.country is just an ID, find the price for selected country ID
+        const countryPrice = priceList.find((price: any) => {
+            return price.country === selectedCountry._id;
+        });
+
+        return countryPrice || null;
+    };
+
     const getCurrencyCodeByCountryId = (countryId: string) => {
         const country = countries.find(c => c._id === countryId);
         return country ? country.currencyCode : null;
@@ -332,8 +486,34 @@ const TributeModal: React.FC<TributeModalProps> = ({
         relationship: "",
         country: ""
     });
+    
+    // Form state for memory submission
+    const [memoryFormData, setMemoryFormData] = useState({
+        message: "",
+        email: "",
+        name: "",
+        relationship: "",
+        country: ""
+    });
+    
+    // Form state for flower submission
+    const [flowerFormData, setFlowerFormData] = useState({
+        message: "",
+        email: "",
+        name: "",
+        relationship: "",
+        country: ""
+    });
+    
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+
+    // Payment-related state
+    const { isOpen: isPaymentModalOpen, openModal: openPaymentModal, closeModal: closePaymentModal } = useStripePaymentModal();
+    const [stripePaymentProp, setStripePaymentProp] = useState<any>(null);
+    const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(null);
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+    const [showFlowerSuccessPopup, setShowFlowerSuccessPopup] = useState(false);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -341,6 +521,425 @@ const TributeModal: React.FC<TributeModalProps> = ({
             ...prev,
             [name]: value
         }));
+    };
+
+    const handleMemoryInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setMemoryFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleFlowerInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFlowerFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleMemoryCountryChange = (countryId: string) => {
+        const country = countries.find(c => c._id === countryId);
+        setSelectedMemoryCountry(country);
+    };
+
+    const handleFlowerCountryChange = (countryId: string) => {
+        const country = countries.find(c => c._id === countryId);
+        setSelectedFlowerCountry(country);
+    };
+
+    const handleSubmitMemory = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // Since there's only one memory option and it's auto-selected, no need to check for selection
+        if (!selectedMemoryOption) {
+            setSubmitMessage({ type: 'error', text: 'Memory option not loaded. Please try again.' });
+            return;
+        }
+
+        if (!selectedMemoryCountry) {
+            setSubmitMessage({ type: 'error', text: t.countryRequired });
+            return;
+        }
+
+        if (!memoryFormData.message.trim()) {
+            setSubmitMessage({ type: 'error', text: t.messageRequired });
+            return;
+        }
+
+        if (!memoryFormData.email.trim()) {
+            setSubmitMessage({ type: 'error', text: 'Please enter your email address.' });
+            return;
+        }
+
+        if (!memoryFormData.name.trim()) {
+            setSubmitMessage({ type: 'error', text: 'Please enter your name.' });
+            return;
+        }
+
+        setIsSubmitting(true);
+        setSubmitMessage(null);
+
+        try {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+            
+            // Get current country price for the selected memory option
+            const currentCountryPrice = getPriceForSelectedCountry(selectedMemoryOption.priceList, selectedMemoryCountry);
+            const finalPrice = currentCountryPrice ? currentCountryPrice.price : 0;
+
+            // If price is 0 or no price found, handle as free tribute
+            if (finalPrice <= 0) {
+                await handleFreeMemoryTribute();
+                return;
+            }
+
+            // For paid tributes, create payment intent first
+            const paymentIntentData = {
+                tributeOptions: "memory",
+                memory: {
+                    finalPriceInCAD: {
+                        price: finalPrice,
+                        currencyCode: currentCountryPrice?.country?.currencyCode || "CAD"
+                    }
+                }
+            };
+
+            const paymentIntentResponse = await fetch(`${baseUrl}/order/tribute/${obituaryEntry._id}/create-payment-intent`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(paymentIntentData),
+            });
+
+            if (paymentIntentResponse.ok) {
+                const paymentIntentResult = await paymentIntentResponse.json();
+                
+                // Create stripe payment data for the modal
+                const stripePaymentData = {
+                    email: memoryFormData.email,
+                    name: memoryFormData.name,
+                    address: memoryFormData.country || '',
+                    phoneNumber: '',
+                    countryId: currentCountryPrice?.country?._id || '',
+                    packageAmount: finalPrice,
+                    tempOrderId: paymentIntentResult.tempTributeId,
+                    paymentIntentId: paymentIntentResult.paymentIntentId
+                };
+
+                setStripePaymentProp(stripePaymentData);
+                setStripeClientSecret(paymentIntentResult.clientSecret);
+                setIsSubmitting(false);
+                openPaymentModal();
+            } else {
+                const errorData = await paymentIntentResponse.json();
+                setSubmitMessage({
+                    type: 'error',
+                    text: errorData.message || 'Failed to initialize payment. Please try again.'
+                });
+            }
+        } catch (error) {
+            console.error('Error creating payment intent:', error);
+            setSubmitMessage({
+                type: 'error',
+                text: 'Network error. Please check your connection and try again.'
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    // Helper function to handle free memory tributes
+    const handleFreeMemoryTribute = async () => {
+        try {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+            
+            // Create FormData for multipart/form-data
+            const formData = new FormData();
+            
+            // Add tribute options
+            formData.append('tributeOptions', 'memory');
+            formData.append('isActive', 'true');
+            
+            // Get current country price for the selected memory option
+            const currentCountryPrice = getPriceForSelectedCountry(selectedMemoryOption.priceList, selectedMemoryCountry);
+            
+            // Create memory object with form data
+            const memoryData = {
+                email: memoryFormData.email,
+                message: memoryFormData.message,
+                name: memoryFormData.name,
+                relationship: memoryFormData.relationship,
+                country: memoryFormData.country,
+                finalPriceInCAD: {
+                    price: currentCountryPrice ? currentCountryPrice.price : 0,
+                    currencyCode: currentCountryPrice?.country?.currencyCode || "CAD"
+                }
+            };
+            
+            formData.append('memory', JSON.stringify(memoryData));
+            
+            // Add memory images if any
+            images.forEach((image, index) => {
+                formData.append('memoryImages', image);
+            });
+
+            const response = await fetch(`${baseUrl}/order/tribute/${obituaryEntry._id}`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                setSubmitMessage({ type: 'success', text: t.memorySubmitSuccess });
+                // Reset form
+                setMemoryFormData({
+                    message: "",
+                    email: "",
+                    name: "",
+                    relationship: "",
+                    country: ""
+                });
+                setSelectedMemoryOption(null);
+                setImages([]);
+                setPreviews([]);
+                // Close modal after a short delay
+                setTimeout(() => {
+                    onClose();
+                }, 2000);
+            } else {
+                const errorData = await response.json();
+                setSubmitMessage({ 
+                    type: 'error', 
+                    text: errorData.message || t.memorySubmitError 
+                });
+            }
+        } catch (error) {
+            console.error('Error submitting free memory:', error);
+            setSubmitMessage({ type: 'error', text: t.networkError });
+        }
+    };
+
+    // Function to confirm memory tribute after successful payment
+    const confirmMemoryTribute = async () => {
+        try {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+            
+            // Create FormData for multipart/form-data
+            const formData = new FormData();
+            
+            // Add tribute options
+            formData.append('tributeOptions', 'memory');
+            
+            // Get current country price for the selected memory option
+            const currentCountryPrice = getPriceForSelectedCountry(selectedMemoryOption.priceList, selectedMemoryCountry);
+            
+            // Create memory object with form data
+            const memoryData = {
+                email: memoryFormData.email,
+                message: memoryFormData.message,
+                name: memoryFormData.name,
+                relationship: memoryFormData.relationship,
+                country: memoryFormData.country,
+                finalPriceInCAD: {
+                    price: currentCountryPrice ? currentCountryPrice.price : 0,
+                    currencyCode: currentCountryPrice?.country?.currencyCode || "CAD"
+                }
+            };
+            
+            formData.append('memory', JSON.stringify(memoryData));
+            
+            // Add payment-related fields
+            if (stripePaymentProp?.tempOrderId) {
+                formData.append('tempTributeId', stripePaymentProp.tempOrderId);
+            }
+            if (stripePaymentProp?.paymentIntentId) {
+                formData.append('paymentIntentId', stripePaymentProp.paymentIntentId);
+            }
+            
+            // Add memory images if any
+            images.forEach((image, index) => {
+                formData.append('memoryImages', image);
+            });
+
+            const response = await fetch(`${baseUrl}/order/tribute/${obituaryEntry._id}/confirm`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to confirm memory tribute');
+            }
+
+            const result = await response.json();
+            console.log('Memory tribute confirmation result:', result);
+            return result;
+        } catch (error) {
+            console.error('Error confirming memory tribute:', error);
+            throw error;
+        }
+    };
+
+    const handleSubmitFlower = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!selectedFlower) {
+            setSubmitMessage({ type: 'error', text: 'Please select a flower type first.' });
+            return;
+        }
+
+        if (!selectedFlowerCountry) {
+            setSubmitMessage({ type: 'error', text: t.countryRequired });
+            return;
+        }
+
+        if (!flowerFormData.message.trim()) {
+            setSubmitMessage({ type: 'error', text: t.messageRequired });
+            return;
+        }
+
+        if (!flowerFormData.email.trim()) {
+            setSubmitMessage({ type: 'error', text: 'Please enter your email address.' });
+            return;
+        }
+
+        if (!flowerFormData.name.trim()) {
+            setSubmitMessage({ type: 'error', text: 'Please enter your name.' });
+            return;
+        }
+
+        setIsSubmitting(true);
+        setSubmitMessage(null);
+
+        try {
+            // Get base URL from environment variable
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+            
+            // Create FormData for multipart/form-data
+            const formData = new FormData();
+            
+            // Add tribute options
+            formData.append('tributeOptions', 'flower');
+            formData.append('isActive', 'true');
+                        
+            // Find CAD price from selected flower for conversion
+            const cadPrice = selectedFlower.priceList.find((price: any) => {
+                const countryObj = countries.find(c => c._id === price.country);
+                return countryObj?.currencyCode === 'CAD';
+            });
+            
+            // Create flower object with form data
+            const flowerData = {
+                flowerType: selectedFlower._id,
+                email: flowerFormData.email,
+                message: flowerFormData.message,
+                name: flowerFormData.name,
+                relationship: flowerFormData.relationship,
+                country: selectedFlowerCountry,
+                deliveryStatus: "Needs To Be Delivered",
+                finalPriceInCAD: {
+                    price: cadPrice ? cadPrice.price : 45.99, // Use CAD price from selected flower or fallback
+                    currencyCode: "CAD"
+                }
+            };
+            
+            formData.append('flower', JSON.stringify(flowerData));
+
+            const response = await fetch(`${baseUrl}/order/tribute/${obituaryEntry._id}`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                // Reset form
+                setFlowerFormData({
+                    message: "",
+                    email: "",
+                    name: "",
+                    relationship: "",
+                    country: ""
+                });
+                setSelectedFlower(null);
+                setSelectedFlowerCountry("");
+                // Show flower success popup
+                setShowFlowerSuccessPopup(true);
+            } else {
+                const errorData = await response.json();
+                setSubmitMessage({ 
+                    type: 'error', 
+                    text: errorData.message || 'Failed to submit flower tribute. Please try again.' 
+                });
+            }
+        } catch (error) {
+            console.error('Error submitting flower:', error);
+            setSubmitMessage({ type: 'error', text: t.networkError });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    // Payment modal handlers
+    const handleClosePaymentModal = () => {
+        closePaymentModal();
+        setStripePaymentProp(null);
+        setStripeClientSecret(null);
+    };
+
+    const handlePaymentSuccess = async () => {
+        try {
+            // Confirm memory tribute after successful payment
+            await confirmMemoryTribute();
+
+            closePaymentModal();
+            setStripePaymentProp(null);
+            setStripeClientSecret(null);
+            
+            // Show success popup
+            setShowSuccessPopup(true);
+        } catch (error) {
+            console.error('Error confirming memory tribute:', error);
+            setSubmitMessage({
+                type: 'error',
+                text: 'Payment was successful, but tribute confirmation failed. Please contact support.'
+            });
+        }
+    };
+
+    const handlePaymentError = (error: string) => {
+        console.error('Payment error:', error);
+        setSubmitMessage({
+            type: 'error',
+            text: `Payment failed: ${error}`
+        });
+    };
+
+    const handlePaymentBack = () => {
+        closePaymentModal();
+        // Optionally keep the form data and allow user to retry
+    };
+
+    const handleSuccessOk = () => {
+        setShowSuccessPopup(false);
+        // Reset form
+        setMemoryFormData({
+            message: "",
+            email: "",
+            name: "",
+            relationship: "",
+            country: ""
+        });
+        setSelectedMemoryOption(null);
+        setImages([]);
+        setPreviews([]);
+        // Close modal
+        onClose();
+    };
+
+    const handleFlowerSuccessOk = () => {
+        setShowFlowerSuccessPopup(false);
+        // Close modal
+        onClose();
     };
 
     const handleSubmitTribute = async (e: React.FormEvent) => {
@@ -428,18 +1027,48 @@ const TributeModal: React.FC<TributeModalProps> = ({
     const handleDrop = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         const droppedFiles = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith("image/"));
-        const newPreviews = droppedFiles.map(file => URL.createObjectURL(file));
-
-        setImages(prev => [...prev, ...droppedFiles]);
-        setPreviews(prev => [...prev, ...newPreviews]);
+        
+        // For memory tab, limit to 1 image
+        if (activeTab === "memory") {
+            if (droppedFiles.length > 0) {
+                const singleFile = droppedFiles[0];
+                const newPreview = URL.createObjectURL(singleFile);
+                
+                // Clean up existing previews
+                previews.forEach(preview => URL.revokeObjectURL(preview));
+                
+                setImages([singleFile]);
+                setPreviews([newPreview]);
+            }
+        } else {
+            // For other tabs, allow multiple images
+            const newPreviews = droppedFiles.map(file => URL.createObjectURL(file));
+            setImages(prev => [...prev, ...droppedFiles]);
+            setPreviews(prev => [...prev, ...newPreviews]);
+        }
     };
 
     const handleBrowse = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFiles = Array.from(e.target.files ?? []).filter(file => file.type.startsWith("image/"));
-        const newPreviews = selectedFiles.map(file => URL.createObjectURL(file));
-
-        setImages(prev => [...prev, ...selectedFiles]);
-        setPreviews(prev => [...prev, ...newPreviews]);
+        
+        // For memory tab, limit to 1 image
+        if (activeTab === "memory") {
+            if (selectedFiles.length > 0) {
+                const singleFile = selectedFiles[0];
+                const newPreview = URL.createObjectURL(singleFile);
+                
+                // Clean up existing previews
+                previews.forEach(preview => URL.revokeObjectURL(preview));
+                
+                setImages([singleFile]);
+                setPreviews([newPreview]);
+            }
+        } else {
+            // For other tabs, allow multiple images
+            const newPreviews = selectedFiles.map(file => URL.createObjectURL(file));
+            setImages(prev => [...prev, ...selectedFiles]);
+            setPreviews(prev => [...prev, ...newPreviews]);
+        }
     };
 
     const removeImage = (index: number) => {
@@ -641,249 +1270,423 @@ const TributeModal: React.FC<TributeModalProps> = ({
                     }
                     {activeTab === "memory" &&
                         <div className="pb-8">
-                            <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
-                                <div className=" p-4  mb-6">
-                                    <h3 className="text-xl font-semibold text-center mb-4 text-primary">{t.shareMemories}</h3>
-                                    <p className="text-center text-gray-500 mb-4 text-primary">
-                                        {t.selectDesign}
-                                    </p>
-                                    <div className="w-full">
-                                        <div
-                                            onDrop={handleDrop}
-                                            onDragOver={(e) => e.preventDefault()}
-                                            className="border-2  border-gray-300 p-6 rounded-lg flex flex-col items-center justify-center text-center bg-white hover:border-primary transition"
-                                        >
-                                            {previews.length > 0 && (
-                                                <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                                                    {previews.map((src, idx) => (
-                                                        <div key={idx} className="relative group">
-                                                            <img
-                                                                src={src}
-                                                                alt={`Preview ${idx + 1}`}
-                                                                className="w-full h-32 object-cover rounded shadow"
-                                                            />
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => removeImage(idx)}
-                                                                className="absolute top-1 right-1 bg-red-600 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition"
-                                                            >
-                                                                ✕
-                                                            </button>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                            <p className="text-gray-500 mb-2">{t.dragDrop}</p>
-                                            <label className="cursor-pointer text-white bg-primary px-8 py-2">
-                                                {t.browseFiles}
-                                                <input
-                                                    type="file"
-                                                    accept="image/*"
-                                                    multiple
-                                                    onChange={handleBrowse}
-                                                    className="hidden"
-                                                />
-                                            </label>
-                                        </div>
+                            {loadingMemoryPricing ? (
+                                <div className="flex justify-center items-center py-8">
+                                    <div className="text-center">
+                                        <div className="loader border-t-4 border-primary border-solid rounded-full w-8 h-8 animate-spin mx-auto mb-2"></div>
+                                        <p>Loading memory options...</p>
                                     </div>
                                 </div>
-                                <div className="mb-4">
-                                    <label htmlFor="message" className="block text-gray-700 mb-2">
-                                        {t.messageLabel}
-                                    </label>
-                                    <textarea
-                                        id="message"
-                                        rows={4}
-                                        maxLength={2000}
-                                        className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                    />
-                                    <p className="text-xs">{t.maxChars}</p>
-                                </div>
-                                <div className="mb-4">
-                                    <label htmlFor="name" className={`pb-2 block`}>
-                                        {t.nameLabel}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label htmlFor="name" className={`pb-2 block`}>
-                                        {t.relationshipLabel}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label htmlFor="name" className={`pb-2 block`}>
-                                        {t.countryLabel}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                                    />
-                                </div>
-                                <div className="flex justify-end gap-2 items-center self-stretch mt-16">
-                                    <button
-                                        onClick={handleClose}
-                                        className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
-                                        {t.back}
-                                    </button>
-                                    <button
-                                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
-                                        onClick={(e => {
-                                            e.preventDefault();
-                                            // setActiveTab("payment");
-                                        }
-                                        )}
-                                    >
-                                        {t.next}
-                                    </button>
-                                </div>
-                            </form>
+                            ) : (
+                                // Show message if no memory options are available
+                                !selectedMemoryOption ? (
+                                    <div className="text-center py-8 text-gray-600">
+                                        <p>No memory tribute options available at this time.</p>
+                                    </div>
+                                ) : (
+                                <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" onSubmit={handleSubmitMemory}>
+                                    {/* Country Selection for Memory */}
+                                    <div className="mb-6">
+                                        <label htmlFor="memory-country" className="block text-sm font-medium text-gray-700 mb-2">
+                                            {t.selectCountry} <span className="text-red-500">*</span>
+                                        </label>
+                                        <select
+                                            id="memory-country"
+                                            value={selectedMemoryCountry?._id || ''}
+                                            onChange={(e) => handleMemoryCountryChange(e.target.value)}
+                                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                            required
+                                        >
+                                            <option value="">{t.selectCountry}</option>
+                                            {countries.map((country) => (
+                                                <option key={country._id} value={country._id}>
+                                                    {country.name[langKey]?.[0]?.value || country.name.en[0]?.value}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* Memory Pricing Display - Show price info for the single option */}
+                                    {selectedMemoryOption && (
+                                        <div className="mb-8">
+                                            <h3 className="text-xl font-semibold text-center mb-4 text-primary">{selectedMemoryOption.name}</h3>
+                                            <div className="text-center p-4 bg-gray-50 rounded-lg border">
+                                                {(() => {
+                                                    if (!selectedMemoryCountry) {
+                                                        return (
+                                                            <div className="text-sm text-gray-500">
+                                                                {t.countryRequired}
+                                                            </div>
+                                                        );
+                                                    }
+
+                                                    const currentCountryPrice = getPriceForSelectedCountry(selectedMemoryOption.priceList, selectedMemoryCountry);
+                                                    
+                                                    if (currentCountryPrice) {
+                                                        const finalPrice = currentCountryPrice.price;
+                                                        return (
+                                                            <div className="space-y-2">
+                                                                <div className="text-lg font-medium">
+                                                                    {finalPrice > 0 ? (
+                                                                        <span className="text-primary">
+                                                                            {currentCountryPrice.country.currencyCode} {finalPrice}
+                                                                        </span>
+                                                                    ) : (
+                                                                        <span className="text-green-600 font-semibold">Free</span>
+                                                                    )}
+                                                                </div>
+                                                                <div className="text-sm text-gray-600">
+                                                                    for {selectedMemoryCountry.name[langKey]?.[0]?.value || selectedMemoryCountry.name.en[0]?.value}
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    } else {
+                                                        return (
+                                                            <div className="text-sm text-gray-500">
+                                                                {t.noCountryPricing}
+                                                            </div>
+                                                        );
+                                                    }
+                                                })()}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Show form only when memory option is loaded */}
+                                    {selectedMemoryOption && (
+                                        <>
+                                            <div className=" p-4  mb-6">
+                                                <h3 className="text-xl font-semibold text-center mb-4 text-primary">{t.shareMemories}</h3>
+                                                <div className="w-full">
+                                                    <div
+                                                        onDrop={handleDrop}
+                                                        onDragOver={(e) => e.preventDefault()}
+                                                        className="border-2  border-gray-300 p-6 rounded-lg flex flex-col items-center justify-center text-center bg-white hover:border-primary transition"
+                                                    >
+                                                        {previews.length > 0 && (
+                                                            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                                                {previews.map((src, idx) => (
+                                                                    <div key={idx} className="relative group">
+                                                                        <img
+                                                                            src={src}
+                                                                            alt={`Preview ${idx + 1}`}
+                                                                            className="w-full h-32 object-cover rounded shadow"
+                                                                        />
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => removeImage(idx)}
+                                                                            className="absolute top-1 right-1 bg-red-600 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition"
+                                                                        >
+                                                                            ✕
+                                                                        </button>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                        <p className="text-gray-500 mb-2">{t.dragDrop}</p>
+                                                        <label className="cursor-pointer text-white bg-primary px-8 py-2">
+                                                            {t.browseFiles}
+                                                            <input
+                                                                type="file"
+                                                                accept="image/*"
+                                                                onChange={handleBrowse}
+                                                                className="hidden"
+                                                            />
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            {/* Success/Error Messages */}
+                                            {submitMessage && (
+                                                <div className={`mb-4 p-3 rounded-lg text-sm ${
+                                                    submitMessage.type === 'success' 
+                                                        ? 'bg-green-100 text-green-700 border border-green-300' 
+                                                        : 'bg-red-100 text-red-700 border border-red-300'
+                                                }`}>
+                                                    {submitMessage.text}
+                                                </div>
+                                            )}
+                                            
+                                            <div className="mb-4">
+                                                <label htmlFor="memory-message" className="block text-gray-700 mb-2">
+                                                    {t.messageLabel}
+                                                </label>
+                                                <textarea
+                                                    id="memory-message"
+                                                    name="message"
+                                                    value={memoryFormData.message}
+                                                    onChange={handleMemoryInputChange}
+                                                    rows={4}
+                                                    maxLength={2000}
+                                                    className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                    placeholder={t.messagePlaceholder}
+                                                />
+                                                <p className="text-xs">{t.maxChars}</p>
+                                            </div>
+                                            <div className="mb-4">
+                                                <label htmlFor="memory-email" className={`pb-2 block`}>
+                                                    {t.emailLabel}
+                                                </label>
+                                                <input
+                                                    type="email"
+                                                    id="memory-email"
+                                                    name="email"
+                                                    value={memoryFormData.email}
+                                                    onChange={handleMemoryInputChange}
+                                                    placeholder={t.emailPlaceholder}
+                                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                                />
+                                            </div>
+                                            <div className="mb-4">
+                                                <label htmlFor="memory-name" className={`pb-2 block`}>
+                                                    {t.nameLabel}
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="memory-name"
+                                                    name="name"
+                                                    value={memoryFormData.name}
+                                                    onChange={handleMemoryInputChange}
+                                                    placeholder={t.namePlaceholder}
+                                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                                />
+                                            </div>
+                                            <div className="mb-4">
+                                                <label htmlFor="memory-relationship" className={`pb-2 block`}>
+                                                    {t.relationshipLabel}
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="memory-relationship"
+                                                    name="relationship"
+                                                    value={memoryFormData.relationship}
+                                                    onChange={handleMemoryInputChange}
+                                                    placeholder={t.relationshipPlaceholder}
+                                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                                />
+                                            </div>
+                                            <div className="mb-4">
+                                                <label htmlFor="memory-country" className={`pb-2 block`}>
+                                                    {t.countryLabel}
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="memory-country"
+                                                    name="country"
+                                                    value={memoryFormData.country}
+                                                    onChange={handleMemoryInputChange}
+                                                    placeholder={t.countryPlaceholder}
+                                                    className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                                />
+                                            </div>
+                                            <div className="flex justify-end gap-2 items-center self-stretch mt-16">
+                                                <button
+                                                    type="button"
+                                                    onClick={handleClose}
+                                                    className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
+                                                    {t.back}
+                                                </button>
+                                                <button
+                                                    type="submit"
+                                                    disabled={isSubmitting || !memoryFormData.message.trim() || !memoryFormData.email.trim() || !memoryFormData.name.trim() || !selectedMemoryCountry}
+                                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                                                >
+                                                    {isSubmitting ? t.memorySubmitting : (() => {
+                                                        if (!selectedMemoryOption || !selectedMemoryCountry) return t.memorySubmit;
+                                                        const currentCountryPrice = getPriceForSelectedCountry(selectedMemoryOption.priceList, selectedMemoryCountry);
+                                                        const finalPrice = currentCountryPrice ? currentCountryPrice.price : 0;
+                                                        return finalPrice > 0 ? t.proceedToPayment : t.createMemoryFree;
+                                                    })()}
+                                                </button>
+                                            </div>
+                                        </>
+                                    )}
+                                </form>
+                                )
+                            )}
                         </div>
                     }
                     {activeTab === "flowers" && !loadingTemplates && (
                         <div className="pb-8">
-                            <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" >
+                            <form className="bg-white shadow-lg p-4 md:p-8 pb-8 mt-8 border border-black" onSubmit={handleSubmitFlower}>
+                                {/* Country Selection for Flowers */}
+                                <div className="mb-6">
+                                    <label htmlFor="flower-country" className="block text-sm font-medium text-gray-700 mb-2">
+                                        {t.selectCountry} <span className="text-red-500">*</span>
+                                    </label>
+                                    <select
+                                        id="flower-country"
+                                        value={selectedFlowerCountry?._id || ''}
+                                        onChange={(e) => handleFlowerCountryChange(e.target.value)}
+                                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                        required
+                                    >
+                                        <option value="">{t.selectCountry}</option>
+                                        {countries.map((country) => (
+                                            <option key={country._id} value={country._id}>
+                                                {country.name[langKey]?.[0]?.value || country.name.en[0]?.value}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
                                 <div className="p-4 mb-6">
                                     <h3 className="text-xl font-semibold text-center mb-4 text-primary">{t.chooseType}</h3>
                                     <p className="text-center text-gray-500 mb-4 text-primary">
                                         {t.selectDesign}
                                     </p>
-                                    <div
-                                        className="flex flex-wrap  text-center mb-4 gap-4"
-                                    >
-                                        {flowerImages.map((flower, index) => (
-                                            <div
-                                                key={index}
-                                                className={`w-1/8 cursor-pointer transition-all duration-200 
-                                                        ${selectedFlower?._id === flower._id
-                                                        ? "border-4 border-teal-600 bg-teal-50 shadow-lg scale-105 ring-2 ring-teal-300"
-                                                        : "border bg-white hover:border-teal-400 hover:bg-teal-50"
+                                    <div className="flex flex-wrap text-center mb-4 gap-4">
+                                        {flowerImages.map((flower, index) => {
+                                            const currentCountryPrice = getFlowerPriceForSelectedCountry(flower.priceList, selectedFlowerCountry);
+                                            
+                                            return (
+                                                <div
+                                                    key={index}
+                                                    className={`cursor-pointer transition-all duration-200 border-2 rounded-lg p-4 ${
+                                                        selectedFlower?._id === flower._id
+                                                            ? "border-primary bg-blue-50 shadow-lg scale-105"
+                                                            : "border-gray-300 hover:border-primary hover:bg-gray-50"
                                                     }`}
-                                                onClick={() => setSelectedFlower(flower)}
-                                                style={{ position: "relative" }}
-                                            >
-                                                <div className="w-56 h-32 bg-gray-200 rounded flex items-center justify-center relative">
-                                                    <img src={flower.image} alt={flower.name} className="object-cover h-full w-56 rounded" />
-                                                    {selectedFlower?._id === flower._id && (
-                                                        <span className="absolute top-2 right-2 bg-teal-600 text-white text-xs px-2 py-1 rounded-full shadow">
-                                                            ✓ Selected
-                                                        </span>
-                                                    )}
+                                                    onClick={() => setSelectedFlower(flower)}
+                                                >
+                                                    <div className="w-56 h-32 bg-gray-200 rounded flex items-center justify-center relative">
+                                                        <img src={flower.image} alt={flower.name} className="object-cover h-full w-56 rounded" />
+                                                        {selectedFlower?._id === flower._id && (
+                                                            <span className="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded-full shadow">
+                                                                ✓ Selected
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <p className={`font-semibold mt-2 ${selectedFlower?._id === flower._id ? "text-primary" : ""}`}>
+                                                        {flower.name}
+                                                    </p>
+                                                    <div className="mt-2">
+                                                        {!selectedFlowerCountry ? (
+                                                            <span className="text-xs text-gray-500">
+                                                                {t.countryRequired}
+                                                            </span>
+                                                        ) : currentCountryPrice ? (
+                                                            <span className="inline-block bg-gray-100 rounded-full px-3 py-1 text-xs font-semibold text-gray-700">
+                                                                {selectedFlowerCountry.currencyCode} {currentCountryPrice.price}
+                                                            </span>
+                                                        ) : (
+                                                            <span className="text-xs text-gray-500">
+                                                                {t.noCountryPricing}
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                                <p className={`font-semibold mt-2 ${selectedFlower?._id === flower._id ? "text-teal-700" : ""}`}>{flower.name}</p>
-                                                <p className="text-sm text-gray-500">Price:</p>
-                                                {flower.priceList.map((priceObj: any, priceIndex: number) => {
-                                                    const currency = getCurrencyCodeByCountryId(priceObj.country) || "";
-                                                    return (
-                                                        <span
-                                                            key={priceIndex}
-                                                            className="mt-2 mb-2 inline-block bg-gray-100 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mt-1 mr-2"
-                                                            title={`${currency} ${priceObj.price}`}
-                                                        >
-                                                            {currency && (
-                                                                <span className="font-bold">{currency}</span>
-                                                            )}{" "}
-                                                            <span>{priceObj.price}</span>
-                                                        </span>
-                                                    );
-                                                })}
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 </div>
-                                <div>
-                                    <p className="text-center text-gray-500 mb-4 text-primary">Select your country to see the price in your currency</p>
-                                    {/* CountrySelect component to select country and show currency */}
-                                    <CountrySelect onChange={handleCountryChange} />
+                                
+                                {/* Success/Error Messages */}
+                                {submitMessage && (
+                                    <div className={`mb-4 p-3 rounded-lg text-sm ${
+                                        submitMessage.type === 'success' 
+                                            ? 'bg-green-100 text-green-700 border border-green-300' 
+                                            : 'bg-red-100 text-red-700 border border-red-300'
+                                    }`}>
+                                        {submitMessage.text}
+                                    </div>
+                                )}
 
-                                    {isConversionLoading && (
-                                        <div className="text-center mt-4">
-                                            <p className="text-lg">Converting</p>
-                                            <div className="loader"></div>
-                                        </div>
-                                    )}
-
-                                    {!isConversionLoading && country && currency && selectedFlower && (
-                                        <div className="mt-4 text-center">
-                                            <p className="text-lg">{selectedFlower.name}</p>
-                                            {convertedAmount !== null && (
-                                                <p className="text-lg">
-                                                    {t.convertedPrice}
-                                                    <span className="font-bold">
-                                                        {currency} {convertedAmount.toFixed(2)}
-                                                    </span>
-                                                </p>
-                                            )}
-                                        </div>
-
-                                    )}
-                                </div>
                                 <div className="mb-4">
-                                    <label htmlFor="message" className="block text-gray-700 mb-2">
-                                        {t.messageLabel}
+                                    <label htmlFor="flower-message" className="block text-gray-700 mb-2">
+                                        {t.messageLabel} <span className="text-red-500">*</span>
                                     </label>
                                     <textarea
-                                        id="message"
+                                        id="flower-message"
+                                        name="message"
+                                        value={flowerFormData.message}
+                                        onChange={handleFlowerInputChange}
                                         rows={4}
                                         maxLength={2000}
+                                        required
                                         className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                        placeholder={t.messagePlaceholder}
                                     />
-                                    <p className="text-xs">{t.maxChars}</p>
+                                    <p className="text-xs text-gray-500 mt-1">{t.maxChars} ({flowerFormData.message.length}/2000)</p>
                                 </div>
+                                
                                 <div className="mb-4">
-                                    <label htmlFor="name" className={`pb-2 block`}>
-                                        {t.nameLabel}
+                                    <label htmlFor="flower-email" className="pb-2 block text-gray-700">
+                                        {t.emailLabel} <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="email"
+                                        id="flower-email"
+                                        name="email"
+                                        value={flowerFormData.email}
+                                        onChange={handleFlowerInputChange}
+                                        required
+                                        className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                        placeholder={t.emailPlaceholder}
+                                    />
+                                </div>
+                                
+                                <div className="mb-4">
+                                    <label htmlFor="flower-name" className="pb-2 block text-gray-700">
+                                        {t.nameLabel} <span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="text"
-                                        id="name"
-                                        className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                        id="flower-name"
+                                        name="name"
+                                        value={flowerFormData.name}
+                                        onChange={handleFlowerInputChange}
+                                        required
+                                        className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                        placeholder={t.namePlaceholder}
                                     />
                                 </div>
+                                
                                 <div className="mb-4">
-                                    <label htmlFor="name" className={`pb-2 block`}>
+                                    <label htmlFor="flower-relationship" className="pb-2 block text-gray-700">
                                         {t.relationshipLabel}
                                     </label>
                                     <input
                                         type="text"
-                                        id="name"
-                                        className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                        id="flower-relationship"
+                                        name="relationship"
+                                        value={flowerFormData.relationship}
+                                        onChange={handleFlowerInputChange}
+                                        className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                        placeholder={t.relationshipPlaceholder}
                                     />
                                 </div>
+                                
                                 <div className="mb-4">
-                                    <label htmlFor="name" className={`pb-2 block`}>
+                                    <label htmlFor="flower-country" className="pb-2 block text-gray-700">
                                         {t.countryLabel}
                                     </label>
                                     <input
                                         type="text"
-                                        id="name"
-                                        className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
+                                        id="flower-country"
+                                        name="country"
+                                        value={flowerFormData.country}
+                                        onChange={handleFlowerInputChange}
+                                        className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                        placeholder={t.countryPlaceholder}
                                     />
                                 </div>
                                 <div className="flex justify-end gap-2 items-center self-stretch mt-16">
                                     <button
+                                        type="button"
                                         onClick={handleClose}
-                                        className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
-                                        {t.back}
+                                        className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6"
+                                        disabled={isSubmitting}
+                                    >
+                                        {t.cancel}
                                     </button>
                                     <button
-                                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 "
-                                        onClick={(e => {
-                                            e.preventDefault();
-                                            // setActiveTab("payment");
-                                        }
-                                        )}
+                                        type="submit"
+                                        disabled={isSubmitting || !selectedFlower || !selectedFlowerCountry || !flowerFormData.message.trim() || !flowerFormData.email.trim() || !flowerFormData.name.trim()}
+                                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 disabled:bg-gray-400 disabled:cursor-not-allowed"
                                     >
-                                        {t.next}
+                                        {isSubmitting ? t.flowerSubmitting : t.flowerSubmit}
                                     </button>
                                 </div>
                             </form>
@@ -892,6 +1695,78 @@ const TributeModal: React.FC<TributeModalProps> = ({
                     }
                 </div>
             </div>
+
+            {/* Stripe Payment Modal */}
+            {isPaymentModalOpen && stripePaymentProp && stripeClientSecret && (
+                <StripePaymentMemorial
+                    formData={stripePaymentProp}
+                    onSuccess={handlePaymentSuccess}
+                    onError={handlePaymentError}
+                    onBack={handlePaymentBack}
+                    onClose={handleClosePaymentModal}
+                    currencyCode={(() => {
+                        if (!selectedMemoryOption || !selectedMemoryCountry) return 'CAD';
+                        const currentCountryPrice = getPriceForSelectedCountry(selectedMemoryOption.priceList, selectedMemoryCountry);
+                        return currentCountryPrice?.country?.currencyCode || 'CAD';
+                    })()}
+                    clientSecret={stripeClientSecret}
+                    isOpen={isPaymentModalOpen}
+                    t={{
+                        completePayment: t.completePayment,
+                        packageAmount: t.packageAmount,
+                        processing: t.processing,
+                        back: t.back,
+                        payNow: t.payNow,
+                        noClientSecret: t.noClientSecret
+                    }}
+                />
+            )}
+
+            {/* Success Popup */}
+            {showSuccessPopup && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg p-8 max-w-md w-full">
+                        <div className="text-center">
+                            <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-semibold mb-2">{t.paymentSuccess}</h3>
+                            <p className="text-gray-600 mb-6">{t.memorySubmitSuccess}</p>
+                            <button
+                                onClick={handleSuccessOk}
+                                className="w-full px-4 py-2 bg-[#0D1322] text-white rounded hover:bg-gray-800 transition-colors"
+                            >
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Flower Success Popup */}
+            {showFlowerSuccessPopup && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg p-8 max-w-md w-full">
+                        <div className="text-center">
+                            <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-semibold mb-2">Success!</h3>
+                            <p className="text-gray-600 mb-6">{t.flowerSubmitSuccess}</p>
+                            <button
+                                onClick={handleFlowerSuccessOk}
+                                className="w-full px-4 py-2 bg-[#0D1322] text-white rounded hover:bg-gray-800 transition-colors"
+                            >
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div >,
         document.body
     );
