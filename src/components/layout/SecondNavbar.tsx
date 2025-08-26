@@ -142,7 +142,7 @@ const SecondNavbar: React.FC = () => {
             >
               <Menu className="w-5 h-5 md:w-6 md:h-6" />
             </button>
-            <div className="flex flex-wrap gap-2 items-center text-sm md:text-base text-center whitespace-nowrap text-zinc-900 overflow-x-auto scrollbar-hide">
+            <div className="flex flex-wrap gap-2 items-center text-xs sm:text-sm md:text-base text-center whitespace-nowrap text-zinc-900 overflow-x-auto scrollbar-hide">
               {["Home", "Create Memorial", "Events", "Advertisement"].map(
                 (page, index) => {
                   // Create proper translation key mapping
