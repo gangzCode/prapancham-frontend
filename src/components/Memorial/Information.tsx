@@ -196,7 +196,28 @@ const Information: React.FC<InformationProps> = ({
                         type="date"
                         id="dateofBirth"
                         value={formData.dateofBirth}
-                        onChange={(e) => handleInputChange('dateofBirth', e.target.value)}
+                        onChange={(e) => {
+                            const dateValue = e.target.value;
+                            // Check if year part has more than 4 digits
+                            if (dateValue) {
+                                const year = dateValue.split('-')[0];
+                                if (year && year.length <= 4) {
+                                    handleInputChange('dateofBirth', dateValue);
+                                }
+                            } else {
+                                handleInputChange('dateofBirth', dateValue);
+                            }
+                        }}
+                        onInput={(e) => {
+                            const input = e.target as HTMLInputElement;
+                            const value = input.value;
+                            if (value) {
+                                const year = value.split('-')[0];
+                                if (year && year.length > 4) {
+                                    input.value = value.substring(0, value.length - 1);
+                                }
+                            }
+                        }}
                         required
                         className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                     />
@@ -209,7 +230,28 @@ const Information: React.FC<InformationProps> = ({
                         type="date"
                         id="dateofDeath"
                         value={formData.dateofDeath}
-                        onChange={(e) => handleInputChange('dateofDeath', e.target.value)}
+                        onChange={(e) => {
+                            const dateValue = e.target.value;
+                            // Check if year part has more than 4 digits
+                            if (dateValue) {
+                                const year = dateValue.split('-')[0];
+                                if (year && year.length <= 4) {
+                                    handleInputChange('dateofDeath', dateValue);
+                                }
+                            } else {
+                                handleInputChange('dateofDeath', dateValue);
+                            }
+                        }}
+                        onInput={(e) => {
+                            const input = e.target as HTMLInputElement;
+                            const value = input.value;
+                            if (value) {
+                                const year = value.split('-')[0];
+                                if (year && year.length > 4) {
+                                    input.value = value.substring(0, value.length - 1);
+                                }
+                            }
+                        }}
                         required
                         className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                     />
