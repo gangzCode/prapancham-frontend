@@ -62,9 +62,9 @@ const Information: React.FC<InformationProps> = ({
     // Validation function to check if all required fields are filled
     const isFormValid = () => {
         return formData.title.trim() !== '' &&
-               formData.address.trim() !== '' &&
-               formData.dateofBirth !== '' &&
-               formData.dateofDeath !== '';
+            formData.address.trim() !== '' &&
+            formData.dateofBirth !== '' &&
+            formData.dateofDeath !== '';
     };
 
     // Get plan name based on language
@@ -196,28 +196,9 @@ const Information: React.FC<InformationProps> = ({
                         type="date"
                         id="dateofBirth"
                         value={formData.dateofBirth}
-                        onChange={(e) => {
-                            const dateValue = e.target.value;
-                            // Check if year part has more than 4 digits
-                            if (dateValue) {
-                                const year = dateValue.split('-')[0];
-                                if (year && year.length <= 4) {
-                                    handleInputChange('dateofBirth', dateValue);
-                                }
-                            } else {
-                                handleInputChange('dateofBirth', dateValue);
-                            }
-                        }}
-                        onInput={(e) => {
-                            const input = e.target as HTMLInputElement;
-                            const value = input.value;
-                            if (value) {
-                                const year = value.split('-')[0];
-                                if (year && year.length > 4) {
-                                    input.value = value.substring(0, value.length - 1);
-                                }
-                            }
-                        }}
+                        min="1000-01-01"
+                        max="9999-12-31"
+                        onChange={(e) => handleInputChange('dateofBirth', e.target.value)}
                         required
                         className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                     />
@@ -230,28 +211,9 @@ const Information: React.FC<InformationProps> = ({
                         type="date"
                         id="dateofDeath"
                         value={formData.dateofDeath}
-                        onChange={(e) => {
-                            const dateValue = e.target.value;
-                            // Check if year part has more than 4 digits
-                            if (dateValue) {
-                                const year = dateValue.split('-')[0];
-                                if (year && year.length <= 4) {
-                                    handleInputChange('dateofDeath', dateValue);
-                                }
-                            } else {
-                                handleInputChange('dateofDeath', dateValue);
-                            }
-                        }}
-                        onInput={(e) => {
-                            const input = e.target as HTMLInputElement;
-                            const value = input.value;
-                            if (value) {
-                                const year = value.split('-')[0];
-                                if (year && year.length > 4) {
-                                    input.value = value.substring(0, value.length - 1);
-                                }
-                            }
-                        }}
+                        min="1000-01-01"
+                        max="9999-12-31"
+                        onChange={(e) => handleInputChange('dateofDeath', e.target.value)}
                         required
                         className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
                     />
@@ -304,11 +266,10 @@ const Information: React.FC<InformationProps> = ({
                     </button>
                     <button
                         type="button"
-                        className={`gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap rounded min-h-6 ${
-                            isFormValid() 
-                                ? 'bg-[#0D1322] hover:bg-[#1a2647] cursor-pointer' 
+                        className={`gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap rounded min-h-6 ${isFormValid()
+                                ? 'bg-[#0D1322] hover:bg-[#1a2647] cursor-pointer'
                                 : 'bg-gray-400 cursor-not-allowed'
-                        }`}
+                            }`}
                         onClick={() => {
                             if (isFormValid()) {
                                 setActiveStep(4);
