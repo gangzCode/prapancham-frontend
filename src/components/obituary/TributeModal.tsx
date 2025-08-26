@@ -836,7 +836,7 @@ const TributeModal: React.FC<TributeModalProps> = ({
                 message: flowerFormData.message,
                 name: flowerFormData.name,
                 relationship: flowerFormData.relationship,
-                country: selectedFlowerCountry,
+                country: selectedFlowerCountry?.name?.en?.[0]?.value || selectedFlowerCountry?.name || 'Unknown',
                 deliveryStatus: "Needs To Be Delivered",
                 finalPriceInCAD: {
                     price: cadPrice ? cadPrice.price : 45.99, // Use CAD price from selected flower or fallback
