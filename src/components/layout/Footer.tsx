@@ -141,7 +141,7 @@ export default function Footer() {
     const fetchNewsCategories = async () => {
       try {
         setCategoriesLoading(true);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/news-category/all?page=1&limit=10`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/news-category/active?page=1&limit=10`);
         if (response.ok) {
           const data = await response.json();
           setNewsCategories(data.newsCategory || []);
