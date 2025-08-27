@@ -11,15 +11,31 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useLanguage } from "@/components/ui/LanguageProvider";
+
+interface NewsCategory {
+  _id: string;
+  name: {
+    en: Array<{ name: string; value: string }>;
+    ta: Array<{ name: string; value: string }>;
+    si: Array<{ name: string; value: string }>;
+  };
+  isDeleted: boolean;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
 
 export default function Footer() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+  const [newsCategories, setNewsCategories] = useState<NewsCategory[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
   const { language } = useLanguage();
 
 
@@ -120,6 +136,28 @@ export default function Footer() {
 
   const t = translations[langKey];
 
+  // Fetch news categories from API
+  useEffect(() => {
+    const fetchNewsCategories = async () => {
+      try {
+        setCategoriesLoading(true);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/news-category/all?page=1&limit=10`);
+        if (response.ok) {
+          const data = await response.json();
+          setNewsCategories(data.newsCategory || []);
+        } else {
+          console.error('Failed to fetch news categories');
+        }
+      } catch (error) {
+        console.error('Error fetching news categories:', error);
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+
+    fetchNewsCategories();
+  }, []);
+
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -217,36 +255,35 @@ export default function Footer() {
           <div className="md:col-span-2">
             <h3 className="font-bold text-lg mb-6">{t.news}</h3>
             <ul className="space-y-3 text-sm">
-              <li>
-                <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                  {t.politics}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                  {t.business}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                  {t.technology}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                  {t.sports}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                  {t.entertainment}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-                  {t.health}
-                </a>
-              </li>
+              {categoriesLoading ? (
+                // Loading state
+                Array.from({ length: 6 }).map((_, index) => (
+                  <li key={index}>
+                    <div className="animate-pulse bg-gray-600 h-4 w-20 rounded"></div>
+                  </li>
+                ))
+              ) : (
+                // Display fetched categories
+                newsCategories.slice(0, 6).map((category) => {
+                  const categoryName = category.name[langKey === 'en' ? 'en' : langKey === 'ta' ? 'ta' : 'si']?.[0]?.name || 
+                                      category.name.en?.[0]?.name || 
+                                      'Unknown Category';
+                  const categoryValue = category.name[langKey === 'en' ? 'en' : langKey === 'ta' ? 'ta' : 'si']?.[0]?.value || 
+                                       category.name.en?.[0]?.value || 
+                                       'unknown';
+                  
+                  return (
+                    <li key={category._id}>
+                      <a 
+                        href={`/news?category=${categoryValue}`} 
+                        className="hover:text-[#6ec1e4] transition-colors"
+                      >
+                        {categoryName}
+                      </a>
+                    </li>
+                  );
+                })
+              )}
             </ul>
           </div>
 
