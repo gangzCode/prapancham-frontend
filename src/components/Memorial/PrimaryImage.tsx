@@ -3,6 +3,7 @@
 import { TitleWithUnderline } from '@/components/ui/title-with-underline';
 import React, { useEffect, useState, DragEvent } from 'react';
 import Image from "next/image";
+import { useLanguage } from '@/components/ui/LanguageProvider';
 
 interface PrimaryImageProps {
     selectedPlan: any;
@@ -31,6 +32,66 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
     onImageDataChange,
     setActiveStep 
 }) => {
+    const { language: langKey } = useLanguage();
+    
+    const translations = {
+        english: {
+            greeting: "Hi {username}, Our deepest condolences.",
+            greetingAnonymous: "Hi there, Our deepest condolences.",
+            packageInfo: "You have selected a {duration} days '{planName}' package,",
+            primaryImageTitle: "Primary Image",
+            dragDropText: "Drag & drop image here or click to browse",
+            browseFileButton: "Browse File...",
+            removeImageButton: "✕",
+            altText: "Preview",
+            recommendedSizeLabel: "Recommended image size:",
+            recommendedSizeValue: "400x400 pixels (1:1 aspect ratio)",
+            recommendedTypeLabel: "Recommended image type:",
+            recommendedTypeValue: "JPEG, PNG, WebP, or HEIC",
+            noteLabel: "Note:",
+            noteValue: "You can upload only 1 primary image",
+            backButton: "Back",
+            nextButton: "Next"
+        },
+        tamil: {
+            greeting: "வணக்கம் {username}, எங்கள் ஆழ்ந்த இரங்கல்கள்.",
+            greetingAnonymous: "வணக்கம், எங்கள் ஆழ்ந்த இரங்கல்கள்.",
+            packageInfo: "நீங்கள் {duration} நாட்கள் '{planName}' தொகுப்பை தேர்ந்தெடுத்துள்ளீர்கள்,",
+            primaryImageTitle: "முதன்மை படம்",
+            dragDropText: "படத்தை இங்கே இழுத்து விடவும் அல்லது உலாவ கிளிக் செய்யவும்",
+            browseFileButton: "கோப்பை உலாவு...",
+            removeImageButton: "✕",
+            altText: "முன்னோட்டம்",
+            recommendedSizeLabel: "பரிந்துரைக்கப்பட்ட படத்தின் அளவு:",
+            recommendedSizeValue: "400x400 பிக்சல்கள் (1:1 விகித அளவு)",
+            recommendedTypeLabel: "பரிந்துரைக்கப்பட்ட படத்தின் வகை:",
+            recommendedTypeValue: "JPEG, PNG, WebP, அல்லது HEIC",
+            noteLabel: "குறிப்பு:",
+            noteValue: "நீங்கள் 1 முதன்மை படத்தை மட்டுமே பதிவேற்ற முடியும்",
+            backButton: "பின்",
+            nextButton: "அடுத்து"
+        },
+        sinhala: {
+            greeting: "ආයුබෝවන් {username}, අපගේ ගැඹුරු සානුකම්පනාව.",
+            greetingAnonymous: "ආයුබෝවන්, අපගේ ගැඹුරු සානුකම්පනාව.",
+            packageInfo: "ඔබ දින {duration} ක '{planName}' පැකේජයක් තෝරාගෙන ඇත,",
+            primaryImageTitle: "ප්‍රධාන රූපය",
+            dragDropText: "රූපය මෙහි ඇද දමන්න හෝ පිරික්සීමට ක්ලික් කරන්න",
+            browseFileButton: "ගොනුව පිරික්සන්න...",
+            removeImageButton: "✕",
+            altText: "පෙරදසුන",
+            recommendedSizeLabel: "නිර්දේශිත රූප ප්‍රමාණය:",
+            recommendedSizeValue: "400x400 පික්සල් (1:1 අනුපාත ප්‍රමාණය)",
+            recommendedTypeLabel: "නිර්දේශිත රූප වර්ගය:",
+            recommendedTypeValue: "JPEG, PNG, WebP, හෝ HEIC",
+            noteLabel: "සටහන:",
+            noteValue: "ඔබට ප්‍රධාන රූප 1ක් පමණක් උඩුගත කළ හැකිය",
+            backButton: "ආපසු",
+            nextButton: "ඊළඟ"
+        }
+    };
+    
+    const t = translations[langKey as keyof typeof translations] || translations.english;
     const [image, setImage] = useState<File | null>(initialImageData || null);
     const [preview, setPreview] = useState<string | null>(
         initialImageData ? URL.createObjectURL(initialImageData) : null
@@ -124,14 +185,20 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
             <form>
                 <div className="p-4 mb-6">
                     <h3 className="text-2xl md:text-4xl font-bold text-center mb-4 text-primary">
-                        Hi {profile?.username || 'there'}, Our deepest condolences.
+                        {profile?.username 
+                            ? t.greeting.replace('{username}', profile.username)
+                            : t.greetingAnonymous
+                        }
                     </h3>
                     <p className="text-center text-gray-500 mb-4 text-primary">
-                        You have selected a {getDuration()} days '{getPlanName()}' package, <span className='text-[#880002]'>{getAddonInfo()}</span>
+                        {t.packageInfo
+                            .replace('{duration}', getDuration().toString())
+                            .replace('{planName}', getPlanName())
+                        } <span className='text-[#880002]'>{getAddonInfo()}</span>
                     </p>
                 </div>
                 <div className="flex-shrink min-w-0 mb-8">
-                    <TitleWithUnderline text="Primary Image" underlineWidth={64} />
+                    <TitleWithUnderline text={t.primaryImageTitle} underlineWidth={64} />
                 </div>
                 <div className="w-full">
                     <div
@@ -144,7 +211,7 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
                                 <div className="relative group">
                                     <img
                                         src={preview}
-                                        alt="Preview"
+                                        alt={t.altText}
                                         className=" md:h-48 aspect-square object-cover  shadow"
                                     />
                                     <button
@@ -152,16 +219,16 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
                                         onClick={removeImage}
                                         className="absolute top-1 right-1 bg-red-600 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition"
                                     >
-                                        ✕
+                                        {t.removeImageButton}
                                     </button>
                                 </div>
                             </div>
                         )}
                         {!preview && (
                             <>
-                                <p className="text-gray-500 mb-2">Drag & drop image here or click to browse</p>
+                                <p className="text-gray-500 mb-2">{t.dragDropText}</p>
                                 <label className="cursor-pointer text-white bg-primary px-8 py-2">
-                                    Browse File...
+                                    {t.browseFileButton}
                                     <input
                                         type="file"
                                         accept="image/*,.heic"
@@ -173,9 +240,9 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
                         )}
                     </div>
                     <div className='bg-[#F8D7DA] mt-4 p-4 rounded'>
-                        <strong>Recommended image size:</strong> 400x400 pixels (1:1 aspect ratio)<br />
-                        <strong>Recommended image type:</strong> JPEG, PNG, WebP, or HEIC<br />
-                        <strong>Note:</strong> You can upload only 1 primary image
+                        <strong>{t.recommendedSizeLabel}</strong> {t.recommendedSizeValue}<br />
+                        <strong>{t.recommendedTypeLabel}</strong> {t.recommendedTypeValue}<br />
+                        <strong>{t.noteLabel}</strong> {t.noteValue}
                     </div>
                 </div>
                 <div className="flex justify-end gap-2 items-center self-stretch mt-16">
@@ -183,7 +250,7 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
                         type="button"
                         onClick={() => setActiveStep(5)}
                         className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
-                        Back
+                        {t.backButton}
                     </button>
                     <button
                         type="button"
@@ -199,7 +266,7 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
                         }}
                         disabled={!isFormValid()}
                     >
-                        Next
+                        {t.nextButton}
                     </button>
                 </div>
             </form>

@@ -2,6 +2,7 @@
 
 import { TitleWithUnderline } from '@/components/ui/title-with-underline';
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '@/components/ui/LanguageProvider';
 
 interface InformationProps {
     selectedPlan: any;
@@ -34,6 +35,75 @@ const Information: React.FC<InformationProps> = ({
     onFormDataChange,
     initialFormData
 }) => {
+    const { language: langKey } = useLanguage();
+    
+    const translations = {
+        english: {
+            greeting: "Hi {username}, Our deepest condolences.",
+            greetingAnonymous: "Hi there, Our deepest condolences.",
+            packageInfo: "You have selected a {duration} days '{planName}' package,",
+            informationTitle: "Information",
+            titleLabel: "Title (Name of Deceased)",
+            shortDescriptionLabel: "Short Description",
+            shortDescriptionPlaceholder: "Maximum 10 words allowed",
+            wordsUsed: "{count}/10 words used",
+            addressLabel: "Address",
+            dateOfBirthLabel: "Date of Birth",
+            dateOfDeathLabel: "Date of Death",
+            descriptionLabel: "Description",
+            descriptionPlaceholder: "Maximum {limit} words allowed",
+            descriptionWordsUsed: "{count}/{limit} words used",
+            tributeVideoLabel: "Tribute Video",
+            tributeVideoPlaceholder: "Enter YouTube video URL",
+            tributeVideoNote: "Create a tribute video and upload it to YouTube. Then copy and paste its link here to show it in your tribute.",
+            backButton: "Back",
+            nextButton: "Next"
+        },
+        tamil: {
+            greeting: "வணக்கம் {username}, எங்கள் ஆழ்ந்த இரங்கல்கள்.",
+            greetingAnonymous: "வணக்கம், எங்கள் ஆழ்ந்த இரங்கல்கள்.",
+            packageInfo: "நீங்கள் {duration} நாட்கள் '{planName}' தொகுப்பை தேர்ந்தெடுத்துள்ளீர்கள்,",
+            informationTitle: "தகவல்",
+            titleLabel: "தலைப்பு (இறந்தவரின் பெயர்)",
+            shortDescriptionLabel: "குறுகிய விளக்கம்",
+            shortDescriptionPlaceholder: "அதிகபட்சம் 10 வார்த்தைகள் அனுமதிக்கப்படும்",
+            wordsUsed: "{count}/10 வார்த்தைகள் பயன்படுத்தப்பட்டன",
+            addressLabel: "முகவரி",
+            dateOfBirthLabel: "பிறந்த தேதி",
+            dateOfDeathLabel: "இறந்த தேதி",
+            descriptionLabel: "விளக்கம்",
+            descriptionPlaceholder: "அதிகபட்சம் {limit} வார்த்தைகள் அனுமதிக்கப்படும்",
+            descriptionWordsUsed: "{count}/{limit} வார்த்தைகள் பயன்படுத்தப்பட்டன",
+            tributeVideoLabel: "நினைவு வீடியோ",
+            tributeVideoPlaceholder: "YouTube வீடியோ URL ஐ உள்ளிடவும்",
+            tributeVideoNote: "ஒரு நினைவு வீடியோவை உருவாக்கி YouTube இல் பதிவேற்றவும். பின்னர் அதன் இணைப்பை இங்கே நகலெடுத்து ஒட்டவும்.",
+            backButton: "பின்",
+            nextButton: "அடுத்து"
+        },
+        sinhala: {
+            greeting: "ආයුබෝවන් {username}, අපගේ ගැඹුරු සානුකම්පනාව.",
+            greetingAnonymous: "ආයුබෝවන්, අපගේ ගැඹුරු සානුකම්පනාව.",
+            packageInfo: "ඔබ දින {duration} ක '{planName}' පැකේජයක් තෝරාගෙන ඇත,",
+            informationTitle: "තොරතුරු",
+            titleLabel: "මාතෘකාව (මියගිය පුද්ගලයාගේ නම)",
+            shortDescriptionLabel: "කෙටි විස්තරය",
+            shortDescriptionPlaceholder: "උපරිම වචන 10ක් අවසර ඇත",
+            wordsUsed: "වචන {count}/10ක් භාවිතා කර ඇත",
+            addressLabel: "ලිපිනය",
+            dateOfBirthLabel: "උපන් දිනය",
+            dateOfDeathLabel: "මරණ දිනය",
+            descriptionLabel: "විස්තරය",
+            descriptionPlaceholder: "උපරිම වචන {limit}ක් අවසර ඇත",
+            descriptionWordsUsed: "වචන {count}/{limit}ක් භාවිතා කර ඇත",
+            tributeVideoLabel: "ස්තුති වීඩියෝව",
+            tributeVideoPlaceholder: "YouTube වීඩියෝ URL එක ඇතුළත් කරන්න",
+            tributeVideoNote: "ස්තුති වීඩියෝවක් සාදා YouTube වෙත උඩුගත කරන්න. ඉන්පසු එහි සබැඳිය මෙහි පිටපත් කර ඔබේ ස්තුතියේ පෙන්වන්න.",
+            backButton: "ආපසු",
+            nextButton: "ඊළඟ"
+        }
+    };
+    
+    const t = translations[langKey as keyof typeof translations] || translations.english;
     const [formData, setFormData] = useState<FormData>({
         title: initialFormData?.title || '',
         shortDescription: initialFormData?.shortDescription || '',
@@ -132,18 +202,24 @@ const Information: React.FC<InformationProps> = ({
             <form>
                 <div className="p-4 mb-6">
                     <h3 className="text-2xl md:text-4xl font-bold text-center mb-4 text-primary">
-                        Hi {profile?.username || 'there'}, Our deepest condolences.
+                        {profile?.username 
+                            ? t.greeting.replace('{username}', profile.username)
+                            : t.greetingAnonymous
+                        }
                     </h3>
                     <p className="text-center text-gray-500 mb-4 text-primary">
-                        You have selected a {getDuration()} days '{getPlanName()}' package, <span className='text-[#880002]'>{getAddonInfo()}</span>
+                        {t.packageInfo
+                            .replace('{duration}', getDuration())
+                            .replace('{planName}', getPlanName())
+                        } <span className='text-[#880002]'>{getAddonInfo()}</span>
                     </p>
                 </div>
                 <div className="flex-shrink min-w-0 mb-8">
-                    <TitleWithUnderline text="Information" underlineWidth={64} />
+                    <TitleWithUnderline text={t.informationTitle} underlineWidth={64} />
                 </div>
                 <div className="mb-4">
                     <label htmlFor="title" className={`pb-2 block`}>
-                        Title &#40;Name of Deceased&#41;<span className="text-[#880002]">*</span>
+                        {t.titleLabel}<span className="text-[#880002]">*</span>
                     </label>
                     <input
                         type="text"
@@ -156,7 +232,7 @@ const Information: React.FC<InformationProps> = ({
                 </div>
                 <div className="mb-4">
                     <label htmlFor="shortDescription" className={`pb-2 block`}>
-                        Short Description
+                        {t.shortDescriptionLabel}
                     </label>
                     <textarea
                         id="shortDescription"
@@ -169,15 +245,15 @@ const Information: React.FC<InformationProps> = ({
                             }
                         }}
                         className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                        placeholder="Maximum 10 words allowed"
+                        placeholder={t.shortDescriptionPlaceholder}
                     />
                     <p className="text-xs text-gray-600 mt-1">
-                        {shortDescWordCount}/10 words used
+                        {t.wordsUsed.replace('{count}', shortDescWordCount.toString())}
                     </p>
                 </div>
                 <div className="mb-4">
                     <label htmlFor="address" className={`pb-2 block`}>
-                        Address <span className="text-[#880002]">*</span>
+                        {t.addressLabel} <span className="text-[#880002]">*</span>
                     </label>
                     <input
                         type="text"
@@ -190,7 +266,7 @@ const Information: React.FC<InformationProps> = ({
                 </div>
                 <div className="mb-4">
                     <label htmlFor="dateofBirth" className={`pb-2 block`}>
-                        Date of Birth<span className="text-[#880002]">*</span>
+                        {t.dateOfBirthLabel}<span className="text-[#880002]">*</span>
                     </label>
                     <input
                         type="date"
@@ -205,7 +281,7 @@ const Information: React.FC<InformationProps> = ({
                 </div>
                 <div className="mb-4">
                     <label htmlFor="dateofDeath" className={`pb-2 block`}>
-                        Date of Death<span className="text-[#880002]">*</span>
+                        {t.dateOfDeathLabel}<span className="text-[#880002]">*</span>
                     </label>
                     <input
                         type="date"
@@ -220,7 +296,7 @@ const Information: React.FC<InformationProps> = ({
                 </div>
                 <div className="mb-4">
                     <label htmlFor="description" className="block text-gray-700 mb-2">
-                        Description
+                        {t.descriptionLabel}
                     </label>
                     <textarea
                         id="description"
@@ -233,16 +309,19 @@ const Information: React.FC<InformationProps> = ({
                             }
                         }}
                         className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                        placeholder={`Maximum ${getWordLimit()} words allowed`}
+                        placeholder={t.descriptionPlaceholder.replace('{limit}', getWordLimit().toString())}
                     />
                     <p className="text-xs text-gray-600 mt-1">
-                        {wordCount}/{getWordLimit()} words used
+                        {t.descriptionWordsUsed
+                            .replace('{count}', wordCount.toString())
+                            .replace('{limit}', getWordLimit().toString())
+                        }
                     </p>
                 </div>
                 {selectedPlan?.isTributeVideoUploading && (
                     <div className="mb-4">
                         <label htmlFor="tributeVideo" className={`pb-2 block`}>
-                            Tribute Video
+                            {t.tributeVideoLabel}
                         </label>
                         <input
                             type="url"
@@ -250,10 +329,10 @@ const Information: React.FC<InformationProps> = ({
                             value={formData.tributeVideo}
                             onChange={(e) => handleInputChange('tributeVideo', e.target.value)}
                             className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                            placeholder="Enter YouTube video URL"
+                            placeholder={t.tributeVideoPlaceholder}
                         />
                         <span className='text-xs text-gray-600 mt-1 block'>
-                            Create a tribute video and upload it to YouTube. Then copy and paste its link here to show it in your tribute.
+                            {t.tributeVideoNote}
                         </span>
                     </div>
                 )}
@@ -262,7 +341,7 @@ const Information: React.FC<InformationProps> = ({
                         type="button"
                         onClick={() => setActiveStep(2)}
                         className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
-                        Back
+                        {t.backButton}
                     </button>
                     <button
                         type="button"
@@ -277,7 +356,7 @@ const Information: React.FC<InformationProps> = ({
                         }}
                         disabled={!isFormValid()}
                     >
-                        Next
+                        {t.nextButton}
                     </button>
                 </div>
             </form>

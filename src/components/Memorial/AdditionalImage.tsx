@@ -4,6 +4,7 @@ import { TitleWithUnderline } from '@/components/ui/title-with-underline';
 import React, { useEffect, useState, DragEvent } from 'react';
 import Image from "next/image";
 import { CirclePlus } from 'lucide-react';
+import { useLanguage } from '@/components/ui/LanguageProvider';
 
 interface AdditionalImageProps {
     selectedPlan: any;
@@ -36,6 +37,69 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
     onImagesDataChange,
     setActiveStep 
 }) => {
+    const { language: langKey } = useLanguage();
+    
+    const translations = {
+        english: {
+            greeting: "Hi {username}, Our deepest condolences.",
+            greetingAnonymous: "Hi there, Our deepest condolences.",
+            packageInfo: "You have selected a {duration} days '{planName}' package,",
+            additionalImagesTitle: "Additional Images",
+            previewAltText: "Preview {number}",
+            removeImageButton: "✕",
+            moreImagesText: "{count} more images left",
+            dragDropText: "Drag & drop images here or click to browse",
+            browseFilesButton: "Browse Files...",
+            recommendedSizeLabel: "Recommended image size:",
+            recommendedSizeValue: "400x400 pixels (1:1 aspect ratio)",
+            recommendedTypeLabel: "Recommended image type:",
+            recommendedTypeValue: "JPEG, PNG, WebP, or HEIC",
+            noteLabel: "Note:",
+            noteValue: "You can upload up to {max} additional images",
+            backButton: "Back",
+            nextButton: "Next"
+        },
+        tamil: {
+            greeting: "வணக்கம் {username}, எங்கள் ஆழ்ந்த இரங்கல்கள்.",
+            greetingAnonymous: "வணக்கம், எங்கள் ஆழ்ந்த இரங்கல்கள்.",
+            packageInfo: "நீங்கள் {duration} நாட்கள் '{planName}' தொகுப்பை தேர்ந்தெடுத்துள்ளீர்கள்,",
+            additionalImagesTitle: "கூடுதல் படங்கள்",
+            previewAltText: "முன்னோட்டம் {number}",
+            removeImageButton: "✕",
+            moreImagesText: "{count} மேலும் படங்கள் மீதமுள்ளன",
+            dragDropText: "படங்களை இங்கே இழுத்து விடவும் அல்லது உலாவ கிளிக் செய்யவும்",
+            browseFilesButton: "கோப்புகளை உலாவு...",
+            recommendedSizeLabel: "பரிந்துரைக்கப்பட்ட படத்தின் அளவு:",
+            recommendedSizeValue: "400x400 பிக்சல்கள் (1:1 விகித அளவு)",
+            recommendedTypeLabel: "பரிந்துரைக்கப்பட்ட படத்தின் வகை:",
+            recommendedTypeValue: "JPEG, PNG, WebP, அல்லது HEIC",
+            noteLabel: "குறிப்பு:",
+            noteValue: "நீங்கள் {max} கூடுதல் படங்கள் வரை பதிவேற்ற முடியும்",
+            backButton: "பின்",
+            nextButton: "அடுத்து"
+        },
+        sinhala: {
+            greeting: "ආයුබෝවන් {username}, අපගේ ගැඹුරු සානුකම්පනාව.",
+            greetingAnonymous: "ආයුබෝවන්, අපගේ ගැඹුරු සානුකම්පනාව.",
+            packageInfo: "ඔබ දින {duration} ක '{planName}' පැකේජයක් තෝරාගෙන ඇත,",
+            additionalImagesTitle: "අමතර රූප",
+            previewAltText: "පෙරදසුන {number}",
+            removeImageButton: "✕",
+            moreImagesText: "තවත් රූප {count}ක් ඉතිරිය",
+            dragDropText: "රූප මෙහි ඇද දමන්න හෝ පිරික්සීමට ක්ලික් කරන්න",
+            browseFilesButton: "ගොනු පිරික්සන්න...",
+            recommendedSizeLabel: "නිර්දේශිත රූප ප්‍රමාණය:",
+            recommendedSizeValue: "400x400 පික්සල් (1:1 අනුපාත ප්‍රමාණය)",
+            recommendedTypeLabel: "නිර්දේශිත රූප වර්ගය:",
+            recommendedTypeValue: "JPEG, PNG, WebP, හෝ HEIC",
+            noteLabel: "සටහන:",
+            noteValue: "ඔබට අමතර රූප {max}ක් දක්වා උඩුගත කළ හැකිය",
+            backButton: "ආපසු",
+            nextButton: "ඊළඟ"
+        }
+    };
+    
+    const t = translations[langKey as keyof typeof translations] || translations.english;
     const [images, setImages] = useState<File[]>(initialImages || []);
     const [previews, setPreviews] = useState<string[]>(
         initialImages ? initialImages.map(file => URL.createObjectURL(file)) : []
@@ -153,14 +217,20 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
             <form>
                 <div className="p-4 mb-6">
                     <h3 className="text-2xl md:text-4xl font-bold text-center mb-4 text-primary">
-                        Hi {profile?.username || 'there'}, Our deepest condolences.
+                        {profile?.username 
+                            ? t.greeting.replace('{username}', profile.username)
+                            : t.greetingAnonymous
+                        }
                     </h3>
                     <p className="text-center text-gray-500 mb-4 text-primary">
-                        You have selected a {getDuration()} days '{getPlanName()}' package, <span className='text-[#880002]'>{getAddonInfo()}</span>
+                        {t.packageInfo
+                            .replace('{duration}', getDuration().toString())
+                            .replace('{planName}', getPlanName())
+                        } <span className='text-[#880002]'>{getAddonInfo()}</span>
                     </p>
                 </div>
                 <div className="flex-shrink min-w-0 mb-8">
-                    <TitleWithUnderline text="Additional Images" underlineWidth={64} />
+                    <TitleWithUnderline text={t.additionalImagesTitle} underlineWidth={64} />
                 </div>
                 <div className="w-full">
                     <div
@@ -174,7 +244,7 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
                                     <div key={idx} className="relative group">
                                         <img
                                             src={src}
-                                            alt={`Preview ${idx + 1}`}
+                                            alt={t.previewAltText.replace('{number}', (idx + 1).toString())}
                                             className=" md:h-48 object-cover aspect-square"
                                         />
                                         <button
@@ -182,7 +252,7 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
                                             onClick={() => removeImage(idx)}
                                             className="absolute top-1 right-1 bg-red-600 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition"
                                         >
-                                            ✕
+                                            {t.removeImageButton}
                                         </button>
                                     </div>
                                 ))}
@@ -202,7 +272,7 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
                                     onChange={handleBrowse}
                                     className="hidden"
                                 />                                                <p className="text-primary mt-2">
-                                                    {getMaxImages() - previews.length} more images left
+                                                    {t.moreImagesText.replace('{count}', (getMaxImages() - previews.length).toString())}
                                                 </p>
                                             </div>
 
@@ -214,9 +284,9 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
 
                         {previews.length === 0 && (
                             <div>
-                                <p className="text-gray-500 mb-2">Drag & drop images here or click to browse</p>
+                                <p className="text-gray-500 mb-2">{t.dragDropText}</p>
                                 <label className="cursor-pointer text-white bg-primary px-8 py-2">
-                                    Browse Files...
+                                    {t.browseFilesButton}
                                     <input
                                         type="file"
                                         accept="image/*,.heic"
@@ -229,9 +299,9 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
                         )}
                     </div>
                     <div className="bg-[#F8D7DA] mt-4 p-4 rounded">
-                        <strong>Recommended image size:</strong> 400x400 pixels (1:1 aspect ratio)<br />
-                        <strong>Recommended image type:</strong> JPEG, PNG, WebP, or HEIC<br />
-                        <strong>Note:</strong> You can upload up to {getMaxImages()} additional images
+                        <strong>{t.recommendedSizeLabel}</strong> {t.recommendedSizeValue}<br />
+                        <strong>{t.recommendedTypeLabel}</strong> {t.recommendedTypeValue}<br />
+                        <strong>{t.noteLabel}</strong> {t.noteValue.replace('{max}', getMaxImages().toString())}
                     </div>
 
                 </div>
@@ -240,14 +310,14 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
                         type="button"
                         onClick={() => setActiveStep(7)}
                         className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
-                        Back
+                        {t.backButton}
                     </button>
                     <button
                         type="button"
                         className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6"
                         onClick={() => setActiveStep(9)}
                     >
-                        Next
+                        {t.nextButton}
                     </button>
                 </div>
             </form>
