@@ -60,7 +60,7 @@ const ThumbnailImage: React.FC<ThumbnailImageProps> = ({
     const handleDrop = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         const droppedFile = Array.from(e.dataTransfer.files)
-            .find(file => file.type.startsWith("image/"));
+            .find(file => file.type.startsWith("image/") || file.type === "image/heic" || file.name.toLowerCase().endsWith('.heic'));
 
         if (droppedFile) {
             if (preview) URL.revokeObjectURL(preview);
@@ -76,7 +76,7 @@ const ThumbnailImage: React.FC<ThumbnailImageProps> = ({
 
     const handleBrowse = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = Array.from(e.target.files ?? [])
-            .find(file => file.type.startsWith("image/"));
+            .find(file => file.type.startsWith("image/") || file.type === "image/heic" || file.name.toLowerCase().endsWith('.heic'));
 
         if (selectedFile) {
             if (preview) URL.revokeObjectURL(preview);
@@ -161,7 +161,7 @@ const ThumbnailImage: React.FC<ThumbnailImageProps> = ({
                                     Browse File...
                                     <input
                                         type="file"
-                                        accept="image/*"
+                                        accept="image/*,.heic"
                                         onChange={handleBrowse}
                                         className="hidden"
                                     />
@@ -171,7 +171,7 @@ const ThumbnailImage: React.FC<ThumbnailImageProps> = ({
                     </div>
                     <div className='bg-[#F8D7DA] mt-4 p-4 rounded'>
                         <strong>Recommended image size:</strong> 400x400 pixels (1:1 aspect ratio)<br />
-                        <strong>Recommended image type:</strong> JPEG, PNG, or WebP<br />
+                        <strong>Recommended image type:</strong> JPEG, PNG, WebP, or HEIC<br />
                         <strong>Image max size:</strong> 5 MB<br />
                         <strong>Note:</strong> You can upload only 1 thumbnail image
                     </div>

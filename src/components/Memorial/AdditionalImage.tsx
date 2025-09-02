@@ -73,7 +73,7 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
         if (availableSlots <= 0) return;
 
         const droppedFiles = Array.from(e.dataTransfer.files)
-            .filter(file => file.type.startsWith("image/"))
+            .filter(file => file.type.startsWith("image/") || file.type === "image/heic" || file.name.toLowerCase().endsWith('.heic'))
             .slice(0, availableSlots);
         
         const newPreviews = droppedFiles.map(file => URL.createObjectURL(file));
@@ -96,7 +96,7 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
         if (availableSlots <= 0) return;
 
         const selectedFiles = Array.from(e.target.files ?? [])
-            .filter(file => file.type.startsWith("image/"))
+            .filter(file => file.type.startsWith("image/") || file.type === "image/heic" || file.name.toLowerCase().endsWith('.heic'))
             .slice(0, availableSlots);
         
         const newPreviews = selectedFiles.map(file => URL.createObjectURL(file));
@@ -194,16 +194,14 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
                                                     <CirclePlus className="w-7 h-7 text-primary mx-auto mb-2" strokeWidth={2} />
                                                 </label>
 
-                                                <input
-                                                    id="imageUpload"
-                                                    type="file"
-                                                    accept="image/*"
-                                                    multiple
-                                                    onChange={handleBrowse}
-                                                    className="hidden"
-                                                />
-
-                                                <p className="text-primary mt-2">
+                                <input
+                                    id="imageUpload"
+                                    type="file"
+                                    accept="image/*,.heic"
+                                    multiple
+                                    onChange={handleBrowse}
+                                    className="hidden"
+                                />                                                <p className="text-primary mt-2">
                                                     {getMaxImages() - previews.length} more images left
                                                 </p>
                                             </div>
@@ -221,7 +219,7 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
                                     Browse Files...
                                     <input
                                         type="file"
-                                        accept="image/*"
+                                        accept="image/*,.heic"
                                         multiple
                                         onChange={handleBrowse}
                                         className="hidden"
@@ -232,7 +230,7 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
                     </div>
                     <div className="bg-[#F8D7DA] mt-4 p-4 rounded">
                         <strong>Recommended image size:</strong> 400x400 pixels (1:1 aspect ratio)<br />
-                        <strong>Recommended image type:</strong> JPEG, PNG, or WebP<br />
+                        <strong>Recommended image type:</strong> JPEG, PNG, WebP, or HEIC<br />
                         <strong>Image max size:</strong> 5 MB<br />
                         <strong>Note:</strong> You can upload up to {getMaxImages()} additional images
                     </div>
