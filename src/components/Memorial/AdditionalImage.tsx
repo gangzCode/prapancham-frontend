@@ -231,7 +231,6 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
                     <div className="bg-[#F8D7DA] mt-4 p-4 rounded">
                         <strong>Recommended image size:</strong> 400x400 pixels (1:1 aspect ratio)<br />
                         <strong>Recommended image type:</strong> JPEG, PNG, WebP, or HEIC<br />
-                        <strong>Image max size:</strong> 5 MB<br />
                         <strong>Note:</strong> You can upload up to {getMaxImages()} additional images
                     </div>
 
