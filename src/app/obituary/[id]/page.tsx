@@ -32,6 +32,7 @@ const localeText = {
         messages: "Messages",
         cards: "Cards",
         letters: "Letters",
+        memories: "Memories",
         contacts: "Contacts",
         noContactInformation: "No contact information provided.",
         requestToContact: "Request to Contact",
@@ -77,6 +78,7 @@ const localeText = {
         messages: "செய்திகள்",
         cards: "அட்டைகள்",
         letters: "கடிதங்கள்",
+        memories: "நினைவுகள்",
         contacts: "தொடர்புகள்",
         noContactInformation: "தொடர்பு தகவல்கள் வழங்கப்படவில்லை.",
         requestToContact: "தொடர்பு கோரிக்கை",
@@ -122,6 +124,7 @@ const localeText = {
         messages: "පණිවිඩ",
         cards: "කාඩ්පත්",
         letters: "ලිපි",
+        memories: "මතකයන්",
         contacts: "සම්බන්ධතා",
         noContactInformation: "සම්බන්ධතා තොරතුරු ලබා දී නැත.",
         requestToContact: "සම්බන්ධ වීමට ඉල්ලීම",
@@ -229,7 +232,7 @@ const ObituaryDetail: React.FC = () => {
     const [error, setError] = useState<string>("");
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [activeTab, setActiveTab] = useState<'messages' | 'cards' | 'letters'>('messages');
+    const [activeTab, setActiveTab] = useState<'messages' | 'cards' | 'letters' | 'memories'>('messages');
     const [tributeTemplateCards, setTributeTemplateCards] = useState<{
         tributeCardTemplate: [
             {
@@ -895,6 +898,15 @@ const ObituaryDetail: React.FC = () => {
                                     >
                                         {t.letters}
                                     </button>
+                                    <button
+                                        onClick={() => setActiveTab('memories')}
+                                        className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${activeTab === 'memories'
+                                            ? 'border-primary text-primary bg-gray-50'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        {t.memories || 'Memories'}
+                                    </button>
                                 </div>
 
                                 {/* Tab Content */}
@@ -957,6 +969,68 @@ const ObituaryDetail: React.FC = () => {
                                         {obituaryData.tributeItems.filter(tribute => tribute.tributeOptions === 'letter' && !tribute.isDeleted).length === 0 && (
                                             <div className="col-span-full bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
                                                 No tribute letters available
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {activeTab === 'memories' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {obituaryData.tributeItems
+                                            .filter(tribute => tribute.tributeOptions === 'memory' && !tribute.isDeleted)
+                                            .map((tribute, index) => (
+                                                <div
+                                                    key={tribute._id}
+                                                    className="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                                                >
+                                                    {/* Memory Image */}
+                                                    {tribute.memory.images && (
+                                                        <div className="relative h-48 overflow-hidden">
+                                                            <img
+                                                                src={tribute.memory.images}
+                                                                alt="Memory"
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                            <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
+                                                                Memory
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    
+                                                    {/* Memory Content */}
+                                                    <div className="p-4">
+                                                        {/* Message */}
+                                                        {tribute.memory.message && (
+                                                            <div className="mb-4">
+                                                                <p className="text-gray-800 leading-relaxed italic">
+                                                                    "{tribute.memory.message}"
+                                                                </p>
+                                                            </div>
+                                                        )}
+                                                        
+                                                        {/* Author Info */}
+                                                        <div className="border-t border-gray-200 pt-4 space-y-1">
+                                                            <p className="font-semibold text-gray-900">
+                                                                {tribute.memory.name}
+                                                            </p>
+                                                            <p className="text-gray-600 text-sm">
+                                                                {tribute.memory.relationship}
+                                                            </p>
+                                                            <p className="text-gray-500 text-xs">
+                                                                {tribute.memory.country}
+                                                            </p>
+                                                            {tribute.memory.finalPriceInCAD && tribute.memory.finalPriceInCAD.price && (
+                                                                <p className="text-teal-600 text-sm font-medium">
+                                                                    Donation: ${tribute.memory.finalPriceInCAD.price} {tribute.memory.finalPriceInCAD.currencyCode}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        {obituaryData.tributeItems.filter(tribute => tribute.tributeOptions === 'memory' && !tribute.isDeleted).length === 0 && (
+                                            <div className="col-span-full bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
+                                                No memories available
                                             </div>
                                         )}
                                     </div>
