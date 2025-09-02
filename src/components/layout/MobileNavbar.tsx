@@ -482,8 +482,14 @@ const MobileNavbar: React.FC = () => {
                 </div>
             </div>
             {isDropMenuOpen && (
-                <div className="fixed inset-0 flex items-start md:pt-40 justify-center bg-black bg-opacity-50 z-50 p-4 overflow-y-auto">
-                    <div className="bg-white rounded-lg shadow-lg w-[calc(100%-2rem)] sm:w-[calc(100%-4rem)] md:w-[calc(100%-8rem)] lg:w-[calc(100%-16rem)] max-w-[1400px] mt-16 md:mt-0">
+                <div 
+                    className="fixed inset-0 flex items-start md:pt-40 justify-center bg-black bg-opacity-50 z-50 p-4 overflow-y-auto"
+                    onClick={toggleDropMenu}
+                >
+                    <div 
+                        className="bg-white rounded-lg shadow-lg w-[calc(100%-2rem)] sm:w-[calc(100%-4rem)] md:w-[calc(100%-8rem)] lg:w-[calc(100%-16rem)] max-w-[1400px] mt-16 md:mt-0"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <DropMenu onClose={toggleDropMenu} />
                     </div>
                 </div>
