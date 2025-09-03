@@ -236,7 +236,24 @@ const MobileNavbar: React.FC = () => {
     return (
         <>
             <div className="flex flex-col gap-4 sm:gap-6 md:gap-10 justify-between items-center px-4 md:px-8 lg:px-16  py-1 pb-4 w-full bg-primary shadow-[0px_4px_14px_rgba(0,0,0,0.25)]">
-                <div className="flex  justify-between w-full items-center text-white">
+                {/* Top row: Logo on left, Language selector on right */}
+                <div className="flex justify-between w-full items-center text-white pt-2">
+                    <div className="flex items-center ml-2">
+                        <Image
+                            src="/images/Prapancham-logo.png"
+                            alt="Prapancham Logo"
+                            width={56}
+                            height={56}
+                            priority
+                            className="max-w-[56px] sm:max-w-none items-center justify-center rounded-md"
+                        />
+                        <span className={`px-1 -mt-2 text-xs text-white bg-[#F65050] ${selectedMenu === "news" ? "block" : selectedMenu === "news-individual" ? "block" : "hidden"}`}>
+                            {t.newsNav}
+                        </span>
+                        <span className={`px-1 -mt-2 text-xs text-white bg-black ${selectedMenu === "obituary" ? "block" : selectedMenu === "news-individual" ? "block" : "hidden"}`}>
+                            {t.Samaathi}
+                        </span>
+                    </div>
                     <div className="flex gap-1 justify-center items-center text-white whitespace-nowrap">
                         <LanguageSelect
                             value={languageSelectValue}
@@ -264,7 +281,7 @@ const MobileNavbar: React.FC = () => {
                             </LanguageSelectContent>
                         </LanguageSelect>
                     </div>
-                    <div className=" flex gap-1 justify-center items-left text-[#1A1D1F] whitespace-nowrap -mr-3">
+                    {/* <div className=" flex gap-1 justify-center items-left text-[#1A1D1F] whitespace-nowrap -mr-3">
                         <CountrySelect
                             value={countrySelectValue}
                             onValueChange={(value) => {
@@ -302,9 +319,10 @@ const MobileNavbar: React.FC = () => {
 
                             </CountrySelectContent>
                         </CountrySelect>
-                    </div>
+                    </div> */}
                 </div>
 
+                {/* Bottom row: Menu button + logo + user section */}
                 <div className="flex gap-2 sm:gap-4 md:gap-6 justify-between items-center w-full text-white">
                     <div className="flex items-center">
                         <button
@@ -314,24 +332,6 @@ const MobileNavbar: React.FC = () => {
                         >
                             <Menu className="w-5 h-5 md:w-6 md:h-6" />
                         </button>
-                        <div>
-                            <h1 className="w-full sm:w-auto sm:min-w-[200px] md:min-w-[292px] order-1 flex items-center justify-center sm:justify-start ">
-                                <Image
-                                    src="/images/Prapancham-logo.png"
-                                    alt="Prapancham Logo"
-                                    width={56}
-                                    height={56}
-                                    priority
-                                    className="max-w-[56px] sm:max-w-none items-center justify-center rounded-md"
-                                />
-                                <span className={`px-1 -mt-2 text-xs text-white bg-[#F65050] ${selectedMenu === "news" ? "block" : selectedMenu === "news-individual" ? "block" : "hidden"}`}>
-                                    {t.newsNav}
-                                </span>
-                                <span className={`px-1 -mt-2 text-xs text-white bg-black ${selectedMenu === "obituary" ? "block" : selectedMenu === "news-individual" ? "block" : "hidden"}`}>
-                                    {t.Samaathi}
-                                </span>
-                            </h1>
-                        </div>
                     </div>
                     <div className="flex items-center justify-center">
                         {!isUserLoading && (isAuthenticated ? (
@@ -482,8 +482,14 @@ const MobileNavbar: React.FC = () => {
                 </div>
             </div>
             {isDropMenuOpen && (
-                <div className="fixed inset-0 flex items-start md:pt-40 justify-center bg-black bg-opacity-50 z-50 p-4 overflow-y-auto">
-                    <div className="bg-white rounded-lg shadow-lg w-[calc(100%-2rem)] sm:w-[calc(100%-4rem)] md:w-[calc(100%-8rem)] lg:w-[calc(100%-16rem)] max-w-[1400px] mt-16 md:mt-0">
+                <div 
+                    className="fixed inset-0 flex items-start md:pt-40 justify-center bg-black bg-opacity-50 z-50 p-4 overflow-y-auto"
+                    onClick={toggleDropMenu}
+                >
+                    <div 
+                        className="bg-white rounded-lg shadow-lg w-[calc(100%-2rem)] sm:w-[calc(100%-4rem)] md:w-[calc(100%-8rem)] lg:w-[calc(100%-16rem)] max-w-[1400px] mt-16 md:mt-0"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <DropMenu onClose={toggleDropMenu} />
                     </div>
                 </div>

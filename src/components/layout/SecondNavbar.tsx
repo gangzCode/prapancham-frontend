@@ -133,8 +133,9 @@ const SecondNavbar: React.FC = () => {
   return (
     <>
       <div className="relative flex flex-col px-4 md:px-8 lg:px-16 ">
-        <nav className="flex flex-wrap md:flex-nowrap gap-4 md:gap-10 justify-between items-center w-full px-2 sm:px-4 lg:px-8 py-2 mt-4 md:mt-6 bg-[#F8F8F8] rounded-lg">
-          <div className="flex flex-wrap md:flex-nowrap gap-4 md:gap-6 items-center w-full md:w-auto">
+        <nav className="flex flex-col xl:flex-row xl:flex-nowrap gap-4 xl:gap-10 justify-between items-center w-full px-2 sm:px-4 lg:px-8 py-2 mt-4 md:mt-6 bg-[#F8F8F8] rounded-lg">
+          {/* First Row: Navigation Items */}
+          <div className="flex flex-wrap xl:flex-nowrap gap-4 xl:gap-6 items-center w-full xl:w-auto">
             <button
               className="flex justify-center items-center p-2 hover:bg-stone-100 rounded-lg transition-colors"
               onClick={toggleDropMenu}
@@ -173,7 +174,7 @@ const SecondNavbar: React.FC = () => {
                   return (
                     <React.Fragment key={page}>
                       {index > 0 && (
-                        <Minus className="hidden md:block h-4 w-[1px] bg-black" />
+                        <Minus className="hidden xl:block h-4 w-[1px] bg-black" />
                       )}
                       {page === "Create Memorial" ? (
                         <button
@@ -204,8 +205,10 @@ const SecondNavbar: React.FC = () => {
               </button> */}
             </div>
           </div>
-          <div className="flex flex-col md:flex-row md:gap-10 gap-6 w-full md:w-auto">
-            <div className="w-full md:w-auto mt-2 md:mt-0">
+          
+          {/* Second Row: Search Bar and User Profile (visible on small screens as second row, inline on xl+ screens) */}
+          <div className="flex flex-row justify-between items-center w-full xl:w-auto xl:gap-10 gap-4 mt-2 xl:mt-0">
+            <div className="flex-1 xl:flex-none">
               <SearchBox />
             </div>
             <div className="flex items-center justify-center">
@@ -232,16 +235,6 @@ const SecondNavbar: React.FC = () => {
                           })()
                         }
                       />
-                      <span className="ml-2 text-black font-semibold">
-                        {(() => {
-                          try {
-                            const user = JSON.parse(localStorage.getItem("user") || "{}");
-                            return user.username || "";
-                          } catch {
-                            return "";
-                          }
-                        })()}
-                      </span>
                       <ChevronDown className="w-6 h-6" />
                     </div>
 
@@ -310,7 +303,7 @@ const SecondNavbar: React.FC = () => {
               ) : (
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="border border-primary text-primary  md:ml-8 px-4 py-2 rounded min-w-[8rem] "
+                  className="border border-primary text-primary xl:ml-8 px-4 py-2 rounded min-w-[8rem]"
                 >
                   {t.signIn} / {t.signUp}
                 </button>

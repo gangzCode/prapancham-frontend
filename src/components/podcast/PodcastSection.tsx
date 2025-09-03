@@ -32,8 +32,6 @@ const PodcastSectionContent = ({
   showViewMore = true,
 }: PodcastSectionProps) => {
   const [activeCategory, setActiveCategory] = useState("All");
-  const [currentPodcast, setCurrentPodcast] = useState<number | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const { language } = useLanguage();
   const searchParams = useSearchParams();
 
@@ -100,14 +98,16 @@ const PodcastSectionContent = ({
     duration: podcast.podcastRunTime,
     image: podcast.image,
     category: podcast.podcastCategory[langKey]?.[0]?.value || "",
+    podcastLink: podcast.podcastLink || "",
   }));
 
-  const togglePlay = (id: number) => {
-    if (currentPodcast === id && isPlaying) {
-      setIsPlaying(false);
-    } else {
-      setCurrentPodcast(id);
-      setIsPlaying(true);
+  const handlePlayClick = (podcast: any) => {
+    if (podcast.podcastLink) {
+      // Clean the URL by removing any surrounding quotes and whitespace
+      const cleanUrl = podcast.podcastLink.replace(/^["']|["']$/g, '').trim();
+      
+      // Open the cleaned URL in a new tab
+      window.open(cleanUrl, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -198,19 +198,13 @@ const PodcastSectionContent = ({
 
                 <div className="flex justify-between items-center w-full">
                   <div className="text-sm text-gray-500">
-                    {currentPodcast === podcast.id && isPlaying
-                      ? "00:30"
-                      : "00:00"}
+                    00:00
                   </div>
 
                   <button
                     className="rounded-full bg-primary text-white p-2 hover:bg-primary/90 transition-colors"
-                    onClick={() => typeof podcast.id === "number" ? togglePlay(podcast.id) : undefined}
-                    aria-label={
-                      isPlaying && currentPodcast === podcast.id
-                        ? "Pause"
-                        : "Play"
-                    }
+                    onClick={() => handlePlayClick(podcast)}
+                    aria-label="Play podcast"
                   >
                     <Play className="w-4 h-4" />
                   </button>

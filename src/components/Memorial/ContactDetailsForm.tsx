@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { PlusCircle, Trash2 } from 'lucide-react';
 import { TitleWithUnderline } from '../ui/title-with-underline';
+import { useLanguage } from '@/components/ui/LanguageProvider';
 
 interface ContactDetail {
     country: string;
@@ -69,6 +70,78 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
     onContactDataChange,
     setActiveStep 
 }) => {
+    const { language: langKey } = useLanguage();
+    
+    const translations = {
+        english: {
+            greeting: "Hi {username}, Our deepest condolences.",
+            greetingAnonymous: "Hi there, Our deepest condolences.",
+            packageInfo: "You have selected a {duration} days '{planName}' package,",
+            contactDetailsTitle: "Contact Details",
+            contactDetailsDescription: "You can add up to {max} contact detail{plural} for this plan.",
+            countryLabel: "Country",
+            selectCountry: "--Select Country--",
+            loadingCountries: "Loading countries...",
+            addressLabel: "Address",
+            phoneLabel: "Phone number",
+            nameLabel: "Name",
+            relationshipLabel: "Relationship",
+            selectRelationship: "--Select--",
+            familyOption: "Family",
+            friendOption: "Friend",
+            emailLabel: "E-mail address",
+            removeDetails: "Remove Details",
+            addMoreDetails: "Add More Contact Details ({current}/{max})",
+            backButton: "Back",
+            nextButton: "Next"
+        },
+        tamil: {
+            greeting: "வணக்கம் {username}, எங்கள் ஆழ்ந்த இரங்கல்கள்.",
+            greetingAnonymous: "வணக்கம், எங்கள் ஆழ்ந்த இரங்கல்கள்.",
+            packageInfo: "நீங்கள் {duration} நாட்கள் '{planName}' தொகுப்பை தேர்ந்தெடுத்துள்ளீர்கள்,",
+            contactDetailsTitle: "தொடர்பு விவரங்கள்",
+            contactDetailsDescription: "இந்த திட்டத்திற்கு நீங்கள் {max} தொடர்பு விவரங்கள்{plural} வரை சேர்க்கலாம்.",
+            countryLabel: "நாடு",
+            selectCountry: "--நாடு தேர்ந்தெடுக்கவும்--",
+            loadingCountries: "நாடுகள் ஏற்றப்படுகின்றன...",
+            addressLabel: "முகவரி",
+            phoneLabel: "தொலைபேசி எண்",
+            nameLabel: "பெயர்",
+            relationshipLabel: "உறவுமுறை",
+            selectRelationship: "--தேர்ந்தெடுக்கவும்--",
+            familyOption: "குடும்பம்",
+            friendOption: "நண்பர்",
+            emailLabel: "மின்னஞ்சல் முகவரி",
+            removeDetails: "விவரங்களை அகற்று",
+            addMoreDetails: "மேலும் தொடர்பு விவரங்கள் சேர்க்கவும் ({current}/{max})",
+            backButton: "பின்",
+            nextButton: "அடுத்து"
+        },
+        sinhala: {
+            greeting: "ආයුබෝවන් {username}, අපගේ ගැඹුරු සානුකම්පනාව.",
+            greetingAnonymous: "ආයුබෝවන්, අපගේ ගැඹුරු සානුකම්පනාව.",
+            packageInfo: "ඔබ දින {duration} ක '{planName}' පැකේජයක් තෝරාගෙන ඇත,",
+            contactDetailsTitle: "සම්බන්ධතා විස්තර",
+            contactDetailsDescription: "මෙම සැලැස්ම සඳහා ඔබට සම්බන්ධතා විස්තර {max}ක්{plural} දක්වා එකතු කළ හැක.",
+            countryLabel: "රට",
+            selectCountry: "--රට තෝරන්න--",
+            loadingCountries: "රටවල් පූරණය වෙමින්...",
+            addressLabel: "ලිපිනය",
+            phoneLabel: "දුරකථන අංකය",
+            nameLabel: "නම",
+            relationshipLabel: "සම්බන්ධතාව",
+            selectRelationship: "--තෝරන්න--",
+            familyOption: "පවුල",
+            friendOption: "මිතුරා",
+            emailLabel: "විද්‍යුත් ලිපිනය",
+            removeDetails: "විස්තර ඉවත් කරන්න",
+            addMoreDetails: "තවත් සම්බන්ධතා විස්තර එකතු කරන්න ({current}/{max})",
+            backButton: "ආපසු",
+            nextButton: "ඊළඟ"
+        }
+    };
+    
+    const t = translations[langKey as keyof typeof translations] || translations.english;
     const [contacts, setContacts] = useState<ContactDetail[]>(
         initialContactData && initialContactData.length > 0 
             ? initialContactData 
@@ -209,16 +282,25 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
         <div className="p-4 md:p-8 lg:px-16 bg-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] mt-10">
             <div className="p-4 mb-6">
                 <h3 className="text-2xl md:text-4xl font-bold text-center mb-4 text-primary">
-                    Hi {profile?.username || 'there'}, Our deepest condolences.
+                    {profile?.username 
+                        ? t.greeting.replace('{username}', profile.username)
+                        : t.greetingAnonymous
+                    }
                 </h3>
                 <p className="text-center text-gray-500 mb-4 text-primary">
-                    You have selected a {getDuration()} days '{getPlanName()}' package, <span className='text-[#880002]'>{getAddonInfo()}</span>
+                    {t.packageInfo
+                        .replace('{duration}', getDuration().toString())
+                        .replace('{planName}', getPlanName())
+                    } <span className='text-[#880002]'>{getAddonInfo()}</span>
                 </p>
             </div>
             <div className="flex-shrink min-w-0 mb-8">
-                <TitleWithUnderline text="Contact Details" underlineWidth={64} />
+                <TitleWithUnderline text={t.contactDetailsTitle} underlineWidth={64} />
                 <p className="text-sm text-gray-600 mt-2">
-                    You can add up to {getMaxContactDetails()} contact detail{getMaxContactDetails() > 1 ? 's' : ''} for this plan.
+                    {t.contactDetailsDescription
+                        .replace('{max}', getMaxContactDetails().toString())
+                        .replace('{plural}', getMaxContactDetails() > 1 ? 's' : '')
+                    }
                 </p>
             </div>
 
@@ -227,7 +309,7 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
                     {/* <h2 className="text-lg font-semibold text-blue-900">Contact Details {index + 1}</h2> */}
                     <div className="space-y-4">
                         <div>
-                            <label className="pb-2 block">Country<span className="text-[#880002]">*</span></label>
+                            <label className="pb-2 block">{t.countryLabel}<span className="text-[#880002]">*</span></label>
                             <select
                                 value={contact.country}
                                 onChange={(e) => handleChange(index, 'country', e.target.value)}
@@ -235,7 +317,7 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
                                 disabled={loadingCountries}
                             >
                                 <option value="">
-                                    {loadingCountries ? 'Loading countries...' : '--Select Country--'}
+                                    {loadingCountries ? t.loadingCountries : t.selectCountry}
                                 </option>
                                 {countries.map((country) => (
                                     <option key={country._id} value={country._id}>
@@ -246,7 +328,7 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
                         </div>
 
                         <div>
-                            <label className="pb-2 block">Address</label>
+                            <label className="pb-2 block">{t.addressLabel}</label>
                             <input
                                 type="text"
                                 value={contact.address}
@@ -256,7 +338,7 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
                         </div>
 
                         <div>
-                            <label className="pb-2 block">Phone number<span className="text-[#880002]">*</span></label>
+                            <label className="pb-2 block">{t.phoneLabel}<span className="text-[#880002]">*</span></label>
                             <input
                                 type="text"
                                 value={contact.phone}
@@ -266,7 +348,7 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
                         </div>
 
                         <div>
-                            <label className="pb-2 block">Name<span className="text-[#880002]">*</span></label>
+                            <label className="pb-2 block">{t.nameLabel}<span className="text-[#880002]">*</span></label>
                             <input
                                 type="text"
                                 value={contact.name}
@@ -276,20 +358,20 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
                         </div>
 
                         <div>
-                            <label className="pb-2 block">Relationship</label>
+                            <label className="pb-2 block">{t.relationshipLabel}</label>
                             <select
                                 value={contact.relationship}
                                 onChange={(e) => handleChange(index, 'relationship', e.target.value)}
                                 className="w-full p-4 border border-primary rounded focus:outline-none focus:ring-2 focus:ring-teal-600"
                             >
-                                <option value="">--Select--</option>
-                                <option value="Family">Family</option>
-                                <option value="Friend">Friend</option>
+                                <option value="">{t.selectRelationship}</option>
+                                <option value="Family">{t.familyOption}</option>
+                                <option value="Friend">{t.friendOption}</option>
                             </select>
                         </div>
 
                         <div>
-                            <label className="pb-2 block">E-mail address</label>
+                            <label className="pb-2 block">{t.emailLabel}</label>
                             <input
                                 type="email"
                                 value={contact.email}
@@ -305,7 +387,7 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
                                 className="text-[#880002] flex items-center space-x-1"
                             >
                                 <Trash2 className="h-4 w-4" />
-                                <span>Remove Details</span>
+                                <span>{t.removeDetails}</span>
                             </button>
                         </div>
                     </div>
@@ -325,8 +407,10 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
                 >
                     <PlusCircle className="h-5 w-5" />
                     <span>
-                        Add More Contact Details 
-                        ({contacts.length}/{getMaxContactDetails()})
+                        {t.addMoreDetails
+                            .replace('{current}', contacts.length.toString())
+                            .replace('{max}', getMaxContactDetails().toString())
+                        }
                     </span>
                 </button>
 
@@ -334,7 +418,7 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
                     <button
                         onClick={() => setActiveStep(3)}
                         className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
-                        Back
+                        {t.backButton}
                     </button>
                     <button
                         className={`gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap rounded min-h-6 ${
@@ -349,7 +433,7 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
                         }}
                         disabled={!isFormValid()}
                     >
-                        Next
+                        {t.nextButton}
                     </button>
                 </div>
             </div>

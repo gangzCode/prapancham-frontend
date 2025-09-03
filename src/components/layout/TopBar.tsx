@@ -158,9 +158,9 @@ const TopBar: React.FC = () => {
     }
   }, [pathname]);
   return (
-    <div className="flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-10 justify-between items-center px-4 md:px-8 lg:px-16  py-1 w-full bg-primary shadow-[0px_4px_14px_rgba(0,0,0,0.25)]">
+    <div className="flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-10 items-center px-4 md:px-8 lg:px-16  py-1 w-full bg-primary shadow-[0px_4px_14px_rgba(0,0,0,0.25)]">
 
-      <div>
+      <div className="flex-shrink-0">
         <h1 className="w-full sm:w-auto sm:min-w-[200px] md:min-w-[292px] order-1 flex items-center justify-center sm:justify-start ">
           <Link href="/">
             <Image
@@ -183,7 +183,7 @@ const TopBar: React.FC = () => {
       </div>
 
 
-      <div>
+      <div className="flex-1 flex justify-center">
         <nav className="w-full sm:w-auto flex flex-wrap sm:flex-nowrap gap-2 sm:gap-1 justify-center items-center text-center text-link order-3 mt-4 sm:mt-0">
           {navItems.map((item) => (
             <Link
@@ -198,8 +198,8 @@ const TopBar: React.FC = () => {
           ))}
         </nav>
       </div>
-      <div className="flex  justify-center items-center text-white">
-        <div className="flex gap-1 justify-center items-center text-white whitespace-nowrap">
+      <div className="flex-shrink-0 flex justify-end items-center text-white min-w-[200px] md:min-w-[292px]">
+        <div className="flex gap-1 justify-end items-center text-white whitespace-nowrap">
           <LanguageSelect
             value={languageSelectValue}
             onValueChange={(value) => {

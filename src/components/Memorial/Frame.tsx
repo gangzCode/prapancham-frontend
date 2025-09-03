@@ -4,6 +4,7 @@ import { TitleWithUnderline } from '@/components/ui/title-with-underline';
 import React, { useState, useEffect } from 'react';
 import Image from "next/image";
 import { Check } from 'lucide-react';
+import { useLanguage } from '@/components/ui/LanguageProvider';
 
 interface FrameProps {
     selectedPlan: any;
@@ -41,6 +42,48 @@ const Frame: React.FC<FrameProps> = ({
     onFrameDataChange,
     setActiveStep 
 }) => {
+    const { language: langKey } = useLanguage();
+    
+    const translations = {
+        english: {
+            greeting: "Hi {username}, Our deepest condolences.",
+            greetingAnonymous: "Hi there, Our deepest condolences.",
+            packageInfo: "You have selected a {duration} days '{planName}' package,",
+            addFrameTitle: "Add a Frame",
+            frameAltText: "Frame {number}",
+            frameLabel: "Frame {number}",
+            noFramesMessage: "No frames available for this plan.",
+            frameInstruction: "Select a frame style in which you wish to display the primary image",
+            backButton: "Back",
+            nextButton: "Next"
+        },
+        tamil: {
+            greeting: "வணக்கம் {username}, எங்கள் ஆழ்ந்த இரங்கல்கள்.",
+            greetingAnonymous: "வணக்கம், எங்கள் ஆழ்ந்த இரங்கல்கள்.",
+            packageInfo: "நீங்கள் {duration} நாட்கள் '{planName}' தொகுப்பை தேர்ந்தெடுத்துள்ளீர்கள்,",
+            addFrameTitle: "சட்டம் சேர்க்கவும்",
+            frameAltText: "சட்டம் {number}",
+            frameLabel: "சட்டம் {number}",
+            noFramesMessage: "இந்த திட்டத்திற்கு சட்டங்கள் எதுவும் கிடைக்கவில்லை.",
+            frameInstruction: "முதன்மை படத்தை காட்ட விரும்பும் சட்ட பாணியை தேர்ந்தெடுக்கவும்",
+            backButton: "பின்",
+            nextButton: "அடுத்து"
+        },
+        sinhala: {
+            greeting: "ආයුබෝවන් {username}, අපගේ ගැඹුරු සානුකම්පනාව.",
+            greetingAnonymous: "ආයුබෝවන්, අපගේ ගැඹුරු සානුකම්පනාව.",
+            packageInfo: "ඔබ දින {duration} ක '{planName}' පැකේජයක් තෝරාගෙන ඇත,",
+            addFrameTitle: "රාමුවක් එකතු කරන්න",
+            frameAltText: "රාමුව {number}",
+            frameLabel: "රාමුව {number}",
+            noFramesMessage: "මෙම සැලැස්ම සඳහා රාමු නොමැත.",
+            frameInstruction: "ප්‍රධාන රූපය ප්‍රදර්ශනය කිරීමට ඔබ කැමති රාමු ශෛලිය තෝරන්න",
+            backButton: "ආපසු",
+            nextButton: "ඊළඟ"
+        }
+    };
+    
+    const t = translations[langKey as keyof typeof translations] || translations.english;
     // Get frames from selectedPlan
     const frames: FrameItem[] = selectedPlan?.primaryImageBgFrames?.filter(
         (frame: FrameItem) => frame.isActive && !frame.isDeleted
@@ -106,14 +149,20 @@ const Frame: React.FC<FrameProps> = ({
             <form>
                 <div className="p-4 mb-6">
                     <h3 className="text-2xl md:text-4xl font-bold text-center mb-4 text-primary">
-                        Hi {profile?.username || 'there'}, Our deepest condolences.
+                        {profile?.username 
+                            ? t.greeting.replace('{username}', profile.username)
+                            : t.greetingAnonymous
+                        }
                     </h3>
                     <p className="text-center text-gray-500 mb-4 text-primary">
-                        You have selected a {getDuration()} days '{getPlanName()}' package, <span className='text-[#880002]'>{getAddonInfo()}</span>
+                        {t.packageInfo
+                            .replace('{duration}', getDuration().toString())
+                            .replace('{planName}', getPlanName())
+                        } <span className='text-[#880002]'>{getAddonInfo()}</span>
                     </p>
                 </div>
                 <div className="flex-shrink min-w-0 mb-8">
-                    <TitleWithUnderline text="Add a Frame" underlineWidth={64} />
+                    <TitleWithUnderline text={t.addFrameTitle} underlineWidth={64} />
                 </div>
                 <div className="w-full">
                     <div className="border-2 border-gray-300 rounded flex flex-col items-center bg-white p-4">
@@ -128,7 +177,7 @@ const Frame: React.FC<FrameProps> = ({
                                     >
                                         <img
                                             src={frame.frameImage}
-                                            alt={`Frame ${idx + 1}`}
+                                            alt={t.frameAltText.replace('{number}', (idx + 1).toString())}
                                             className="object-cover md:h-48 md:!w-48 aspect-square"
                                         />
                                         {selectedFrame === frame._id && (
@@ -136,18 +185,20 @@ const Frame: React.FC<FrameProps> = ({
                                                 <Check className="w-5 h-5" />
                                             </div>
                                         )}
-                                        <p className="mt-2 text-sm text-gray-700">Frame {idx + 1}</p>
+                                        <p className="mt-2 text-sm text-gray-700">
+                                            {t.frameLabel.replace('{number}', (idx + 1).toString())}
+                                        </p>
                                     </div>
                                 ))}
                             </div>
                         ) : (
                             <div className="text-center text-gray-500 py-8">
-                                No frames available for this plan.
+                                {t.noFramesMessage}
                             </div>
                         )}
                     </div>
                     <div className='bg-[#F8D7DA] mt-4 p-2 text-sm text-red-800 rounded'>
-                        Select a frame style in which you wish to display the primary image
+                        {t.frameInstruction}
                     </div>
                 </div>
                 <div className="flex justify-end gap-2 items-center self-stretch mt-16">
@@ -156,7 +207,7 @@ const Frame: React.FC<FrameProps> = ({
                         className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6"
                         type="button"
                     >
-                        Back
+                        {t.backButton}
                     </button>
                     <button
                         type="button"
@@ -172,7 +223,7 @@ const Frame: React.FC<FrameProps> = ({
                         }}
                         disabled={!isFormValid()}
                     >
-                        Next
+                        {t.nextButton}
                     </button>
                 </div>
             </form>
