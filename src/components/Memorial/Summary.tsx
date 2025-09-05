@@ -18,7 +18,7 @@ interface SummaryProps {
     primaryImage?: File | null;
     frameData?: any;
     additionalImagesData?: File[];
-    accountDetailsData?: any;
+    donationReceivableData?: boolean;
     setActiveStep: (step: number) => void;
 }
 
@@ -35,7 +35,7 @@ const Summary: React.FC<SummaryProps> = ({
     primaryImage,
     frameData,
     additionalImagesData,
-    accountDetailsData,
+    donationReceivableData,
     setActiveStep
 }) => {
     const router = useRouter();
@@ -152,12 +152,7 @@ const Summary: React.FC<SummaryProps> = ({
                 shortDescription: informationFormData.shortDescription || '',
             } : {},
             primaryImage: primaryImage || null,
-            accountDetails: accountDetailsData ? {
-                bankName: accountDetailsData.bankName || '',
-                branchName: accountDetailsData.branch || '',
-                accountNumber: accountDetailsData.accountNumber || '',
-                accountHolderName: accountDetailsData.accountHolder || ''
-            } : {},
+            isDonationReceivable: donationReceivableData || false,
             selectedCountry: selectedCountryId || '',
             selectedPackage: selectedPlan?._id || '',
             thumbnailImage: thumbnailImage || null,
@@ -336,12 +331,12 @@ const Summary: React.FC<SummaryProps> = ({
             "primaryImage": primaryImage,
             "frameData": frameData,
             "additionalImagesData": additionalImagesData,
-            "accountDetailsData": accountDetailsData,
+            "donationReceivableData": donationReceivableData,
             "totalPrice": getTotalPrice(),
             "currency": getCurrency(),
             "features": getPlanFeatures()
         });
-    }, [selectedPlan, selectedAddon, selectedCountryId, profile, language, informationFormData, contactData, thumbnailImage, primaryImage, frameData, additionalImagesData, accountDetailsData]);
+    }, [selectedPlan, selectedAddon, selectedCountryId, profile, language, informationFormData, contactData, thumbnailImage, primaryImage, frameData, additionalImagesData, donationReceivableData]);
 
 
     // Initialize default background color
@@ -398,7 +393,7 @@ const Summary: React.FC<SummaryProps> = ({
         uploadFormData.append('selectedAddons', JSON.stringify(formData.selectedAddons));
         uploadFormData.append('selectedPrimaryImageBgFrame', formData.selectedPrimaryImageBgFrame);
         uploadFormData.append('selectedBgColor', formData.selectedBgColor);
-        uploadFormData.append('accountDetails', JSON.stringify(formData.accountDetails));
+        uploadFormData.append('isDonationReceivable', String(formData.isDonationReceivable));
 
         // Append additional fields for order confirmation
         if (stripePaymentProp?.tempOrderId) {
@@ -716,7 +711,10 @@ const Summary: React.FC<SummaryProps> = ({
                                                 <p>{contact.email}</p>
                                                 <p>{contact.relationship}</p>
                                             </div>
-                                            <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                                            <button
+                                                className={`mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)] ${true ? 'bg-[#0D1322]' : 'bg-gray-400'}`}
+                                                disabled
+                                            >
                                                 Request to Contact
                                             </button>
                                         </div>
@@ -754,23 +752,18 @@ const Summary: React.FC<SummaryProps> = ({
                                     <p>{profile?.email || 'Email not provided'}</p>
                                     <p>{profile?.phone || 'Phone not provided'}</p>
                                 </div>
-                                {accountDetailsData && (
-                                    <>
-                                        <Separator className="mt-6 !w-full mb-4" />
-                                        <div className="flex-shrink min-w-0 max-w-full mt-4">
-                                            <TitleWithUnderline text="Account Details" underlineWidth={64} fontSize={3} />
-                                        </div>
-                                        <div className="space-y-2 mt-2 p-2">
-                                            <p>Bank: {accountDetailsData.bankName || 'Not provided'}</p>
-                                            <p>Branch: {accountDetailsData.branch || 'Not provided'}</p>
-                                            <p>Account: {accountDetailsData.accountNumber || 'Not provided'}</p>
-                                            <p>Holder: {accountDetailsData.accountHolder || 'Not provided'}</p>
-                                        </div>
-                                    </>
-                                )}
-                                <button className="w-full gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
-                                    Request to Contact
-                                </button>
+                                <Separator className="mt-6 !w-full mb-4" />
+                                <div className="flex-shrink min-w-0 max-w-full mt-4">
+                                    <TitleWithUnderline text="Donation Status" underlineWidth={64} fontSize={3} />
+                                </div>
+                                <div className="space-y-2 mt-2 p-2">
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-3 h-3 rounded-full ${donationReceivableData ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                                        <p className={donationReceivableData ? 'text-green-700' : 'text-gray-600'}>
+                                            {donationReceivableData ? 'Donations enabled for this memorial' : 'Donations not enabled for this memorial'}
+                                        </p>
+                                    </div>
+                                </div>
                                 <Separator className="mt-8 !w-full mb-4" />
                                 <div className="flex-shrink min-w-0 max-w-full mt-8 mb-6">
                                     <TitleWithUnderline text="Pictures" underlineWidth={64} fontSize={3} />
@@ -799,10 +792,6 @@ const Summary: React.FC<SummaryProps> = ({
                                                 No images uploaded
                                             </div>
                                         )}
-
-                                        <button className="w-full gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
-                                            Request to Contact
-                                        </button>
                                     </div>
                                 </div>
                             </div>
