@@ -7,6 +7,7 @@ export interface ObituaryEntry {
   imageUrl: string;
   condolences: number;
   donations?: number;
+  isDonationReceivable?: boolean;
   accountDetails?: {
     bankName: string;
     branchName: string;

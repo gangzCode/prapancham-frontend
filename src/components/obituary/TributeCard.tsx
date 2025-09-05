@@ -67,19 +67,9 @@ const TributeCard: React.FC<TributeCardProps> = ({
 
   const closeModal = () => setIsModalOpen(false);
 
-  // Check if account details are valid for donations
-  const hasValidAccountDetails = () => {
-    if (!entry.accountDetails) return false;
-    
-    const { bankName, branchName, accountNumber, accountHolderName } = entry.accountDetails;
-    
-    // Check if all required fields are filled and not empty
-    return (
-      bankName && bankName.trim() !== '' &&
-      branchName && branchName.trim() !== '' &&
-      accountNumber && accountNumber.toString().trim() !== '' &&
-      accountHolderName && accountHolderName.trim() !== ''
-    );
+  // Check if donations are enabled for this memorial
+  const isDonationEnabled = () => {
+    return entry.isDonationReceivable === true;
   };
 
   return (
@@ -116,7 +106,7 @@ const TributeCard: React.FC<TributeCardProps> = ({
       <div className="flex justify-between pt-2 border-t gap-2">
         <button
           onClick={() => setIsTributeModalOpen(true)}
-          className={`py-2 border border-primary rounded text-primary ${hasValidAccountDetails() ? 'w-4/5' : 'w-full'}`}
+          className={`py-2 border border-primary rounded text-primary ${isDonationEnabled() ? 'w-4/5' : 'w-full'}`}
         >
           🕯️ {t.postTribute}
         </button>
@@ -130,7 +120,7 @@ const TributeCard: React.FC<TributeCardProps> = ({
           eventName={eventName}
           date={date}
         />
-        {hasValidAccountDetails() && (
+        {isDonationEnabled() && (
           <>
             <button
               onClick={() => setIsModalOpen(true)}

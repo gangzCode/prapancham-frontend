@@ -195,6 +195,7 @@ interface ObituaryData {
     expiryDate: string;
     recievedDonations: any[];
     userDonationStatus: string;
+    isDonationReceivable?: boolean;
     contactDetails: any[];
     createdAt: string;
     updatedAt: string;
@@ -715,6 +716,11 @@ const ObituaryDetail: React.FC = () => {
         }
     };
 
+    // Function to check if donations are enabled for this memorial
+    const isDonationEnabled = (): boolean => {
+        return obituaryData?.isDonationReceivable === true;
+    };
+
     // Function to check if account details are valid for donation
     const hasValidAccountDetails = (accountDetails: any): boolean => {
         if (!accountDetails) return false;
@@ -850,9 +856,9 @@ const ObituaryDetail: React.FC = () => {
 
                                 🕯️ {t.postTribute}
                             </button>
-                            {hasValidAccountDetails(obituaryData.accountDetails) && (
+                            {isDonationEnabled() && (
                                 <button
-                                    onClick={openModal}
+                                    onClick={() => setIsModalOpen(true)}
                                     className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
                                 >
                                     💝 {t.donate}
@@ -1190,13 +1196,6 @@ const ObituaryDetail: React.FC = () => {
                                 </p>
                             </div>
 
-                            <button
-                                onClick={() => handleRequestToContact()}
-                                className="w-full gap-2.5 self-stretch px-4 py-3 my-auto mt-4 text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
-                            >
-                                {t.requestToContact}
-                            </button>
-
                             <Separator className="mt-8 !w-full mb-4" />
 
                             {/* Pictures Section */}
@@ -1223,12 +1222,6 @@ const ObituaryDetail: React.FC = () => {
                                     )}
                                 </div>
                             </div>
-                            <button
-                                onClick={() => handleRequestToContact()}
-                                className="w-full gap-2.5 self-stretch px-4 py-3 my-auto mt-4 text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
-                            >
-                                {t.requestToContact}
-                            </button>
                         </div>
                     </div>
                 </div>
