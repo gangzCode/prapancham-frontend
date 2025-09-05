@@ -5,6 +5,9 @@ import React, { useState, useEffect } from "react";
 import PaginationBar from "@/components/category/PaginationBar";
 import useSWR from 'swr';
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 
 
@@ -251,34 +254,43 @@ const Advertisement = () => {
         return (
             <div className="mt-8">
                 {/* Category Tabs */}
-                <div className="py-4 px-4 md:px-8 lg:px-16 bg-white border-b">
-                    <div className="flex flex-wrap gap-2 md:gap-4">
+                <div className="bg-primary p-4 overflow-x-auto h-[72px]">
+                    <div className="flex justify-start md:justify-center items-center min-w-max px-2">
                         {/* All Categories Tab */}
-                        <button
-                            onClick={() => handleCategoryChange('')}
-                            className={`px-4 py-2 rounded-lg font-medium text-sm md:text-base transition-colors ${
-                                selectedAdCategory === '' 
-                                    ? 'bg-primary text-white' 
-                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                            }`}
-                        >
-                            {t.allCategories} ({totalAdCount} {t.posts})
-                        </button>
+                        <React.Fragment>
+                            <Button
+                                variant="ghost"
+                                className={cn(
+                                    "border-none whitespace-nowrap text-white font-poppins text-base",
+                                    selectedAdCategory === '' ? "font-bold bg-white rounded-lg text-[#1D94C5]" : "font-normal"
+                                )}
+                                onClick={() => handleCategoryChange('')}
+                            >
+                                {t.allCategories} ({totalAdCount} {t.posts})
+                            </Button>
+                            {categoriesData && categoriesData.length > 0 && (
+                                <Separator orientation="vertical" className="h-6 mx-2 text-white" />
+                            )}
+                        </React.Fragment>
                         {/* Category Tabs */}
-                        {categoriesData?.map((category: any) => {
+                        {categoriesData?.map((category: any, index: number) => {
                             const langObj = category.name[langKey]?.[0] || category.name["en"]?.[0];
                             return (
-                                <button
-                                    key={category._id}
-                                    onClick={() => handleCategoryChange(category._id)}
-                                    className={`px-4 py-2 rounded-lg font-medium text-sm md:text-base transition-colors ${
-                                        selectedAdCategory === category._id 
-                                            ? 'bg-primary text-white' 
-                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
-                                >
-                                    {langObj?.value} ({category.adCount} {t.posts})
-                                </button>
+                                <React.Fragment key={category._id}>
+                                    <Button
+                                        variant="ghost"
+                                        className={cn(
+                                            "border-none whitespace-nowrap text-white font-poppins text-base",
+                                            selectedAdCategory === category._id ? "font-bold bg-white rounded-lg text-[#1D94C5]" : "font-normal"
+                                        )}
+                                        onClick={() => handleCategoryChange(category._id)}
+                                    >
+                                        {langObj?.value} ({category.adCount} {t.posts})
+                                    </Button>
+                                    {index < categoriesData.length - 1 && (
+                                        <Separator orientation="vertical" className="h-6 mx-2 text-white" />
+                                    )}
+                                </React.Fragment>
                             );
                         })}
                     </div>
@@ -330,35 +342,44 @@ const Advertisement = () => {
     return (
         <div className="mt-8">
             {/* Category Tabs */}
-            <div className="py-4 px-4 md:px-8 lg:px-16 bg-white border-b">
-                <div className="flex flex-wrap gap-2 md:gap-4">
+            <div className="bg-primary p-4 overflow-x-auto h-[72px]">
+                <div className="flex justify-start md:justify-center items-center min-w-max px-2">
                     {/* All Categories Tab */}
-                    <button
-                        onClick={() => handleCategoryChange('')}
-                        className={`px-4 py-2 rounded-lg font-medium text-sm md:text-base transition-colors ${
-                            selectedAdCategory === '' 
-                                ? 'bg-primary text-white' 
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
-                    >
-                        {t.allCategories} ({totalAdCount} {t.posts})
-                    </button>
+                    <React.Fragment>
+                        <Button
+                            variant="ghost"
+                            className={cn(
+                                "border-none whitespace-nowrap text-white font-poppins text-base",
+                                selectedAdCategory === '' ? "font-bold bg-white rounded-lg text-[#1D94C5]" : "font-normal"
+                            )}
+                            onClick={() => handleCategoryChange('')}
+                        >
+                            {t.allCategories} ({totalAdCount} {t.posts})
+                        </Button>
+                        {categoriesData && categoriesData.length > 0 && (
+                            <Separator orientation="vertical" className="h-6 mx-2 text-white" />
+                        )}
+                    </React.Fragment>
                     
                     {/* Category Tabs */}
-                    {categoriesData?.map((category: any) => {
+                    {categoriesData?.map((category: any, index: number) => {
                         const langObj = category.name[langKey]?.[0] || category.name["en"]?.[0];
                         return (
-                            <button
-                                key={category._id}
-                                onClick={() => handleCategoryChange(category._id)}
-                                className={`px-4 py-2 rounded-lg font-medium text-sm md:text-base transition-colors ${
-                                    selectedAdCategory === category._id 
-                                        ? 'bg-primary text-white' 
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                }`}
-                            >
-                                {langObj?.value} ({category.adCount} {t.posts})
-                            </button>
+                            <React.Fragment key={category._id}>
+                                <Button
+                                    variant="ghost"
+                                    className={cn(
+                                        "border-none whitespace-nowrap text-white font-poppins text-base",
+                                        selectedAdCategory === category._id ? "font-bold bg-white rounded-lg text-[#1D94C5]" : "font-normal"
+                                    )}
+                                    onClick={() => handleCategoryChange(category._id)}
+                                >
+                                    {langObj?.value} ({category.adCount} {t.posts})
+                                </Button>
+                                {index < categoriesData.length - 1 && (
+                                    <Separator orientation="vertical" className="h-6 mx-2 text-white" />
+                                )}
+                            </React.Fragment>
                         );
                     })}
                 </div>
