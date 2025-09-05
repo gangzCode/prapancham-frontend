@@ -158,7 +158,7 @@ const TopBar: React.FC = () => {
     }
   }, [pathname]);
   return (
-    <div className="flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-10 items-center px-4 md:px-8 lg:px-16  py-1 w-full bg-primary shadow-[0px_4px_14px_rgba(0,0,0,0.25)]">
+    <div className="flex flex-col md:flex-row gap-2 md:gap-4 lg:gap-10 items-center px-4 md:px-8 lg:px-16 py-2 md:py-1 w-full bg-primary shadow-[0px_4px_14px_rgba(0,0,0,0.25)]">
 
       <div className="flex-shrink-0">
         <h1 className="w-full sm:w-auto sm:min-w-[200px] md:min-w-[292px] order-1 flex items-center justify-center sm:justify-start ">
@@ -198,8 +198,8 @@ const TopBar: React.FC = () => {
           ))}
         </nav>
       </div>
-      <div className="flex-shrink-0 flex justify-end items-center text-white min-w-[200px] md:min-w-[292px]">
-        <div className="flex gap-1 justify-end items-center text-white whitespace-nowrap">
+      <div className="flex-shrink-0 flex justify-end items-center text-white w-full md:w-auto md:min-w-[200px] lg:min-w-[292px]">
+        <div className="flex gap-1 justify-center md:justify-end items-center text-white whitespace-nowrap w-full md:w-auto">
           <LanguageSelect
             value={languageSelectValue}
             onValueChange={(value) => {
@@ -207,13 +207,13 @@ const TopBar: React.FC = () => {
               setLanguageSelectValue(value);
             }}
           >
-            <LanguageSelectTrigger className="md:w-[7rem] text-white bg-transparent border-none outline-none cursor-pointer text-sm sm:text-base">
+            <LanguageSelectTrigger className="w-full md:w-[7rem] text-white bg-transparent border-none outline-none cursor-pointer text-sm sm:text-base">
               <LanguageSelectValue
                 className="text-white placeholder:text-white text-sm sm:text-base"
                 placeholder="Language"
               />
             </LanguageSelectTrigger>
-            <LanguageSelectContent>
+            <LanguageSelectContent className="min-w-[120px] max-w-[200px] z-50">
               <LanguageSelectItem value="english" className="text-sm sm:text-base">
                 English
               </LanguageSelectItem>

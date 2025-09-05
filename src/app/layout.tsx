@@ -23,7 +23,7 @@ export default function RootLayout({
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window?.innerWidth < 768);
+      setIsMobile(window?.innerWidth < 878);
     };
 
     checkMobile();
