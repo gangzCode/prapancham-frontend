@@ -832,11 +832,34 @@ const ObituaryDetail: React.FC = () => {
                             </div>
                         </div>
 
-                        <p className="text-justify mt-4">
-                            {obituaryData.information.description || t.noDescriptionProvided}
-                        </p>
+                        {/* Memorial Description Section */}
+                        <div className="mt-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200">
+                            <div className="flex items-start gap-4">
+                                <div className="flex-shrink-0">
+                                    <div className="w-1 h-16 bg-gradient-to-b from-teal-500 to-teal-700 rounded-full"></div>
+                                </div>
+                                <div className="flex-1">
+                                    {obituaryData.information.description ? (
+                                        <div className="prose prose-gray max-w-none">
+                                            <p className="text-gray-700 leading-relaxed text-lg font-light italic">
+                                                "{obituaryData.information.description}"
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center justify-center py-8">
+                                            <div className="text-center">
+                                                <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                                <p className="text-gray-500 text-sm">{t.noDescriptionProvided}</p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
 
-                        <div className="flex justify-end gap-2 items-center self-stretch mt-4">
+                        <div className="flex justify-end gap-2 items-center self-stretch mt-6">
                             {
                                 obituaryData.selectedPackage.isSocialSharing && (
                                     <button
