@@ -67,19 +67,9 @@ const TributeCard: React.FC<TributeCardProps> = ({
 
   const closeModal = () => setIsModalOpen(false);
 
-  // Check if account details are valid for donations
-  const hasValidAccountDetails = () => {
-    if (!entry.accountDetails) return false;
-    
-    const { bankName, branchName, accountNumber, accountHolderName } = entry.accountDetails;
-    
-    // Check if all required fields are filled and not empty
-    return (
-      bankName && bankName.trim() !== '' &&
-      branchName && branchName.trim() !== '' &&
-      accountNumber && accountNumber.toString().trim() !== '' &&
-      accountHolderName && accountHolderName.trim() !== ''
-    );
+  // Check if donations are enabled for this memorial
+  const isDonationEnabled = () => {
+    return entry.isDonationReceivable === true;
   };
 
   return (
@@ -116,9 +106,12 @@ const TributeCard: React.FC<TributeCardProps> = ({
       <div className="flex justify-between pt-2 border-t gap-2">
         <button
           onClick={() => setIsTributeModalOpen(true)}
-          className={`py-2 border border-primary rounded text-primary ${hasValidAccountDetails() ? 'w-4/5' : 'w-full'}`}
+          className={`bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-4 py-3 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold justify-center ${isDonationEnabled() ? 'flex-grow' : 'w-full'}`}
         >
-          🕯️ {t.postTribute}
+          <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          {t.postTribute}
         </button>
         <TributeModal 
           isOpen={isTributeModalOpen} 
@@ -130,13 +123,18 @@ const TributeCard: React.FC<TributeCardProps> = ({
           eventName={eventName}
           date={date}
         />
-        {hasValidAccountDetails() && (
+        {isDonationEnabled() && (
           <>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="w-1/5 py-2 bg-primary text-white rounded"
+              className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-4 py-3 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold min-w-[120px]"
             >
-              💝 {t.donate}
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0A1.5 1.5 0 013 18.546V19a1 1 0 001 1h16a1 1 0 001-1v-.454c0-.793-.644-1.546-1.5-1.546z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12.054l-2.5-2.5L8 11.054l4 4 4-4-1.5-1.5-2.5 2.5z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.054V12.054" />
+              </svg>
+              {t.donate}
             </button>
             <DonateModal
               isOpen={isModalOpen}

@@ -195,6 +195,7 @@ interface ObituaryData {
     expiryDate: string;
     recievedDonations: any[];
     userDonationStatus: string;
+    isDonationReceivable?: boolean;
     contactDetails: any[];
     createdAt: string;
     updatedAt: string;
@@ -715,6 +716,11 @@ const ObituaryDetail: React.FC = () => {
         }
     };
 
+    // Function to check if donations are enabled for this memorial
+    const isDonationEnabled = (): boolean => {
+        return obituaryData?.isDonationReceivable === true;
+    };
+
     // Function to check if account details are valid for donation
     const hasValidAccountDetails = (accountDetails: any): boolean => {
         if (!accountDetails) return false;
@@ -826,36 +832,69 @@ const ObituaryDetail: React.FC = () => {
                             </div>
                         </div>
 
-                        <p className="text-justify mt-4">
-                            {obituaryData.information.description || t.noDescriptionProvided}
-                        </p>
+                        {/* Memorial Description Section */}
+                        <div className="mt-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200">
+                            <div className="flex items-start gap-4">
+                                <div className="flex-shrink-0">
+                                    <div className="w-1 h-16 bg-gradient-to-b from-teal-500 to-teal-700 rounded-full"></div>
+                                </div>
+                                <div className="flex-1">
+                                    {obituaryData.information.description ? (
+                                        <div className="prose prose-gray max-w-none">
+                                            <p className="text-gray-700 leading-relaxed text-lg font-light italic">
+                                                "{obituaryData.information.description}"
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center justify-center py-8">
+                                            <div className="text-center">
+                                                <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                                <p className="text-gray-500 text-sm">{t.noDescriptionProvided}</p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
 
-                        <div className="flex justify-end gap-2 items-center self-stretch mt-4">
+                        <div className="flex justify-end gap-2 items-center self-stretch mt-6">
                             {
                                 obituaryData.selectedPackage.isSocialSharing && (
                                     <button
-                                        className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
+                                        className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold"
                                         onClick={() => setShowSharePopup(!showSharePopup)}
                                     >
-                                        📢 {t.share}
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                                        </svg>
+                                        Share Memorial
                                     </button>
                                 )
                             }
                             <button
-                                className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
+                                className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold"
                                 onClick={() =>
                                     setIsTributeModalOpen(true)
                                 }
                             >
-
-                                🕯️ {t.postTribute}
+                                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                                {t.postTribute}
                             </button>
-                            {hasValidAccountDetails(obituaryData.accountDetails) && (
+                            {isDonationEnabled() && (
                                 <button
-                                    onClick={openModal}
-                                    className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
+                                    onClick={() => setIsModalOpen(true)}
+                                    className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold"
                                 >
-                                    💝 {t.donate}
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0A1.5 1.5 0 013 18.546V19a1 1 0 001 1h16a1 1 0 001-1v-.454c0-.793-.644-1.546-1.5-1.546z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12.054l-2.5-2.5L8 11.054l4 4 4-4-1.5-1.5-2.5 2.5z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.054V12.054" />
+                                    </svg>
+                                    {t.donate}
                                 </button>
                             )}
                         </div>
@@ -1190,13 +1229,6 @@ const ObituaryDetail: React.FC = () => {
                                 </p>
                             </div>
 
-                            <button
-                                onClick={() => handleRequestToContact()}
-                                className="w-full gap-2.5 self-stretch px-4 py-3 my-auto mt-4 text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
-                            >
-                                {t.requestToContact}
-                            </button>
-
                             <Separator className="mt-8 !w-full mb-4" />
 
                             {/* Pictures Section */}
@@ -1223,12 +1255,6 @@ const ObituaryDetail: React.FC = () => {
                                     )}
                                 </div>
                             </div>
-                            <button
-                                onClick={() => handleRequestToContact()}
-                                className="w-full gap-2.5 self-stretch px-4 py-3 my-auto mt-4 text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]"
-                            >
-                                {t.requestToContact}
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -1283,63 +1309,127 @@ const ObituaryDetail: React.FC = () => {
             />
 
             {showSharePopup && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-                    <div className="bg-white rounded-lg shadow-lg p-6 min-w-[320px] relative">
-                        <button
-                            className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl"
-                            onClick={() => setShowSharePopup(false)}
-                            aria-label="Close"
-                        >
-                            ×
-                        </button>
-                        <h2 className="text-lg font-semibold mb-4 text-center">{t.share}</h2>
-                        <div className="flex flex-col gap-3">
-                            <button
-                                className="w-full flex items-center gap-2 px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition"
-                                onClick={() => handleShare('facebook')}
-                            >
-                                <span>
-                                    {/* Facebook SVG */}
-                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="40" height="40" viewBox="0 0 50 50">
-                                        <path d="M 25 3 C 12.861562 3 3 12.861562 3 25 C 3 36.019135 11.127533 45.138355 21.712891 46.728516 L 22.861328 46.902344 L 22.861328 29.566406 L 17.664062 29.566406 L 17.664062 26.046875 L 22.861328 26.046875 L 22.861328 21.373047 C 22.861328 18.494965 23.551973 16.599417 24.695312 15.410156 C 25.838652 14.220896 27.528004 13.621094 29.878906 13.621094 C 31.758714 13.621094 32.490022 13.734993 33.185547 13.820312 L 33.185547 16.701172 L 30.738281 16.701172 C 29.349697 16.701172 28.210449 17.475903 27.619141 18.507812 C 27.027832 19.539724 26.84375 20.771816 26.84375 22.027344 L 26.84375 26.044922 L 32.966797 26.044922 L 32.421875 29.564453 L 26.84375 29.564453 L 26.84375 46.929688 L 27.978516 46.775391 C 38.71434 45.319366 47 36.126845 47 25 C 47 12.861562 37.138438 3 25 3 z M 25 5 C 36.057562 5 45 13.942438 45 25 C 45 34.729791 38.035799 42.731796 28.84375 44.533203 L 28.84375 31.564453 L 34.136719 31.564453 L 35.298828 24.044922 L 28.84375 24.044922 L 28.84375 22.027344 C 28.84375 20.989871 29.033574 20.060293 29.353516 19.501953 C 29.673457 18.943614 29.981865 18.701172 30.738281 18.701172 L 35.185547 18.701172 L 35.185547 12.009766 L 34.318359 11.892578 C 33.718567 11.811418 32.349197 11.621094 29.878906 11.621094 C 27.175808 11.621094 24.855567 12.357448 23.253906 14.023438 C 21.652246 15.689426 20.861328 18.170128 20.861328 21.373047 L 20.861328 24.046875 L 15.664062 24.046875 L 15.664062 31.566406 L 20.861328 31.566406 L 20.861328 44.470703 C 11.816995 42.554813 5 34.624447 5 25 C 5 13.942438 13.942438 5 25 5 z"></path>
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+                    onClick={() => setShowSharePopup(false)}
+                >
+                    <div 
+                        className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 relative overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Header */}
+                        <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-6 py-4 text-white">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h2 className="text-xl font-bold">Share Memorial</h2>
+                                    <p className="text-teal-100 text-sm opacity-90">Honor their memory by sharing</p>
+                                </div>
+                                <button
+                                    className="p-2 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
+                                    onClick={() => setShowSharePopup(false)}
+                                    aria-label="Close"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                     </svg>
-                                </span> Facebook
-                            </button>
-                            <button
-                                className="w-full flex items-center gap-2 px-4 py-2 rounded bg-green-500 text-white hover:bg-green-600 transition"
-                                onClick={() => handleShare('whatsapp')}
-                            >
-                                <span>
-                                    {/* WhatsApp SVG */}
-                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="40" height="40" viewBox="0 0 50 50">
-                                        <path d="M 25 2 C 12.3 2 2 12.3 2 25 C 2 29.1 3.1 32.899219 5 36.199219 L 2 46.699219 C 1.9 46.999219 1.9992187 47.399219 2.1992188 47.699219 C 2.4992187 47.999219 2.8992187 48 3.1992188 48 L 14.199219 45.300781 C 17.399219 47.000781 21.1 48 25 48 C 37.7 48 48 37.7 48 25 C 48 12.3 37.7 2 25 2 z M 25 4 C 36.6 4 46 13.4 46 25 C 46 36.6 36.6 46 25 46 C 21.3 46 17.800781 45.000781 14.800781 43.300781 C 14.600781 43.200781 14.299609 43.099219 14.099609 43.199219 L 4.5 45.599609 L 7 36.400391 C 7.1 36.100391 7.0003906 35.899609 6.9003906 35.599609 C 5.1003906 32.499609 4 28.9 4 25 C 4 13.4 13.4 4 25 4 z M 18.113281 12.988281 C 17.925781 12.975781 17.800781 13 17.800781 13 L 16.599609 13 C 15.999609 13 15.100781 13.2 14.300781 14 C 13.800781 14.5 12 16.3 12 19.5 C 12 22.9 14.299609 25.799609 14.599609 26.099609 C 14.599609 26.099609 15 26.600781 15.5 27.300781 C 16 28.000781 16.699609 28.800781 17.599609 29.800781 C 19.399609 31.700781 21.899609 33.899219 25.099609 35.199219 C 26.499609 35.799219 27.699609 36.2 28.599609 36.5 C 30.199609 37 31.700781 36.900781 32.800781 36.800781 C 33.600781 36.700781 34.500391 36.299219 35.400391 35.699219 C 36.300391 35.099219 37.199609 34.400391 37.599609 33.400391 C 37.899609 32.600391 37.999609 31.900781 38.099609 31.300781 L 38.099609 30.5 C 38.099609 30.2 38.000781 30.200781 37.800781 29.800781 C 37.300781 29.000781 36.799219 29.000781 36.199219 28.800781 C 35.899219 28.600781 34.999219 28.200781 34.199219 27.800781 C 33.299219 27.400781 32.599609 27.000781 32.099609 26.800781 C 31.799609 26.700781 31.400391 26.499609 30.900391 26.599609 C 30.400391 26.699609 29.899609 27 29.599609 27.5 C 29.299609 27.9 28.200781 29.299219 27.800781 29.699219 L 27.699219 29.599609 C 27.299219 29.399609 26.7 29.200781 26 28.800781 C 25.2 28.400781 24.299219 27.800781 23.199219 26.800781 C 21.599219 25.400781 20.499219 23.699609 20.199219 23.099609 C 20.499219 22.699609 20.899609 22.3 21.099609 22 C 21.199609 21.9 21.280859 21.799219 21.349609 21.699219 C 21.418359 21.599219 21.475391 21.500391 21.525391 21.400391 C 21.625391 21.200391 21.700781 21.000781 21.800781 20.800781 C 22.200781 20.100781 22.000781 19.300391 21.800781 18.900391 C 21.800781 18.900391 21.7 18.600781 21.5 18.300781 C 21.4 18.000781 21.2 17.499609 21 17.099609 C 20.6 16.199609 20.2 15.199609 20 14.599609 C 19.7 13.899609 19.300781 13.399219 18.800781 13.199219 C 18.550781 13.049219 18.300781 13.000781 18.113281 12.988281 z M 16.599609 15 L 17.699219 15 L 17.900391 15 C 17.900391 15 17.999609 15.100391 18.099609 15.400391 C 18.299609 16.000391 18.799609 17.000391 19.099609 17.900391 C 19.299609 18.300391 19.499609 18.799609 19.599609 19.099609 C 19.699609 19.399609 19.800391 19.600781 19.900391 19.800781 C 19.900391 19.900781 20 19.900391 20 19.900391 C 19.8 20.300391 19.8 20.399219 19.5 20.699219 C 19.2 21.099219 18.799219 21.499219 18.699219 21.699219 C 18.599219 21.899219 18.299609 22.1 18.099609 22.5 C 17.899609 22.9 18.000781 23.599609 18.300781 24.099609 C 18.700781 24.699609 19.900781 26.700391 21.800781 28.400391 C 23.000781 29.500391 24.1 30.199609 25 30.599609 C 25.9 31.099609 26.600781 31.300391 26.800781 31.400391 C 27.200781 31.600391 27.599609 31.699219 28.099609 31.699219 C 28.599609 31.699219 29.000781 31.3 29.300781 31 C 29.700781 30.6 30.699219 29.399609 31.199219 28.599609 L 31.400391 28.699219 C 31.400391 28.699219 31.699609 28.8 32.099609 29 C 32.499609 29.2 32.900391 29.399609 33.400391 29.599609 C 34.300391 29.999609 35.100391 30.399609 35.400391 30.599609 L 36 30.900391 L 36 31.199219 C 36 31.599219 35.899219 32.200781 35.699219 32.800781 C 35.599219 33.100781 35.000391 33.699609 34.400391 34.099609 C 33.700391 34.499609 32.899609 34.800391 32.599609 34.900391 C 31.699609 35.000391 30.600781 35.099219 29.300781 34.699219 C 28.500781 34.399219 27.4 34.1 26 33.5 C 23.2 32.3 20.899219 30.3 19.199219 28.5 C 18.399219 27.6 17.699219 26.799219 17.199219 26.199219 C 16.699219 25.599219 16.500781 25.2 16.300781 25 C 15.900781 24.6 14 21.999609 14 19.599609 C 14 17.099609 15.200781 16.100391 15.800781 15.400391 C 16.100781 15.000391 16.499609 15 16.599609 15 z"></path>
-                                    </svg>
-                                </span> WhatsApp
-                            </button>
-                            <button
-                                className="w-full flex items-center gap-2 px-4 py-2 rounded bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-white hover:opacity-90 transition"
-                                onClick={() => handleShare('instagram')}
-                            >
-                                <span>
-                                    {/* Instagram SVG */}
-                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="40" height="40" viewBox="0 0 50 50">
-                                        <path d="M 16 3 C 8.8324839 3 3 8.8324839 3 16 L 3 34 C 3 41.167516 8.8324839 47 16 47 L 34 47 C 41.167516 47 47 41.167516 47 34 L 47 16 C 47 8.8324839 41.167516 3 34 3 L 16 3 z M 16 5 L 34 5 C 40.086484 5 45 9.9135161 45 16 L 45 34 C 45 40.086484 40.086484 45 34 45 L 16 45 C 9.9135161 45 5 40.086484 5 34 L 5 16 C 5 9.9135161 9.9135161 5 16 5 z M 37 11 A 2 2 0 0 0 35 13 A 2 2 0 0 0 37 15 A 2 2 0 0 0 39 13 A 2 2 0 0 0 37 11 z M 25 14 C 18.936712 14 14 18.936712 14 25 C 14 31.063288 18.936712 36 25 36 C 31.063288 36 36 31.063288 36 25 C 36 18.936712 31.063288 14 25 14 z M 25 16 C 29.982407 16 34 20.017593 34 25 C 34 29.982407 29.982407 34 25 34 C 20.017593 34 16 29.982407 16 25 C 16 20.017593 20.017593 16 25 16 z"></path>
-                                    </svg>
-                                </span> Instagram
-                            </button>
-                            <button
-                                className="w-full flex items-center gap-2 px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 transition"
-                                onClick={async () => {
-                                    try {
-                                        await navigator.clipboard.writeText(currentUrl);
-                                        alert('Link copied to clipboard!');
-                                    } catch {
-                                        alert('Failed to copy link.');
-                                    }
-                                }}
-                            >
-                                <span>🔗</span> Copy Link
-                            </button>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-6">
+                            <div className="grid grid-cols-2 gap-3 mb-4">
+                                {/* Facebook */}
+                                <button
+                                    className="group flex flex-col items-center p-4 rounded-xl border-2 border-gray-100 hover:border-blue-200 hover:bg-blue-50 transition-all duration-200 transform hover:scale-105"
+                                    onClick={() => handleShare('facebook')}
+                                >
+                                    <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mb-2 group-hover:bg-blue-700 transition-colors">
+                                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                        </svg>
+                                    </div>
+                                    <span className="text-sm font-medium text-gray-700 group-hover:text-blue-700">Facebook</span>
+                                </button>
+
+                                {/* WhatsApp */}
+                                <button
+                                    className="group flex flex-col items-center p-4 rounded-xl border-2 border-gray-100 hover:border-green-200 hover:bg-green-50 transition-all duration-200 transform hover:scale-105"
+                                    onClick={() => handleShare('whatsapp')}
+                                >
+                                    <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-2 group-hover:bg-green-600 transition-colors">
+                                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.886 3.488"/>
+                                        </svg>
+                                    </div>
+                                    <span className="text-sm font-medium text-gray-700 group-hover:text-green-700">WhatsApp</span>
+                                </button>
+
+                                {/* Instagram */}
+                                <button
+                                    className="group flex flex-col items-center p-4 rounded-xl border-2 border-gray-100 hover:border-pink-200 hover:bg-pink-50 transition-all duration-200 transform hover:scale-105"
+                                    onClick={() => handleShare('instagram')}
+                                >
+                                    <div className="w-12 h-12 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 rounded-full flex items-center justify-center mb-2 group-hover:from-yellow-500 group-hover:via-red-600 group-hover:to-purple-600 transition-all">
+                                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                        </svg>
+                                    </div>
+                                    <span className="text-sm font-medium text-gray-700 group-hover:text-pink-700">Instagram</span>
+                                </button>
+
+                                {/* Copy Link */}
+                                <button
+                                    className="group flex flex-col items-center p-4 rounded-xl border-2 border-gray-100 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 transform hover:scale-105"
+                                    onClick={async () => {
+                                        try {
+                                            await navigator.clipboard.writeText(currentUrl);
+                                            // Show success feedback
+                                            const button = event?.currentTarget as HTMLButtonElement;
+                                            const originalText = button.querySelector('span')?.textContent;
+                                            const span = button.querySelector('span');
+                                            if (span) {
+                                                span.textContent = 'Copied!';
+                                                span.className = 'text-sm font-medium text-green-600';
+                                                setTimeout(() => {
+                                                    span.textContent = originalText || 'Copy Link';
+                                                    span.className = 'text-sm font-medium text-gray-700 group-hover:text-gray-800';
+                                                }, 2000);
+                                            }
+                                        } catch {
+                                            alert('Failed to copy link.');
+                                        }
+                                    }}
+                                >
+                                    <div className="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center mb-2 group-hover:bg-gray-700 transition-colors">
+                                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                    <span className="text-sm font-medium text-gray-700 group-hover:text-gray-800">Copy Link</span>
+                                </button>
+                            </div>
+
+                            {/* Memorial Info */}
+                            <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                                <div className="flex items-center space-x-3">
+                                    {obituaryData?.primaryImage && (
+                                        <img 
+                                            src={obituaryData.primaryImage} 
+                                            alt="Memorial" 
+                                            className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
+                                        />
+                                    )}
+                                    <div className="flex-1 min-w-0">
+                                        <h3 className="text-sm font-semibold text-gray-900 truncate">
+                                            {obituaryData?.information?.title || 'Memorial'}
+                                        </h3>
+                                        <p className="text-xs text-gray-500">
+                                            Share this beautiful memorial with family and friends
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

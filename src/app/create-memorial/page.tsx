@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import PrimaryImage from '@/components/Memorial/PrimaryImage';
 import Frame from '@/components/Memorial/Frame';
 import AdditionalImage from '@/components/Memorial/AdditionalImage';
-import AccoundDetails from '@/components/Memorial/AccoundDetails';
+import DonationReceivableConfirmation from '@/components/Memorial/DonationReceivableConfirmation';
 import Summary from '@/components/Memorial/Summary';
 import SignupModal from '@/components/siginin/SignupModal ';
 import useSWR from 'swr';
@@ -80,6 +80,7 @@ const CreateMemorialPage: React.FC = () => {
     const [primaryImageData, setPrimaryImageData] = useState<File | null>(null);
     const [frameData, setFrameData] = useState<any>(null);
     const [additionalImagesData, setAdditionalImagesData] = useState<File[]>([]);
+    const [donationReceivableData, setDonationReceivableData] = useState<boolean>(false);
     const [accountDetailsData, setAccountDetailsData] = useState<any>(null);
     const { language } = useLanguage();
 
@@ -373,7 +374,7 @@ const CreateMemorialPage: React.FC = () => {
                     />
                 }
                 {activeStep === 9 &&
-                    <AccoundDetails
+                    <DonationReceivableConfirmation
                         selectedPlan={selectedPlan}
                         profile={profile}
                         language={langKey}
@@ -385,8 +386,8 @@ const CreateMemorialPage: React.FC = () => {
                         primaryImage={primaryImageData}
                         frameData={frameData}
                         additionalImagesData={additionalImagesData}
-                        initialAccountData={accountDetailsData}
-                        onAccountDataChange={setAccountDetailsData}
+                        initialDonationReceivable={donationReceivableData}
+                        onDonationReceivableChange={setDonationReceivableData}
                         setActiveStep={setActiveStep}
                     />
                 }
@@ -403,7 +404,7 @@ const CreateMemorialPage: React.FC = () => {
                         primaryImage={primaryImageData}
                         frameData={frameData}
                         additionalImagesData={additionalImagesData}
-                        accountDetailsData={accountDetailsData}
+                        donationReceivableData={donationReceivableData}
                         setActiveStep={setActiveStep}
                     />
                 }

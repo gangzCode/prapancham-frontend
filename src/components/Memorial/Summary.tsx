@@ -18,7 +18,7 @@ interface SummaryProps {
     primaryImage?: File | null;
     frameData?: any;
     additionalImagesData?: File[];
-    accountDetailsData?: any;
+    donationReceivableData?: boolean;
     setActiveStep: (step: number) => void;
 }
 
@@ -35,7 +35,7 @@ const Summary: React.FC<SummaryProps> = ({
     primaryImage,
     frameData,
     additionalImagesData,
-    accountDetailsData,
+    donationReceivableData,
     setActiveStep
 }) => {
     const router = useRouter();
@@ -152,12 +152,7 @@ const Summary: React.FC<SummaryProps> = ({
                 shortDescription: informationFormData.shortDescription || '',
             } : {},
             primaryImage: primaryImage || null,
-            accountDetails: accountDetailsData ? {
-                bankName: accountDetailsData.bankName || '',
-                branchName: accountDetailsData.branch || '',
-                accountNumber: accountDetailsData.accountNumber || '',
-                accountHolderName: accountDetailsData.accountHolder || ''
-            } : {},
+            isDonationReceivable: donationReceivableData || false,
             selectedCountry: selectedCountryId || '',
             selectedPackage: selectedPlan?._id || '',
             thumbnailImage: thumbnailImage || null,
@@ -336,12 +331,12 @@ const Summary: React.FC<SummaryProps> = ({
             "primaryImage": primaryImage,
             "frameData": frameData,
             "additionalImagesData": additionalImagesData,
-            "accountDetailsData": accountDetailsData,
+            "donationReceivableData": donationReceivableData,
             "totalPrice": getTotalPrice(),
             "currency": getCurrency(),
             "features": getPlanFeatures()
         });
-    }, [selectedPlan, selectedAddon, selectedCountryId, profile, language, informationFormData, contactData, thumbnailImage, primaryImage, frameData, additionalImagesData, accountDetailsData]);
+    }, [selectedPlan, selectedAddon, selectedCountryId, profile, language, informationFormData, contactData, thumbnailImage, primaryImage, frameData, additionalImagesData, donationReceivableData]);
 
 
     // Initialize default background color
@@ -398,7 +393,7 @@ const Summary: React.FC<SummaryProps> = ({
         uploadFormData.append('selectedAddons', JSON.stringify(formData.selectedAddons));
         uploadFormData.append('selectedPrimaryImageBgFrame', formData.selectedPrimaryImageBgFrame);
         uploadFormData.append('selectedBgColor', formData.selectedBgColor);
-        uploadFormData.append('accountDetails', JSON.stringify(formData.accountDetails));
+        uploadFormData.append('isDonationReceivable', String(formData.isDonationReceivable));
 
         // Append additional fields for order confirmation
         if (stripePaymentProp?.tempOrderId) {
@@ -612,14 +607,47 @@ const Summary: React.FC<SummaryProps> = ({
                                     </div>
                                 </div>
                             </div>
-                            <p className="text-justify mt-4">
-                                {informationFormData?.description || 'No description provided.'}
-                            </p>
-                            <div className="flex justify-end gap-2 items-center self-stretch mt-4">
-                                <button className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                            
+                            {/* Enhanced Description Section */}
+                            <div className="mt-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200">
+                            <div className="flex items-start gap-4">
+                                <div className="flex-shrink-0">
+                                    <div className="w-1 h-16 bg-gradient-to-b from-teal-500 to-teal-700 rounded-full"></div>
+                                </div>
+                                <div className="flex-1">
+                                    {informationFormData.description ? (
+                                        <div className="prose prose-gray max-w-none">
+                                            <p className="text-gray-700 leading-relaxed text-lg font-light italic">
+                                                "{informationFormData.description}"
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center justify-center py-8">
+                                            <div className="text-center">
+                                                <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                                <p className="text-gray-500 text-sm">No description provided.</p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                            <div className="flex justify-end gap-2 items-center self-stretch mt-6">
+                                <button className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold">
+                                    <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
                                     Post Tribute
                                 </button>
-                                <button className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                                <button className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0A1.5 1.5 0 013 18.546V19a1 1 0 001 1h16a1 1 0 001-1v-.454c0-.793-.644-1.546-1.5-1.546z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12.054l-2.5-2.5L8 11.054l4 4 4-4-1.5-1.5-2.5 2.5z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.054V12.054" />
+                                    </svg>
                                     Donate
                                 </button>
                             </div>
@@ -716,7 +744,10 @@ const Summary: React.FC<SummaryProps> = ({
                                                 <p>{contact.email}</p>
                                                 <p>{contact.relationship}</p>
                                             </div>
-                                            <button className="mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
+                                            <button
+                                                className={`mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)] ${true ? 'bg-[#0D1322]' : 'bg-gray-400'}`}
+                                                disabled
+                                            >
                                                 Request to Contact
                                             </button>
                                         </div>
@@ -754,23 +785,18 @@ const Summary: React.FC<SummaryProps> = ({
                                     <p>{profile?.email || 'Email not provided'}</p>
                                     <p>{profile?.phone || 'Phone not provided'}</p>
                                 </div>
-                                {accountDetailsData && (
-                                    <>
-                                        <Separator className="mt-6 !w-full mb-4" />
-                                        <div className="flex-shrink min-w-0 max-w-full mt-4">
-                                            <TitleWithUnderline text="Account Details" underlineWidth={64} fontSize={3} />
-                                        </div>
-                                        <div className="space-y-2 mt-2 p-2">
-                                            <p>Bank: {accountDetailsData.bankName || 'Not provided'}</p>
-                                            <p>Branch: {accountDetailsData.branch || 'Not provided'}</p>
-                                            <p>Account: {accountDetailsData.accountNumber || 'Not provided'}</p>
-                                            <p>Holder: {accountDetailsData.accountHolder || 'Not provided'}</p>
-                                        </div>
-                                    </>
-                                )}
-                                <button className="w-full gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
-                                    Request to Contact
-                                </button>
+                                <Separator className="mt-6 !w-full mb-4" />
+                                <div className="flex-shrink min-w-0 max-w-full mt-4">
+                                    <TitleWithUnderline text="Donation Status" underlineWidth={64} fontSize={3} />
+                                </div>
+                                <div className="space-y-2 mt-2 p-2">
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-3 h-3 rounded-full ${donationReceivableData ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                                        <p className={donationReceivableData ? 'text-green-700' : 'text-gray-600'}>
+                                            {donationReceivableData ? 'Donations enabled for this memorial' : 'Donations not enabled for this memorial'}
+                                        </p>
+                                    </div>
+                                </div>
                                 <Separator className="mt-8 !w-full mb-4" />
                                 <div className="flex-shrink min-w-0 max-w-full mt-8 mb-6">
                                     <TitleWithUnderline text="Pictures" underlineWidth={64} fontSize={3} />
@@ -799,10 +825,6 @@ const Summary: React.FC<SummaryProps> = ({
                                                 No images uploaded
                                             </div>
                                         )}
-
-                                        <button className="w-full gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)]">
-                                            Request to Contact
-                                        </button>
                                     </div>
                                 </div>
                             </div>

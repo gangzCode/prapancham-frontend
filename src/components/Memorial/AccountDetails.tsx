@@ -20,7 +20,7 @@ interface AccoundDetailsProps {
     setActiveStep: (step: number) => void;
 }
 
-const AccoundDetails: React.FC<AccoundDetailsProps> = ({ 
+const AccountDetails: React.FC<AccoundDetailsProps> = ({ 
     selectedPlan,
     profile,
     language,
@@ -265,4 +265,4 @@ const AccoundDetails: React.FC<AccoundDetailsProps> = ({
     );
 };
 
-export default AccoundDetails;
+export default AccountDetails;
