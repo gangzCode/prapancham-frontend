@@ -69,6 +69,7 @@ export default function Footer() {
       subscribeSuccess: "Subscribed successfully!",
       subscribeFail: "Subscription failed.",
       copyright: "© 2025 Prapancham. All rights reserved.",
+      newsletterDesc: "Subscribe to our newsletter to get the latest news, obituaries, and updates.",
     },
     ta: {
       news: "செய்திகள்",
@@ -97,6 +98,7 @@ export default function Footer() {
       subscribeSuccess: "சந்தா எடுக்கப்பட்டது!",
       subscribeFail: "சந்தா செய்ய முடியவில்லை.",
       copyright: "© 2025 ப்ரபஞ்சம். எல்லா உரிமைகளும் பாதுகாக்கப்பட்டவை.",
+      newsletterDesc: "சமீபத்திய செய்திகள், மரண அறிவிப்புகள் மற்றும் புதுப்பிப்புகளைப் பெற எங்கள் செய்திமடலுக்கு சந்தா செலுத்துங்கள்.",
     },
     si: {
       news: "ප්‍රවෘත්ති",
@@ -125,6 +127,7 @@ export default function Footer() {
       subscribeSuccess: "දායක වීම සාර්ථකයි!",
       subscribeFail: "දායක වීම අසාර්ථකයි.",
       copyright: "© 2025 ප්‍රපංචම්. සියලුම හිමිකම් ඇවිරිණි.",
+      newsletterDesc: "නවතම ප්‍රවෘත්ති, මරණ නිවේදන සහ යාවත්කාලීන කිරීම් ලබා ගැනීමට අපගේ පුවත් පත්‍රයට දායක වන්න.",
     },
   };
 
@@ -319,7 +322,7 @@ export default function Footer() {
               {t.stayTuned}
             </h2>
             <p className="text-sm mb-6">
-              Lorem ipsum dolor sit amet consectetur. Tellus nisi
+              {t.newsletterDesc}
             </p>
             <form onSubmit={handleSubscribe} className="flex gap-2 mb-8 w-full">
               <Input
@@ -342,19 +345,19 @@ export default function Footer() {
             {error && <span className="text-red-400 ml-2">{error}</span>}
 
             <div className="flex flex-wrap gap-6 text-sm">
-              <a href="#" className="hover:text-[#6ec1e4] transition-colors">
+              <a href="/news" className="hover:text-[#6ec1e4] transition-colors">
                 {t.newsNav}
               </a>
               <span className="text-gray-400">|</span>
-              <a href="#" className="hover:text-[#6ec1e4] transition-colors">
+              <a href="/obituary" className="hover:text-[#6ec1e4] transition-colors">
                 {t.obituary}
               </a>
               <span className="text-gray-400">|</span>
-              <a href="#" className="hover:text-[#6ec1e4] transition-colors">
+              <a href="/about" className="hover:text-[#6ec1e4] transition-colors">
                 {t.aboutUs}
               </a>
               <span className="text-gray-400">|</span>
-              <a href="#" className="hover:text-[#6ec1e4] transition-colors">
+              <a href="/contact" className="hover:text-[#6ec1e4] transition-colors">
                 {t.contactUs}
               </a>
             </div>
