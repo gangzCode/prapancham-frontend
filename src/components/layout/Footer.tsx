@@ -342,19 +342,19 @@ export default function Footer() {
             {error && <span className="text-red-400 ml-2">{error}</span>}
 
             <div className="flex flex-wrap gap-6 text-sm">
-              <a href="#" className="hover:text-[#6ec1e4] transition-colors">
+              <a href="/news" className="hover:text-[#6ec1e4] transition-colors">
                 {t.newsNav}
               </a>
               <span className="text-gray-400">|</span>
-              <a href="#" className="hover:text-[#6ec1e4] transition-colors">
+              <a href="/obituary" className="hover:text-[#6ec1e4] transition-colors">
                 {t.obituary}
               </a>
               <span className="text-gray-400">|</span>
-              <a href="#" className="hover:text-[#6ec1e4] transition-colors">
+              <a href="/about" className="hover:text-[#6ec1e4] transition-colors">
                 {t.aboutUs}
               </a>
               <span className="text-gray-400">|</span>
-              <a href="#" className="hover:text-[#6ec1e4] transition-colors">
+              <a href="/contact" className="hover:text-[#6ec1e4] transition-colors">
                 {t.contactUs}
               </a>
             </div>
