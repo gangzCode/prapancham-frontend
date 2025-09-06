@@ -6,6 +6,7 @@ import { Separator } from '../ui/separator';
 import StripePaymentMemorial, { useStripePaymentModal } from './StripePaymentMemorial';
 import { add } from 'date-fns';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/components/ui/LanguageProvider';
 interface SummaryProps {
     selectedPlan: any;
     profile: any;
@@ -21,6 +22,102 @@ interface SummaryProps {
     donationReceivableData?: boolean;
     setActiveStep: (step: number) => void;
 }
+
+const translations = {
+    english: {
+        overview: "Overview",
+        name: "Name:",
+        birthDateLabel: "Birth Date:",
+        deathDateLabel: "Date of Passing:",
+        age: "Age:",
+        address: "Funeral House Address:",
+        notProvided: "Not provided",
+        postersInformation: "Poster's Information",
+        posterName: "Name:",
+        posterAddress: "Address:",
+        posterEmail: "Email:",
+        posterPhone: "Phone:",
+        contacts: "Contacts",
+        contactName: "Name:",
+        contactAddress: "Address:",
+        contactPhone: "Phone:",
+        contactEmail: "Email:",
+        contactRelationship: "Relationship:",
+        requestToContact: "Request to Contact",
+        noContactInformation: "No contact information provided.",
+        donationStatus: "Donation Status",
+        donationsEnabled: "Donations enabled for this memorial",
+        donationsNotEnabled: "Donations not enabled for this memorial",
+        pictures: "Pictures",
+        noImagesUploaded: "No images uploaded",
+        nameNotProvided: "Name not provided",
+        addressNotProvided: "Address not provided",
+        emailNotProvided: "Email not provided",
+        phoneNotProvided: "Phone not provided"
+    },
+    tamil: {
+        overview: "கண்ணோட்டம்",
+        name: "பெயர்:",
+        birthDateLabel: "பிறந்த தேதி:",
+        deathDateLabel: "மறைவு தேதி:",
+        age: "வயது:",
+        address: "இறுதிச் சடங்கு இல்லத்தின் முகவரி:",
+        notProvided: "வழங்கப்படவில்லை",
+        postersInformation: "போஸ்டரின் தகவல்கள்",
+        posterName: "பெயர்:",
+        posterAddress: "முகவரி:",
+        posterEmail: "மின்னஞ்சல்:",
+        posterPhone: "தொலைபேசி:",
+        contacts: "தொடர்புகள்",
+        contactName: "பெயர்:",
+        contactAddress: "முகவரி:",
+        contactPhone: "தொலைபேசி:",
+        contactEmail: "மின்னஞ்சல்:",
+        contactRelationship: "உறவு:",
+        requestToContact: "தொடர்பு கோரிக்கை",
+        noContactInformation: "தொடர்பு தகவல்கள் வழங்கப்படவில்லை.",
+        donationStatus: "நன்கொடை நிலை",
+        donationsEnabled: "இந்த நினைவகத்திற்கு நன்கொடைகள் இயக்கப்பட்டுள்ளன",
+        donationsNotEnabled: "இந்த நினைவகத்திற்கு நன்கொடைகள் இயக்கப்படவில்லை",
+        pictures: "படங்கள்",
+        noImagesUploaded: "படங்கள் பதிவேற்றப்படவில்லை",
+        nameNotProvided: "பெயர் வழங்கப்படவில்லை",
+        addressNotProvided: "முகவரி வழங்கப்படவில்லை",
+        emailNotProvided: "மின்னஞ்சல் வழங்கப்படவில்லை",
+        phoneNotProvided: "தொலைபேசி வழங்கப்படவில்லை"
+    },
+    sinhala: {
+        overview: "දළ විශ්ලේෂණය",
+        name: "නම:",
+        birthDateLabel: "උපන් දිනය:",
+        deathDateLabel: "මරණ දිනය:",
+        age: "වයස:",
+        address: "අවමංගල්‍ය ගෘහ ලිපිනය:",
+        notProvided: "ලබා දී නැත",
+        postersInformation: "පෝස්ටරගේ තොරතුරු",
+        posterName: "නම:",
+        posterAddress: "ලිපිනය:",
+        posterEmail: "ඊ-මේල්:",
+        posterPhone: "දුරකථනය:",
+        contacts: "සම්බන්ධතා",
+        contactName: "නම:",
+        contactAddress: "ලිපිනය:",
+        contactPhone: "දුරකථනය:",
+        contactEmail: "ඊ-මේල්:",
+        contactRelationship: "සම්බන්ධතාවය:",
+        requestToContact: "සම්බන්ධ වීමට ඉල්ලීම",
+        noContactInformation: "සම්බන්ධතා තොරතුරු ලබා දී නැත.",
+        donationStatus: "දන්දීම් තත්ත්වය",
+        donationsEnabled: "මෙම ස්මාරකය සඳහා දන්දීම් සක්‍රීය කර ඇත",
+        donationsNotEnabled: "මෙම ස්මාරකය සඳහා දන්දීම් සක්‍රීය කර නැත",
+        pictures: "පින්තූර",
+        noImagesUploaded: "පින්තූර උඩුගත කර නැත",
+        nameNotProvided: "නම ලබා දී නැත",
+        addressNotProvided: "ලිපිනය ලබා දී නැත",
+        emailNotProvided: "ඊ-මේල් ලබා දී නැත",
+        phoneNotProvided: "දුරකථනය ලබා දී නැත"
+    }
+};
 
 
 const Summary: React.FC<SummaryProps> = ({
@@ -39,6 +136,9 @@ const Summary: React.FC<SummaryProps> = ({
     setActiveStep
 }) => {
     const router = useRouter();
+    const { language: langKey } = useLanguage();
+    
+    const t = translations[langKey as keyof typeof translations] || translations.english;
 
     const [activeColor, setActiveColor] = useState("#ffffff");
     const [activeColorId, setActiveColorId] = useState<string>("");
@@ -804,29 +904,44 @@ const Summary: React.FC<SummaryProps> = ({
 
                             <div className="mt-8">
                                 <div className="flex-shrink min-w-0 max-w-full">
-                                    <TitleWithUnderline text="Contacts" underlineWidth={64} fontSize={3} />
+                                    <TitleWithUnderline text={t.contacts} underlineWidth={64} fontSize={3} />
                                 </div>
                                 {contactData && contactData.length > 0 ? (
                                     contactData.map((contact: any, index: number) => (
                                         <div key={index} className="bg-white p-6 shadow-md mb-4 flex md:flex-row flex-col justify-between md:items-center">
                                             <div>
-                                                <p className="text-[#880002]">{contact.name}</p>
-                                                <p>{contact.address}</p>
-                                                <p>{contact.phone}</p>
-                                                <p>{contact.email}</p>
-                                                <p>{contact.relationship}</p>
+                                                <p>
+                                                    <span className="text-gray-600 font-medium">{t.contactName} </span>
+                                                    <span className="text-[#880002]">{contact.name}</span>
+                                                </p>
+                                                <p>
+                                                    <span className="text-gray-600 font-medium">{t.contactAddress} </span>
+                                                    <span className="text-gray-700">{contact.address}</span>
+                                                </p>
+                                                <p>
+                                                    <span className="text-gray-600 font-medium">{t.contactPhone} </span>
+                                                    <span className="text-gray-700">{contact.phone}</span>
+                                                </p>
+                                                <p>
+                                                    <span className="text-gray-600 font-medium">{t.contactEmail} </span>
+                                                    <span className="text-gray-700">{contact.email}</span>
+                                                </p>
+                                                <p>
+                                                    <span className="text-gray-600 font-medium">{t.contactRelationship} </span>
+                                                    <span className="text-gray-700">{contact.relationship}</span>
+                                                </p>
                                             </div>
                                             <button
                                                 className={`mb-0 gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap rounded min-h-6 shadow-[0px_4px_8px_rgba(0,0,0,0.25)] ${true ? 'bg-[#0D1322]' : 'bg-gray-400'}`}
                                                 disabled
                                             >
-                                                Request to Contact
+                                                {t.requestToContact}
                                             </button>
                                         </div>
                                     ))
                                 ) : (
                                     <div className="bg-white p-6 shadow-md mb-4">
-                                        <p className="text-gray-500 text-center">No contact information provided.</p>
+                                        <p className="text-gray-500 text-center">{t.noContactInformation}</p>
                                     </div>
                                 )}
                             </div>
@@ -838,40 +953,52 @@ const Summary: React.FC<SummaryProps> = ({
                         <div className="md:col-span-1">
                             <div className="bg-white p-2 shadow-md">
                                 <div className="flex-shrink min-w-0 max-w-full mt-2">
-                                    <TitleWithUnderline text="Overview" underlineWidth={64} fontSize={3} />
+                                    <TitleWithUnderline text={t.overview} underlineWidth={64} fontSize={3} />
                                 </div>
                                 <div className="space-y-2 mt-2 p-2">
-                                    <p className="text-gray-500">Name: {informationFormData?.title || ((informationFormData?.firstName && informationFormData?.lastName) ? `${informationFormData.firstName} ${informationFormData.lastName}` : informationFormData?.preferredName) || 'Not provided'}</p>
-                                    <p className="text-gray-500">Birth Date: {informationFormData?.dateofBirth ? new Date(informationFormData.dateofBirth).toLocaleDateString() : 'Not provided'}</p>
-                                    <p className="text-gray-500">Death Date: {informationFormData?.dateofDeath ? new Date(informationFormData.dateofDeath).toLocaleDateString() : 'Not provided'}</p>
-                                    <p className="text-gray-500">Age: {informationFormData?.dateofBirth && informationFormData?.dateofDeath ? calculateAge(informationFormData.dateofBirth, informationFormData.dateofDeath) : 'Not provided'}</p>
-                                    <p>Address: {informationFormData?.address || 'Not provided'}</p>
+                                    <p className="text-gray-500">{t.name} {informationFormData?.title || ((informationFormData?.firstName && informationFormData?.lastName) ? `${informationFormData.firstName} ${informationFormData.lastName}` : informationFormData?.preferredName) || t.notProvided}</p>
+                                    <p className="text-gray-500">{t.birthDateLabel} {informationFormData?.dateofBirth ? new Date(informationFormData.dateofBirth).toLocaleDateString() : t.notProvided}</p>
+                                    <p className="text-gray-500">{t.deathDateLabel} {informationFormData?.dateofDeath ? new Date(informationFormData.dateofDeath).toLocaleDateString() : t.notProvided}</p>
+                                    <p className="text-gray-500">{t.age} {informationFormData?.dateofBirth && informationFormData?.dateofDeath ? calculateAge(informationFormData.dateofBirth, informationFormData.dateofDeath) : t.notProvided}</p>
+                                    <p>{t.address} {informationFormData?.address || t.notProvided}</p>
                                 </div>
                                 <Separator className="mt-6 !w-full mb-8" />
                                 <div className="flex-shrink min-w-0 max-w-full mt-4">
-                                    <TitleWithUnderline text="Poster's Information" underlineWidth={64} fontSize={3} />
+                                    <TitleWithUnderline text={t.postersInformation} underlineWidth={64} fontSize={3} />
                                 </div>
                                 <div className="space-y-2 mt-2 p-2">
-                                    <p className="text-[#880002]">{profile?.username || 'Name'}</p>
-                                    <p>{profile?.address || 'Address not provided'}</p>
-                                    <p>{profile?.email || 'Email not provided'}</p>
-                                    <p>{profile?.phone || 'Phone not provided'}</p>
+                                    <p>
+                                        <span className="text-gray-600 font-medium">{t.posterName} </span>
+                                        <span className="text-[#880002]">{profile?.username || t.nameNotProvided}</span>
+                                    </p>
+                                    <p>
+                                        <span className="text-gray-600 font-medium">{t.posterAddress} </span>
+                                        <span className="text-gray-700">{profile?.address || t.addressNotProvided}</span>
+                                    </p>
+                                    <p>
+                                        <span className="text-gray-600 font-medium">{t.posterEmail} </span>
+                                        <span className="text-gray-700">{profile?.email || t.emailNotProvided}</span>
+                                    </p>
+                                    <p>
+                                        <span className="text-gray-600 font-medium">{t.posterPhone} </span>
+                                        <span className="text-gray-700">{profile?.phone || t.phoneNotProvided}</span>
+                                    </p>
                                 </div>
                                 <Separator className="mt-6 !w-full mb-4" />
                                 <div className="flex-shrink min-w-0 max-w-full mt-4">
-                                    <TitleWithUnderline text="Donation Status" underlineWidth={64} fontSize={3} />
+                                    <TitleWithUnderline text={t.donationStatus} underlineWidth={64} fontSize={3} />
                                 </div>
                                 <div className="space-y-2 mt-2 p-2">
                                     <div className="flex items-center gap-3">
                                         <div className={`w-3 h-3 rounded-full ${donationReceivableData ? 'bg-green-500' : 'bg-gray-400'}`}></div>
                                         <p className={donationReceivableData ? 'text-green-700' : 'text-gray-600'}>
-                                            {donationReceivableData ? 'Donations enabled for this memorial' : 'Donations not enabled for this memorial'}
+                                            {donationReceivableData ? t.donationsEnabled : t.donationsNotEnabled}
                                         </p>
                                     </div>
                                 </div>
                                 <Separator className="mt-8 !w-full mb-4" />
                                 <div className="flex-shrink min-w-0 max-w-full mt-8 mb-6">
-                                    <TitleWithUnderline text="Pictures" underlineWidth={64} fontSize={3} />
+                                    <TitleWithUnderline text={t.pictures} underlineWidth={64} fontSize={3} />
                                 </div>
                                 <div className="p-2">
                                     <div className="bg-white p-2 shadow-md">
@@ -894,7 +1021,7 @@ const Summary: React.FC<SummaryProps> = ({
                                             </div>
                                         ) : (
                                             <div className="p-4 text-center text-gray-500">
-                                                No images uploaded
+                                                {t.noImagesUploaded}
                                             </div>
                                         )}
                                     </div>
