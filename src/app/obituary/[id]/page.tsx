@@ -40,15 +40,26 @@ const localeText = {
         overview: "Overview",
         name: "Name:",
         birthDateLabel: "Birth Date:",
-        deathDateLabel: "Death Date:",
+        deathDateLabel: "Date of Passing:",
         age: "Age:",
-        address: "Address:",
+        address: "Funeral House Address:",
         notProvided: "Not provided",
         postersInformation: "Poster's Information",
         nameNotProvided: "Name not provided",
         addressNotProvided: "Address not provided",
         emailNotProvided: "Email not provided",
         phoneNotProvided: "Phone not provided",
+        // Poster's Information field labels
+        posterName: "Name:",
+        posterAddress: "Address:",
+        posterEmail: "Email:",
+        posterPhone: "Phone:",
+        // Contact Details field labels
+        contactName: "Name:",
+        contactAddress: "Address:",
+        contactPhone: "Phone:",
+        contactEmail: "Email:",
+        contactRelationship: "Relationship:",
         accountDetails: "Account Details",
         bank: "Bank:",
         branch: "Branch:",
@@ -97,15 +108,26 @@ const localeText = {
         overview: "கண்ணோட்டம்",
         name: "பெயர்:",
         birthDateLabel: "பிறந்த தேதி:",
-        deathDateLabel: "மரண தேதி:",
+        deathDateLabel: "மறைவு தேதி:",
         age: "வயது:",
-        address: "முகவரி:",
+        address: "இறுதிச் சடங்கு இல்லத்தின் முகவரி:",
         notProvided: "வழங்கப்படவில்லை",
         postersInformation: "போஸ்டரின் தகவல்கள்",
         nameNotProvided: "பெயர் வழங்கப்படவில்லை",
         addressNotProvided: "முகவரி வழங்கப்படவில்லை",
         emailNotProvided: "மின்னஞ்சல் வழங்கப்படவில்லை",
         phoneNotProvided: "தொலைபேசி வழங்கப்படவில்லை",
+        // Poster's Information field labels
+        posterName: "பெயர்:",
+        posterAddress: "முகவரி:",
+        posterEmail: "மின்னஞ்சல்:",
+        posterPhone: "தொலைபேசி:",
+        // Contact Details field labels
+        contactName: "பெயர்:",
+        contactAddress: "முகவரி:",
+        contactPhone: "தொலைபேசி:",
+        contactEmail: "மின்னஞ்சல்:",
+        contactRelationship: "உறவு:",
         accountDetails: "கணக்கு விவரங்கள்",
         bank: "வங்கி:",
         branch: "கிளை:",
@@ -156,13 +178,24 @@ const localeText = {
         birthDateLabel: "උපන් දිනය:",
         deathDateLabel: "මරණ දිනය:",
         age: "වයස:",
-        address: "ලිපිනය:",
+        address: "අවමංගල්‍ය ගෘහ ලිපිනය:",
         notProvided: "ලබා දී නැත",
         postersInformation: "පෝස්ටරගේ තොරතුරු",
         nameNotProvided: "නම ලබා දී නැත",
         addressNotProvided: "ලිපිනය ලබා දී නැත",
         emailNotProvided: "ඊ-මේල් ලබා දී නැත",
         phoneNotProvided: "දුරකථනය ලබා දී නැත",
+        // Poster's Information field labels
+        posterName: "නම:",
+        posterAddress: "ලිපිනය:",
+        posterEmail: "ඊ-මේල්:",
+        posterPhone: "දුරකථනය:",
+        // Contact Details field labels
+        contactName: "නම:",
+        contactAddress: "ලිපිනය:",
+        contactPhone: "දුරකථනය:",
+        contactEmail: "ඊ-මේල්:",
+        contactRelationship: "සම්බන්ධතාවය:",
         accountDetails: "ගිණුම් විස්තර",
         bank: "බැංකුව:",
         branch: "ශාඛාව:",
@@ -1296,11 +1329,26 @@ const ObituaryDetail: React.FC = () => {
                                 obituaryData.contactDetails.map((contact: any, index: number) => (
                                     <div key={index} className="bg-white p-6 shadow-md mb-4 flex md:flex-row flex-col justify-between md:items-center">
                                         <div>
-                                            <p className="text-[#880002]">{contact.name}</p>
-                                            <p>{contact.address}</p>
-                                            <p>{contact.phoneNumber}</p>
-                                            <p>{contact.email}</p>
-                                            <p>{contact.relationship}</p>
+                                            <p>
+                                                <span className="text-gray-600 font-medium">{t.contactName}</span>
+                                                <span className="text-[#880002]"> {contact.name}</span>
+                                            </p>
+                                            <p>
+                                                <span className="text-gray-600 font-medium">{t.contactAddress}</span>
+                                                <span className="text-gray-700"> {contact.address}</span>
+                                            </p>
+                                            <p>
+                                                <span className="text-gray-600 font-medium">{t.contactPhone}</span>
+                                                <span className="text-gray-700"> {contact.phoneNumber}</span>
+                                            </p>
+                                            <p>
+                                                <span className="text-gray-600 font-medium">{t.contactEmail}</span>
+                                                <span className="text-gray-700"> {contact.email}</span>
+                                            </p>
+                                            <p>
+                                                <span className="text-gray-600 font-medium">{t.contactRelationship}</span>
+                                                <span className="text-gray-700"> {contact.relationship}</span>
+                                            </p>
                                         </div>
                                         <button
                                             onClick={() => handleRequestToContact(contact.phoneNumber)}
@@ -1343,25 +1391,37 @@ const ObituaryDetail: React.FC = () => {
                                 <TitleWithUnderline text={t.postersInformation} underlineWidth={64} fontSize={3} />
                             </div>
                             <div className="space-y-2 mt-2 p-2">
-                                <p className="text-[#880002]">
-                                    {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
-                                        ? obituaryData.contactDetails[0].name
-                                        : obituaryData.username || t.nameNotProvided}
+                                <p>
+                                    <span className="text-gray-600 font-medium">{t.posterName} </span>
+                                    <span className="text-[#880002]">
+                                        {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
+                                            ? obituaryData.contactDetails[0].name
+                                            : obituaryData.username || t.nameNotProvided}
+                                    </span>
                                 </p>
                                 <p>
-                                    {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
-                                        ? obituaryData.contactDetails[0].address || t.addressNotProvided
-                                        : t.addressNotProvided}
+                                    <span className="text-gray-600 font-medium">{t.posterAddress} </span>
+                                    <span className="text-gray-700">
+                                        {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
+                                            ? obituaryData.contactDetails[0].address || t.addressNotProvided
+                                            : t.addressNotProvided}
+                                    </span>
                                 </p>
                                 <p>
-                                    {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
-                                        ? obituaryData.contactDetails[0].email || t.emailNotProvided
-                                        : obituaryData.username || t.emailNotProvided}
+                                    <span className="text-gray-600 font-medium">{t.posterEmail} </span>
+                                    <span className="text-gray-700">
+                                        {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
+                                            ? obituaryData.contactDetails[0].email || t.emailNotProvided
+                                            : obituaryData.username || t.emailNotProvided}
+                                    </span>
                                 </p>
                                 <p>
-                                    {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
-                                        ? obituaryData.contactDetails[0].phoneNumber || t.phoneNotProvided
-                                        : t.phoneNotProvided}
+                                    <span className="text-gray-600 font-medium">{t.posterPhone} </span>
+                                    <span className="text-gray-700">
+                                        {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
+                                            ? obituaryData.contactDetails[0].phoneNumber || t.phoneNotProvided
+                                            : t.phoneNotProvided}
+                                    </span>
                                 </p>
                             </div>
 
