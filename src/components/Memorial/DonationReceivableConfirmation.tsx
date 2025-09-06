@@ -1,6 +1,8 @@
 "use client";
+
+import { TitleWithUnderline } from '@/components/ui/title-with-underline';
 import React, { useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { useLanguage } from '@/components/ui/LanguageProvider';
 
 interface DonationReceivableConfirmationProps {
     selectedPlan: any;
@@ -35,12 +37,16 @@ const DonationReceivableConfirmation: React.FC<DonationReceivableConfirmationPro
     onDonationReceivableChange,
     setActiveStep
 }) => {
+    const { language: langKey } = useLanguage();
     const [isDonationReceivable, setIsDonationReceivable] = useState(initialDonationReceivable);
 
     // Translations object
     const translations = {
-        en: {
-            title: "Donation Receivable",
+        english: {
+            greeting: "Hi {username}, Our deepest condolences.",
+            greetingAnonymous: "Hi there, Our deepest condolences.",
+            packageInfo: "You have selected a {duration} days '{planName}' package,",
+            title: "Donation Settings",
             subtitle: "Enable donation functionality for this memorial",
             description: "When enabled, visitors can make donations to support this memorial. This allows family and friends to contribute financially in memory of the deceased.",
             enableDonations: "Enable Donations",
@@ -56,8 +62,11 @@ const DonationReceivableConfirmation: React.FC<DonationReceivableConfirmationPro
             backButton: "Back",
             continueButton: "Continue"
         },
-        ta: {
-            title: "நன்கொடை பெறுதல்",
+        tamil: {
+            greeting: "வணக்கம் {username}, எங்கள் ஆழ்ந்த இரங்கல்கள்.",
+            greetingAnonymous: "வணக்கம், எங்கள் ஆழ்ந்த இரங்கல்கள்.",
+            packageInfo: "நீங்கள் {duration} நாட்கள் '{planName}' தொகுப்பை தேர்ந்தெடுத்துள்ளீர்கள்,",
+            title: "நன்கொடை அமைப்புகள்",
             subtitle: "இந்த நினைவுச்சின்னத்திற்கு நன்கொடை செயல்பாட்டை இயக்கவும்",
             description: "இயக்கப்படும்போது, பார்வையாளர்கள் இந்த நினைவுச்சின்னத்தை ஆதரிக்க நன்கொடைகளை வழங்க முடியும். இது குடும்பத்தினர் மற்றும் நண்பர்கள் இறந்தவரின் நினைவாக நிதி ரீதியாக பங்களிக்க அனுமதிக்கிறது.",
             enableDonations: "நன்கொடைகளை இயக்கவும்",
@@ -73,8 +82,11 @@ const DonationReceivableConfirmation: React.FC<DonationReceivableConfirmationPro
             backButton: "பின்",
             continueButton: "தொடர்"
         },
-        si: {
-            title: "පරිත්‍යාග ලැබීම",
+        sinhala: {
+            greeting: "ආයුබෝවන් {username}, අපගේ ගැඹුරු සානුකම්පනාව.",
+            greetingAnonymous: "ආයුබෝවන්, අපගේ ගැඹුරු සානුකම්පනාව.",
+            packageInfo: "ඔබ දින {duration} ක '{planName}' පැකේජයක් තෝරාගෙන ඇත,",
+            title: "පරිත්‍යාග සැකසීම්",
             subtitle: "මෙම ස්මාරකය සඳහා පරිත්‍යාග කාර්යක්ෂමතාව සක්‍රිය කරන්න",
             description: "සක්‍රිය කළ විට, නරඹන්නන්ට මෙම ස්මාරකයට සහාය දැක්වීම සඳහා පරිත්‍යාග කළ හැකිය. මෙය පවුලේ සාමාජිකයින්ට සහ මිතුරන්ට මියගිය පුද්ගලයාගේ මතකය වෙනුවෙන් මූල්‍ය වශයෙන් දායක වීමට ඉඩ සලසයි.",
             enableDonations: "පරිත්‍යාග සක්‍රිය කරන්න",
@@ -91,14 +103,27 @@ const DonationReceivableConfirmation: React.FC<DonationReceivableConfirmationPro
             continueButton: "ඉදිරියට"
         }
     };
+    
+    const t = translations[langKey as keyof typeof translations] || translations.english;
 
-    const getTranslations = () => {
-        if (language === 'tamil') return translations.ta;
-        if (language === 'sinhala') return translations.si;
-        return translations.en;
+    // Get plan name based on language
+    const getPlanName = () => {
+        const planNames = selectedPlan?.name?.[language];
+        return planNames?.[0]?.name || 'Selected Package';
     };
 
-    const currentTranslations = getTranslations();
+    // Get plan duration
+    const getDuration = () => {
+        return selectedPlan?.duration || 0;
+    };
+
+    // Get addon info
+    const getAddonInfo = () => {
+        if (!selectedAddon || selectedAddon.length === 0) {
+            return 'with no extra addons';
+        }
+        return `with ${selectedAddon.map((addon: any) => addon.name).join(', ')} addon${selectedAddon.length > 1 ? 's' : ''}`;
+    };
 
     const handleToggleChange = (checked: boolean) => {
         setIsDonationReceivable(checked);
@@ -114,112 +139,78 @@ const DonationReceivableConfirmation: React.FC<DonationReceivableConfirmationPro
     };
 
     return (
-        <div className="p-4 md:p-8 lg:px-16 bg-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)]">
-            {/* Header */}
-            <div className="flex items-center space-x-2 p-4 mb-6">
-                <div className="bg-primary text-white rounded-full p-2">
-                    <ArrowLeft
-                        onClick={handleBack}
-                        className='cursor-pointer'
-                    />
-                </div>
-                <span className="text-primary text-lg">
-                    {currentTranslations.backButton}
-                </span>
-            </div>
-
-            {/* Main Content */}
-            <div className="max-w-4xl mx-auto">
-                <div className="text-center mb-8">
-                    <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                        {currentTranslations.title}
-                    </h1>
-                    <p className="text-lg text-gray-600 mb-2">
-                        {currentTranslations.subtitle}
+        <div className='p-4 md:p-8 lg:px-16 bg-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)]'>
+            <form>
+                <div className="p-4 mb-6">
+                    <h3 className="text-2xl md:text-4xl font-bold text-center mb-4 text-primary">
+                        {profile?.username 
+                            ? t.greeting.replace('{username}', profile.username)
+                            : t.greetingAnonymous
+                        }
+                    </h3>
+                    <p className="text-center text-gray-500 mb-4 text-primary">
+                        {t.packageInfo
+                            .replace('{duration}', getDuration())
+                            .replace('{planName}', getPlanName())
+                        } <span className='text-[#880002]'>{getAddonInfo()}</span>
                     </p>
-                    <p className="text-gray-500 max-w-2xl mx-auto">
-                        {currentTranslations.description}
+                </div>
+                
+                <div className="flex-shrink min-w-0 mb-8">
+                    <TitleWithUnderline text={t.title} underlineWidth={64} />
+                </div>
+
+                <div className="mb-6">
+                    <p className="text-gray-600 text-center max-w-2xl mx-auto mb-8">
+                        {t.description}
                     </p>
                 </div>
 
                 {/* Toggle Section */}
-                <div className="bg-gray-50 rounded-lg p-6 mb-8">
-                    <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                                {currentTranslations.toggleLabel}
-                            </h3>
-                            <p className="text-gray-600">
-                                {isDonationReceivable ? currentTranslations.enableDonations : currentTranslations.disableDonations}
-                            </p>
-                        </div>
-                        <div className="ml-6">
-                            <label className="relative inline-flex items-center cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    className="sr-only peer"
-                                    checked={isDonationReceivable}
-                                    onChange={(e) => handleToggleChange(e.target.checked)}
-                                />
-                                <div className="w-14 h-8 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-300 rounded-full peer peer-checked:after:translate-x-6 peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-teal-600"></div>
-                            </label>
+                <div className="mb-6">
+                    <label htmlFor="donationToggle" className="pb-2 block font-medium">
+                        {t.toggleLabel}
+                    </label>
+                    <div className="bg-gray-50 rounded-lg p-6 border border-primary">
+                        <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                                <p className="text-gray-700">
+                                    {isDonationReceivable ? t.enableDonations : t.disableDonations}
+                                </p>
+                            </div>
+                            <div className="ml-6">
+                                <label className="relative inline-flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        id="donationToggle"
+                                        className="sr-only peer"
+                                        checked={isDonationReceivable}
+                                        onChange={(e) => handleToggleChange(e.target.checked)}
+                                    />
+                                    <div className="w-14 h-8 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-300 rounded-full peer peer-checked:after:translate-x-6 peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-teal-600"></div>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Benefits Section */}
-                <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                        {currentTranslations.benefitsTitle}
-                    </h3>
-                    <ul className="space-y-3">
-                        <li className="flex items-start">
-                            <span className="text-teal-600 mr-3 mt-1">✓</span>
-                            <span className="text-gray-700">{currentTranslations.benefit1}</span>
-                        </li>
-                        <li className="flex items-start">
-                            <span className="text-teal-600 mr-3 mt-1">✓</span>
-                            <span className="text-gray-700">{currentTranslations.benefit2}</span>
-                        </li>
-                        <li className="flex items-start">
-                            <span className="text-teal-600 mr-3 mt-1">✓</span>
-                            <span className="text-gray-700">{currentTranslations.benefit3}</span>
-                        </li>
-                        <li className="flex items-start">
-                            <span className="text-teal-600 mr-3 mt-1">✓</span>
-                            <span className="text-gray-700">{currentTranslations.benefit4}</span>
-                        </li>
-                    </ul>
-                </div>
-
-                {/* Warning Section */}
-                {/* <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-8">
-                    <h3 className="text-lg font-semibold text-yellow-800 mb-2">
-                        {currentTranslations.warningTitle}
-                    </h3>
-                    <p className="text-yellow-700">
-                        {currentTranslations.warningText}
-                    </p>
-                </div> */}
-
                 {/* Navigation Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-between">
+                <div className="flex justify-end gap-2 items-center self-stretch mt-16">
                     <button
                         type="button"
                         onClick={handleBack}
-                        className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6"
-                    >
-                        {currentTranslations.backButton}
+                        className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 ">
+                        {t.backButton}
                     </button>
                     <button
                         type="button"
                         onClick={handleContinue}
-                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap bg-[#0D1322] rounded min-h-6"
+                        className="gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap rounded min-h-6 bg-[#0D1322] hover:bg-[#1a2647] cursor-pointer"
                     >
-                        {currentTranslations.continueButton}
+                        {t.continueButton}
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
     );
 };
