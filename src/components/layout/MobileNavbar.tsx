@@ -239,14 +239,16 @@ const MobileNavbar: React.FC = () => {
                 {/* Top row: Logo on left, Language selector on right */}
                 <div className="flex justify-between w-full items-center text-white pt-2">
                     <div className="flex items-center ml-2">
-                        <Image
-                            src="/images/Prapancham-logo.png"
-                            alt="Prapancham Logo"
-                            width={56}
-                            height={56}
-                            priority
-                            className="max-w-[56px] sm:max-w-none items-center justify-center rounded-md"
-                        />
+                        <Link href="/" className="cursor-pointer">
+                            <Image
+                                src="/images/Prapancham-logo.png"
+                                alt="Prapancham Logo"
+                                width={56}
+                                height={56}
+                                priority
+                                className="max-w-[56px] sm:max-w-none items-center justify-center rounded-md"
+                            />
+                        </Link>
                         <span className={`px-1 -mt-2 text-xs text-white bg-[#F65050] ${selectedMenu === "news" ? "block" : selectedMenu === "news-individual" ? "block" : "hidden"}`}>
                             {t.newsNav}
                         </span>
