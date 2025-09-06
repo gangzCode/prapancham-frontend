@@ -186,7 +186,10 @@ const localeText = {
 };
 interface ObituaryData {
     information: {
-        title: string;
+        title?: string;
+        firstName?: string;
+        lastName?: string;
+        preferredName?: string;
         address: string;
         dateofBirth: string;
         dateofDeath: string;
@@ -615,7 +618,12 @@ const ObituaryDetail: React.FC = () => {
                         <div className="relative p-8">
                             {/* Greeting */}
                             <div className="mb-6">
-                                <p className="text-amber-900 font-serif text-lg">Dear {obituaryData?.information.title || 'Friend'},</p>
+                                <p className="text-amber-900 font-serif text-lg">Dear {obituaryData?.information.title
+                                    ||
+                                    (obituaryData?.information.firstName && obituaryData?.information.lastName)
+                                    ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                                    : obituaryData?.information.preferredName
+                                    || 'Friend'},</p>
                             </div>
 
                             {/* Message body */}
@@ -858,13 +866,15 @@ const ObituaryDetail: React.FC = () => {
 
                                     <div className="w-full flex justify-center">
                                         <h1 className="text-3xl md:text-4xl font-serif font-normal text-white mb-8 leading-tight text-center max-w-4xl">
-                                            {obituaryData.information.title || t.memorialTitle}
+                                            {obituaryData.information.title
+                                                || (obituaryData.information.firstName && obituaryData.information.lastName)
+                                                ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                                                : obituaryData.information.preferredName || t.memorialTitle}
                                         </h1>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                         {/* Memorial Description Section */}
                         <div className="mt-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200">
                             <div className="flex items-start gap-4">
@@ -1316,7 +1326,10 @@ const ObituaryDetail: React.FC = () => {
                                 <TitleWithUnderline text={t.overview} underlineWidth={64} fontSize={3} />
                             </div>
                             <div className="space-y-2 mt-2 p-2">
-                                <p className="text-gray-500">{t.name} {obituaryData.information.title || t.notProvided}</p>
+                                <p className="text-gray-500">{t.name} {obituaryData.information.title
+                                    || ((obituaryData.information.firstName && obituaryData.information.lastName)
+                                        ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                                        : obituaryData.information.preferredName || t.notProvided)}</p>
                                 <p className="text-gray-500">{t.birthDateLabel} {obituaryData.information.dateofBirth ? new Date(obituaryData.information.dateofBirth).toLocaleDateString() : t.notProvided}</p>
                                 <p className="text-gray-500">{t.deathDateLabel} {obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString() : t.notProvided}</p>
                                 <p className="text-gray-500">{t.age} {obituaryData.information.dateofBirth && obituaryData.information.dateofDeath ? calculateAge(obituaryData.information.dateofBirth, obituaryData.information.dateofDeath) : t.notProvided}</p>
@@ -1390,14 +1403,20 @@ const ObituaryDetail: React.FC = () => {
                     onClose={closeModal}
                     obituaryEntry={{
                         _id: obituaryData._id,
-                        title: obituaryData.information.title,
-                        name: obituaryData.information.title,
-                        date: obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString('en-GB', {
+                        title: obituaryData.information?.title ||
+                            ((obituaryData.information?.firstName && obituaryData.information?.lastName)
+                                ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                                : obituaryData.information?.preferredName || 'Unknown'),
+                        name: obituaryData.information?.title ||
+                            ((obituaryData.information?.firstName && obituaryData.information?.lastName)
+                                ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                                : obituaryData.information?.preferredName || 'Unknown'),
+                        date: obituaryData.information?.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString('en-GB', {
                             day: '2-digit',
                             month: 'short',
                             year: 'numeric'
                         }) : '',
-                        address: obituaryData.information.address,
+                        address: obituaryData.information?.address || '',
                         imageUrl: obituaryData.primaryImage || obituaryData.thumbnailImage || "/images/tribute.jpg",
                         condolences: obituaryData.tributeItems ? obituaryData.tributeItems.length : 0,
                     }}
@@ -1409,22 +1428,34 @@ const ObituaryDetail: React.FC = () => {
                 onClose={() => setIsTributeModalOpen(false)}
                 obituaryEntry={{
                     _id: obituaryData._id,
-                    title: obituaryData.information.title,
-                    name: obituaryData.information.title,
-                    date: obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString('en-GB', {
+                    title: obituaryData.information?.title ||
+                        ((obituaryData.information?.firstName && obituaryData.information?.lastName)
+                            ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                            : obituaryData.information?.preferredName || 'Unknown'),
+                    name: obituaryData.information?.title ||
+                        ((obituaryData.information?.firstName && obituaryData.information?.lastName)
+                            ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                            : obituaryData.information?.preferredName || 'Unknown'),
+                    date: obituaryData.information?.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString('en-GB', {
                         day: '2-digit',
                         month: 'short',
                         year: 'numeric'
                     }) : '',
-                    address: obituaryData.information.address,
+                    address: obituaryData.information?.address || '',
                     imageUrl: obituaryData.thumbnailImage || obituaryData.primaryImage || "/images/tribute.jpg",
                     condolences: obituaryData.tributeItems ? obituaryData.tributeItems.length : 0,
                 }}
                 timeAgo={obituaryData.createdAt ? calculateTimeAgo(obituaryData.createdAt) : ''}
                 imageUrl={obituaryData.thumbnailImage || obituaryData.primaryImage || "/images/tribute.jpg"}
-                ceremonyTitle={obituaryData.information.title}
-                eventName={obituaryData.information.title}
-                date={obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString('en-GB', {
+                ceremonyTitle={obituaryData.information?.title ||
+                    (obituaryData.information?.firstName && obituaryData.information?.lastName)
+                    ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                    : obituaryData.information?.preferredName || 'Unknown'}
+                eventName={obituaryData.information?.title ||
+                    (obituaryData.information?.firstName && obituaryData.information?.lastName)
+                    ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                    : obituaryData.information?.preferredName || 'Unknown'}
+                date={obituaryData.information?.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString('en-GB', {
                     day: '2-digit',
                     month: 'short',
                     year: 'numeric'

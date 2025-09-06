@@ -59,7 +59,7 @@ const Summary: React.FC<SummaryProps> = ({
         shareMemorial: "Share Memorial",
         shareMemorialDescription: "Honor their memory by sharing",
         facebook: "Facebook",
-        whatsapp: "WhatsApp", 
+        whatsapp: "WhatsApp",
         instagram: "Instagram",
         copyLink: "Copy Link",
         copied: "Copied!",
@@ -72,7 +72,10 @@ const Summary: React.FC<SummaryProps> = ({
 
     const handleShare = (platform: 'facebook' | 'whatsapp' | 'instagram') => {
         let shareUrl = '';
-        const pageTitle = informationFormData?.title || 'Memorial Preview';
+        const pageTitle = informationFormData?.title
+            || (informationFormData?.firstName && informationFormData?.lastName)
+            ? `${informationFormData.firstName} ${informationFormData.lastName}'s Memorial`
+            : `${informationFormData?.preferredName || 'Memorial Preview'}`;
         const encodedUrl = encodeURIComponent(currentUrl);
         const encodedTitle = encodeURIComponent(pageTitle);
 
@@ -179,7 +182,14 @@ const Summary: React.FC<SummaryProps> = ({
     const createFormData = () => {
         const formData = {
             information: informationFormData ? {
-                title: informationFormData.title || '',
+                title: informationFormData.title ||
+                    ((informationFormData?.firstName && informationFormData?.lastName)
+                        ? `${informationFormData.firstName} ${informationFormData.lastName}`
+                        : informationFormData?.preferredName
+                    ) || '',
+                firstName: informationFormData.firstName || '',
+                lastName: informationFormData.lastName || '',
+                preferredName: informationFormData.preferredName || '',
                 address: informationFormData.address || '',
                 dateofBirth: informationFormData.dateofBirth ? new Date(informationFormData.dateofBirth).toISOString().split('T')[0] : '',
                 dateofDeath: informationFormData.dateofDeath ? new Date(informationFormData.dateofDeath).toISOString().split('T')[0] : '',
@@ -240,7 +250,11 @@ const Summary: React.FC<SummaryProps> = ({
                     phone: loggedInUser.phone || ''
                 },
                 information: informationFormData ? {
-                    title: informationFormData.title || '',
+                    title: informationFormData.title ||
+                        ((informationFormData?.firstName && informationFormData?.lastName)
+                            ? `${informationFormData.firstName} ${informationFormData.lastName}`
+                            : informationFormData?.preferredName
+                        ) || '',
                     address: informationFormData.address || '',
                     dateofBirth: informationFormData.dateofBirth ? new Date(informationFormData.dateofBirth).toISOString().split('T')[0] : '',
                     dateofDeath: informationFormData.dateofDeath ? new Date(informationFormData.dateofDeath).toISOString().split('T')[0] : '',
@@ -637,42 +651,46 @@ const Summary: React.FC<SummaryProps> = ({
 
                                         <div className="w-full flex justify-center">
                                             <h1 className="text-3xl md:text-4xl font-serif font-normal text-white mb-8 leading-tight text-center max-w-4xl">
-                                                {informationFormData?.title || 'Memorial Title'}
+                                                {informationFormData?.title ||
+                                                    ((informationFormData?.firstName && informationFormData?.lastName)
+                                                        ? `${informationFormData.firstName} ${informationFormData.lastName}`
+                                                        : informationFormData?.preferredName
+                                                    ) || 'Memorial Preview'}
                                             </h1>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             {/* Enhanced Description Section */}
                             <div className="mt-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200">
-                            <div className="flex items-start gap-4">
-                                <div className="flex-shrink-0">
-                                    <div className="w-1 h-16 bg-gradient-to-b from-teal-500 to-teal-700 rounded-full"></div>
-                                </div>
-                                <div className="flex-1">
-                                    {informationFormData.description ? (
-                                        <div className="prose prose-gray max-w-none">
-                                            <p className="text-gray-700 leading-relaxed text-lg font-light italic">
-                                                "{informationFormData.description}"
-                                            </p>
-                                        </div>
-                                    ) : (
-                                        <div className="flex items-center justify-center py-8">
-                                            <div className="text-center">
-                                                <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                </svg>
-                                                <p className="text-gray-500 text-sm">No description provided.</p>
+                                <div className="flex items-start gap-4">
+                                    <div className="flex-shrink-0">
+                                        <div className="w-1 h-16 bg-gradient-to-b from-teal-500 to-teal-700 rounded-full"></div>
+                                    </div>
+                                    <div className="flex-1">
+                                        {informationFormData.description ? (
+                                            <div className="prose prose-gray max-w-none">
+                                                <p className="text-gray-700 leading-relaxed text-lg font-light italic">
+                                                    "{informationFormData.description}"
+                                                </p>
                                             </div>
-                                        </div>
-                                    )}
+                                        ) : (
+                                            <div className="flex items-center justify-center py-8">
+                                                <div className="text-center">
+                                                    <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                    </svg>
+                                                    <p className="text-gray-500 text-sm">No description provided.</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
                             <div className="flex justify-end gap-2 items-center self-stretch mt-6">
-                                <button 
+                                <button
                                     className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold"
                                     onClick={() => setShowSharePopup(!showSharePopup)}
                                     type="button"
@@ -682,7 +700,7 @@ const Summary: React.FC<SummaryProps> = ({
                                     </svg>
                                     Share Memorial
                                 </button>
-                                <button 
+                                <button
                                     className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold cursor-not-allowed"
                                     disabled
                                     type="button"
@@ -692,7 +710,7 @@ const Summary: React.FC<SummaryProps> = ({
                                     </svg>
                                     Post Tribute
                                 </button>
-                                <button 
+                                <button
                                     className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold cursor-not-allowed"
                                     disabled
                                     type="button"
@@ -823,7 +841,7 @@ const Summary: React.FC<SummaryProps> = ({
                                     <TitleWithUnderline text="Overview" underlineWidth={64} fontSize={3} />
                                 </div>
                                 <div className="space-y-2 mt-2 p-2">
-                                    <p className="text-gray-500">Name: {informationFormData?.title ? informationFormData.title : 'Not provided'}</p>
+                                    <p className="text-gray-500">Name: {informationFormData?.title || ((informationFormData?.firstName && informationFormData?.lastName) ? `${informationFormData.firstName} ${informationFormData.lastName}` : informationFormData?.preferredName) || 'Not provided'}</p>
                                     <p className="text-gray-500">Birth Date: {informationFormData?.dateofBirth ? new Date(informationFormData.dateofBirth).toLocaleDateString() : 'Not provided'}</p>
                                     <p className="text-gray-500">Death Date: {informationFormData?.dateofDeath ? new Date(informationFormData.dateofDeath).toLocaleDateString() : 'Not provided'}</p>
                                     <p className="text-gray-500">Age: {informationFormData?.dateofBirth && informationFormData?.dateofDeath ? calculateAge(informationFormData.dateofBirth, informationFormData.dateofDeath) : 'Not provided'}</p>
@@ -889,8 +907,8 @@ const Summary: React.FC<SummaryProps> = ({
                 </section>
 
                 <div className='text-end'>
-                    I have read and accept the <span 
-                        className='text-[#880002] underline cursor-pointer' 
+                    I have read and accept the <span
+                        className='text-[#880002] underline cursor-pointer'
                         onClick={() => window.open('/terms', 'termsWindow', 'width=800,height=600,scrollbars=yes,resizable=yes,status=no,location=no,toolbar=no,menubar=no')}
                     >
                         Terms & Conditions
@@ -1105,7 +1123,7 @@ const Summary: React.FC<SummaryProps> = ({
                                     )}
                                     <div className="flex-1 min-w-0">
                                         <h4 className="font-semibold text-gray-900 truncate">
-                                            {informationFormData?.title || 'Memorial Title'}
+                                            {informationFormData?.title || ((informationFormData?.firstName && informationFormData?.lastName) ? `${informationFormData.firstName} ${informationFormData.lastName}` : informationFormData?.preferredName) || 'Memorial Name'}
                                         </h4>
                                         <p className="text-sm text-gray-600 truncate">{shareText.shareThisMemorial}</p>
                                     </div>

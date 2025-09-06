@@ -11,7 +11,10 @@ type LanguageKey = "en" | "ta" | "si";
 interface UserObituaryOrder {
     _id: string;
     information: {
-        title: string;
+        title?: string;
+        firstName?: string;
+        lastName?: string;
+        preferredName?: string;
         address: string;
         dateofBirth: string;
         dateofDeath: string;
@@ -257,8 +260,17 @@ const UserObituaries: React.FC = () => {
         condolencesCount: obituary.tributeItems?.length || 0,
         timeAgo: calculateTimeAgo(obituary.createdAt),
         imageUrl: obituary.primaryImage || obituary.thumbnailImage || "/images/tribute.jpg",
-        ceremonyTitle: obituary.information.shortDescription || obituary.information.title,
-        eventName: obituary.information.title,
+        ceremonyTitle: obituary.information.shortDescription || obituary.information.title 
+            || ((obituary.information.firstName && obituary.information.lastName)
+                ? `${obituary.information.firstName} ${obituary.information.lastName}`
+                : obituary.information.preferredName
+            )
+            || "",
+        eventName: obituary.information.title ||
+            ((obituary.information.firstName && obituary.information.lastName)
+                ? `${obituary.information.firstName} ${obituary.information.lastName}`
+                : obituary.information.preferredName
+            ) || "",
         date: new Date(obituary.information.dateofDeath).toLocaleDateString('en-GB', {
             day: '2-digit',
             month: 'short',

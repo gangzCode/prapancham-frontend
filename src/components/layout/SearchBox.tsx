@@ -8,7 +8,10 @@ import { useRouter } from "next/navigation";
 interface OrderResult {
   _id: string;
   information: {
-    title: string;
+    title?: string;
+    firstName?: string;
+    lastName?: string;
+    preferredName?: string;
     address: string;
     dateofBirth: string;
     dateofDeath: string;
@@ -183,12 +186,22 @@ const SearchBox: React.FC = () => {
           >
             <img
               src={order.thumbnailImage || order.primaryImage || "/images/tribute.jpg"}
-              alt={order.information.title}
+              alt={order.information.title
+                || ((order.information.firstName && order.information.lastName)
+                  ? `${order.information.firstName} ${order.information.lastName}`
+                  : order.information.preferredName
+                )
+                || ""}
               className="w-12 h-12 object-cover rounded"
             />
             <div className="flex-1 min-w-0">
               <div className="font-medium text-sm group-hover:text-primary transition-colors truncate">
-                {order.information.title}
+                {order.information.title
+                  || ((order.information.firstName && order.information.lastName)
+                    ? `${order.information.firstName} ${order.information.lastName}`
+                    : order.information.preferredName
+                  )
+                  || ""}
               </div>
               <div className="text-xs text-gray-500 truncate">
                 {order.information.address}
@@ -303,8 +316,8 @@ const SearchBox: React.FC = () => {
                 <button
                   key={tab.key}
                   className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${activeTab === tab.key
-                      ? 'text-primary border-b-2 border-primary bg-white'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    ? 'text-primary border-b-2 border-primary bg-white'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                     }`}
                   onClick={() => setActiveTab(tab.key as 'orders' | 'news' | 'events')}
                 >

@@ -16,7 +16,10 @@ interface InformationProps {
 }
 
 interface FormData {
-    title: string;
+    firstName: string;
+    lastName: string;
+    preferredName: string;
+    usePreferredName: boolean;
     shortDescription: string;
     address: string;
     dateofBirth: string;
@@ -43,7 +46,10 @@ const Information: React.FC<InformationProps> = ({
             greetingAnonymous: "Hi there, Our deepest condolences.",
             packageInfo: "You have selected a {duration} days '{planName}' package,",
             informationTitle: "Information",
-            titleLabel: "Title (Name of Deceased)",
+            firstNameLabel: "First Name",
+            lastNameLabel: "Last Name",
+            preferredNameLabel: "Preferred Name",
+            usePreferredNameLabel: "Use preferred name instead of first and last name",
             shortDescriptionLabel: "Short Description",
             shortDescriptionPlaceholder: "Maximum 10 words allowed",
             wordsUsed: "{count}/10 words used",
@@ -64,7 +70,10 @@ const Information: React.FC<InformationProps> = ({
             greetingAnonymous: "வணக்கம், எங்கள் ஆழ்ந்த இரங்கல்கள்.",
             packageInfo: "நீங்கள் {duration} நாட்கள் '{planName}' தொகுப்பை தேர்ந்தெடுத்துள்ளீர்கள்,",
             informationTitle: "தகவல்",
-            titleLabel: "தலைப்பு (இறந்தவரின் பெயர்)",
+            firstNameLabel: "முதல் பெயர்",
+            lastNameLabel: "கடைசி பெயர்",
+            preferredNameLabel: "விருப்பமான பெயர்",
+            usePreferredNameLabel: "முதல் மற்றும் கடைசி பெயருக்கு பதிலாக விருப்பமான பெயரைப் பயன்படுத்தவும்",
             shortDescriptionLabel: "குறுகிய விளக்கம்",
             shortDescriptionPlaceholder: "அதிகபட்சம் 10 வார்த்தைகள் அனுமதிக்கப்படும்",
             wordsUsed: "{count}/10 வார்த்தைகள் பயன்படுத்தப்பட்டன",
@@ -85,7 +94,10 @@ const Information: React.FC<InformationProps> = ({
             greetingAnonymous: "ආයුබෝවන්, අපගේ ගැඹුරු සානුකම්පනාව.",
             packageInfo: "ඔබ දින {duration} ක '{planName}' පැකේජයක් තෝරාගෙන ඇත,",
             informationTitle: "තොරතුරු",
-            titleLabel: "මාතෘකාව (මියගිය පුද්ගලයාගේ නම)",
+            firstNameLabel: "මුල් නම",
+            lastNameLabel: "අවසන් නම",
+            preferredNameLabel: "අභිමත නම",
+            usePreferredNameLabel: "මුල් සහ අවසන් නම වෙනුවට අභිමත නම භාවිතා කරන්න",
             shortDescriptionLabel: "කෙටි විස්තරය",
             shortDescriptionPlaceholder: "උපරිම වචන 10ක් අවසර ඇත",
             wordsUsed: "වචන {count}/10ක් භාවිතා කර ඇත",
@@ -105,7 +117,10 @@ const Information: React.FC<InformationProps> = ({
     
     const t = translations[langKey as keyof typeof translations] || translations.english;
     const [formData, setFormData] = useState<FormData>({
-        title: initialFormData?.title || '',
+        firstName: initialFormData?.firstName || '',
+        lastName: initialFormData?.lastName || '',
+        preferredName: initialFormData?.preferredName || '',
+        usePreferredName: initialFormData?.usePreferredName || false,
         shortDescription: initialFormData?.shortDescription || '',
         address: initialFormData?.address || '',
         dateofBirth: initialFormData?.dateofBirth || '',
@@ -131,7 +146,11 @@ const Information: React.FC<InformationProps> = ({
 
     // Validation function to check if all required fields are filled
     const isFormValid = () => {
-        return formData.title.trim() !== '' &&
+        const hasNameInfo = formData.usePreferredName 
+            ? formData.preferredName.trim() !== ''
+            : formData.firstName.trim() !== '' && formData.lastName.trim() !== '';
+        
+        return hasNameInfo &&
             formData.address.trim() !== '' &&
             formData.dateofBirth !== '' &&
             formData.dateofDeath !== '';
@@ -161,7 +180,7 @@ const Information: React.FC<InformationProps> = ({
         return `with ${selectedAddon.map((addon: any) => addon.name).join(', ')} addon${selectedAddon.length > 1 ? 's' : ''}`;
     };
 
-    const handleInputChange = (field: keyof FormData, value: string) => {
+    const handleInputChange = (field: keyof FormData, value: string | boolean) => {
         const updatedFormData = {
             ...formData,
             [field]: value
@@ -174,13 +193,13 @@ const Information: React.FC<InformationProps> = ({
         }
 
         // Count words for description field
-        if (field === 'description') {
+        if (field === 'description' && typeof value === 'string') {
             const words = value.trim().split(/\s+/).filter(word => word.length > 0);
             setWordCount(words.length);
         }
 
         // Count words for short description field
-        if (field === 'shortDescription') {
+        if (field === 'shortDescription' && typeof value === 'string') {
             const words = value.trim().split(/\s+/).filter(word => word.length > 0);
             setShortDescWordCount(words.length);
         }
@@ -218,17 +237,63 @@ const Information: React.FC<InformationProps> = ({
                     <TitleWithUnderline text={t.informationTitle} underlineWidth={64} />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="title" className={`pb-2 block`}>
-                        {t.titleLabel}<span className="text-[#880002]">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="title"
-                        value={formData.title}
-                        onChange={(e) => handleInputChange('title', e.target.value)}
-                        required
-                        className={`w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600`}
-                    />
+                    <div className="flex items-center mb-3">
+                        <input
+                            type="checkbox"
+                            id="usePreferredName"
+                            checked={formData.usePreferredName}
+                            onChange={(e) => handleInputChange('usePreferredName', e.target.checked)}
+                            className="mr-2 h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+                        />
+                        <label htmlFor="usePreferredName" className="text-sm text-gray-700">
+                            {t.usePreferredNameLabel}
+                        </label>
+                    </div>
+                    
+                    {formData.usePreferredName ? (
+                        <div>
+                            <label htmlFor="preferredName" className="pb-2 block">
+                                {t.preferredNameLabel}<span className="text-[#880002]">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="preferredName"
+                                value={formData.preferredName}
+                                onChange={(e) => handleInputChange('preferredName', e.target.value)}
+                                required
+                                className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                            />
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label htmlFor="firstName" className="pb-2 block">
+                                    {t.firstNameLabel}<span className="text-[#880002]">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="firstName"
+                                    value={formData.firstName}
+                                    onChange={(e) => handleInputChange('firstName', e.target.value)}
+                                    required
+                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="lastName" className="pb-2 block">
+                                    {t.lastNameLabel}<span className="text-[#880002]">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="lastName"
+                                    value={formData.lastName}
+                                    onChange={(e) => handleInputChange('lastName', e.target.value)}
+                                    required
+                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="shortDescription" className={`pb-2 block`}>

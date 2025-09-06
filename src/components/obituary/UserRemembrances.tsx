@@ -11,7 +11,10 @@ type LanguageKey = "en" | "ta" | "si";
 interface UserremembranceOrder {
     _id: string;
     information: {
-        title: string;
+        title?: string;
+        firstName?: string;
+        lastName?: string;
+        preferredName?: string;
         address: string;
         dateofBirth: string;
         dateofDeath: string;
@@ -257,8 +260,16 @@ const UserRemembrances: React.FC = () => {
         condolencesCount: remembrance.tributeItems?.length || 0,
         timeAgo: calculateTimeAgo(remembrance.createdAt),
         imageUrl: remembrance.primaryImage || remembrance.thumbnailImage || "/images/tribute.jpg",
-        ceremonyTitle: remembrance.information.shortDescription || remembrance.information.title,
-        eventName: remembrance.information.title,
+        ceremonyTitle: remembrance.information.shortDescription || remembrance.information.title ||
+        ((remembrance.information.firstName && remembrance.information.lastName)
+            ? `${remembrance.information.firstName} ${remembrance.information.lastName}`
+            : remembrance.information.preferredName
+        ) || "",
+        eventName: remembrance.information.title ||
+        ((remembrance.information.firstName && remembrance.information.lastName)
+            ? `${remembrance.information.firstName} ${remembrance.information.lastName}`
+            : remembrance.information.preferredName
+        ) || "",
         date: new Date(remembrance.information.dateofDeath).toLocaleDateString('en-GB', {
             day: '2-digit',
             month: 'short',
