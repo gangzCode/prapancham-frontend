@@ -36,7 +36,10 @@ const SecondNavbar: React.FC = () => {
       createMemorial: "Create Memorial",
       events: "Events",
       advertisement: "Advertisement",
-      setting: "Setting",
+      profileInformation: "Profile Information",
+      obituary: "Obituary",
+      remembrance: "Remembrance",
+      profileAdvertisement: "Advertisement",
       logout: "Log Out",
       signIn: "Sign In",
       signUp: "Sign Up",
@@ -47,7 +50,10 @@ const SecondNavbar: React.FC = () => {
       createMemorial: "நினைவு உருவாக்கு",
       events: "நிகழ்வுகள்",
       advertisement: "விளம்பரம்",
-      setting: "அமைப்பு",
+      profileInformation: "விவர தகவல்",
+      obituary: "மரண அறிவித்தல்",
+      remembrance: "நினைவுச்சின்னம்",
+      profileAdvertisement: "விளம்பரம்",
       logout: "வெளியேறு",
       signIn: "உள்நுழைய",
       signUp: "பதிவுசெய்ய",
@@ -57,7 +63,10 @@ const SecondNavbar: React.FC = () => {
       createMemorial: "අනුස්මරණය නිර්මාණය",
       events: "සිදුවීම්",
       advertisement: "ප්‍රචාරණය",
-      setting: "සැකසීම",
+      profileInformation: "පැතිකඩ තොරතුරු",
+      obituary: "මරණ දැනුම්දීම",
+      remembrance: "අනුස්මරණය",
+      profileAdvertisement: "වෙළඳ දැන්වීම",
       logout: "පිටවීම",
       signIn: "ඇතුල් වන්න",
       signUp: "ලියාපදිංචි වන්න",
@@ -269,14 +278,43 @@ const SecondNavbar: React.FC = () => {
                             })()}
                           </h2>
                         </div>
-                        <div
-                          className="text-center text-black mb-4 mt-4 cursor-pointer hover:underline"
-                          onClick={() => {
-                            setShowPopup(false);
-                            router.push("/profile");
-                          }}
-                        >
-                          {t.setting}
+                        <div className="space-y-1">
+                          <div
+                            className="text-center text-black py-1 cursor-pointer hover:underline hover:bg-gray-50 rounded"
+                            onClick={() => {
+                              setShowPopup(false);
+                              router.push("/profile?tab=General");
+                            }}
+                          >
+                            {t.profileInformation}
+                          </div>
+                          <div
+                            className="text-center text-black py-1 cursor-pointer hover:underline hover:bg-gray-50 rounded"
+                            onClick={() => {
+                              setShowPopup(false);
+                              router.push("/profile?tab=Obituary");
+                            }}
+                          >
+                            {t.obituary}
+                          </div>
+                          <div
+                            className="text-center text-black py-1 cursor-pointer hover:underline hover:bg-gray-50 rounded"
+                            onClick={() => {
+                              setShowPopup(false);
+                              router.push("/profile?tab=Remembrance");
+                            }}
+                          >
+                            {t.remembrance}
+                          </div>
+                          <div
+                            className="text-center text-black py-1 cursor-pointer hover:underline hover:bg-gray-50 rounded"
+                            onClick={() => {
+                              setShowPopup(false);
+                              router.push("/profile?tab=Advertisement");
+                            }}
+                          >
+                            {t.profileAdvertisement}
+                          </div>
                         </div>
                         <hr className="border-gray-300 mb-4" />
                         <button
