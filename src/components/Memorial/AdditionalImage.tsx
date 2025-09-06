@@ -5,6 +5,7 @@ import React, { useEffect, useState, DragEvent } from 'react';
 import Image from "next/image";
 import { CirclePlus } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageProvider';
+import { convertHeicToJpeg } from '@/lib/heicConverter';
 
 interface AdditionalImageProps {
     selectedPlan: any;
@@ -101,9 +102,15 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
     
     const t = translations[langKey as keyof typeof translations] || translations.english;
     const [images, setImages] = useState<File[]>(initialImages || []);
-    const [previews, setPreviews] = useState<string[]>(
-        initialImages ? initialImages.map(file => URL.createObjectURL(file)) : []
-    );
+    const [previews, setPreviews] = useState<string[]>([]);
+
+    // Initialize previews for existing images
+    useEffect(() => {
+        if (initialImages && initialImages.length > 0) {
+            Promise.all(initialImages.map(file => convertHeicToJpeg(file)))
+                .then(setPreviews);
+        }
+    }, [initialImages]);
 
     // Get the maximum number of additional images allowed
     const getMaxImages = () => {
@@ -129,7 +136,7 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
         return `with ${selectedAddon.map((addon: any) => addon.name).join(', ')} addon${selectedAddon.length > 1 ? 's' : ''}`;
     };
 
-    const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         const maxImages = getMaxImages();
         const availableSlots = maxImages - images.length;
@@ -140,7 +147,8 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
             .filter(file => file.type.startsWith("image/") || file.type === "image/heic" || file.name.toLowerCase().endsWith('.heic'))
             .slice(0, availableSlots);
         
-        const newPreviews = droppedFiles.map(file => URL.createObjectURL(file));
+        // Convert HEIC files to JPEG for preview
+        const newPreviews = await Promise.all(droppedFiles.map(file => convertHeicToJpeg(file)));
         const updatedImages = [...images, ...droppedFiles];
         const updatedPreviews = [...previews, ...newPreviews];
 
@@ -153,7 +161,7 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
         }
     };
 
-    const handleBrowse = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleBrowse = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const maxImages = getMaxImages();
         const availableSlots = maxImages - images.length;
         
@@ -163,7 +171,8 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
             .filter(file => file.type.startsWith("image/") || file.type === "image/heic" || file.name.toLowerCase().endsWith('.heic'))
             .slice(0, availableSlots);
         
-        const newPreviews = selectedFiles.map(file => URL.createObjectURL(file));
+        // Convert HEIC files to JPEG for preview
+        const newPreviews = await Promise.all(selectedFiles.map(file => convertHeicToJpeg(file)));
         const updatedImages = [...images, ...selectedFiles];
         const updatedPreviews = [...previews, ...newPreviews];
 

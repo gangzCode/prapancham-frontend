@@ -3,6 +3,7 @@
 import { TitleWithUnderline } from '@/components/ui/title-with-underline';
 import React, { useEffect, useState, DragEvent } from 'react';
 import { useLanguage } from '@/components/ui/LanguageProvider';
+import { convertHeicToJpeg } from '@/lib/heicConverter';
 
 interface ThumbnailImageProps {
     selectedPlan: any;
@@ -87,9 +88,14 @@ const ThumbnailImage: React.FC<ThumbnailImageProps> = ({
     
     const t = translations[langKey as keyof typeof translations] || translations.english;
     const [image, setImage] = useState<File | null>(initialImageData || null);
-    const [preview, setPreview] = useState<string | null>(
-        initialImageData ? URL.createObjectURL(initialImageData) : null
-    );
+    const [preview, setPreview] = useState<string | null>(null);
+
+    // Initialize preview for existing image
+    useEffect(() => {
+        if (initialImageData) {
+            convertHeicToJpeg(initialImageData).then(setPreview);
+        }
+    }, [initialImageData]);
 
     // Get plan name based on language
     const getPlanName = () => {
@@ -115,7 +121,7 @@ const ThumbnailImage: React.FC<ThumbnailImageProps> = ({
         return image !== null;
     };
 
-    const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         const droppedFile = Array.from(e.dataTransfer.files)
             .find(file => file.type.startsWith("image/") || file.type === "image/heic" || file.name.toLowerCase().endsWith('.heic'));
@@ -123,7 +129,10 @@ const ThumbnailImage: React.FC<ThumbnailImageProps> = ({
         if (droppedFile) {
             if (preview) URL.revokeObjectURL(preview);
             setImage(droppedFile);
-            setPreview(URL.createObjectURL(droppedFile));
+            
+            // Convert HEIC to JPEG if needed and create preview
+            const previewUrl = await convertHeicToJpeg(droppedFile);
+            setPreview(previewUrl);
             
             // Notify parent component of image change
             if (onImageDataChange) {
@@ -132,14 +141,17 @@ const ThumbnailImage: React.FC<ThumbnailImageProps> = ({
         }
     };
 
-    const handleBrowse = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleBrowse = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = Array.from(e.target.files ?? [])
             .find(file => file.type.startsWith("image/") || file.type === "image/heic" || file.name.toLowerCase().endsWith('.heic'));
 
         if (selectedFile) {
             if (preview) URL.revokeObjectURL(preview);
             setImage(selectedFile);
-            setPreview(URL.createObjectURL(selectedFile));
+            
+            // Convert HEIC to JPEG if needed and create preview
+            const previewUrl = await convertHeicToJpeg(selectedFile);
+            setPreview(previewUrl);
             
             // Notify parent component of image change
             if (onImageDataChange) {
