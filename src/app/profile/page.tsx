@@ -141,8 +141,25 @@ const ProfileContent: React.FC = () => {
     // Handle tab parameter from URL
     useEffect(() => {
         const tab = searchParams.get('tab');
-        if (tab && ["General", "Obituary", "Remembrance", "Advertisement"].includes(tab)) {
-            setActiveTab(tab);
+        if (tab) {
+            // Map URL parameter values to internal tab values
+            const tabMapping: { [key: string]: string } = {
+                'profileInformation': 'General',
+                'general': 'General',
+                'General': 'General',
+                'obituary': 'Obituary',
+                'Obituary': 'Obituary',
+                'remembrance': 'Remembrance',
+                'Remembrance': 'Remembrance',
+                'profileAdvertisement': 'Advertisement',
+                'advertisement': 'Advertisement',
+                'Advertisement': 'Advertisement'
+            };
+            
+            const mappedTab = tabMapping[tab];
+            if (mappedTab) {
+                setActiveTab(mappedTab);
+            }
         }
     }, [searchParams]);
 
