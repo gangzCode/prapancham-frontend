@@ -45,6 +45,7 @@ const MobileNavbar: React.FC = () => {
     const [isUserLoading, setIsUserLoading] = useState(true);
     const [showPopup, setShowPopup] = useState(false);
     const popupRef = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLDivElement>(null);
     const [selectedMenu, setSelectedMenu] = useState("");
     const [isDropMenuOpen, setIsDropMenuOpen] = useState(false);
     const fetcher = (url: string) => fetch(url).then(res => res.json());
@@ -193,7 +194,8 @@ const MobileNavbar: React.FC = () => {
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+            if (popupRef.current && !popupRef.current.contains(event.target as Node) &&
+                triggerRef.current && !triggerRef.current.contains(event.target as Node)) {
                 setShowPopup(false);
             }
         }
@@ -342,6 +344,7 @@ const MobileNavbar: React.FC = () => {
                    */}
                                 <div className="relative ml-4">
                                     <div
+                                        ref={triggerRef}
                                         onClick={() => setShowPopup(!showPopup)}
                                         className="flex items-center justify-center cursor-pointer"
                                     >
@@ -359,6 +362,7 @@ const MobileNavbar: React.FC = () => {
                                                 })()
                                             }
                                         />
+                                        <ChevronDown className={`w-4 h-4 ml-1 text-white cursor-pointer transition-transform duration-200 ${showPopup ? 'rotate-180' : ''}`} />
                                         {/* <span className="ml-2 text-black font-semibold">
                                             {(() => {
                                                 try {
@@ -369,7 +373,6 @@ const MobileNavbar: React.FC = () => {
                                                 }
                                             })()}
                                         </span> */}
-                                        {/* <ChevronDown className="w-6 h-6" /> */}
                                     </div>
 
                                     {showPopup && (
