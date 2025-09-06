@@ -293,7 +293,7 @@ const SearchBox: React.FC = () => {
 
       {showResults && hasResults && (
         <div
-          className="fixed md:absolute left-0 right-0 md:left-auto md:right-auto top-full md:top-auto w-full md:w-[600px] bg-white rounded-none md:rounded-lg shadow-2xl mt-0 md:mt-1 max-h-[50vh] md:max-h-[500px] overflow-hidden origin-top animate-in fade-in zoom-in duration-200 border-t md:border border-gray-200 z-50"
+          className="absolute left-0 right-0 md:right-0 md:left-auto md:w-[600px] top-full w-full bg-white rounded-none md:rounded-lg shadow-2xl mt-0 md:mt-1 max-h-[50vh] md:max-h-[500px] overflow-hidden origin-top animate-in fade-in zoom-in duration-200 border-t md:border border-gray-200 z-50"
           onMouseDown={handleMouseDown}
         >
           <div className="flex flex-col h-full">
