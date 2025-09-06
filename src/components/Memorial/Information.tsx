@@ -50,13 +50,15 @@ const Information: React.FC<InformationProps> = ({
             lastNameLabel: "Last Name",
             preferredNameLabel: "Preferred Name",
             usePreferredNameLabel: "Use preferred name instead of first and last name",
-            shortDescriptionLabel: "Short Description",
+            obituaryHeadlineLabel: "Obituary Headline",
+            remembranceHeadlineLabel: "Remembrance Headline",
             shortDescriptionPlaceholder: "Maximum 10 words allowed",
             wordsUsed: "{count}/10 words used",
-            addressLabel: "Address",
+            addressLabel: "Funeral House Address",
             dateOfBirthLabel: "Date of Birth",
-            dateOfDeathLabel: "Date of Death",
-            descriptionLabel: "Description",
+            dateOfDeathLabel: "Date of Passing",
+            obituaryDescriptionLabel: "Obituary Description",
+            remembranceDescriptionLabel: "Remembrance Description",
             descriptionPlaceholder: "Maximum {limit} words allowed",
             descriptionWordsUsed: "{count}/{limit} words used",
             tributeVideoLabel: "Tribute Video",
@@ -74,13 +76,15 @@ const Information: React.FC<InformationProps> = ({
             lastNameLabel: "கடைசி பெயர்",
             preferredNameLabel: "விருப்பமான பெயர்",
             usePreferredNameLabel: "முதல் மற்றும் கடைசி பெயருக்கு பதிலாக விருப்பமான பெயரைப் பயன்படுத்தவும்",
-            shortDescriptionLabel: "குறுகிய விளக்கம்",
+            obituaryHeadlineLabel: "இறப்பு அறிக்கை தலைப்பு",
+            remembranceHeadlineLabel: "நினைவஞ்சலி தலைப்பு",
             shortDescriptionPlaceholder: "அதிகபட்சம் 10 வார்த்தைகள் அனுமதிக்கப்படும்",
             wordsUsed: "{count}/10 வார்த்தைகள் பயன்படுத்தப்பட்டன",
-            addressLabel: "முகவரி",
+            addressLabel: "இறுதிச் சடங்கு இல்லத்தின் முகவரி",
             dateOfBirthLabel: "பிறந்த தேதி",
-            dateOfDeathLabel: "இறந்த தேதி",
-            descriptionLabel: "விளக்கம்",
+            dateOfDeathLabel: "மறைவு தேதி",
+            obituaryDescriptionLabel: "இறப்பு அறிக்கை விளக்கம்",
+            remembranceDescriptionLabel: "நினைவஞ்சலி விளக்கம்",
             descriptionPlaceholder: "அதிகபட்சம் {limit} வார்த்தைகள் அனுமதிக்கப்படும்",
             descriptionWordsUsed: "{count}/{limit} வார்த்தைகள் பயன்படுத்தப்பட்டன",
             tributeVideoLabel: "நினைவு வீடியோ",
@@ -98,13 +102,15 @@ const Information: React.FC<InformationProps> = ({
             lastNameLabel: "අවසන් නම",
             preferredNameLabel: "අභිමත නම",
             usePreferredNameLabel: "මුල් සහ අවසන් නම වෙනුවට අභිමත නම භාවිතා කරන්න",
-            shortDescriptionLabel: "කෙටි විස්තරය",
+            obituaryHeadlineLabel: "අවමංගල්‍ය මාතෘකාව",
+            remembranceHeadlineLabel: "සිහිකිරීමේ මාතෘකාව",
             shortDescriptionPlaceholder: "උපරිම වචන 10ක් අවසර ඇත",
             wordsUsed: "වචන {count}/10ක් භාවිතා කර ඇත",
-            addressLabel: "ලිපිනය",
+            addressLabel: "අවමංගල්‍ය ගෘහ ලිපිනය",
             dateOfBirthLabel: "උපන් දිනය",
             dateOfDeathLabel: "මරණ දිනය",
-            descriptionLabel: "විස්තරය",
+            obituaryDescriptionLabel: "අවමංගල්‍ය විස්තරය",
+            remembranceDescriptionLabel: "සිහිකිරීමේ විස්තරය",
             descriptionPlaceholder: "උපරිම වචන {limit}ක් අවසර ඇත",
             descriptionWordsUsed: "වචන {count}/{limit}ක් භාවිතා කර ඇත",
             tributeVideoLabel: "ස්තුති වීඩියෝව",
@@ -178,6 +184,28 @@ const Information: React.FC<InformationProps> = ({
             return 'with no extra addons';
         }
         return `with ${selectedAddon.map((addon: any) => addon.name).join(', ')} addon${selectedAddon.length > 1 ? 's' : ''}`;
+    };
+
+    // Get description label based on package type
+    const getDescriptionLabel = () => {
+        if (selectedPlan?.isObituary) {
+            return t.obituaryDescriptionLabel;
+        } else if (selectedPlan?.isRemembarace) {
+            return t.remembranceDescriptionLabel;
+        }
+        // Default fallback
+        return t.obituaryDescriptionLabel;
+    };
+
+    // Get headline label based on package type
+    const getHeadlineLabel = () => {
+        if (selectedPlan?.isObituary) {
+            return t.obituaryHeadlineLabel;
+        } else if (selectedPlan?.isRemembarace) {
+            return t.remembranceHeadlineLabel;
+        }
+        // Default fallback
+        return t.obituaryHeadlineLabel;
     };
 
     const handleInputChange = (field: keyof FormData, value: string | boolean) => {
@@ -297,7 +325,7 @@ const Information: React.FC<InformationProps> = ({
                 </div>
                 <div className="mb-4">
                     <label htmlFor="shortDescription" className={`pb-2 block`}>
-                        {t.shortDescriptionLabel}
+                        {getHeadlineLabel()}
                     </label>
                     <textarea
                         id="shortDescription"
@@ -361,7 +389,7 @@ const Information: React.FC<InformationProps> = ({
                 </div>
                 <div className="mb-4">
                     <label htmlFor="description" className="block text-gray-700 mb-2">
-                        {t.descriptionLabel}
+                        {getDescriptionLabel()}
                     </label>
                     <textarea
                         id="description"
