@@ -985,10 +985,10 @@ const ObituaryDetail: React.FC = () => {
                                 </div>
 
                                 {/* Tab Navigation */}
-                                <div className="flex border-b border-gray-200 mb-6">
+                                <div className="flex flex-wrap sm:flex-nowrap border-b border-gray-200 mb-6 overflow-x-auto">
                                     <button
                                         onClick={() => setActiveTab('messages')}
-                                        className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${activeTab === 'messages'
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === 'messages'
                                             ? 'border-primary text-primary bg-gray-50'
                                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                             }`}
@@ -997,7 +997,7 @@ const ObituaryDetail: React.FC = () => {
                                     </button>
                                     <button
                                         onClick={() => setActiveTab('cards')}
-                                        className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${activeTab === 'cards'
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === 'cards'
                                             ? 'border-primary text-primary bg-gray-50'
                                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                             }`}
@@ -1006,7 +1006,7 @@ const ObituaryDetail: React.FC = () => {
                                     </button>
                                     <button
                                         onClick={() => setActiveTab('letters')}
-                                        className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${activeTab === 'letters'
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === 'letters'
                                             ? 'border-primary text-primary bg-gray-50'
                                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                             }`}
@@ -1015,7 +1015,7 @@ const ObituaryDetail: React.FC = () => {
                                     </button>
                                     <button
                                         onClick={() => setActiveTab('memories')}
-                                        className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${activeTab === 'memories'
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === 'memories'
                                             ? 'border-primary text-primary bg-gray-50'
                                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                             }`}
@@ -1024,7 +1024,7 @@ const ObituaryDetail: React.FC = () => {
                                     </button>
                                     <button
                                         onClick={() => setActiveTab('flowers')}
-                                        className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${activeTab === 'flowers'
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === 'flowers'
                                             ? 'border-primary text-primary bg-gray-50'
                                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                             }`}
