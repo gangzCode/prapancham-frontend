@@ -29,7 +29,7 @@ const EventSlider = () => {
   type LanguageKey = 'en' | 'ta' | 'si';
   const translations: Record<LanguageKey, { [key: string]: string }> = {
     en: {
-      bookEvent: "Book Event",
+      bookEvent: "View Event",
       noEventsFound: "No events found",
       peopleHaveRegistered: "people have registered",
     },

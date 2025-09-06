@@ -8,7 +8,10 @@ import { useRouter } from "next/navigation";
 interface OrderResult {
   _id: string;
   information: {
-    title: string;
+    title?: string;
+    firstName?: string;
+    lastName?: string;
+    preferredName?: string;
     address: string;
     dateofBirth: string;
     dateofDeath: string;
@@ -183,12 +186,22 @@ const SearchBox: React.FC = () => {
           >
             <img
               src={order.thumbnailImage || order.primaryImage || "/images/tribute.jpg"}
-              alt={order.information.title}
+              alt={order.information.title
+                || ((order.information.firstName && order.information.lastName)
+                  ? `${order.information.firstName} ${order.information.lastName}`
+                  : order.information.preferredName
+                )
+                || ""}
               className="w-12 h-12 object-cover rounded"
             />
             <div className="flex-1 min-w-0">
               <div className="font-medium text-sm group-hover:text-primary transition-colors truncate">
-                {order.information.title}
+                {order.information.title
+                  || ((order.information.firstName && order.information.lastName)
+                    ? `${order.information.firstName} ${order.information.lastName}`
+                    : order.information.preferredName
+                  )
+                  || ""}
               </div>
               <div className="text-xs text-gray-500 truncate">
                 {order.information.address}
@@ -293,7 +306,7 @@ const SearchBox: React.FC = () => {
 
       {showResults && hasResults && (
         <div
-          className="fixed md:absolute left-0 right-0 md:left-auto md:right-auto top-full md:top-auto w-full md:w-[600px] bg-white rounded-none md:rounded-lg shadow-2xl mt-0 md:mt-1 max-h-[50vh] md:max-h-[500px] overflow-hidden origin-top animate-in fade-in zoom-in duration-200 border-t md:border border-gray-200 z-50"
+          className="absolute left-0 right-0 md:right-0 md:left-auto md:w-[600px] top-full w-full bg-white rounded-none md:rounded-lg shadow-2xl mt-0 md:mt-1 max-h-[50vh] md:max-h-[500px] overflow-hidden origin-top animate-in fade-in zoom-in duration-200 border-t md:border border-gray-200 z-50"
           onMouseDown={handleMouseDown}
         >
           <div className="flex flex-col h-full">
@@ -303,8 +316,8 @@ const SearchBox: React.FC = () => {
                 <button
                   key={tab.key}
                   className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${activeTab === tab.key
-                      ? 'text-primary border-b-2 border-primary bg-white'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    ? 'text-primary border-b-2 border-primary bg-white'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                     }`}
                   onClick={() => setActiveTab(tab.key as 'orders' | 'news' | 'events')}
                 >

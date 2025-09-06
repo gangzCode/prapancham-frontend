@@ -11,7 +11,10 @@ type LanguageKey = "en" | "ta" | "si";
 interface UserObituaryOrder {
     _id: string;
     information: {
-        title: string;
+        title?: string;
+        firstName?: string;
+        lastName?: string;
+        preferredName?: string;
         address: string;
         dateofBirth: string;
         dateofDeath: string;
@@ -257,8 +260,17 @@ const UserObituaries: React.FC = () => {
         condolencesCount: obituary.tributeItems?.length || 0,
         timeAgo: calculateTimeAgo(obituary.createdAt),
         imageUrl: obituary.primaryImage || obituary.thumbnailImage || "/images/tribute.jpg",
-        ceremonyTitle: obituary.information.shortDescription || obituary.information.title,
-        eventName: obituary.information.title,
+        ceremonyTitle: obituary.information.shortDescription || obituary.information.title 
+            || ((obituary.information.firstName && obituary.information.lastName)
+                ? `${obituary.information.firstName} ${obituary.information.lastName}`
+                : obituary.information.preferredName
+            )
+            || "",
+        eventName: obituary.information.title ||
+            ((obituary.information.firstName && obituary.information.lastName)
+                ? `${obituary.information.firstName} ${obituary.information.lastName}`
+                : obituary.information.preferredName
+            ) || "",
         date: new Date(obituary.information.dateofDeath).toLocaleDateString('en-GB', {
             day: '2-digit',
             month: 'short',
@@ -307,7 +319,9 @@ const UserObituaries: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 {/* Post Obituary Card */}
                 <div
-                    className="border-2 border-dashed border-gray-300 flex items-center justify-center p-4 min-h-48 cursor-pointer hover:border-primary hover:bg-gray-50 transition-colors"
+                    className={`border-2 border-dashed border-gray-300 flex items-center justify-center p-4 cursor-pointer hover:border-primary hover:bg-gray-50 transition-colors ${
+                        obituaries.length === 0 ? 'h-[286px]' : 'min-h-48'
+                    }`}
                     onClick={() => router.push('/create-memorial')}
                 >
                     <div className="text-center">

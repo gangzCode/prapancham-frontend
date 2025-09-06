@@ -11,6 +11,7 @@ import SignupModal from "../../components/siginin/SignupModal ";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import { useSearchParams } from 'next/navigation';
 
 type LanguageKey = "en" | "ta" | "si";
 
@@ -19,10 +20,11 @@ const Events: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const searchParams = useSearchParams();
 
     const translations: Record<LanguageKey, { [key: string]: string }> = {
         en: {
-            general: "General",
+            general: "Profile Information",
             obituary: "Obituary",
             remembrance: "Remembrance",
             advertisement: "Advertisement",
@@ -47,7 +49,7 @@ const Events: React.FC = () => {
             profileUpdateFailed: "Failed to update profile.",
         },
         ta: {
-            general: "பொதுவானது",
+            general: "விவர தகவல்",
             obituary: "மரண அறிவித்தல்",
             remembrance: "நினைவுச்சின்னம்",
             advertisement: "விளம்பரம்",
@@ -72,7 +74,7 @@ const Events: React.FC = () => {
             profileUpdateFailed: "சுயவிவரம் புதுப்பிக்க முடியவில்லை.",
         },
         si: {
-            general: "සාමාන්‍ය",
+            general: "පැතිකඩ තොරතුරු",
             obituary: "මරණ දැනුම්දීම",
             remembrance: "අනුස්මරණය",
             advertisement: "වෙළඳ දැන්වීම",
@@ -135,6 +137,14 @@ const Events: React.FC = () => {
         };
         checkAuth();
     }, [isModalOpen]);
+
+    // Handle tab parameter from URL
+    useEffect(() => {
+        const tab = searchParams.get('tab');
+        if (tab && ["General", "Obituary", "Remembrance", "Advertisement"].includes(tab)) {
+            setActiveTab(tab);
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         const userStr = localStorage.getItem("user");

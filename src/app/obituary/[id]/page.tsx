@@ -29,25 +29,37 @@ const localeText = {
         tributeVideo: "Tribute Video",
         slideshowImages: "Slideshow Images",
         tributes: "Tributes",
-        messages: "Messages",
+        messages: "Guest Book",
         cards: "Cards",
         letters: "Letters",
         memories: "Memories",
+        flowers: "Flowers",
         contacts: "Contacts",
         noContactInformation: "No contact information provided.",
         requestToContact: "Request to Contact",
         overview: "Overview",
         name: "Name:",
         birthDateLabel: "Birth Date:",
-        deathDateLabel: "Death Date:",
+        deathDateLabel: "Date of Passing:",
         age: "Age:",
-        address: "Address:",
+        address: "Funeral House Address:",
         notProvided: "Not provided",
         postersInformation: "Poster's Information",
         nameNotProvided: "Name not provided",
         addressNotProvided: "Address not provided",
         emailNotProvided: "Email not provided",
         phoneNotProvided: "Phone not provided",
+        // Poster's Information field labels
+        posterName: "Name:",
+        posterAddress: "Address:",
+        posterEmail: "Email:",
+        posterPhone: "Phone:",
+        // Contact Details field labels
+        contactName: "Name:",
+        contactAddress: "Address:",
+        contactPhone: "Phone:",
+        contactEmail: "Email:",
+        contactRelationship: "Relationship:",
         accountDetails: "Account Details",
         bank: "Bank:",
         branch: "Branch:",
@@ -57,6 +69,16 @@ const localeText = {
         noImagesUploaded: "No images uploaded",
         noImageSelected: "No image selected",
         share: "Social Share",
+        shareMemorial: "Share Memorial",
+        shareMemorialDescription: "Honor their memory by sharing",
+        facebook: "Facebook",
+        whatsapp: "WhatsApp",
+        instagram: "Instagram",
+        copyLink: "Copy Link",
+        copied: "Copied!",
+        shareThisMemorial: "Share this beautiful memorial with family and friends",
+        close: "Close",
+        memorial: "Memorial",
     },
     ta: {
         loading: "ஏற்றுகிறது...",
@@ -75,25 +97,37 @@ const localeText = {
         tributeVideo: "அஞ்சலி வீடியோ",
         slideshowImages: "ஸ்லைடுஷோ படங்கள்",
         tributes: "அஞ்சலிகள்",
-        messages: "செய்திகள்",
+        messages: "விருந்தினர் புத்தகம்",
         cards: "அட்டைகள்",
         letters: "கடிதங்கள்",
         memories: "நினைவுகள்",
+        flowers: "பூக்கள்",
         contacts: "தொடர்புகள்",
         noContactInformation: "தொடர்பு தகவல்கள் வழங்கப்படவில்லை.",
         requestToContact: "தொடர்பு கோரிக்கை",
         overview: "கண்ணோட்டம்",
         name: "பெயர்:",
         birthDateLabel: "பிறந்த தேதி:",
-        deathDateLabel: "மரண தேதி:",
+        deathDateLabel: "மறைவு தேதி:",
         age: "வயது:",
-        address: "முகவரி:",
+        address: "இறுதிச் சடங்கு இல்லத்தின் முகவரி:",
         notProvided: "வழங்கப்படவில்லை",
         postersInformation: "போஸ்டரின் தகவல்கள்",
         nameNotProvided: "பெயர் வழங்கப்படவில்லை",
         addressNotProvided: "முகவரி வழங்கப்படவில்லை",
         emailNotProvided: "மின்னஞ்சல் வழங்கப்படவில்லை",
         phoneNotProvided: "தொலைபேசி வழங்கப்படவில்லை",
+        // Poster's Information field labels
+        posterName: "பெயர்:",
+        posterAddress: "முகவரி:",
+        posterEmail: "மின்னஞ்சல்:",
+        posterPhone: "தொலைபேசி:",
+        // Contact Details field labels
+        contactName: "பெயர்:",
+        contactAddress: "முகவரி:",
+        contactPhone: "தொலைபேசி:",
+        contactEmail: "மின்னஞ்சல்:",
+        contactRelationship: "உறவு:",
         accountDetails: "கணக்கு விவரங்கள்",
         bank: "வங்கி:",
         branch: "கிளை:",
@@ -103,6 +137,16 @@ const localeText = {
         noImagesUploaded: "படங்கள் பதிவேற்றப்படவில்லை",
         noImageSelected: "படம் தேர்ந்தெடுக்கப்படவில்லை",
         share: "சமூக பகிர்வு",
+        shareMemorial: "நினைவை பகிரவும்",
+        shareMemorialDescription: "பகிர்வதன் மூலம் அவர்களின் நினைவை கௌரவிக்கவும்",
+        facebook: "பேஸ்புக்",
+        whatsapp: "வாட்ஸ்ஆப்",
+        instagram: "இன்ஸ்டாகிராம்",
+        copyLink: "இணைப்பை நகலெடுக்கவும்",
+        copied: "நகலெடுக்கப்பட்டது!",
+        shareThisMemorial: "இந்த அழகான நினைவகத்தை குடும்பத்தினர் மற்றும் நண்பர்களுடன் பகிரவும்",
+        close: "மூடு",
+        memorial: "நினைவகம்",
     },
     si: {
         loading: "පූරණය වෙමින්...",
@@ -121,10 +165,11 @@ const localeText = {
         tributeVideo: "ප්‍රණාම වීඩියෝව",
         slideshowImages: "ස්ලයිඩ්ෂෝ පින්තූර",
         tributes: "ප්‍රණාම",
-        messages: "පණිවිඩ",
+        messages: "අමුත්තන් පොත",
         cards: "කාඩ්පත්",
         letters: "ලිපි",
         memories: "මතකයන්",
+        flowers: "මල්",
         contacts: "සම්බන්ධතා",
         noContactInformation: "සම්බන්ධතා තොරතුරු ලබා දී නැත.",
         requestToContact: "සම්බන්ධ වීමට ඉල්ලීම",
@@ -133,13 +178,24 @@ const localeText = {
         birthDateLabel: "උපන් දිනය:",
         deathDateLabel: "මරණ දිනය:",
         age: "වයස:",
-        address: "ලිපිනය:",
+        address: "අවමංගල්‍ය ගෘහ ලිපිනය:",
         notProvided: "ලබා දී නැත",
         postersInformation: "පෝස්ටරගේ තොරතුරු",
         nameNotProvided: "නම ලබා දී නැත",
         addressNotProvided: "ලිපිනය ලබා දී නැත",
         emailNotProvided: "ඊ-මේල් ලබා දී නැත",
         phoneNotProvided: "දුරකථනය ලබා දී නැත",
+        // Poster's Information field labels
+        posterName: "නම:",
+        posterAddress: "ලිපිනය:",
+        posterEmail: "ඊ-මේල්:",
+        posterPhone: "දුරකථනය:",
+        // Contact Details field labels
+        contactName: "නම:",
+        contactAddress: "ලිපිනය:",
+        contactPhone: "දුරකථනය:",
+        contactEmail: "ඊ-මේල්:",
+        contactRelationship: "සම්බන්ධතාවය:",
         accountDetails: "ගිණුම් විස්තර",
         bank: "බැංකුව:",
         branch: "ශාඛාව:",
@@ -149,11 +205,24 @@ const localeText = {
         noImagesUploaded: "පින්තූර උඩුගත කර නැත",
         noImageSelected: "පින්තූරයක් තෝරා නැත",
         share: "සමාජ බෙදාහැරීම",
+        shareMemorial: "ස්මාරකය බෙදාගන්න",
+        shareMemorialDescription: "බෙදාගැනීමෙන් ඔවුන්ගේ මතකය ගෞරව කරන්න",
+        facebook: "ෆේස්බුක්",
+        whatsapp: "වාට්ස්ඇප්",
+        instagram: "ඉන්ස්ටග්රෑම්",
+        copyLink: "සබැඳිය පිටපත් කරන්න",
+        copied: "පිටපත් විය!",
+        shareThisMemorial: "මෙම සුන්දර ස්මාරකය පවුලේ අය සහ මිතුරන් සමඟ බෙදාගන්න",
+        close: "වසන්න",
+        memorial: "ස්මාරකය",
     },
 };
 interface ObituaryData {
     information: {
-        title: string;
+        title?: string;
+        firstName?: string;
+        lastName?: string;
+        preferredName?: string;
         address: string;
         dateofBirth: string;
         dateofDeath: string;
@@ -233,7 +302,7 @@ const ObituaryDetail: React.FC = () => {
     const [error, setError] = useState<string>("");
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [activeTab, setActiveTab] = useState<'messages' | 'cards' | 'letters' | 'memories'>('messages');
+    const [activeTab, setActiveTab] = useState<'messages' | 'cards' | 'letters' | 'memories' | 'flowers'>('messages');
     const [tributeTemplateCards, setTributeTemplateCards] = useState<{
         tributeCardTemplate: [
             {
@@ -582,7 +651,12 @@ const ObituaryDetail: React.FC = () => {
                         <div className="relative p-8">
                             {/* Greeting */}
                             <div className="mb-6">
-                                <p className="text-amber-900 font-serif text-lg">Dear {obituaryData?.information.title || 'Friend'},</p>
+                                <p className="text-amber-900 font-serif text-lg">Dear {obituaryData?.information.title
+                                    ||
+                                    (obituaryData?.information.firstName && obituaryData?.information.lastName)
+                                    ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                                    : obituaryData?.information.preferredName
+                                    || 'Friend'},</p>
                             </div>
 
                             {/* Message body */}
@@ -724,7 +798,7 @@ const ObituaryDetail: React.FC = () => {
     // Function to check if account details are valid for donation
     const hasValidAccountDetails = (accountDetails: any): boolean => {
         if (!accountDetails) return false;
-        
+
         return !!(
             accountDetails.bankName?.trim() &&
             accountDetails.branchName?.trim() &&
@@ -825,13 +899,15 @@ const ObituaryDetail: React.FC = () => {
 
                                     <div className="w-full flex justify-center">
                                         <h1 className="text-3xl md:text-4xl font-serif font-normal text-white mb-8 leading-tight text-center max-w-4xl">
-                                            {obituaryData.information.title || t.memorialTitle}
+                                            {obituaryData.information.title
+                                                || (obituaryData.information.firstName && obituaryData.information.lastName)
+                                                ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                                                : obituaryData.information.preferredName || t.memorialTitle}
                                         </h1>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                         {/* Memorial Description Section */}
                         <div className="mt-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200">
                             <div className="flex items-start gap-4">
@@ -863,18 +939,18 @@ const ObituaryDetail: React.FC = () => {
                             {
                                 obituaryData.selectedPackage.isSocialSharing && (
                                     <button
-                                        className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold"
+                                        className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold"
                                         onClick={() => setShowSharePopup(!showSharePopup)}
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                                         </svg>
-                                        Share Memorial
+                                        {t.shareMemorial}
                                     </button>
                                 )
                             }
                             <button
-                                className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold"
+                                className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold"
                                 onClick={() =>
                                     setIsTributeModalOpen(true)
                                 }
@@ -887,7 +963,7 @@ const ObituaryDetail: React.FC = () => {
                             {isDonationEnabled() && (
                                 <button
                                     onClick={() => setIsModalOpen(true)}
-                                    className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold"
+                                    className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0A1.5 1.5 0 013 18.546V19a1 1 0 001 1h16a1 1 0 001-1v-.454c0-.793-.644-1.546-1.5-1.546z" />
@@ -909,10 +985,10 @@ const ObituaryDetail: React.FC = () => {
                                 </div>
 
                                 {/* Tab Navigation */}
-                                <div className="flex border-b border-gray-200 mb-6">
+                                <div className="flex flex-wrap sm:flex-nowrap border-b border-gray-200 mb-6 overflow-x-auto">
                                     <button
                                         onClick={() => setActiveTab('messages')}
-                                        className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${activeTab === 'messages'
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === 'messages'
                                             ? 'border-primary text-primary bg-gray-50'
                                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                             }`}
@@ -921,7 +997,7 @@ const ObituaryDetail: React.FC = () => {
                                     </button>
                                     <button
                                         onClick={() => setActiveTab('cards')}
-                                        className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${activeTab === 'cards'
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === 'cards'
                                             ? 'border-primary text-primary bg-gray-50'
                                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                             }`}
@@ -930,7 +1006,7 @@ const ObituaryDetail: React.FC = () => {
                                     </button>
                                     <button
                                         onClick={() => setActiveTab('letters')}
-                                        className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${activeTab === 'letters'
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === 'letters'
                                             ? 'border-primary text-primary bg-gray-50'
                                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                             }`}
@@ -939,12 +1015,21 @@ const ObituaryDetail: React.FC = () => {
                                     </button>
                                     <button
                                         onClick={() => setActiveTab('memories')}
-                                        className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${activeTab === 'memories'
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === 'memories'
                                             ? 'border-primary text-primary bg-gray-50'
                                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                             }`}
                                     >
                                         {t.memories || 'Memories'}
+                                    </button>
+                                    <button
+                                        onClick={() => setActiveTab('flowers')}
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === 'flowers'
+                                            ? 'border-primary text-primary bg-gray-50'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        {t.flowers}
                                     </button>
                                 </div>
 
@@ -976,6 +1061,11 @@ const ObituaryDetail: React.FC = () => {
                                                     </div>
                                                 </div>
                                             ))}
+                                        {obituaryData.tributeItems.filter(tribute => tribute.tributeOptions === 'message' && !tribute.isDeleted).length === 0 && (
+                                            <div className="bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
+                                                No guest book entries available
+                                            </div>
+                                        )}
                                     </div>
                                 )}
 
@@ -1035,7 +1125,7 @@ const ObituaryDetail: React.FC = () => {
                                                             </div>
                                                         </div>
                                                     )}
-                                                    
+
                                                     {/* Memory Content */}
                                                     <div className="p-4">
                                                         {/* Message */}
@@ -1046,7 +1136,7 @@ const ObituaryDetail: React.FC = () => {
                                                                 </p>
                                                             </div>
                                                         )}
-                                                        
+
                                                         {/* Author Info */}
                                                         <div className="border-t border-gray-200 pt-4 space-y-1">
                                                             <p className="font-semibold text-gray-900">
@@ -1058,11 +1148,11 @@ const ObituaryDetail: React.FC = () => {
                                                             <p className="text-gray-500 text-xs">
                                                                 {tribute.memory.country}
                                                             </p>
-                                                            {tribute.memory.finalPriceInCAD && tribute.memory.finalPriceInCAD.price && (
+                                                            {/* {tribute.memory.finalPriceInCAD && tribute.memory.finalPriceInCAD.price && (
                                                                 <p className="text-teal-600 text-sm font-medium">
                                                                     Donation: ${tribute.memory.finalPriceInCAD.price} {tribute.memory.finalPriceInCAD.currencyCode}
                                                                 </p>
-                                                            )}
+                                                            )} */}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1070,6 +1160,82 @@ const ObituaryDetail: React.FC = () => {
                                         {obituaryData.tributeItems.filter(tribute => tribute.tributeOptions === 'memory' && !tribute.isDeleted).length === 0 && (
                                             <div className="col-span-full bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
                                                 No memories available
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {activeTab === 'flowers' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {obituaryData.tributeItems
+                                            .filter(tribute => tribute.tributeOptions === 'flower' && !tribute.isDeleted)
+                                            .map((tribute, index) => (
+                                                <div
+                                                    key={tribute._id}
+                                                    className="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                                                >
+                                                    {/* Flower Header */}
+                                                    <div className="bg-primary p-4 text-white">
+                                                        <div className="flex items-center space-x-3">
+                                                            <div className="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                                                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                                                </svg>
+                                                            </div>
+                                                            <div>
+                                                                <h3 className="font-semibold text-white">{tribute.flower.name}</h3>
+                                                                <p className="text-pink-100 text-sm">{tribute.flower.country}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Flower Content */}
+                                                    <div className="p-4">
+                                                        {/* Message */}
+                                                        {tribute.flower.message && (
+                                                            <div className="mb-4">
+                                                                <p className="text-gray-800 leading-relaxed italic">
+                                                                    "{tribute.flower.message}"
+                                                                </p>
+                                                            </div>
+                                                        )}
+
+                                                        {/* Sender Info */}
+                                                        <div className="border-t border-gray-200 pt-4 space-y-2">
+                                                            <p className="font-semibold text-gray-900">
+                                                                {tribute.flower.name}
+                                                            </p>
+                                                            <p className="text-gray-600 text-sm">
+                                                                {tribute.flower.relationship}
+                                                            </p>
+                                                            <p className="text-gray-500 text-xs">
+                                                                {tribute.flower.email}
+                                                            </p>
+
+                                                            {/* Status and Price */}
+                                                            <div className="flex items-center justify-between pt-2">
+                                                                <span className={`px-2 py-1 rounded text-xs font-medium ${tribute.flower.deliveryStatus === 'Delivered'
+                                                                    ? 'bg-green-100 text-green-800'
+                                                                    : tribute.flower.deliveryStatus === 'Needs To Be Delivered'
+                                                                        ? 'bg-yellow-100 text-yellow-800'
+                                                                        : 'bg-gray-100 text-gray-800'
+                                                                    }`}>
+                                                                    {tribute.flower.deliveryStatus}
+                                                                </span>
+
+                                                                {tribute.flower.finalPriceInCAD && tribute.flower.finalPriceInCAD.price && (
+                                                                    <span className="text-pink-600 font-medium text-sm">
+                                                                        ${tribute.flower.finalPriceInCAD.price} {tribute.flower.finalPriceInCAD.currencyCode}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        {obituaryData.tributeItems.filter(tribute => tribute.tributeOptions === 'flower' && !tribute.isDeleted).length === 0 && (
+                                            <div className="col-span-full bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
+                                                No virtual flowers available
                                             </div>
                                         )}
                                     </div>
@@ -1163,11 +1329,26 @@ const ObituaryDetail: React.FC = () => {
                                 obituaryData.contactDetails.map((contact: any, index: number) => (
                                     <div key={index} className="bg-white p-6 shadow-md mb-4 flex md:flex-row flex-col justify-between md:items-center">
                                         <div>
-                                            <p className="text-[#880002]">{contact.name}</p>
-                                            <p>{contact.address}</p>
-                                            <p>{contact.phoneNumber}</p>
-                                            <p>{contact.email}</p>
-                                            <p>{contact.relationship}</p>
+                                            <p>
+                                                <span className="text-gray-600 font-medium">{t.contactName}</span>
+                                                <span className="text-[#880002]"> {contact.name}</span>
+                                            </p>
+                                            <p>
+                                                <span className="text-gray-600 font-medium">{t.contactAddress}</span>
+                                                <span className="text-gray-700"> {contact.address}</span>
+                                            </p>
+                                            <p>
+                                                <span className="text-gray-600 font-medium">{t.contactPhone}</span>
+                                                <span className="text-gray-700"> {contact.phoneNumber}</span>
+                                            </p>
+                                            <p>
+                                                <span className="text-gray-600 font-medium">{t.contactEmail}</span>
+                                                <span className="text-gray-700"> {contact.email}</span>
+                                            </p>
+                                            <p>
+                                                <span className="text-gray-600 font-medium">{t.contactRelationship}</span>
+                                                <span className="text-gray-700"> {contact.relationship}</span>
+                                            </p>
                                         </div>
                                         <button
                                             onClick={() => handleRequestToContact(contact.phoneNumber)}
@@ -1193,7 +1374,10 @@ const ObituaryDetail: React.FC = () => {
                                 <TitleWithUnderline text={t.overview} underlineWidth={64} fontSize={3} />
                             </div>
                             <div className="space-y-2 mt-2 p-2">
-                                <p className="text-gray-500">{t.name} {obituaryData.information.title || t.notProvided}</p>
+                                <p className="text-gray-500">{t.name} {obituaryData.information.title
+                                    || ((obituaryData.information.firstName && obituaryData.information.lastName)
+                                        ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                                        : obituaryData.information.preferredName || t.notProvided)}</p>
                                 <p className="text-gray-500">{t.birthDateLabel} {obituaryData.information.dateofBirth ? new Date(obituaryData.information.dateofBirth).toLocaleDateString() : t.notProvided}</p>
                                 <p className="text-gray-500">{t.deathDateLabel} {obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString() : t.notProvided}</p>
                                 <p className="text-gray-500">{t.age} {obituaryData.information.dateofBirth && obituaryData.information.dateofDeath ? calculateAge(obituaryData.information.dateofBirth, obituaryData.information.dateofDeath) : t.notProvided}</p>
@@ -1207,25 +1391,37 @@ const ObituaryDetail: React.FC = () => {
                                 <TitleWithUnderline text={t.postersInformation} underlineWidth={64} fontSize={3} />
                             </div>
                             <div className="space-y-2 mt-2 p-2">
-                                <p className="text-[#880002]">
-                                    {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
-                                        ? obituaryData.contactDetails[0].name
-                                        : obituaryData.username || t.nameNotProvided}
+                                <p>
+                                    <span className="text-gray-600 font-medium">{t.posterName} </span>
+                                    <span className="text-[#880002]">
+                                        {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
+                                            ? obituaryData.contactDetails[0].name
+                                            : obituaryData.username || t.nameNotProvided}
+                                    </span>
                                 </p>
                                 <p>
-                                    {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
-                                        ? obituaryData.contactDetails[0].address || t.addressNotProvided
-                                        : t.addressNotProvided}
+                                    <span className="text-gray-600 font-medium">{t.posterAddress} </span>
+                                    <span className="text-gray-700">
+                                        {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
+                                            ? obituaryData.contactDetails[0].address || t.addressNotProvided
+                                            : t.addressNotProvided}
+                                    </span>
                                 </p>
                                 <p>
-                                    {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
-                                        ? obituaryData.contactDetails[0].email || t.emailNotProvided
-                                        : obituaryData.username || t.emailNotProvided}
+                                    <span className="text-gray-600 font-medium">{t.posterEmail} </span>
+                                    <span className="text-gray-700">
+                                        {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
+                                            ? obituaryData.contactDetails[0].email || t.emailNotProvided
+                                            : obituaryData.username || t.emailNotProvided}
+                                    </span>
                                 </p>
                                 <p>
-                                    {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
-                                        ? obituaryData.contactDetails[0].phoneNumber || t.phoneNotProvided
-                                        : t.phoneNotProvided}
+                                    <span className="text-gray-600 font-medium">{t.posterPhone} </span>
+                                    <span className="text-gray-700">
+                                        {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
+                                            ? obituaryData.contactDetails[0].phoneNumber || t.phoneNotProvided
+                                            : t.phoneNotProvided}
+                                    </span>
                                 </p>
                             </div>
 
@@ -1267,14 +1463,20 @@ const ObituaryDetail: React.FC = () => {
                     onClose={closeModal}
                     obituaryEntry={{
                         _id: obituaryData._id,
-                        title: obituaryData.information.title,
-                        name: obituaryData.information.title,
-                        date: obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString('en-GB', {
+                        title: obituaryData.information?.title ||
+                            ((obituaryData.information?.firstName && obituaryData.information?.lastName)
+                                ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                                : obituaryData.information?.preferredName || 'Unknown'),
+                        name: obituaryData.information?.title ||
+                            ((obituaryData.information?.firstName && obituaryData.information?.lastName)
+                                ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                                : obituaryData.information?.preferredName || 'Unknown'),
+                        date: obituaryData.information?.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString('en-GB', {
                             day: '2-digit',
                             month: 'short',
                             year: 'numeric'
                         }) : '',
-                        address: obituaryData.information.address,
+                        address: obituaryData.information?.address || '',
                         imageUrl: obituaryData.primaryImage || obituaryData.thumbnailImage || "/images/tribute.jpg",
                         condolences: obituaryData.tributeItems ? obituaryData.tributeItems.length : 0,
                     }}
@@ -1286,22 +1488,34 @@ const ObituaryDetail: React.FC = () => {
                 onClose={() => setIsTributeModalOpen(false)}
                 obituaryEntry={{
                     _id: obituaryData._id,
-                    title: obituaryData.information.title,
-                    name: obituaryData.information.title,
-                    date: obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString('en-GB', {
+                    title: obituaryData.information?.title ||
+                        ((obituaryData.information?.firstName && obituaryData.information?.lastName)
+                            ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                            : obituaryData.information?.preferredName || 'Unknown'),
+                    name: obituaryData.information?.title ||
+                        ((obituaryData.information?.firstName && obituaryData.information?.lastName)
+                            ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                            : obituaryData.information?.preferredName || 'Unknown'),
+                    date: obituaryData.information?.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString('en-GB', {
                         day: '2-digit',
                         month: 'short',
                         year: 'numeric'
                     }) : '',
-                    address: obituaryData.information.address,
+                    address: obituaryData.information?.address || '',
                     imageUrl: obituaryData.thumbnailImage || obituaryData.primaryImage || "/images/tribute.jpg",
                     condolences: obituaryData.tributeItems ? obituaryData.tributeItems.length : 0,
                 }}
                 timeAgo={obituaryData.createdAt ? calculateTimeAgo(obituaryData.createdAt) : ''}
                 imageUrl={obituaryData.thumbnailImage || obituaryData.primaryImage || "/images/tribute.jpg"}
-                ceremonyTitle={obituaryData.information.title}
-                eventName={obituaryData.information.title}
-                date={obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString('en-GB', {
+                ceremonyTitle={obituaryData.information?.title ||
+                    (obituaryData.information?.firstName && obituaryData.information?.lastName)
+                    ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                    : obituaryData.information?.preferredName || 'Unknown'}
+                eventName={obituaryData.information?.title ||
+                    (obituaryData.information?.firstName && obituaryData.information?.lastName)
+                    ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                    : obituaryData.information?.preferredName || 'Unknown'}
+                date={obituaryData.information?.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString('en-GB', {
                     day: '2-digit',
                     month: 'short',
                     year: 'numeric'
@@ -1309,25 +1523,25 @@ const ObituaryDetail: React.FC = () => {
             />
 
             {showSharePopup && (
-                <div 
+                <div
                     className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
                     onClick={() => setShowSharePopup(false)}
                 >
-                    <div 
+                    <div
                         className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 relative overflow-hidden"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header */}
-                        <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-6 py-4 text-white">
+                        <div className="bg-primary px-6 py-4 text-white">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h2 className="text-xl font-bold">Share Memorial</h2>
-                                    <p className="text-teal-100 text-sm opacity-90">Honor their memory by sharing</p>
+                                    <h2 className="text-xl font-bold">{t.shareMemorial}</h2>
+                                    <p className="text-teal-100 text-sm opacity-90">{t.shareMemorialDescription}</p>
                                 </div>
                                 <button
                                     className="p-2 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
                                     onClick={() => setShowSharePopup(false)}
-                                    aria-label="Close"
+                                    aria-label={t.close}
                                 >
                                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1338,94 +1552,121 @@ const ObituaryDetail: React.FC = () => {
 
                         {/* Content */}
                         <div className="p-6">
-                            <div className="grid grid-cols-2 gap-3 mb-4">
+                            <div className="flex gap-3 mb-4">
                                 {/* Facebook */}
                                 <button
-                                    className="group flex flex-col items-center p-4 rounded-xl border-2 border-gray-100 hover:border-blue-200 hover:bg-blue-50 transition-all duration-200 transform hover:scale-105"
+                                    className="group flex flex-col items-center p-3 rounded-xl border-2 border-gray-100 hover:border-blue-200 hover:bg-blue-50 transition-all duration-200 transform hover:scale-105 flex-1"
                                     onClick={() => handleShare('facebook')}
                                 >
-                                    <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mb-2 group-hover:bg-blue-700 transition-colors">
-                                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center mb-2 group-hover:bg-blue-700 transition-colors">
+                                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                                         </svg>
                                     </div>
-                                    <span className="text-sm font-medium text-gray-700 group-hover:text-blue-700">Facebook</span>
+                                    <span className="text-xs font-medium text-gray-700 group-hover:text-blue-700">{t.facebook}</span>
                                 </button>
 
                                 {/* WhatsApp */}
                                 <button
-                                    className="group flex flex-col items-center p-4 rounded-xl border-2 border-gray-100 hover:border-green-200 hover:bg-green-50 transition-all duration-200 transform hover:scale-105"
+                                    className="group flex flex-col items-center p-3 rounded-xl border-2 border-gray-100 hover:border-green-200 hover:bg-green-50 transition-all duration-200 transform hover:scale-105 flex-1"
                                     onClick={() => handleShare('whatsapp')}
                                 >
-                                    <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-2 group-hover:bg-green-600 transition-colors">
-                                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.886 3.488"/>
+                                    <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center mb-2 group-hover:bg-green-600 transition-colors">
+                                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.886 3.488" />
                                         </svg>
                                     </div>
-                                    <span className="text-sm font-medium text-gray-700 group-hover:text-green-700">WhatsApp</span>
+                                    <span className="text-xs font-medium text-gray-700 group-hover:text-green-700">{t.whatsapp}</span>
                                 </button>
 
                                 {/* Instagram */}
                                 <button
-                                    className="group flex flex-col items-center p-4 rounded-xl border-2 border-gray-100 hover:border-pink-200 hover:bg-pink-50 transition-all duration-200 transform hover:scale-105"
+                                    className="group flex flex-col items-center p-3 rounded-xl border-2 border-gray-100 hover:border-pink-200 hover:bg-pink-50 transition-all duration-200 transform hover:scale-105 flex-1"
                                     onClick={() => handleShare('instagram')}
                                 >
-                                    <div className="w-12 h-12 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 rounded-full flex items-center justify-center mb-2 group-hover:from-yellow-500 group-hover:via-red-600 group-hover:to-purple-600 transition-all">
-                                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                    <div className="w-10 h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 rounded-full flex items-center justify-center mb-2 group-hover:from-yellow-500 group-hover:via-red-600 group-hover:to-purple-600 transition-all">
+                                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                                         </svg>
                                     </div>
-                                    <span className="text-sm font-medium text-gray-700 group-hover:text-pink-700">Instagram</span>
+                                    <span className="text-xs font-medium text-gray-700 group-hover:text-pink-700">{t.instagram}</span>
                                 </button>
+                            </div>
 
-                                {/* Copy Link */}
-                                <button
-                                    className="group flex flex-col items-center p-4 rounded-xl border-2 border-gray-100 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 transform hover:scale-105"
-                                    onClick={async () => {
-                                        try {
-                                            await navigator.clipboard.writeText(currentUrl);
-                                            // Show success feedback
-                                            const button = event?.currentTarget as HTMLButtonElement;
-                                            const originalText = button.querySelector('span')?.textContent;
-                                            const span = button.querySelector('span');
-                                            if (span) {
-                                                span.textContent = 'Copied!';
-                                                span.className = 'text-sm font-medium text-green-600';
-                                                setTimeout(() => {
-                                                    span.textContent = originalText || 'Copy Link';
-                                                    span.className = 'text-sm font-medium text-gray-700 group-hover:text-gray-800';
-                                                }, 2000);
+                            {/* Copy Link Section */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">{t.copyLink}</label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        value={currentUrl}
+                                        readOnly
+                                        className="w-full px-3 py-2 pr-12 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                    />
+                                    <button
+                                        onClick={() => {
+                                            // Get the input field and copy its value
+                                            const input = document.querySelector('input[type="text"][readonly]') as HTMLInputElement;
+                                            if (input) {
+                                                // Select the text in the input field
+                                                input.select();
+                                                input.setSelectionRange(0, 99999); // For mobile devices
+
+                                                try {
+                                                    // Copy the selected text
+                                                    document.execCommand('copy');
+
+                                                    // Show success feedback
+                                                    const button = document.querySelector('button[title="' + t.copyLink + '"]');
+                                                    if (button) {
+                                                        const icon = button.querySelector('svg');
+                                                        if (icon) {
+                                                            // Store original icon
+                                                            const originalIcon = icon.innerHTML;
+                                                            // Change to check icon
+                                                            icon.innerHTML = '<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />';
+                                                            icon.classList.remove('text-gray-400');
+                                                            icon.classList.add('text-green-600');
+
+                                                            setTimeout(() => {
+                                                                icon.innerHTML = originalIcon;
+                                                                icon.classList.remove('text-green-600');
+                                                                icon.classList.add('text-gray-400');
+                                                            }, 2000);
+                                                        }
+                                                    }
+                                                } catch (error) {
+                                                    // If copy fails, show alert with the URL
+                                                    alert('Copy failed. Please copy manually: ' + input.value);
+                                                }
                                             }
-                                        } catch {
-                                            alert('Failed to copy link.');
-                                        }
-                                    }}
-                                >
-                                    <div className="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center mb-2 group-hover:bg-gray-700 transition-colors">
-                                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        }}
+                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-lg hover:bg-gray-100"
+                                        title={t.copyLink}
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                                         </svg>
-                                    </div>
-                                    <span className="text-sm font-medium text-gray-700 group-hover:text-gray-800">Copy Link</span>
-                                </button>
+                                    </button>
+                                </div>
                             </div>
 
                             {/* Memorial Info */}
                             <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
                                 <div className="flex items-center space-x-3">
                                     {obituaryData?.primaryImage && (
-                                        <img 
-                                            src={obituaryData.primaryImage} 
-                                            alt="Memorial" 
+                                        <img
+                                            src={obituaryData.primaryImage}
+                                            alt="Memorial"
                                             className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
                                         />
                                     )}
                                     <div className="flex-1 min-w-0">
                                         <h3 className="text-sm font-semibold text-gray-900 truncate">
-                                            {obituaryData?.information?.title || 'Memorial'}
+                                            {obituaryData?.information?.title || t.memorial}
                                         </h3>
                                         <p className="text-xs text-gray-500">
-                                            Share this beautiful memorial with family and friends
+                                            {t.shareThisMemorial}
                                         </p>
                                     </div>
                                 </div>

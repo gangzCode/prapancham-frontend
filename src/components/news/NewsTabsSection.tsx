@@ -99,7 +99,12 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className, categoryId
     const transformed = obituaryDataResponse.orders.map((order: any) => ({
       _id: order._id,
       title: order.information.shortDescription,
-      name: order.information.title,
+      name: order.information.title
+          || ((order.information.firstName && order.information.lastName)
+              ? `${order.information.firstName} ${order.information.lastName}`
+              : order.information.preferredName
+          )
+          || "",
       date: localeText[langKey].date(new Date(order.information.dateofDeath)),
       address: order.information.address,
       imageUrl: order.thumbnailImage || order.primaryImage,

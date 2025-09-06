@@ -11,7 +11,10 @@ type LanguageKey = "en" | "ta" | "si";
 interface UserremembranceOrder {
     _id: string;
     information: {
-        title: string;
+        title?: string;
+        firstName?: string;
+        lastName?: string;
+        preferredName?: string;
         address: string;
         dateofBirth: string;
         dateofDeath: string;
@@ -257,8 +260,16 @@ const UserRemembrances: React.FC = () => {
         condolencesCount: remembrance.tributeItems?.length || 0,
         timeAgo: calculateTimeAgo(remembrance.createdAt),
         imageUrl: remembrance.primaryImage || remembrance.thumbnailImage || "/images/tribute.jpg",
-        ceremonyTitle: remembrance.information.shortDescription || remembrance.information.title,
-        eventName: remembrance.information.title,
+        ceremonyTitle: remembrance.information.shortDescription || remembrance.information.title ||
+        ((remembrance.information.firstName && remembrance.information.lastName)
+            ? `${remembrance.information.firstName} ${remembrance.information.lastName}`
+            : remembrance.information.preferredName
+        ) || "",
+        eventName: remembrance.information.title ||
+        ((remembrance.information.firstName && remembrance.information.lastName)
+            ? `${remembrance.information.firstName} ${remembrance.information.lastName}`
+            : remembrance.information.preferredName
+        ) || "",
         date: new Date(remembrance.information.dateofDeath).toLocaleDateString('en-GB', {
             day: '2-digit',
             month: 'short',
@@ -307,7 +318,9 @@ const UserRemembrances: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 {/* Post Obituary Card */}
                 <div
-                    className="border-2 border-dashed border-gray-300 flex items-center justify-center p-4 min-h-48 cursor-pointer hover:border-primary hover:bg-gray-50 transition-colors"
+                    className={`border-2 border-dashed border-gray-300 flex items-center justify-center p-4 cursor-pointer hover:border-primary hover:bg-gray-50 transition-colors ${
+                        remembrances.length === 0 ? 'h-[286px]' : 'min-h-48'
+                    }`}
                     onClick={() => router.push('/create-memorial')}
                 >
                     <div className="text-center">

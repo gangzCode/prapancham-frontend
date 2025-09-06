@@ -16,7 +16,10 @@ type LanguageKey = "en" | "ta" | "si";
 interface ApiOrder {
     _id: string;
     information: {
-        title: string;
+        title?: string;
+        firstName?: string;
+        lastName?: string;
+        preferredName?: string;
         address: string;
         dateofBirth: string;
         dateofDeath: string;
@@ -58,7 +61,7 @@ const Obituary: React.FC = () => {
         en: {
             days: "days",
             day: "day",
-            hours: "hours", 
+            hours: "hours",
             hour: "hour",
             minutes: "minutes",
             minute: "minute",
@@ -347,7 +350,7 @@ const Obituary: React.FC = () => {
         setSearchTerm(""); // Clear search when selecting country
         setActiveFilters(null); // Clear filters when selecting country
         setCurrentPage(1); // Reset to first page when selecting country
-        
+
         // If "All" is selected (empty countryId), fetch all orders
         if (countryId === "" || countryId === "all") {
             setSelectedCountryId(null); // Set to null for "All" option
@@ -364,32 +367,48 @@ const Obituary: React.FC = () => {
 
     // Transform API data to match TributeCard props
     const transformOrderToTributeData = (order: ApiOrder) => ({
-        _id: order._id,
-        title: order.information.shortDescription || order.information.title,
-        name: order.information.title,
-        date: new Date(order.information.dateofDeath).toLocaleDateString('en-GB', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
-        }),
-        address: order.information.address,
-        imageUrl: order.thumbnailImage || order.primaryImage || "/images/tribute.jpg",
-        condolences: order.tributeItems? order.tributeItems.length : 0,
-        donations: order.recievedDonations ? order.recievedDonations.length : 0,
-        isDonationReceivable: order.isDonationReceivable || false,
-        accountDetails: order.accountDetails || null,
+        _id: order?._id ?? "",
+        title:
+            order?.information?.shortDescription
+            || order?.information?.title
+            || ((order?.information?.firstName && order?.information?.lastName)
+                ? `${order.information.firstName} ${order.information.lastName}`
+                : order?.information?.preferredName
+            )
+            || "",
+        name: order?.information?.title
+            || ((order?.information?.firstName && order?.information?.lastName)
+                ? `${order.information.firstName} ${order.information.lastName}`
+                : order?.information?.preferredName
+            )
+            || "",
+        date: order?.information?.dateofDeath
+            ? new Date(order.information.dateofDeath).toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            })
+            : "",
+        address: order?.information?.address ?? "",
+        imageUrl: order?.thumbnailImage
+            || order?.primaryImage
+            || "/images/tribute.jpg",
+        condolences: Array.isArray(order?.tributeItems) ? order.tributeItems.length : 0,
+        donations: Array.isArray(order?.recievedDonations) ? order.recievedDonations.length : 0,
+        isDonationReceivable: order?.isDonationReceivable ?? false,
+        accountDetails: order?.accountDetails ?? null,
     });
 
     return (
         <section className="flex flex-col justify-center px-4 md:px-8 lg:px-16  py-6 max-md:px-5">
             <Separator className="mb-4" />
-            <OrbituaryNavbar 
-                onSearch={handleSearch} 
+            <OrbituaryNavbar
+                onSearch={handleSearch}
                 onFilter={handleFilter}
                 onReset={handleReset}
-                isLoading={isSearching || isFiltering || isFilteringByCountry} 
+                isLoading={isSearching || isFiltering || isFilteringByCountry}
             />
-            <CountrySection 
+            <CountrySection
                 onCountrySelect={handleCountrySelect}
                 selectedCountryId={selectedCountryId === null ? "all" : selectedCountryId}
             />
@@ -438,11 +457,11 @@ const Obituary: React.FC = () => {
                     ) : (
                         <div className="text-center py-12">
                             <p className="text-gray-500 text-lg">
-                                {searchTerm.trim() 
-                                    ? `${t.noObituariesForSearch} "${searchTerm}".` 
+                                {searchTerm.trim()
+                                    ? `${t.noObituariesForSearch} "${searchTerm}".`
                                     : selectedCountryId
                                         ? `${t.noObituariesForCountry} ${selectedCountryName}.`
-                                        : activeFilters 
+                                        : activeFilters
                                             ? t.noObituariesForFilters
                                             : `${t.noObituariesFound}.`
                                 }
@@ -457,9 +476,9 @@ const Obituary: React.FC = () => {
                 </div>
 
                 <div className="md:col-span-1">
-                    <AdvertisementSidebar 
-                    numberOfAds={4}
-                    adPageName="obituary"
+                    <AdvertisementSidebar
+                        numberOfAds={4}
+                        adPageName="obituary"
                     />
                 </div>
             </div>

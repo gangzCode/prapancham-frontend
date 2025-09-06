@@ -76,7 +76,7 @@ const EventCard: React.FC<EventCardProps> = ({
                     rel="noopener noreferrer"
                     className="bg-[#0D1322] text-white py-2 px-8 rounded-lg w-full sm:w-auto hover:bg-[#0D1322]/80 transition-colors text-center block sm:inline-block"
                 >
-                    {bookEvent || "Book Event"}
+                    {bookEvent || "View Event"}
                 </a>
 
             </div>
@@ -110,7 +110,7 @@ const EventList: React.FC<CalendarProps> = ({ year, month, day }) => {
     const translations: Record<LanguageKey, { [key: string]: string }> = {
         en: {
             noEventsFound: "No events found",
-            bookEvent: "Book Event",
+            bookEvent: "View Event",
             peopleHaveRegistered: "people have registered",
         },
         ta: {

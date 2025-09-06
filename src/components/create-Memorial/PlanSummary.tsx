@@ -186,7 +186,7 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
                     {' '}
                     <span 
                         className='text-[#880002] underline cursor-pointer hover:text-[#660001] transition-colors'
-                        onClick={() => router.push('/terms')}
+                        onClick={() => window.open('/terms', 'termsWindow', 'width=800,height=600,scrollbars=yes,resizable=yes,status=no,location=no,toolbar=no,menubar=no')}
                     >
                         {language === 'en' && 'Terms & Conditions'}
                         {language === 'si' && 'නියමයන් සහ කොන්දේසි'}
