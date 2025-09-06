@@ -52,6 +52,8 @@ const Information: React.FC<InformationProps> = ({
             usePreferredNameLabel: "Use preferred name instead of first and last name",
             obituaryHeadlineLabel: "Obituary Headline",
             remembranceHeadlineLabel: "Remembrance Headline",
+            obituaryHeadlinePlaceholder: "e.g., 'In loving memory of John Smith'",
+            remembranceHeadlinePlaceholder: "e.g., 'Celebrating the life of John Smith'",
             shortDescriptionPlaceholder: "Maximum 10 words allowed",
             wordsUsed: "{count}/10 words used",
             addressLabel: "Funeral House Address",
@@ -78,6 +80,8 @@ const Information: React.FC<InformationProps> = ({
             usePreferredNameLabel: "முதல் மற்றும் கடைசி பெயருக்கு பதிலாக விருப்பமான பெயரைப் பயன்படுத்தவும்",
             obituaryHeadlineLabel: "இறப்பு அறிக்கை தலைப்பு",
             remembranceHeadlineLabel: "நினைவஞ்சலி தலைப்பு",
+            obituaryHeadlinePlaceholder: "உதாரணம்: 'ஜான் ஸ்மித்தின் அன்பான நினைவாக'",
+            remembranceHeadlinePlaceholder: "உதாரணம்: 'ஜான் ஸ்மித்தின் வாழ்க்கையைக் கொண்டாடுதல்'",
             shortDescriptionPlaceholder: "அதிகபட்சம் 10 வார்த்தைகள் அனுமதிக்கப்படும்",
             wordsUsed: "{count}/10 வார்த்தைகள் பயன்படுத்தப்பட்டன",
             addressLabel: "இறுதிச் சடங்கு இல்லத்தின் முகவரி",
@@ -104,6 +108,8 @@ const Information: React.FC<InformationProps> = ({
             usePreferredNameLabel: "මුල් සහ අවසන් නම වෙනුවට අභිමත නම භාවිතා කරන්න",
             obituaryHeadlineLabel: "අවමංගල්‍ය මාතෘකාව",
             remembranceHeadlineLabel: "සිහිකිරීමේ මාතෘකාව",
+            obituaryHeadlinePlaceholder: "උදාහරණ: 'ජෝන් ස්මිත්ගේ ප්‍රේමණීය සිහිකිරීමේදී'",
+            remembranceHeadlinePlaceholder: "උදාහරණ: 'ජෝන් ස්මිත්ගේ ජීවිතය සැමරීම'",
             shortDescriptionPlaceholder: "උපරිම වචන 10ක් අවසර ඇත",
             wordsUsed: "වචන {count}/10ක් භාවිතා කර ඇත",
             addressLabel: "අවමංගල්‍ය ගෘහ ලිපිනය",
@@ -206,6 +212,17 @@ const Information: React.FC<InformationProps> = ({
         }
         // Default fallback
         return t.obituaryHeadlineLabel;
+    };
+
+    // Get headline placeholder based on package type
+    const getHeadlinePlaceholder = () => {
+        if (selectedPlan?.isObituary) {
+            return t.obituaryHeadlinePlaceholder;
+        } else if (selectedPlan?.isRemembarace) {
+            return t.remembranceHeadlinePlaceholder;
+        }
+        // Default fallback
+        return t.obituaryHeadlinePlaceholder;
     };
 
     const handleInputChange = (field: keyof FormData, value: string | boolean) => {
@@ -338,7 +355,7 @@ const Information: React.FC<InformationProps> = ({
                             }
                         }}
                         className="w-full p-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                        placeholder={t.shortDescriptionPlaceholder}
+                        placeholder={getHeadlinePlaceholder()}
                     />
                     <p className="text-xs text-gray-600 mt-1">
                         {t.wordsUsed.replace('{count}', shortDescWordCount.toString())}
