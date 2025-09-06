@@ -1,7 +1,7 @@
 "use client";
 import Image from 'next/image';
 import { Minus, CirclePlus, Camera } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Upload, Trash2 } from 'lucide-react';
 import { TitleWithUnderline } from '@/components/ui/title-with-underline';
 import OrbituaryCard from '@/components/obituary/OrbituaryCard';
@@ -15,7 +15,7 @@ import { useSearchParams } from 'next/navigation';
 
 type LanguageKey = "en" | "ta" | "si";
 
-const Events: React.FC = () => {
+const ProfileContent: React.FC = () => {
     const [activeTab, setActiveTab] = useState("General");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -479,6 +479,14 @@ const Events: React.FC = () => {
         );
     }
     return <SignupModal isOpen={isModalOpen} onClose={handleClose} />;
+};
+
+const Events: React.FC = () => {
+    return (
+        <Suspense fallback={<div className="flex justify-center items-center min-h-screen">Loading...</div>}>
+            <ProfileContent />
+        </Suspense>
+    );
 };
 
 export default Events;
