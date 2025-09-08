@@ -88,6 +88,9 @@ const MobileNavbar: React.FC = () => {
             logout: "Log Out",
             signIn: "Sign In",
             signUp: "Sign Up",
+            profileInformation: "Profile Information",
+            remembrance: "Remembrance",
+            profileAdvertisement: "Advertisement",
         },
         ta: {
             newsNav: "செய்திகள்",
@@ -99,6 +102,9 @@ const MobileNavbar: React.FC = () => {
             logout: "வெளியேறு",
             signIn: "உள்நுழைய",
             signUp: "பதிவுசெய்ய",
+            profileInformation: "விவர தகவல்",
+            remembrance: "நினைவுச்சின்னம்",
+            profileAdvertisement: "விளம்பரம்",
         },
         si: {
             newsNav: "ප්‍රවෘත්ති",
@@ -110,6 +116,9 @@ const MobileNavbar: React.FC = () => {
             logout: "පිටවීම",
             signIn: "ඇතුල් වන්න",
             signUp: "ලියාපදිංචි වන්න",
+            profileInformation: "පැතිකඩ තොරතුරු",
+            remembrance: "අනුස්මරණය",
+            profileAdvertisement: "වෙළඳ දැන්වීම්",
         },
     };
     const t = translations[langKey];
@@ -406,14 +415,43 @@ const MobileNavbar: React.FC = () => {
                                                     })()}
                                                 </h2>
                                             </div>
-                                            <div
-                                                className="text-center text-black mb-4 mt-4 cursor-pointer hover:underline"
-                                                onClick={() => {
-                                                    setShowPopup(false);
-                                                    router.push("/profile");
-                                                }}
-                                            >
-                                                {t.setting}
+                                            <div className="grid grid-cols-2 gap-2 mb-4">
+                                                <button
+                                                    onClick={() => {
+                                                        setShowPopup(false);
+                                                        router.push("/profile?tab=profileInformation");
+                                                    }}
+                                                    className="py-1 px-2 text-black hover:bg-gray-50 rounded text-sm text-center"
+                                                >
+                                                    {t.profileInformation}
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setShowPopup(false);
+                                                        router.push("/profile?tab=obituary");
+                                                    }}
+                                                    className="py-1 px-2 text-black hover:bg-gray-50 rounded text-sm text-center"
+                                                >
+                                                    {t.obituary}
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setShowPopup(false);
+                                                        router.push("/profile?tab=remembrance");
+                                                    }}
+                                                    className="py-1 px-2 text-black hover:bg-gray-50 rounded text-sm text-center"
+                                                >
+                                                    {t.remembrance}
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setShowPopup(false);
+                                                        router.push("/profile?tab=profileAdvertisement");
+                                                    }}
+                                                    className="py-1 px-2 text-black hover:bg-gray-50 rounded text-sm text-center"
+                                                >
+                                                    {t.profileAdvertisement}
+                                                </button>
                                             </div>
                                             <hr className="border-gray-300 mb-4" />
                                             <button
