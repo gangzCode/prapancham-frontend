@@ -137,7 +137,7 @@ const Summary: React.FC<SummaryProps> = ({
 }) => {
     const router = useRouter();
     const { language: langKey } = useLanguage();
-    
+
     const t = translations[langKey as keyof typeof translations] || translations.english;
 
     const [activeColor, setActiveColor] = useState("#ffffff");
@@ -284,12 +284,14 @@ const Summary: React.FC<SummaryProps> = ({
             information: informationFormData ? {
                 title: informationFormData.title ||
                     ((informationFormData?.firstName && informationFormData?.lastName)
-                        ? `${informationFormData.firstName} ${informationFormData.lastName}`
+                        ? `${informationFormData.nameTitle ? informationFormData.nameTitle + ' ' : ''}${informationFormData.firstName} ${informationFormData.lastName}`
                         : informationFormData?.preferredName
+                            ? `${informationFormData.preferredNameTitle ? informationFormData.preferredNameTitle + ' ' : ''}${informationFormData.preferredName}`
+                            : ''
                     ) || '',
-                firstName: informationFormData.firstName || '',
+                firstName: (informationFormData.firstName && informationFormData.lastName) ? `${informationFormData.nameTitle} ${informationFormData.firstName} ${informationFormData.lastName}` : '',
                 lastName: informationFormData.lastName || '',
-                preferredName: informationFormData.preferredName || '',
+                preferredName: informationFormData.preferredName ? `${informationFormData.preferredNameTitle} ${informationFormData.preferredName}` : '',
                 address: informationFormData.address || '',
                 dateofBirth: informationFormData.dateofBirth ? new Date(informationFormData.dateofBirth).toISOString().split('T')[0] : '',
                 dateofDeath: informationFormData.dateofDeath ? new Date(informationFormData.dateofDeath).toISOString().split('T')[0] : '',
@@ -753,8 +755,8 @@ const Summary: React.FC<SummaryProps> = ({
                                             <h1 className="text-3xl md:text-4xl font-serif font-normal text-white mb-8 leading-tight text-center max-w-4xl">
                                                 {informationFormData?.title ||
                                                     ((informationFormData?.firstName && informationFormData?.lastName)
-                                                        ? `${informationFormData.firstName} ${informationFormData.lastName}`
-                                                        : informationFormData?.preferredName
+                                                        ? `${informationFormData.nameTitle} ${informationFormData.firstName} ${informationFormData.lastName}`
+                                                        : `${informationFormData.nameTitle} ${informationFormData?.preferredName}`
                                                     ) || 'Memorial Preview'}
                                             </h1>
                                         </div>
@@ -956,7 +958,7 @@ const Summary: React.FC<SummaryProps> = ({
                                     <TitleWithUnderline text={t.overview} underlineWidth={64} fontSize={3} />
                                 </div>
                                 <div className="space-y-2 mt-2 p-2">
-                                    <p className="text-gray-500">{t.name} {informationFormData?.title || ((informationFormData?.firstName && informationFormData?.lastName) ? `${informationFormData.firstName} ${informationFormData.lastName}` : informationFormData?.preferredName) || t.notProvided}</p>
+                                    <p className="text-gray-500">{t.name} {informationFormData?.title || ((informationFormData?.firstName && informationFormData?.lastName) ? `${informationFormData.nameTitle} ${informationFormData.firstName} ${informationFormData.lastName}` : `${informationFormData.nameTitle} ${informationFormData?.preferredName}`) || t.notProvided}</p>
                                     <p className="text-gray-500">{t.birthDateLabel} {informationFormData?.dateofBirth ? new Date(informationFormData.dateofBirth).toLocaleDateString() : t.notProvided}</p>
                                     <p className="text-gray-500">{t.deathDateLabel} {informationFormData?.dateofDeath ? new Date(informationFormData.dateofDeath).toLocaleDateString() : t.notProvided}</p>
                                     <p className="text-gray-500">{t.age} {informationFormData?.dateofBirth && informationFormData?.dateofDeath ? calculateAge(informationFormData.dateofBirth, informationFormData.dateofDeath) : t.notProvided}</p>
