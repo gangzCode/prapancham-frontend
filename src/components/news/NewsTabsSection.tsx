@@ -232,7 +232,7 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className, categoryId
                   </div>
                 </div>
               ) : (
-                <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[456px]">
+                <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[920px]">
                   <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-0 md:pr-4">
                     {obituaryData.map((entry, index) => (
                       <div key={index} className={index > 0 ? "mt-2" : ""}>
