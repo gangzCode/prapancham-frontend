@@ -1,6 +1,8 @@
 'use client'
 
+import 'react-phone-input-2/lib/style.css';
 import React, { useState, useEffect } from 'react';
+import PhoneInput from 'react-phone-input-2';
 import { PlusCircle, Trash2 } from 'lucide-react';
 import { TitleWithUnderline } from '../ui/title-with-underline';
 import { useLanguage } from '@/components/ui/LanguageProvider';
@@ -339,11 +341,28 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
 
                         <div>
                             <label className="pb-2 block">{t.phoneLabel}<span className="text-[#880002]">*</span></label>
-                            <input
-                                type="text"
+                            <PhoneInput
+                                country={'lk'}
+                                placeholder={t.phoneLabel}
+                                containerClass="phone-input"
+                                inputClass="form-control"
+                                containerStyle={{
+                                    border: '1px solid #0f766e',
+                                    borderRadius: '0.5rem'
+                                }}
+                                inputStyle={{
+                                    border: 'none',
+                                    borderRadius: '0.5rem',
+                                    paddingLeft: '60px',
+                                    fontSize: '16px',
+                                    width: '100%'
+                                }}
+                                buttonStyle={{
+                                    border: 'none',
+                                    borderRadius: '0.5rem 0 0 0.5rem'
+                                }}
                                 value={contact.phone}
-                                onChange={(e) => handleChange(index, 'phone', e.target.value)}
-                                className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                onChange={(value) => handleChange(index, 'phone', value)}
                             />
                         </div>
 
