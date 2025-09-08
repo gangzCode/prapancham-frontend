@@ -153,6 +153,7 @@ const Summary: React.FC<SummaryProps> = ({
     const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(null);
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
     const [showSharePopup, setShowSharePopup] = useState(false);
+    const [activeMediaTab, setActiveMediaTab] = useState<'messages' | 'cards' | 'letters' | 'memories' | 'flowers'>('messages');
 
     // Localization text for share popup
     const shareText = {
@@ -660,33 +661,38 @@ const Summary: React.FC<SummaryProps> = ({
 
                 <section className="flex flex-col justify-center px-4 md:px-8 lg:px-16  py-6 max-md:px-5">
                     <Separator className="mb-5 w-full" />
-                    <div className="flex flex-wrap gap-2 my-4">
-                        {(selectedPlan?.bgColors || [
-                            { _id: "", colorCode: "#ffffff" },
-                        ]).map((colorObj: any, index: number) => {
-                            const color = colorObj?.colorCode || colorObj;
-                            const colorId = colorObj?._id || "";
-                            return (
-                                <button
-                                    key={colorId || color}
-                                    className="w-8 h-8 rounded-full flex items-center justify-center relative border-2 border-gray-400 bg-white"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setActiveColor(color);
-                                        setActiveColorId(colorId);
-                                    }}
-                                >
-                                    <div
-                                        className="w-6 h-6 rounded-full flex items-center justify-center"
-                                        style={{ backgroundColor: color }}
+                    
+                    {/* Background Color Selection */}
+                    <div className="my-4">
+                        <p className="text-sm text-gray-600 mb-2">Select the background color for the obituary post</p>
+                        <div className="flex flex-wrap gap-2">
+                            {(selectedPlan?.bgColors || [
+                                { _id: "", colorCode: "#ffffff" },
+                            ]).map((colorObj: any, index: number) => {
+                                const color = colorObj?.colorCode || colorObj;
+                                const colorId = colorObj?._id || "";
+                                return (
+                                    <button
+                                        key={colorId || color}
+                                        className="w-8 h-8 rounded-full flex items-center justify-center relative border-2 border-gray-400 bg-white"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setActiveColor(color);
+                                            setActiveColorId(colorId);
+                                        }}
                                     >
-                                        {activeColor === color && (
-                                            <Check className="text-gray-500 w-4 h-4" />
-                                        )}
-                                    </div>
-                                </button>
-                            );
-                        })}
+                                        <div
+                                            className="w-6 h-6 rounded-full flex items-center justify-center"
+                                            style={{ backgroundColor: color }}
+                                        >
+                                            {activeColor === color && (
+                                                <Check className="text-gray-500 w-4 h-4" />
+                                            )}
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
 
 
@@ -826,6 +832,108 @@ const Summary: React.FC<SummaryProps> = ({
                                 </button>
                             </div>
                             <Separator className="mt-4 !w-full" />
+
+                            {/* Tributes Section */}
+                            <div className="mt-8">
+                                <div className="flex-shrink min-w-0 max-w-full mb-6">
+                                    <TitleWithUnderline text="Tributes" underlineWidth={64} fontSize={3} />
+                                </div>
+
+                                {/* Tab Navigation */}
+                                <div className="flex flex-wrap sm:flex-nowrap border-b border-gray-200 mb-6 overflow-x-auto">
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveMediaTab('messages')}
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeMediaTab === 'messages'
+                                            ? 'border-primary text-primary bg-gray-50'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        Guest Book
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveMediaTab('cards')}
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeMediaTab === 'cards'
+                                            ? 'border-primary text-primary bg-gray-50'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        Cards
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveMediaTab('letters')}
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeMediaTab === 'letters'
+                                            ? 'border-primary text-primary bg-gray-50'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        Letters
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveMediaTab('memories')}
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeMediaTab === 'memories'
+                                            ? 'border-primary text-primary bg-gray-50'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        Memories
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveMediaTab('flowers')}
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeMediaTab === 'flowers'
+                                            ? 'border-primary text-primary bg-gray-50'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        Flowers
+                                    </button>
+                                </div>
+
+                                {/* Tab Content */}
+                                {activeMediaTab === 'messages' && (
+                                    <div className="grid grid-cols-1 gap-4 mb-8">
+                                        <div className="bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
+                                            No guest book entries available
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeMediaTab === 'cards' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                                        <div className="col-span-full bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
+                                            No tribute cards available
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeMediaTab === 'letters' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                                        <div className="col-span-full bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
+                                            No tribute letters available
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeMediaTab === 'memories' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                                        <div className="col-span-full bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
+                                            No memories available
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeMediaTab === 'flowers' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                                        <div className="col-span-full bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
+                                            No virtual flowers available
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
 
                             {/* YouTube Video and Additional Images Section */}
                             {(informationFormData?.tributeVideo || (additionalPreviews && additionalPreviews.length > 0)) && (
