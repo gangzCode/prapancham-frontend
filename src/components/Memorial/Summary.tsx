@@ -53,7 +53,31 @@ const translations = {
         nameNotProvided: "Name not provided",
         addressNotProvided: "Address not provided",
         emailNotProvided: "Email not provided",
-        phoneNotProvided: "Phone not provided"
+        phoneNotProvided: "Phone not provided",
+        // New translations
+        selectBackgroundColor: "Select the background color for the obituary post",
+        tributes: "Tributes",
+        mediaGallery: "Media Gallery",
+        guestBook: "Guest Book",
+        cards: "Cards",
+        letters: "Letters",
+        memories: "Memories",
+        flowers: "Flowers",
+        noGuestBookEntries: "No guest book entries available",
+        noTributeCards: "No tribute cards available",
+        noTributeLetters: "No tribute letters available",
+        noMemories: "No memories available",
+        noVirtualFlowers: "No virtual flowers available",
+        tributeVideo: "Tribute Video",
+        additionalImages: "Additional Images",
+        shareMemorial: "Share Memorial",
+        postTribute: "Post Tribute",
+        donate: "Donate",
+        back: "Back",
+        continueToPay: "Continue to Pay",
+        submitting: "Submitting...",
+        totalAmountToPay: "Total amount to pay",
+        noImageSelected: "No image selected"
     },
     tamil: {
         overview: "கண்ணோட்டம்",
@@ -84,7 +108,31 @@ const translations = {
         nameNotProvided: "பெயர் வழங்கப்படவில்லை",
         addressNotProvided: "முகவரி வழங்கப்படவில்லை",
         emailNotProvided: "மின்னஞ்சல் வழங்கப்படவில்லை",
-        phoneNotProvided: "தொலைபேசி வழங்கப்படவில்லை"
+        phoneNotProvided: "தொலைபேசி வழங்கப்படவில்லை",
+        // New translations
+        selectBackgroundColor: "அவமங்கல அறிவித்தலுக்கான பின்னணி நிறத்தைத் தேர்ந்தெடுக்கவும்",
+        tributes: "அஞ்சலிகள்",
+        mediaGallery: "ஊடக காட்சியகம்",
+        guestBook: "விருந்தினர் புத்தகம்",
+        cards: "அட்டைகள்",
+        letters: "கடிதங்கள்",
+        memories: "நினைவுகள்",
+        flowers: "மலர்கள்",
+        noGuestBookEntries: "விருந்தினர் புத்தக பதிவுகள் எதுவும் இல்லை",
+        noTributeCards: "அஞ்சலி அட்டைகள் எதுவும் இல்லை",
+        noTributeLetters: "அஞ்சலி கடிதங்கள் எதுவும் இல்லை",
+        noMemories: "நினைவுகள் எதுவும் இல்லை",
+        noVirtualFlowers: "மெய்நிகர் மலர்கள் எதுவும் இல்லை",
+        tributeVideo: "அஞ்சலி வீடியோ",
+        additionalImages: "கூடுதல் படங்கள்",
+        shareMemorial: "நினைவகத்தை பகிரவும்",
+        postTribute: "அஞ்சலி இடவும்",
+        donate: "நன்கொடை",
+        back: "பின்",
+        continueToPay: "பணம் செலுத்த தொடரவும்",
+        submitting: "சமர்ப்பிக்கப்படுகிறது...",
+        totalAmountToPay: "செலுத்த வேண்டிய மொத்த தொகை",
+        noImageSelected: "படம் தேர்ந்தெடுக்கப்படவில்லை"
     },
     sinhala: {
         overview: "දළ විශ්ලේෂණය",
@@ -115,7 +163,31 @@ const translations = {
         nameNotProvided: "නම ලබා දී නැත",
         addressNotProvided: "ලිපිනය ලබා දී නැත",
         emailNotProvided: "ඊ-මේල් ලබා දී නැත",
-        phoneNotProvided: "දුරකථනය ලබා දී නැත"
+        phoneNotProvided: "දුරකථනය ලබා දී නැත",
+        // New translations
+        selectBackgroundColor: "අවමංගල්‍ය පළකිරීම සඳහා පසුබිම් වර්ණය තෝරන්න",
+        tributes: "ප්‍රණාම",
+        mediaGallery: "මාධ්‍ය ගැලරිය",
+        guestBook: "අමුත්තන් පොත",
+        cards: "කාඩ්පත්",
+        letters: "ලිපි",
+        memories: "මතකයන්",
+        flowers: "මල්",
+        noGuestBookEntries: "අමුත්තන් පොත් ප්‍රවේශයන් නොමැත",
+        noTributeCards: "ප්‍රණාම කාඩ්පත් නොමැත",
+        noTributeLetters: "ප්‍රණාම ලිපි නොමැත",
+        noMemories: "මතකයන් නොමැත",
+        noVirtualFlowers: "අතථ්‍ය මල් නොමැත",
+        tributeVideo: "ප්‍රණාම වීඩියෝව",
+        additionalImages: "අමතර පින්තූර",
+        shareMemorial: "ස්මාරකය බෙදාගන්න",
+        postTribute: "ප්‍රණාමය පළ කරන්න",
+        donate: "දන්දීම්",
+        back: "ආපසු",
+        continueToPay: "ගෙවීම සඳහා ඉදිරියට",
+        submitting: "ඉදිරිපත් කරමින්...",
+        totalAmountToPay: "ගෙවිය යුතු මුළු මුදල",
+        noImageSelected: "පින්තූරයක් තෝරා නැත"
     }
 };
 
@@ -137,7 +209,7 @@ const Summary: React.FC<SummaryProps> = ({
 }) => {
     const router = useRouter();
     const { language: langKey } = useLanguage();
-    
+
     const t = translations[langKey as keyof typeof translations] || translations.english;
 
     const [activeColor, setActiveColor] = useState("#ffffff");
@@ -153,6 +225,7 @@ const Summary: React.FC<SummaryProps> = ({
     const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(null);
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
     const [showSharePopup, setShowSharePopup] = useState(false);
+    const [activeMediaTab, setActiveMediaTab] = useState<'messages' | 'cards' | 'letters' | 'memories' | 'flowers'>('messages');
 
     // Localization text for share popup
     const shareText = {
@@ -284,12 +357,14 @@ const Summary: React.FC<SummaryProps> = ({
             information: informationFormData ? {
                 title: informationFormData.title ||
                     ((informationFormData?.firstName && informationFormData?.lastName)
-                        ? `${informationFormData.firstName} ${informationFormData.lastName}`
+                        ? `${informationFormData.nameTitle ? informationFormData.nameTitle + ' ' : ''}${informationFormData.firstName} ${informationFormData.lastName}`
                         : informationFormData?.preferredName
+                            ? `${informationFormData.preferredNameTitle ? informationFormData.preferredNameTitle + ' ' : ''}${informationFormData.preferredName}`
+                            : ''
                     ) || '',
-                firstName: informationFormData.firstName || '',
+                firstName: (informationFormData.firstName && informationFormData.lastName) ? `${informationFormData.nameTitle} ${informationFormData.firstName} ${informationFormData.lastName}` : '',
                 lastName: informationFormData.lastName || '',
-                preferredName: informationFormData.preferredName || '',
+                preferredName: informationFormData.preferredName ? `${informationFormData.preferredNameTitle} ${informationFormData.preferredName}` : '',
                 address: informationFormData.address || '',
                 dateofBirth: informationFormData.dateofBirth ? new Date(informationFormData.dateofBirth).toISOString().split('T')[0] : '',
                 dateofDeath: informationFormData.dateofDeath ? new Date(informationFormData.dateofDeath).toISOString().split('T')[0] : '',
@@ -651,40 +726,45 @@ const Summary: React.FC<SummaryProps> = ({
                     ))}
                 </div>
                 <div className='flex justify-between text-primary my-8'>
-                    <p>Total amount to pay</p>
+                    <p>{t.totalAmountToPay}</p>
                     <h1 className="text-xl font-bold">{getTotalPrice().toLocaleString()} {getCurrency()}</h1>
                 </div>
 
 
                 <section className="flex flex-col justify-center px-4 md:px-8 lg:px-16  py-6 max-md:px-5">
                     <Separator className="mb-5 w-full" />
-                    <div className="flex flex-wrap gap-2 my-4">
-                        {(selectedPlan?.bgColors || [
-                            { _id: "", colorCode: "#ffffff" },
-                        ]).map((colorObj: any, index: number) => {
-                            const color = colorObj?.colorCode || colorObj;
-                            const colorId = colorObj?._id || "";
-                            return (
-                                <button
-                                    key={colorId || color}
-                                    className="w-8 h-8 rounded-full flex items-center justify-center relative border-2 border-gray-400 bg-white"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setActiveColor(color);
-                                        setActiveColorId(colorId);
-                                    }}
-                                >
-                                    <div
-                                        className="w-6 h-6 rounded-full flex items-center justify-center"
-                                        style={{ backgroundColor: color }}
+                    
+                    {/* Background Color Selection */}
+                    <div className="my-4">
+                        <p className="text-sm text-gray-600 mb-2">{t.selectBackgroundColor}</p>
+                        <div className="flex flex-wrap gap-2">
+                            {(selectedPlan?.bgColors || [
+                                { _id: "", colorCode: "#ffffff" },
+                            ]).map((colorObj: any, index: number) => {
+                                const color = colorObj?.colorCode || colorObj;
+                                const colorId = colorObj?._id || "";
+                                return (
+                                    <button
+                                        key={colorId || color}
+                                        className="w-8 h-8 rounded-full flex items-center justify-center relative border-2 border-gray-400 bg-white"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setActiveColor(color);
+                                            setActiveColorId(colorId);
+                                        }}
                                     >
-                                        {activeColor === color && (
-                                            <Check className="text-gray-500 w-4 h-4" />
-                                        )}
-                                    </div>
-                                </button>
-                            );
-                        })}
+                                        <div
+                                            className="w-6 h-6 rounded-full flex items-center justify-center"
+                                            style={{ backgroundColor: color }}
+                                        >
+                                            {activeColor === color && (
+                                                <Check className="text-gray-500 w-4 h-4" />
+                                            )}
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
 
 
@@ -736,7 +816,7 @@ const Summary: React.FC<SummaryProps> = ({
                                             )}
                                             {!primaryPreview && (
                                                 <div className="w-40 sm:w-60 shadow-md aspect-square bg-gray-200 flex items-center justify-center">
-                                                    <p className="text-white text-sm">No image selected</p>
+                                                    <p className="text-white text-sm">{t.noImageSelected}</p>
                                                 </div>
                                             )}
 
@@ -753,8 +833,8 @@ const Summary: React.FC<SummaryProps> = ({
                                             <h1 className="text-3xl md:text-4xl font-serif font-normal text-white mb-8 leading-tight text-center max-w-4xl">
                                                 {informationFormData?.title ||
                                                     ((informationFormData?.firstName && informationFormData?.lastName)
-                                                        ? `${informationFormData.firstName} ${informationFormData.lastName}`
-                                                        : informationFormData?.preferredName
+                                                        ? `${informationFormData.nameTitle} ${informationFormData.firstName} ${informationFormData.lastName}`
+                                                        : `${informationFormData.nameTitle} ${informationFormData?.preferredName}`
                                                     ) || 'Memorial Preview'}
                                             </h1>
                                         </div>
@@ -798,7 +878,7 @@ const Summary: React.FC<SummaryProps> = ({
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                                     </svg>
-                                    Share Memorial
+                                    {t.shareMemorial}
                                 </button>
                                 <button
                                     className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold cursor-not-allowed"
@@ -808,7 +888,7 @@ const Summary: React.FC<SummaryProps> = ({
                                     <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
-                                    Post Tribute
+                                    {t.postTribute}
                                 </button>
                                 <button
                                     className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold cursor-not-allowed"
@@ -820,16 +900,118 @@ const Summary: React.FC<SummaryProps> = ({
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12.054l-2.5-2.5L8 11.054l4 4 4-4-1.5-1.5-2.5 2.5z" />
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.054V12.054" />
                                     </svg>
-                                    Donate
+                                    {t.donate}
                                 </button>
                             </div>
                             <Separator className="mt-4 !w-full" />
+
+                            {/* Tributes Section */}
+                            <div className="mt-8">
+                                <div className="flex-shrink min-w-0 max-w-full mb-6">
+                                    <TitleWithUnderline text={t.tributes} underlineWidth={64} fontSize={3} />
+                                </div>
+
+                                {/* Tab Navigation */}
+                                <div className="flex flex-wrap sm:flex-nowrap border-b border-gray-200 mb-6 overflow-x-auto">
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveMediaTab('messages')}
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeMediaTab === 'messages'
+                                            ? 'border-primary text-primary bg-gray-50'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        {t.guestBook}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveMediaTab('cards')}
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeMediaTab === 'cards'
+                                            ? 'border-primary text-primary bg-gray-50'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        {t.cards}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveMediaTab('letters')}
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeMediaTab === 'letters'
+                                            ? 'border-primary text-primary bg-gray-50'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        {t.letters}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveMediaTab('memories')}
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeMediaTab === 'memories'
+                                            ? 'border-primary text-primary bg-gray-50'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        {t.memories}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveMediaTab('flowers')}
+                                        className={`px-3 sm:px-6 py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeMediaTab === 'flowers'
+                                            ? 'border-primary text-primary bg-gray-50'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        {t.flowers}
+                                    </button>
+                                </div>
+
+                                {/* Tab Content */}
+                                {activeMediaTab === 'messages' && (
+                                    <div className="grid grid-cols-1 gap-4 mb-8">
+                                        <div className="bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
+                                            {t.noGuestBookEntries}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeMediaTab === 'cards' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                                        <div className="col-span-full bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
+                                            {t.noTributeCards}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeMediaTab === 'letters' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                                        <div className="col-span-full bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
+                                            {t.noTributeLetters}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeMediaTab === 'memories' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                                        <div className="col-span-full bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
+                                            {t.noMemories}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeMediaTab === 'flowers' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                                        <div className="col-span-full bg-gray-100 p-6 rounded-lg shadow-md text-center text-gray-500">
+                                            {t.noVirtualFlowers}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
 
                             {/* YouTube Video and Additional Images Section */}
                             {(informationFormData?.tributeVideo || (additionalPreviews && additionalPreviews.length > 0)) && (
                                 <div className="mt-8">
                                     <div className="flex-shrink min-w-0 max-w-full mb-6">
-                                        <TitleWithUnderline text="Media Gallery" underlineWidth={64} fontSize={3} />
+                                        <TitleWithUnderline text={t.mediaGallery} underlineWidth={64} fontSize={3} />
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -837,13 +1019,13 @@ const Summary: React.FC<SummaryProps> = ({
                                         {informationFormData?.tributeVideo && (
                                             <div className={`${!additionalPreviews || additionalPreviews.length === 0 ? 'md:col-span-2 flex justify-center' : ''}`}>
                                                 <div className="bg-white p-4 shadow-md">
-                                                    <h3 className="text-lg font-semibold mb-4 text-center">Tribute Video</h3>
+                                                    <h3 className="text-lg font-semibold mb-4 text-center">{t.tributeVideo}</h3>
                                                     <div className="aspect-video w-full">
                                                         <iframe
                                                             width="100%"
                                                             height="100%"
                                                             src={`https://www.youtube.com/embed/${informationFormData.tributeVideo.split('v=')[1]?.split('&')[0] || informationFormData.tributeVideo.split('/').pop()}`}
-                                                            title="Tribute Video"
+                                                            title={t.tributeVideo}
                                                             frameBorder="0"
                                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                                             allowFullScreen
@@ -858,7 +1040,7 @@ const Summary: React.FC<SummaryProps> = ({
                                         {additionalPreviews && additionalPreviews.length > 0 && (
                                             <div className={`${!informationFormData?.tributeVideo ? 'md:col-span-2 flex justify-center' : ''}`}>
                                                 <div className="bg-white p-4 shadow-md w-full">
-                                                    <h3 className="text-lg font-semibold mb-4 text-center">Additional Images</h3>
+                                                    <h3 className="text-lg font-semibold mb-4 text-center">{t.additionalImages}</h3>
                                                     <div className="relative">
                                                         <div className="w-full relative aspect-video">
                                                             <img
@@ -956,7 +1138,7 @@ const Summary: React.FC<SummaryProps> = ({
                                     <TitleWithUnderline text={t.overview} underlineWidth={64} fontSize={3} />
                                 </div>
                                 <div className="space-y-2 mt-2 p-2">
-                                    <p className="text-gray-500">{t.name} {informationFormData?.title || ((informationFormData?.firstName && informationFormData?.lastName) ? `${informationFormData.firstName} ${informationFormData.lastName}` : informationFormData?.preferredName) || t.notProvided}</p>
+                                    <p className="text-gray-500">{t.name} {informationFormData?.title || ((informationFormData?.firstName && informationFormData?.lastName) ? `${informationFormData.nameTitle} ${informationFormData.firstName} ${informationFormData.lastName}` : `${informationFormData.nameTitle} ${informationFormData?.preferredName}`) || t.notProvided}</p>
                                     <p className="text-gray-500">{t.birthDateLabel} {informationFormData?.dateofBirth ? new Date(informationFormData.dateofBirth).toLocaleDateString() : t.notProvided}</p>
                                     <p className="text-gray-500">{t.deathDateLabel} {informationFormData?.dateofDeath ? new Date(informationFormData.dateofDeath).toLocaleDateString() : t.notProvided}</p>
                                     <p className="text-gray-500">{t.age} {informationFormData?.dateofBirth && informationFormData?.dateofDeath ? calculateAge(informationFormData.dateofBirth, informationFormData.dateofDeath) : t.notProvided}</p>
@@ -1059,7 +1241,7 @@ const Summary: React.FC<SummaryProps> = ({
                         className="gap-2.5 self-stretch shrink-0 px-4 py-3 my-auto text-body-xs text-[#0D1322] rounded border border-teal-900 border-solid min-h-6 "
                         disabled={isSubmitting}
                     >
-                        Back
+                        {t.back}
                     </button>
                     <button
                         type="button"
@@ -1067,7 +1249,7 @@ const Summary: React.FC<SummaryProps> = ({
                         onClick={handleContinueToPay}
                         disabled={isSubmitting}
                     >
-                        {isSubmitting ? 'Submitting...' : 'Continue to Pay'}
+                        {isSubmitting ? t.submitting : t.continueToPay}
                     </button>
                 </div>
             </form>

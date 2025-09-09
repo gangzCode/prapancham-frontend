@@ -16,8 +16,10 @@ interface InformationProps {
 }
 
 interface FormData {
+    nameTitle: string;
     firstName: string;
     lastName: string;
+    preferredNameTitle: string;
     preferredName: string;
     usePreferredName: boolean;
     shortDescription: string;
@@ -39,13 +41,26 @@ const Information: React.FC<InformationProps> = ({
     initialFormData
 }) => {
     const { language: langKey } = useLanguage();
-    
+
+    const nameTitleOptions = {
+        mr: "Mr",
+        mrs: "Mrs",
+        ms: "Ms",
+        miss: "Miss",
+        dr: "Dr",
+        prof: "Prof",
+        rev: "Rev",
+        hon: "Hon",
+        sir: "Sir"
+    };
+
     const translations = {
         english: {
             greeting: "Hi {username}, Our deepest condolences.",
             greetingAnonymous: "Hi there, Our deepest condolences.",
             packageInfo: "You have selected a {duration} days '{planName}' package,",
-            informationTitle: "Information",
+            informationTitle: "Deceased person's information",
+            nameTitleLabel: "Title",
             firstNameLabel: "First Name",
             lastNameLabel: "Last Name",
             preferredNameLabel: "Preferred Name",
@@ -73,7 +88,8 @@ const Information: React.FC<InformationProps> = ({
             greeting: "வணக்கம் {username}, எங்கள் ஆழ்ந்த இரங்கல்கள்.",
             greetingAnonymous: "வணக்கம், எங்கள் ஆழ்ந்த இரங்கல்கள்.",
             packageInfo: "நீங்கள் {duration} நாட்கள் '{planName}' தொகுப்பை தேர்ந்தெடுத்துள்ளீர்கள்,",
-            informationTitle: "தகவல்",
+            informationTitle: "இறந்தவரின் தகவல்",
+            nameTitleLabel: "பட்டம்",
             firstNameLabel: "முதல் பெயர்",
             lastNameLabel: "கடைசி பெயர்",
             preferredNameLabel: "விருப்பமான பெயர்",
@@ -101,7 +117,8 @@ const Information: React.FC<InformationProps> = ({
             greeting: "ආයුබෝවන් {username}, අපගේ ගැඹුරු සානුකම්පනාව.",
             greetingAnonymous: "ආයුබෝවන්, අපගේ ගැඹුරු සානුකම්පනාව.",
             packageInfo: "ඔබ දින {duration} ක '{planName}' පැකේජයක් තෝරාගෙන ඇත,",
-            informationTitle: "තොරතුරු",
+            informationTitle: "මියගිය පුද්ගලයාගේ තොරතුරු",
+            nameTitleLabel: "පිරිනාමය",
             firstNameLabel: "මුල් නම",
             lastNameLabel: "අවසන් නම",
             preferredNameLabel: "අභිමත නම",
@@ -126,11 +143,13 @@ const Information: React.FC<InformationProps> = ({
             nextButton: "ඊළඟ"
         }
     };
-    
+
     const t = translations[langKey as keyof typeof translations] || translations.english;
     const [formData, setFormData] = useState<FormData>({
+        nameTitle: initialFormData?.nameTitle || '',
         firstName: initialFormData?.firstName || '',
         lastName: initialFormData?.lastName || '',
+        preferredNameTitle: initialFormData?.preferredNameTitle || '',
         preferredName: initialFormData?.preferredName || '',
         usePreferredName: initialFormData?.usePreferredName || false,
         shortDescription: initialFormData?.shortDescription || '',
@@ -158,10 +177,10 @@ const Information: React.FC<InformationProps> = ({
 
     // Validation function to check if all required fields are filled
     const isFormValid = () => {
-        const hasNameInfo = formData.usePreferredName 
+        const hasNameInfo = formData.usePreferredName
             ? formData.preferredName.trim() !== ''
             : formData.firstName.trim() !== '' && formData.lastName.trim() !== '';
-        
+
         return hasNameInfo &&
             formData.address.trim() !== '' &&
             formData.dateofBirth !== '' &&
@@ -266,7 +285,7 @@ const Information: React.FC<InformationProps> = ({
             <form>
                 <div className="p-4 mb-6">
                     <h3 className="text-2xl md:text-4xl font-bold text-center mb-4 text-primary">
-                        {profile?.username 
+                        {profile?.username
                             ? t.greeting.replace('{username}', profile.username)
                             : t.greetingAnonymous
                         }
@@ -294,23 +313,57 @@ const Information: React.FC<InformationProps> = ({
                             {t.usePreferredNameLabel}
                         </label>
                     </div>
-                    
+
                     {formData.usePreferredName ? (
-                        <div>
-                            <label htmlFor="preferredName" className="pb-2 block">
-                                {t.preferredNameLabel}<span className="text-[#880002]">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                id="preferredName"
-                                value={formData.preferredName}
-                                onChange={(e) => handleInputChange('preferredName', e.target.value)}
-                                required
-                                className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                            />
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label htmlFor="preferredNameTitle" className="pb-2 block">
+                                    {t.nameTitleLabel}
+                                </label>
+                                <select
+                                    id="preferredNameTitle"
+                                    value={formData.preferredNameTitle}
+                                    onChange={(e) => handleInputChange('preferredNameTitle', e.target.value)}
+                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                >
+                                    <option value="">Select</option>
+                                    {Object.values(nameTitleOptions).map((title: string, index: number) => (
+                                        <option key={index} value={title}>{title}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="md:col-span-3">
+                                <label htmlFor="preferredName" className="pb-2 block">
+                                    {t.preferredNameLabel}<span className="text-[#880002]">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="preferredName"
+                                    value={formData.preferredName}
+                                    onChange={(e) => handleInputChange('preferredName', e.target.value)}
+                                    required
+                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                />
+                            </div>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label htmlFor="nameTitle" className="pb-2 block">
+                                    {t.nameTitleLabel}
+                                </label>
+                                <select
+                                    id="nameTitle"
+                                    value={formData.nameTitle}
+                                    onChange={(e) => handleInputChange('nameTitle', e.target.value)}
+                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                >
+                                    <option value="">Select</option>
+                                    {Object.values(nameTitleOptions).map((title: string, index: number) => (
+                                        <option key={index} value={title}>{title}</option>
+                                    ))}
+                                </select>
+                            </div>
                             <div>
                                 <label htmlFor="firstName" className="pb-2 block">
                                     {t.firstNameLabel}<span className="text-[#880002]">*</span>
@@ -324,7 +377,7 @@ const Information: React.FC<InformationProps> = ({
                                     className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                                 />
                             </div>
-                            <div>
+                            <div className="md:col-span-2">
                                 <label htmlFor="lastName" className="pb-2 block">
                                     {t.lastNameLabel}<span className="text-[#880002]">*</span>
                                 </label>
@@ -456,8 +509,8 @@ const Information: React.FC<InformationProps> = ({
                     <button
                         type="button"
                         className={`gap-2.5 self-stretch px-4 py-3 my-auto text-white whitespace-nowrap rounded min-h-6 ${isFormValid()
-                                ? 'bg-[#0D1322] hover:bg-[#1a2647] cursor-pointer'
-                                : 'bg-gray-400 cursor-not-allowed'
+                            ? 'bg-[#0D1322] hover:bg-[#1a2647] cursor-pointer'
+                            : 'bg-gray-400 cursor-not-allowed'
                             }`}
                         onClick={() => {
                             if (isFormValid()) {
