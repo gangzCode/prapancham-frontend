@@ -836,7 +836,7 @@ const Summary: React.FC<SummaryProps> = ({
                                                 </h1>
                                                 {informationFormData?.firstName && informationFormData?.lastName && informationFormData?.preferredName && (
                                                     <p className="text-white text-opacity-80 text-lg font-light mb-6">
-                                                        ({t.knownAs} {informationFormData.preferredName})
+                                                        ({informationFormData.preferredName})
                                                     </p>
                                                 )}
                                                 {!(informationFormData?.firstName && informationFormData?.lastName && informationFormData?.preferredName) && (

@@ -42,10 +42,10 @@ const useLocalizedNews = (endpoint: string, langKey: LanguageKey, categoryId?: s
     if (!data || error) return [];
 
     let filteredData = data;
-    
+
     // If categoryId is provided and not "all", filter by category
     if (categoryId && categoryId !== "all") {
-      filteredData = data.filter((item: any) => 
+      filteredData = data.filter((item: any) =>
         item.newsCategory?._id === categoryId
       );
     }
@@ -100,11 +100,12 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className, categoryId
       _id: order._id,
       title: order.information.shortDescription,
       name: order.information.title
-          || ((order.information.firstName && order.information.lastName)
-              ? `${order.information.firstName} ${order.information.lastName}`
-              : order.information.preferredName
-          )
-          || "",
+        || ((order.information.firstName && order.information.lastName && order.information.preferredName)
+          ? `${order.information.firstName} ${order.information.lastName} (${order.information.preferredName})`
+          : (order.information.firstName && order.information.lastName)
+            ? `${order.information.firstName} ${order.information.lastName}`
+            : order.information.preferredName
+        ),
       date: localeText[langKey].date(new Date(order.information.dateofDeath)),
       address: order.information.address,
       imageUrl: order.thumbnailImage || order.primaryImage,
@@ -163,7 +164,7 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className, categoryId
                 <div className="flex flex-1 justify-center items-center h-[400px]">
                   <div className="text-center text-gray-500">
                     <p className="text-lg font-medium mb-2">
-                      {categoryId && categoryId !== "all" 
+                      {categoryId && categoryId !== "all"
                         ? localeText[langKey].noNewsInCategory
                         : localeText[langKey].noNews
                       }
