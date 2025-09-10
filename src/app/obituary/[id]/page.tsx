@@ -39,6 +39,7 @@ const localeText = {
         requestToContact: "Request to Contact",
         overview: "Overview",
         name: "Name:",
+        knownAs: "known as",
         birthDateLabel: "Birth Date:",
         deathDateLabel: "Date of Passing:",
         age: "Age:",
@@ -107,6 +108,7 @@ const localeText = {
         requestToContact: "தொடர்பு கோரிக்கை",
         overview: "கண்ணோட்டம்",
         name: "பெயர்:",
+        knownAs: "என அழைக்கப்படுபவர்",
         birthDateLabel: "பிறந்த தேதி:",
         deathDateLabel: "மறைவு தேதி:",
         age: "வயது:",
@@ -175,6 +177,7 @@ const localeText = {
         requestToContact: "සම්බන්ධ වීමට ඉල්ලීම",
         overview: "දළ විශ්ලේෂණය",
         name: "නම:",
+        knownAs: "ලෙස හැඳින්වේ",
         birthDateLabel: "උපන් දිනය:",
         deathDateLabel: "මරණ දිනය:",
         age: "වයස:",
@@ -898,12 +901,22 @@ const ObituaryDetail: React.FC = () => {
                                     </div>
 
                                     <div className="w-full flex justify-center">
-                                        <h1 className="text-3xl md:text-4xl font-serif font-normal text-white mb-8 leading-tight text-center max-w-4xl">
-                                            {obituaryData.information.title
-                                                || (obituaryData.information.firstName && obituaryData.information.lastName)
-                                                ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
-                                                : obituaryData.information.preferredName || t.memorialTitle}
-                                        </h1>
+                                        <div className="text-center">
+                                            <h1 className="text-3xl md:text-4xl font-serif font-normal text-white mb-2 leading-tight text-center max-w-4xl">
+                                                {obituaryData.information.title
+                                                    || (obituaryData.information.firstName && obituaryData.information.lastName)
+                                                    ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                                                    : obituaryData.information.preferredName || t.memorialTitle}
+                                            </h1>
+                                            {obituaryData.information.firstName && obituaryData.information.lastName && obituaryData.information.preferredName && (
+                                                <p className="text-white text-opacity-80 text-lg font-light mb-6">
+                                                    ({obituaryData.information.preferredName})
+                                                </p>
+                                            )}
+                                            {!(obituaryData.information.firstName && obituaryData.information.lastName && obituaryData.information.preferredName) && (
+                                                <div className="mb-8"></div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
