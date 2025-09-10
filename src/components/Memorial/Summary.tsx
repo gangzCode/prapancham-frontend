@@ -7,6 +7,7 @@ import StripePaymentMemorial, { useStripePaymentModal } from './StripePaymentMem
 import { add } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/components/ui/LanguageProvider';
+import TermsModal from '@/components/ui/TermsModal';
 interface SummaryProps {
     selectedPlan: any;
     profile: any;
@@ -229,6 +230,7 @@ const Summary: React.FC<SummaryProps> = ({
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
     const [showSharePopup, setShowSharePopup] = useState(false);
     const [activeMediaTab, setActiveMediaTab] = useState<'messages' | 'cards' | 'letters' | 'memories' | 'flowers'>('messages');
+    const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
 
     // Localization text for share popup
     const shareText = {
@@ -1224,7 +1226,7 @@ const Summary: React.FC<SummaryProps> = ({
                 <div className='text-end'>
                     I have read and accept the <span
                         className='text-[#880002] underline cursor-pointer'
-                        onClick={() => window.open('/terms', 'termsWindow', 'width=800,height=600,scrollbars=yes,resizable=yes,status=no,location=no,toolbar=no,menubar=no')}
+                        onClick={() => setIsTermsModalOpen(true)}
                     >
                         Terms & Conditions
                     </span>
@@ -1448,6 +1450,13 @@ const Summary: React.FC<SummaryProps> = ({
                     </div>
                 </div>
             )}
+
+            {/* Terms Modal */}
+            <TermsModal 
+                isOpen={isTermsModalOpen} 
+                onClose={() => setIsTermsModalOpen(false)} 
+                language={language} 
+            />
         </div>
     );
 };

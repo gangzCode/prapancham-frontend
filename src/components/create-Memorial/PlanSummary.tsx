@@ -5,6 +5,7 @@ import { Check, Plus } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
+import TermsModal from '@/components/ui/TermsModal';
 
 interface PlanSummaryProps {
     language: string;
@@ -27,6 +28,7 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
     selectedPlan
 }) => {
     const [isChecked, setIsChecked] = useState(false);
+    const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
     const router = useRouter();
 
     const availableAddons = (selectedPlan?.addons || []).map((addon: any) => {
@@ -186,7 +188,7 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
                     {' '}
                     <span 
                         className='text-[#880002] underline cursor-pointer hover:text-[#660001] transition-colors'
-                        onClick={() => window.open('/terms', 'termsWindow', 'width=800,height=600,scrollbars=yes,resizable=yes,status=no,location=no,toolbar=no,menubar=no')}
+                        onClick={() => setIsTermsModalOpen(true)}
                     >
                         {language === 'en' && 'Terms & Conditions'}
                         {language === 'si' && 'නියමයන් සහ කොන්දේසි'}
@@ -238,6 +240,13 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
                     {language === 'ta' && 'அடுத்தது'}
                 </button>
             </div>
+
+            {/* Terms Modal */}
+            <TermsModal 
+                isOpen={isTermsModalOpen} 
+                onClose={() => setIsTermsModalOpen(false)} 
+                language={language} 
+            />
         </div>
     );
 };
