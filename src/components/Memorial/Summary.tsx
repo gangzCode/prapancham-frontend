@@ -27,6 +27,7 @@ const translations = {
     english: {
         overview: "Overview",
         name: "Name:",
+        knownAs: "known as",
         birthDateLabel: "Birth Date:",
         deathDateLabel: "Date of Passing:",
         age: "Age:",
@@ -82,6 +83,7 @@ const translations = {
     tamil: {
         overview: "கண்ணோட்டம்",
         name: "பெயர்:",
+        knownAs: "என அழைக்கப்படுபவர்",
         birthDateLabel: "பிறந்த தேதி:",
         deathDateLabel: "மறைவு தேதி:",
         age: "வயது:",
@@ -137,6 +139,7 @@ const translations = {
     sinhala: {
         overview: "දළ විශ්ලේෂණය",
         name: "නම:",
+        knownAs: "ලෙස හැඳින්වේ",
         birthDateLabel: "උපන් දිනය:",
         deathDateLabel: "මරණ දිනය:",
         age: "වයස:",
@@ -823,13 +826,23 @@ const Summary: React.FC<SummaryProps> = ({
                                         </div>
 
                                         <div className="w-full flex justify-center">
-                                            <h1 className="text-3xl md:text-4xl font-serif font-normal text-white mb-8 leading-tight text-center max-w-4xl">
-                                                {informationFormData?.title ||
-                                                    ((informationFormData?.firstName && informationFormData?.lastName)
-                                                        ? `${informationFormData.nameTitle} ${informationFormData.firstName} ${informationFormData.lastName}`
-                                                        : `${informationFormData.nameTitle} ${informationFormData?.preferredName}`
-                                                    ) || 'Memorial Preview'}
-                                            </h1>
+                                            <div className="text-center">
+                                                <h1 className="text-3xl md:text-4xl font-serif font-normal text-white mb-2 leading-tight text-center max-w-4xl">
+                                                    {informationFormData?.title ||
+                                                        ((informationFormData?.firstName && informationFormData?.lastName)
+                                                            ? `${informationFormData.nameTitle} ${informationFormData.firstName} ${informationFormData.lastName}`
+                                                            : `${informationFormData.nameTitle} ${informationFormData?.preferredName}`
+                                                        ) || 'Memorial Preview'}
+                                                </h1>
+                                                {informationFormData?.firstName && informationFormData?.lastName && informationFormData?.preferredName && (
+                                                    <p className="text-white text-opacity-80 text-lg font-light mb-6">
+                                                        ({t.knownAs} {informationFormData.preferredName})
+                                                    </p>
+                                                )}
+                                                {!(informationFormData?.firstName && informationFormData?.lastName && informationFormData?.preferredName) && (
+                                                    <div className="mb-8"></div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
