@@ -355,16 +355,9 @@ const Summary: React.FC<SummaryProps> = ({
     const createFormData = () => {
         const formData = {
             information: informationFormData ? {
-                title: informationFormData.title ||
-                    ((informationFormData?.firstName && informationFormData?.lastName)
-                        ? `${informationFormData.nameTitle ? informationFormData.nameTitle + ' ' : ''}${informationFormData.firstName} ${informationFormData.lastName}`
-                        : informationFormData?.preferredName
-                            ? `${informationFormData.preferredNameTitle ? informationFormData.preferredNameTitle + ' ' : ''}${informationFormData.preferredName}`
-                            : ''
-                    ) || '',
-                firstName: (informationFormData.firstName && informationFormData.lastName) ? `${informationFormData.nameTitle} ${informationFormData.firstName} ${informationFormData.lastName}` : '',
+                firstName: (informationFormData.firstName && informationFormData.lastName) ? `${informationFormData.nameTitle} ${informationFormData.firstName}` : '',
                 lastName: informationFormData.lastName || '',
-                preferredName: informationFormData.preferredName ? `${informationFormData.preferredNameTitle} ${informationFormData.preferredName}` : '',
+                preferredName: informationFormData.preferredName || '',
                 address: informationFormData.address || '',
                 dateofBirth: informationFormData.dateofBirth ? new Date(informationFormData.dateofBirth).toISOString().split('T')[0] : '',
                 dateofDeath: informationFormData.dateofDeath ? new Date(informationFormData.dateofDeath).toISOString().split('T')[0] : '',
