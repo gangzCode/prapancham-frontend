@@ -7,6 +7,7 @@ import StripePaymentMemorial, { useStripePaymentModal } from './StripePaymentMem
 import { add } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/components/ui/LanguageProvider';
+import TermsModal from '@/components/ui/TermsModal';
 interface SummaryProps {
     selectedPlan: any;
     profile: any;
@@ -27,6 +28,7 @@ const translations = {
     english: {
         overview: "Overview",
         name: "Name:",
+        knownAs: "known as",
         birthDateLabel: "Birth Date:",
         deathDateLabel: "Date of Passing:",
         age: "Age:",
@@ -82,6 +84,7 @@ const translations = {
     tamil: {
         overview: "கண்ணோட்டம்",
         name: "பெயர்:",
+        knownAs: "என அழைக்கப்படுபவர்",
         birthDateLabel: "பிறந்த தேதி:",
         deathDateLabel: "மறைவு தேதி:",
         age: "வயது:",
@@ -137,6 +140,7 @@ const translations = {
     sinhala: {
         overview: "දළ විශ්ලේෂණය",
         name: "නම:",
+        knownAs: "ලෙස හැඳින්වේ",
         birthDateLabel: "උපන් දිනය:",
         deathDateLabel: "මරණ දිනය:",
         age: "වයස:",
@@ -226,6 +230,7 @@ const Summary: React.FC<SummaryProps> = ({
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
     const [showSharePopup, setShowSharePopup] = useState(false);
     const [activeMediaTab, setActiveMediaTab] = useState<'messages' | 'cards' | 'letters' | 'memories' | 'flowers'>('messages');
+    const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
 
     // Localization text for share popup
     const shareText = {
@@ -355,16 +360,9 @@ const Summary: React.FC<SummaryProps> = ({
     const createFormData = () => {
         const formData = {
             information: informationFormData ? {
-                title: informationFormData.title ||
-                    ((informationFormData?.firstName && informationFormData?.lastName)
-                        ? `${informationFormData.nameTitle ? informationFormData.nameTitle + ' ' : ''}${informationFormData.firstName} ${informationFormData.lastName}`
-                        : informationFormData?.preferredName
-                            ? `${informationFormData.preferredNameTitle ? informationFormData.preferredNameTitle + ' ' : ''}${informationFormData.preferredName}`
-                            : ''
-                    ) || '',
-                firstName: (informationFormData.firstName && informationFormData.lastName) ? `${informationFormData.nameTitle} ${informationFormData.firstName} ${informationFormData.lastName}` : '',
+                firstName: (informationFormData.firstName && informationFormData.lastName) ? `${informationFormData.nameTitle} ${informationFormData.firstName}` : '',
                 lastName: informationFormData.lastName || '',
-                preferredName: informationFormData.preferredName ? `${informationFormData.preferredNameTitle} ${informationFormData.preferredName}` : '',
+                preferredName: informationFormData.preferredName || '',
                 address: informationFormData.address || '',
                 dateofBirth: informationFormData.dateofBirth ? new Date(informationFormData.dateofBirth).toISOString().split('T')[0] : '',
                 dateofDeath: informationFormData.dateofDeath ? new Date(informationFormData.dateofDeath).toISOString().split('T')[0] : '',
@@ -830,13 +828,23 @@ const Summary: React.FC<SummaryProps> = ({
                                         </div>
 
                                         <div className="w-full flex justify-center">
-                                            <h1 className="text-3xl md:text-4xl font-serif font-normal text-white mb-8 leading-tight text-center max-w-4xl">
-                                                {informationFormData?.title ||
-                                                    ((informationFormData?.firstName && informationFormData?.lastName)
-                                                        ? `${informationFormData.nameTitle} ${informationFormData.firstName} ${informationFormData.lastName}`
-                                                        : `${informationFormData.nameTitle} ${informationFormData?.preferredName}`
-                                                    ) || 'Memorial Preview'}
-                                            </h1>
+                                            <div className="text-center">
+                                                <h1 className="text-3xl md:text-4xl font-serif font-normal text-white mb-2 leading-tight text-center max-w-4xl">
+                                                    {informationFormData?.title ||
+                                                        ((informationFormData?.firstName && informationFormData?.lastName)
+                                                            ? `${informationFormData.nameTitle} ${informationFormData.firstName} ${informationFormData.lastName}`
+                                                            : `${informationFormData.nameTitle} ${informationFormData?.preferredName}`
+                                                        ) || 'Memorial Preview'}
+                                                </h1>
+                                                {informationFormData?.firstName && informationFormData?.lastName && informationFormData?.preferredName && (
+                                                    <p className="text-white text-opacity-80 text-lg font-light mb-6">
+                                                        ({informationFormData.preferredName})
+                                                    </p>
+                                                )}
+                                                {!(informationFormData?.firstName && informationFormData?.lastName && informationFormData?.preferredName) && (
+                                                    <div className="mb-8"></div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -885,7 +893,7 @@ const Summary: React.FC<SummaryProps> = ({
                                     disabled
                                     type="button"
                                 >
-                                    <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
                                     {t.postTribute}
@@ -895,7 +903,7 @@ const Summary: React.FC<SummaryProps> = ({
                                     disabled
                                     type="button"
                                 >
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0A1.5 1.5 0 013 18.546V19a1 1 0 001 1h16a1 1 0 001-1v-.454c0-.793-.644-1.546-1.5-1.546z" />
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12.054l-2.5-2.5L8 11.054l4 4 4-4-1.5-1.5-2.5 2.5z" />
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.054V12.054" />
@@ -1218,7 +1226,7 @@ const Summary: React.FC<SummaryProps> = ({
                 <div className='text-end'>
                     I have read and accept the <span
                         className='text-[#880002] underline cursor-pointer'
-                        onClick={() => window.open('/terms', 'termsWindow', 'width=800,height=600,scrollbars=yes,resizable=yes,status=no,location=no,toolbar=no,menubar=no')}
+                        onClick={() => setIsTermsModalOpen(true)}
                     >
                         Terms & Conditions
                     </span>
@@ -1442,6 +1450,13 @@ const Summary: React.FC<SummaryProps> = ({
                     </div>
                 </div>
             )}
+
+            {/* Terms Modal */}
+            <TermsModal 
+                isOpen={isTermsModalOpen} 
+                onClose={() => setIsTermsModalOpen(false)} 
+                language={language} 
+            />
         </div>
     );
 };

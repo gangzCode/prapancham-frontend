@@ -254,7 +254,7 @@ const MobileNavbar: React.FC = () => {
 
     return (
         <>
-            <div className="flex flex-col gap-4 sm:gap-6 md:gap-10 justify-between items-center px-4 md:px-8 lg:px-16  py-1 pb-4 w-full bg-primary shadow-[0px_4px_14px_rgba(0,0,0,0.25)]">
+            <div className="sticky top-0 z-50 flex flex-col gap-4 sm:gap-6 md:gap-10 justify-between items-center px-4 md:px-8 lg:px-16  py-1 pb-4 w-full bg-primary shadow-[0px_4px_14px_rgba(0,0,0,0.25)]">
                 {/* Top row: Logo on left, Language selector on right */}
                 <div className="flex justify-between w-full items-center text-white pt-2">
                     <div className="flex items-center ml-2">

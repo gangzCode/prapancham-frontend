@@ -7,12 +7,77 @@ import { ObituaryEntry } from "./types";
 import BreakingNewsCard from "./BreakingNewsCard";
 import ObituaryCard from "./ObituaryCard";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 import useSWR from "swr";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 import { ArrowRight } from "lucide-react";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+// Skeleton Loader Components
+const BreakingNewsSkeleton = () => (
+  <article className="flex-1 shrink self-stretch my-auto basis-0 min-w-60 shadow-[0px_0px_12px_rgba(0,0,0,0.06)] max-md:max-w-full">
+    <div className="flex relative flex-col justify-end w-full min-h-[516px] max-md:max-w-full animate-pulse">
+      <div className="absolute inset-0 bg-gray-200"></div>
+      <div className="relative z-10 p-6 bg-gradient-to-t from-black/60 to-transparent">
+        <div className="space-y-3">
+          <div className="h-4 bg-gray-300 rounded w-24"></div>
+          <div className="h-8 bg-gray-300 rounded w-3/4"></div>
+          <div className="space-y-2">
+            <div className="h-4 bg-gray-300 rounded w-full"></div>
+            <div className="h-4 bg-gray-300 rounded w-2/3"></div>
+          </div>
+          <div className="flex justify-between items-center mt-4">
+            <div className="h-4 bg-gray-300 rounded w-20"></div>
+            <div className="flex gap-2">
+              <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+              <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+);
+
+const ObituarySkeleton = () => (
+  <div className="animate-pulse space-y-4">
+    {[...Array(3)].map((_, index) => (
+      <div key={index} className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
+        <div className="flex gap-3">
+          <div className="w-16 h-16 bg-gray-200 rounded-lg flex-shrink-0"></div>
+          <div className="flex-1 space-y-2">
+            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div className="h-3 bg-gray-200 rounded w-full"></div>
+            <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+            <div className="flex justify-between items-center">
+              <div className="h-3 bg-gray-200 rounded w-20"></div>
+              <div className="h-3 bg-gray-200 rounded w-16"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const HeroSectionSkeleton = () => (
+  <section className="flex flex-wrap gap-6 justify-center items-center px-4 md:px-8 lg:px-16 mt-6 w-full max-md:px-5 max-md:max-w-full">
+    <BreakingNewsSkeleton />
+    <aside className="self-stretch rounded-2xl min-h-[516px] min-w-60 w-[375px]">
+      <div className="flex-shrink min-w-0 max-w-full">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-48 mb-2"></div>
+          <div className="h-1 bg-gray-200 rounded w-16"></div>
+        </div>
+      </div>
+      <div className="flex flex-1 gap-2 justify-center px-1 py-2 mt-4 h-full">
+        <div className="flex flex-1 justify-center items-start h-[456px]">
+          <ObituarySkeleton />
+        </div>
+      </div>
+    </aside>
+  </section>
+);
 
 type NewsItem = {
   id: string;
@@ -139,12 +204,13 @@ const HeroSection = () => {
       (order: any) => ({
         _id: order._id,
         title: order.information.shortDescription,
-        name: order.information.title 
-            || ((order.information.firstName && order.information.lastName)
-                ? `${order.information.firstName} ${order.information.lastName}`
-                : order.information.preferredName
-            )
-            || "",
+        name: order.information.title
+          || ((order.information.firstName && order.information.lastName && order.information.preferredName)
+            ? `${order.information.firstName} ${order.information.lastName} (${order.information.preferredName})`
+            : (order.information.firstName && order.information.lastName)
+              ? `${order.information.firstName} ${order.information.lastName}`
+              : order.information.preferredName
+          ),
         date: localeText[langKey].date(new Date(order.information.dateofDeath)),
         address: order.information.address,
         imageUrl: order.thumbnailImage || order.primaryImage,
@@ -178,11 +244,7 @@ const HeroSection = () => {
   return (
     <section className="flex flex-wrap gap-6 justify-center items-center px-4 md:px-8 lg:px-16 mt-6 w-full max-md:px-5 max-md:max-w-full">
       {isLoading ? (
-        <article className="flex-1 shrink self-stretch my-auto basis-0 min-w-60 shadow-[0px_0px_12px_rgba(0,0,0,0.06)] max-md:max-w-full">
-          <div className="flex relative flex-col justify-center items-center w-full min-h-[516px] max-md:max-w-full bg-gray-50">
-            <LoadingSpinner message="Loading breaking news..." />
-          </div>
-        </article>
+        <BreakingNewsSkeleton />
       ) : currentNews ? (
         <article className="flex-1 shrink self-stretch my-auto basis-0 min-w-60 shadow-[0px_0px_12px_rgba(0,0,0,0.06)] max-md:max-w-full">
           <div className="flex relative flex-col justify-end w-full min-h-[516px] max-md:max-w-full">
@@ -213,8 +275,8 @@ const HeroSection = () => {
         </div>
         <div className="flex flex-1 gap-2 justify-center px-1 py-2 mt-4 h-full">
           {obituaryLoading ? (
-            <div className="flex flex-1 justify-center items-center h-[456px]">
-              <LoadingSpinner message="Loading obituaries..." />
+            <div className="flex flex-1 justify-center items-start h-[456px] w-full">
+              <ObituarySkeleton />
             </div>
           ) : obituaryData.length === 0 ? (
             <div className="flex flex-1 justify-center items-center h-[456px]">
@@ -244,7 +306,7 @@ const HeroSection = () => {
                     {langKey === "ta"
                       ? "மேலும் பார்க்க"
                       : langKey === "si"
-                        ? "තවත් බලන්න"
+                        ? "தවत් බලන්න"
                         : "View more"}
                   </span>
                   <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />

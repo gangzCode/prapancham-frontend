@@ -377,11 +377,12 @@ const Obituary: React.FC = () => {
             )
             || "",
         name: order?.information?.title
-            || ((order?.information?.firstName && order?.information?.lastName)
-                ? `${order.information.firstName} ${order.information.lastName}`
-                : order?.information?.preferredName
-            )
-            || "",
+            || ((order?.information?.firstName && order?.information?.lastName && order?.information?.preferredName)
+                ? `${order.information.firstName} ${order.information.lastName} (${order.information.preferredName})`
+                : (order?.information?.firstName && order?.information?.lastName)
+                    ? `${order.information.firstName} ${order.information.lastName}`
+                    : order?.information?.preferredName
+            ) || "",
         date: order?.information?.dateofDeath
             ? new Date(order.information.dateofDeath).toLocaleDateString('en-GB', {
                 day: '2-digit',

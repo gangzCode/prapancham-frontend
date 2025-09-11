@@ -63,8 +63,7 @@ const Information: React.FC<InformationProps> = ({
             nameTitleLabel: "Title",
             firstNameLabel: "First Name",
             lastNameLabel: "Last Name",
-            preferredNameLabel: "Preferred Name",
-            usePreferredNameLabel: "Use preferred name instead of first and last name",
+            preferredNameLabel: "Preferred Name (Optional)",
             obituaryHeadlineLabel: "Obituary Headline",
             remembranceHeadlineLabel: "Remembrance Headline",
             obituaryHeadlinePlaceholder: "e.g., 'In loving memory of John Smith'",
@@ -92,8 +91,7 @@ const Information: React.FC<InformationProps> = ({
             nameTitleLabel: "பட்டம்",
             firstNameLabel: "முதல் பெயர்",
             lastNameLabel: "கடைசி பெயர்",
-            preferredNameLabel: "விருப்பமான பெயர்",
-            usePreferredNameLabel: "முதல் மற்றும் கடைசி பெயருக்கு பதிலாக விருப்பமான பெயரைப் பயன்படுத்தவும்",
+            preferredNameLabel: "விருப்பமான பெயர் (விருப்பமானது)",
             obituaryHeadlineLabel: "இறப்பு அறிக்கை தலைப்பு",
             remembranceHeadlineLabel: "நினைவஞ்சலி தலைப்பு",
             obituaryHeadlinePlaceholder: "உதாரணம்: 'ஜான் ஸ்மித்தின் அன்பான நினைவாக'",
@@ -121,8 +119,7 @@ const Information: React.FC<InformationProps> = ({
             nameTitleLabel: "පිරිනාමය",
             firstNameLabel: "මුල් නම",
             lastNameLabel: "අවසන් නම",
-            preferredNameLabel: "අභිමත නම",
-            usePreferredNameLabel: "මුල් සහ අවසන් නම වෙනුවට අභිමත නම භාවිතා කරන්න",
+            preferredNameLabel: "අභිමත නම (විකල්පය)",
             obituaryHeadlineLabel: "අවමංගල්‍ය මාතෘකාව",
             remembranceHeadlineLabel: "සිහිකිරීමේ මාතෘකාව",
             obituaryHeadlinePlaceholder: "උදාහරණ: 'ජෝන් ස්මිත්ගේ ප්‍රේමණීය සිහිකිරීමේදී'",
@@ -177,9 +174,7 @@ const Information: React.FC<InformationProps> = ({
 
     // Validation function to check if all required fields are filled
     const isFormValid = () => {
-        const hasNameInfo = formData.usePreferredName
-            ? formData.preferredName.trim() !== ''
-            : formData.firstName.trim() !== '' && formData.lastName.trim() !== '';
+        const hasNameInfo = formData.firstName.trim() !== '' && formData.lastName.trim() !== '';
 
         return hasNameInfo &&
             formData.address.trim() !== '' &&
@@ -301,97 +296,65 @@ const Information: React.FC<InformationProps> = ({
                     <TitleWithUnderline text={t.informationTitle} underlineWidth={64} />
                 </div>
                 <div className="mb-4">
-                    <div className="flex items-center mb-3">
-                        <input
-                            type="checkbox"
-                            id="usePreferredName"
-                            checked={formData.usePreferredName}
-                            onChange={(e) => handleInputChange('usePreferredName', e.target.checked)}
-                            className="mr-2 h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
-                        />
-                        <label htmlFor="usePreferredName" className="text-sm text-gray-700">
-                            {t.usePreferredNameLabel}
-                        </label>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                        <div>
+                            <label htmlFor="nameTitle" className="pb-2 block">
+                                {t.nameTitleLabel}
+                            </label>
+                            <select
+                                id="nameTitle"
+                                value={formData.nameTitle}
+                                onChange={(e) => handleInputChange('nameTitle', e.target.value)}
+                                className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                            >
+                                <option value="">Select</option>
+                                {Object.values(nameTitleOptions).map((title: string, index: number) => (
+                                    <option key={index} value={title}>{title}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label htmlFor="firstName" className="pb-2 block">
+                                {t.firstNameLabel}<span className="text-[#880002]">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="firstName"
+                                value={formData.firstName}
+                                onChange={(e) => handleInputChange('firstName', e.target.value)}
+                                required
+                                className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                            />
+                        </div>
+                        <div className="md:col-span-2">
+                            <label htmlFor="lastName" className="pb-2 block">
+                                {t.lastNameLabel}<span className="text-[#880002]">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="lastName"
+                                value={formData.lastName}
+                                onChange={(e) => handleInputChange('lastName', e.target.value)}
+                                required
+                                className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                            />
+                        </div>
                     </div>
-
-                    {formData.usePreferredName ? (
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div>
-                                <label htmlFor="preferredNameTitle" className="pb-2 block">
-                                    {t.nameTitleLabel}
-                                </label>
-                                <select
-                                    id="preferredNameTitle"
-                                    value={formData.preferredNameTitle}
-                                    onChange={(e) => handleInputChange('preferredNameTitle', e.target.value)}
-                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                >
-                                    <option value="">Select</option>
-                                    {Object.values(nameTitleOptions).map((title: string, index: number) => (
-                                        <option key={index} value={title}>{title}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="md:col-span-3">
-                                <label htmlFor="preferredName" className="pb-2 block">
-                                    {t.preferredNameLabel}<span className="text-[#880002]">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    id="preferredName"
-                                    value={formData.preferredName}
-                                    onChange={(e) => handleInputChange('preferredName', e.target.value)}
-                                    required
-                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                />
-                            </div>
+                    
+                    <div className="grid grid-cols-1 gap-4">
+                        <div>
+                            <label htmlFor="preferredName" className="pb-2 block">
+                                {t.preferredNameLabel}
+                            </label>
+                            <input
+                                type="text"
+                                id="preferredName"
+                                value={formData.preferredName}
+                                onChange={(e) => handleInputChange('preferredName', e.target.value)}
+                                className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                            />
                         </div>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div>
-                                <label htmlFor="nameTitle" className="pb-2 block">
-                                    {t.nameTitleLabel}
-                                </label>
-                                <select
-                                    id="nameTitle"
-                                    value={formData.nameTitle}
-                                    onChange={(e) => handleInputChange('nameTitle', e.target.value)}
-                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                >
-                                    <option value="">Select</option>
-                                    {Object.values(nameTitleOptions).map((title: string, index: number) => (
-                                        <option key={index} value={title}>{title}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div>
-                                <label htmlFor="firstName" className="pb-2 block">
-                                    {t.firstNameLabel}<span className="text-[#880002]">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    id="firstName"
-                                    value={formData.firstName}
-                                    onChange={(e) => handleInputChange('firstName', e.target.value)}
-                                    required
-                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                />
-                            </div>
-                            <div className="md:col-span-2">
-                                <label htmlFor="lastName" className="pb-2 block">
-                                    {t.lastNameLabel}<span className="text-[#880002]">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    id="lastName"
-                                    value={formData.lastName}
-                                    onChange={(e) => handleInputChange('lastName', e.target.value)}
-                                    required
-                                    className="w-full h-[3.5rem] px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                                />
-                            </div>
-                        </div>
-                    )}
+                    </div>
                 </div>
                 <div className="mb-4">
                     <label htmlFor="shortDescription" className={`pb-2 block`}>

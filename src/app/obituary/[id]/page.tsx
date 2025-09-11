@@ -39,6 +39,7 @@ const localeText = {
         requestToContact: "Request to Contact",
         overview: "Overview",
         name: "Name:",
+        knownAs: "known as",
         birthDateLabel: "Birth Date:",
         deathDateLabel: "Date of Passing:",
         age: "Age:",
@@ -107,6 +108,7 @@ const localeText = {
         requestToContact: "தொடர்பு கோரிக்கை",
         overview: "கண்ணோட்டம்",
         name: "பெயர்:",
+        knownAs: "என அழைக்கப்படுபவர்",
         birthDateLabel: "பிறந்த தேதி:",
         deathDateLabel: "மறைவு தேதி:",
         age: "வயது:",
@@ -175,6 +177,7 @@ const localeText = {
         requestToContact: "සම්බන්ධ වීමට ඉල්ලීම",
         overview: "දළ විශ්ලේෂණය",
         name: "නම:",
+        knownAs: "ලෙස හැඳින්වේ",
         birthDateLabel: "උපන් දිනය:",
         deathDateLabel: "මරණ දිනය:",
         age: "වයස:",
@@ -898,12 +901,22 @@ const ObituaryDetail: React.FC = () => {
                                     </div>
 
                                     <div className="w-full flex justify-center">
-                                        <h1 className="text-3xl md:text-4xl font-serif font-normal text-white mb-8 leading-tight text-center max-w-4xl">
-                                            {obituaryData.information.title
-                                                || (obituaryData.information.firstName && obituaryData.information.lastName)
-                                                ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
-                                                : obituaryData.information.preferredName || t.memorialTitle}
-                                        </h1>
+                                        <div className="text-center">
+                                            <h1 className="text-3xl md:text-4xl font-serif font-normal text-white mb-2 leading-tight text-center max-w-4xl">
+                                                {obituaryData.information.title
+                                                    || (obituaryData.information.firstName && obituaryData.information.lastName)
+                                                    ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                                                    : obituaryData.information.preferredName || t.memorialTitle}
+                                            </h1>
+                                            {obituaryData.information.firstName && obituaryData.information.lastName && obituaryData.information.preferredName && (
+                                                <p className="text-white text-opacity-80 text-lg font-light mb-6">
+                                                    ({obituaryData.information.preferredName})
+                                                </p>
+                                            )}
+                                            {!(obituaryData.information.firstName && obituaryData.information.lastName && obituaryData.information.preferredName) && (
+                                                <div className="mb-8"></div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -955,7 +968,7 @@ const ObituaryDetail: React.FC = () => {
                                     setIsTributeModalOpen(true)
                                 }
                             >
-                                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
                                 {t.postTribute}
@@ -965,7 +978,7 @@ const ObituaryDetail: React.FC = () => {
                                     onClick={() => setIsModalOpen(true)}
                                     className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold"
                                 >
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0A1.5 1.5 0 013 18.546V19a1 1 0 001 1h16a1 1 0 001-1v-.454c0-.793-.644-1.546-1.5-1.546z" />
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12.054l-2.5-2.5L8 11.054l4 4 4-4-1.5-1.5-2.5 2.5z" />
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.054V12.054" />

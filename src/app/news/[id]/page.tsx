@@ -7,11 +7,97 @@ import RelevantNewsSection from "@/components/news-individual/RelevantNewsSectio
 import { Separator } from "@/components/ui/separator";
 import AdvertisementSidebar from "@/components/news-category/AdvertisementSidebar";
 import { useLanguage } from "@/components/ui/LanguageProvider";
-import LoadingSpinner from "../../../../components/ui/LoadingSpinner";
 
 type LanguageKey = "en" | "ta" | "si";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+// Skeleton Loader Components
+const NewsIndividualSkeleton = () => (
+  <div className="bg-white min-h-screen">
+    <div className="flex flex-col justify-center px-4 md:px-8 lg:px-16 py-6 max-md:px-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="md:col-span-2 animate-pulse">
+          {/* Main Image Skeleton */}
+          <div className="mb-6">
+            <div className="w-full h-[450px] bg-gray-200 rounded-lg"></div>
+            <div className="flex items-center gap-2 mt-4 justify-between">
+              <div className="flex items-center gap-2">
+                <div className="h-4 bg-gray-200 rounded w-24"></div>
+                <div className="h-3 bg-gray-200 rounded w-20"></div>
+              </div>
+              <div className="h-3 bg-gray-200 rounded w-24"></div>
+            </div>
+          </div>
+
+          {/* Title Skeleton */}
+          <div className="mb-4">
+            <div className="h-8 bg-gray-200 rounded w-3/4 mb-2"></div>
+            <div className="h-6 bg-gray-200 rounded w-1/2"></div>
+          </div>
+
+          {/* Content Skeleton */}
+          <div className="space-y-4 mb-6">
+            <div className="h-4 bg-gray-200 rounded w-full"></div>
+            <div className="h-4 bg-gray-200 rounded w-full"></div>
+            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div className="h-4 bg-gray-200 rounded w-full"></div>
+            <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+          </div>
+
+          {/* Other Images Skeleton */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-8">
+            {[...Array(3)].map((_, index) => (
+              <div key={index} className="w-full h-[320px] bg-gray-200 rounded"></div>
+            ))}
+          </div>
+
+          {/* More Content Skeleton */}
+          <div className="space-y-4 mb-6">
+            <div className="h-4 bg-gray-200 rounded w-full"></div>
+            <div className="h-4 bg-gray-200 rounded w-full"></div>
+            <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+            <div className="h-4 bg-gray-200 rounded w-full"></div>
+          </div>
+
+          {/* Bottom Images Skeleton */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-8">
+            <div className="w-full h-[336px] bg-gray-200 rounded"></div>
+            <div className="w-full h-[336px] bg-gray-200 rounded"></div>
+          </div>
+        </div>
+
+        {/* Sidebar Skeleton */}
+        <div className="md:col-span-1 animate-pulse">
+          <div className="space-y-6">
+            {[...Array(4)].map((_, index) => (
+              <div key={index} className="w-full h-64 bg-gray-200 rounded-lg"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Related News Section Skeleton */}
+    <div className="px-4 md:px-8 lg:px-16 py-8 animate-pulse">
+      <div className="mb-6">
+        <div className="h-8 bg-gray-200 rounded w-64 mb-4"></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, index) => (
+            <div key={index} className="bg-gray-100 rounded-lg p-4">
+              <div className="w-full h-48 bg-gray-200 rounded mb-4"></div>
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div className="h-3 bg-gray-200 rounded w-full"></div>
+                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 const NewsIndividual: React.FC = () => {
   const params = useParams();
@@ -28,13 +114,15 @@ const NewsIndividual: React.FC = () => {
   );
 
   if (error) {
-    <div className="text-red-500 p-4">
-      {localeText[langKey]?.failedToLoad || "Failed to load news."}
-    </div>;
+    return (
+      <div className="text-red-500 p-4">
+        {localeText[langKey]?.failedToLoad || "Failed to load news."}
+      </div>
+    );
   }
 
   if (!data || !data.news) {
-    return <LoadingSpinner message={localeText[langKey]?.loading || "Loading..."} />;
+    return <NewsIndividualSkeleton />;
   }
 
   const getTimeAgo = (createdAt: string) => {
@@ -172,10 +260,10 @@ const NewsIndividual: React.FC = () => {
         </div>
       </div>
 
-      <RelevantNewsSection
+      {/* <RelevantNewsSection
         relatedNews={data.relatedNews}
         differentCategoryNews={data.differentCategoryNews}
-      />
+      /> */}
       {/* <RelevantNewsSection /> */}
     </div>
   );

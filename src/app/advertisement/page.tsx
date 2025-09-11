@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import PaginationBar from "@/components/category/PaginationBar";
 import useSWR from 'swr';
 import { useLanguage } from "@/components/ui/LanguageProvider";
@@ -58,9 +58,62 @@ interface AdResponse {
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
-const Advertisement = () => {
+const LoadingSpinner = ({ language }: { language?: string }) => {
+  const loadingText = {
+    english: "Loading advertisements...",
+    tamil: "விளம்பரங்கள் ஏற்றப்படுகின்றன...",
+    sinhala: "දැන්වීම් පූරණය වෙමින්...",
+  };
+
+  const text = loadingText[language as keyof typeof loadingText] || loadingText.english;
+
+  return (
+    <div className="flex flex-col justify-center items-center py-8 space-y-4">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <p className="text-gray-600 text-sm">{text}</p>
+    </div>
+  );
+};
+
+// Loading component for Suspense fallback
+const AdPageLoading = () => (
+  <div className="flex flex-col">
+    <main className="flex flex-col mt-0 w-full bg-white max-md:mt-0 gap-[24px]">
+      {/* Loading Spinner at top */}
+      <LoadingSpinner />
+
+      <div className="animate-pulse">
+        {/* Category Tabs Skeleton */}
+        <div className="h-16 bg-gray-200 rounded-lg mb-6 mx-4 md:mx-8 lg:mx-16"></div>
+
+        {/* Advertisement Grid Skeleton */}
+        <div className="mx-4 md:mx-8 lg:px-16 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="bg-gray-100 rounded-lg p-4">
+                <div className="w-full h-48 bg-gray-200 rounded mb-4"></div>
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-3 bg-gray-200 rounded w-full"></div>
+                  <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Pagination Skeleton */}
+        <div className="h-12 bg-gray-200 rounded-lg mx-4 md:mx-8 lg:mx-16"></div>
+      </div>
+    </main>
+  </div>
+);
+
+const AdvertisementContent = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedAdCategory, setSelectedAdCategory] = useState<string>('');
+    const [pageLoading, setPageLoading] = useState(true);
+    const [activeCountry, setActiveCountry] = useState<string>('');
     const { language } = useLanguage();
     let langKey: LanguageKey;
 
@@ -144,6 +197,66 @@ const Advertisement = () => {
         fetcher
     );
 
+    // Manage overall page loading state
+    useEffect(() => {
+        const allDataLoaded = !isLoading && !adsLoading;
+        
+        if (allDataLoaded && pageLoading) {
+            // Add a small delay for smooth transition
+            setTimeout(() => {
+                setPageLoading(false);
+            }, 500);
+        }
+    }, [isLoading, adsLoading, pageLoading]);
+
+    // Reset page loading when category changes
+    useEffect(() => {
+        setPageLoading(true);
+    }, [selectedAdCategory]);
+
+    // Update activeCountry when categories are loaded
+    useEffect(() => {
+        if (categoriesData && categoriesData.length > 0 && !activeCountry) {
+            const langObj = categoriesData[0].name[langKey]?.[0] || categoriesData[0].name["en"]?.[0];
+            const firstCategory = `${langObj?.value} (${categoriesData[0].adCount} ${t.posts})` || "";
+            setActiveCountry(firstCategory);
+        }
+    }, [categoriesData, activeCountry, langKey, t.posts]);
+
+    // Show loading state until all data is loaded
+    if (pageLoading) {
+        return (
+            <div className="flex flex-col">
+                <main className="flex flex-col mt-0 w-full bg-white max-md:mt-0 gap-[24px]">
+                    <LoadingSpinner language={language} />
+                    <div className="animate-pulse mx-4 md:mx-8 lg:mx-16">
+                        {/* Category Tabs Skeleton */}
+                        <div className="h-16 bg-gray-200 rounded-lg mb-6"></div>
+
+                        {/* Advertisement Grid Skeleton */}
+                        <div className="mb-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                {[...Array(8)].map((_, i) => (
+                                    <div key={i} className="bg-gray-100 rounded-lg p-4">
+                                        <div className="w-full h-48 bg-gray-200 rounded mb-4"></div>
+                                        <div className="space-y-2">
+                                            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                                            <div className="h-3 bg-gray-200 rounded w-full"></div>
+                                            <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Pagination Skeleton */}
+                        <div className="h-12 bg-gray-200 rounded-lg"></div>
+                    </div>
+                </main>
+            </div>
+        );
+    }
+
 
     const categories: string[] = [
         ...(categoriesData?.map((cat: any) => {
@@ -182,14 +295,6 @@ const Advertisement = () => {
         </div>
     );
 
-
-    const [activeCountry, setActiveCountry] = useState(categories[0]);
-    useEffect(() => {
-        if (categories.length > 0 && !activeCountry) {
-            setActiveCountry(categories[0]);
-        }
-    }, [categories, activeCountry]);
-
     const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
     };
@@ -207,37 +312,6 @@ const Advertisement = () => {
         const message = encodeURIComponent("Hi! I'm interested in advertising on your platform. Could you please provide more information?");
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
         window.open(whatsappUrl, '_blank');
-    }
-
-    // Loading state
-    if (adsLoading) {
-        return (
-            <div className="mt-8 py-8 px-4 md:px-8 lg:px-16">
-                <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
-                    {/* Animated loading spinner */}
-                    <div className="relative">
-                        <div className="w-12 h-12 border-4 border-gray-200 border-t-primary rounded-full animate-spin"></div>
-                        <div className="absolute inset-0 w-12 h-12 border-4 border-transparent border-r-teal-300 rounded-full animate-ping"></div>
-                    </div>
-                    {/* Loading text with fade animation */}
-                    <div className="text-center space-y-2">
-                        <h2 className="text-xl font-semibold text-gray-700 animate-pulse">
-                            {t.loadingAds}
-                        </h2>
-                        <p className="text-sm text-gray-500">
-                            {t.pleaseWait}
-                        </p>
-                    </div>
-                    {/* Loading bars animation */}
-                    <div className="flex space-x-1">
-                        <div className="w-2 h-8 bg-primary rounded animate-pulse" style={{animationDelay: '0ms'}}></div>
-                        <div className="w-2 h-8 bg-teal-400 rounded animate-pulse" style={{animationDelay: '150ms'}}></div>
-                        <div className="w-2 h-8 bg-teal-300 rounded animate-pulse" style={{animationDelay: '300ms'}}></div>
-                        <div className="w-2 h-8 bg-primary rounded animate-pulse" style={{animationDelay: '450ms'}}></div>
-                    </div>
-                </div>
-            </div>
-        );
     }
 
     // Error state
@@ -701,6 +775,15 @@ const Advertisement = () => {
             </div>
         </div>
     );
+};
+
+// Main component wrapped in Suspense
+const Advertisement: React.FC = () => {
+  return (
+    <Suspense fallback={<AdPageLoading />}>
+      <AdvertisementContent />
+    </Suspense>
+  );
 };
 
 export default Advertisement;

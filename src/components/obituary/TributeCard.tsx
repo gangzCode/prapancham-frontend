@@ -108,7 +108,7 @@ const TributeCard: React.FC<TributeCardProps> = ({
           onClick={() => setIsTributeModalOpen(true)}
           className={`bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-4 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-102 transition-all duration-200 flex items-center gap-2 font-semibold justify-center ${isDonationEnabled() ? 'flex-grow' : 'w-full'}`}
         >
-          <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
           </svg>
           {t.postTribute}
@@ -129,7 +129,7 @@ const TributeCard: React.FC<TributeCardProps> = ({
               onClick={() => setIsModalOpen(true)}
               className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-4 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-102 transition-all duration-200 flex items-center gap-2 font-semibold min-w-[120px]"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0A1.5 1.5 0 013 18.546V19a1 1 0 001 1h16a1 1 0 001-1v-.454c0-.793-.644-1.546-1.5-1.546z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12.054l-2.5-2.5L8 11.054l4 4 4-4-1.5-1.5-2.5 2.5z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.054V12.054" />
