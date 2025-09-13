@@ -734,7 +734,7 @@ const Summary: React.FC<SummaryProps> = ({
                     
                     {/* Background Color Selection */}
                     <div className="my-4">
-                        <p className="text-sm text-gray-600 mb-2">{t.selectBackgroundColor}</p>
+                        <p className="text-md text-gray-600 mb-2">{t.selectBackgroundColor}</p>
                         <div className="flex flex-wrap gap-2">
                             {(selectedPlan?.bgColors || [
                                 { _id: "", colorCode: "#ffffff" },

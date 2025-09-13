@@ -278,7 +278,7 @@ export default function Footer() {
                   return (
                     <li key={category._id}>
                       <a 
-                        href={`/news?category=${categoryValue}`} 
+                        href={`/news?category=${category._id}`} 
                         className="hover:text-[#6ec1e4] transition-colors"
                       >
                         {categoryName}

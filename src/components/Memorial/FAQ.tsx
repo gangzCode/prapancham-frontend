@@ -21,6 +21,19 @@ export default function FAQ() {
         setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
     };
 
+    // Localization for FAQ title
+    const getLocalizedTitle = () => {
+        switch (language) {
+            case 'tamil':
+                return 'அடிக்கடி கேட்கப்படும் கேள்விகள்';
+            case 'sinhala':
+                return 'නිතර අසන ප්‍රශ්න';
+            case 'english':
+            default:
+                return 'Frequently Asked Questions';
+        }
+    };
+
     // if (isLoading) {
     //     return <div>Loading...</div>;
     // }
@@ -35,7 +48,7 @@ export default function FAQ() {
         <div className="">
             <div className=" mx-auto bg-white p-6 ">
                 <div className=" min-w-0 max-w-full">
-                    <TitleWithUnderline text="Frequently Asked Questions" underlineWidth={64} fontSize={2.4} />
+                    <TitleWithUnderline text={getLocalizedTitle()} underlineWidth={64} fontSize={2.4} />
                 </div>
                 <div className="space-y-4">
                     {faqs.map((faq: any, index: number) => {
