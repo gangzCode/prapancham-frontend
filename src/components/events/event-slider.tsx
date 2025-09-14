@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import useSWR from 'swr';
@@ -11,14 +11,21 @@ const fetcher = (url: string) => fetch(url).then(res => res.json());
 const EventSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { language } = useLanguage();
+  const totalItemsRef = useRef(0);
 
   const { data, error, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/event/featured?page=1&limit=10`,
-    fetcher
+    fetcher,
+    {
+      keepPreviousData: true, // Show previous data while loading new data
+      revalidateOnFocus: false, // Don't revalidate when window gets focus
+      revalidateOnReconnect: false, // Don't revalidate on reconnect
+    }
   );
 
   const events = data?.events || [];
   const totalItems = events.length;
+  totalItemsRef.current = totalItems;
 
   const currentEvent = events[currentIndex];
   let langKey: LanguageKey;
@@ -51,20 +58,22 @@ const EventSlider = () => {
     return field?.[langKey]?.[0]?.[key] || '';
   };
 
-  const nextImage = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % totalItems);
-  };
+  const nextImage = useCallback(() => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % Math.max(totalItemsRef.current, 1));
+  }, []);
 
-  const prevImage = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + totalItems) % totalItems);
-  };
+  const prevImage = useCallback(() => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + Math.max(totalItemsRef.current, 1)) % Math.max(totalItemsRef.current, 1));
+  }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      nextImage();
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [totalItems]);
+    if (totalItems > 1) {
+      const interval = setInterval(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % Math.max(totalItems, 1));
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [totalItems > 1]); // Only depend on whether we have multiple items
 
   if (isLoading || !currentEvent) {
     return <div className="text-center p-4">Loading events...</div>;
