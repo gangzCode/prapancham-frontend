@@ -84,29 +84,35 @@ const EventsContent: React.FC = () => {
     const [year, setYear] = useState<number | null>(2025);
     const [month, setMonth] = useState<number | null>(6);
     const [day, setDay] = useState<number | null>(15);
-    const [pageLoading, setPageLoading] = useState(true);
     const { language } = useLanguage();
 
-    // Fetch events data to check loading states
-    const { data: eventsData, error: eventsError, isLoading: eventsLoading } = useSWR(
-        `${process.env.NEXT_PUBLIC_API_URL}/events/active`,
-        fetcher
+    // Check if any child component is loading for the first time
+    const { data: featuredEventsData, isLoading: featuredEventsLoading } = useSWR(
+        `${process.env.NEXT_PUBLIC_API_URL}/event/featured?page=1&limit=10`,
+        fetcher,
+        {
+            keepPreviousData: true,
+            revalidateOnFocus: false,
+            revalidateOnReconnect: false,
+        }
     );
 
-    // Manage overall page loading state
-    useEffect(() => {
-        const allDataLoaded = !eventsLoading;
-        
-        if (allDataLoaded && pageLoading) {
-            // Add a small delay for smooth transition
-            setTimeout(() => {
-                setPageLoading(false);
-            }, 500);
+    const { data: activeEventsData, isLoading: activeEventsLoading } = useSWR(
+        `${process.env.NEXT_PUBLIC_API_URL}/event/active?page=1&limit=7&year=${year || ''}&month=${month || ''}&day=${day || ''}`,
+        fetcher,
+        {
+            keepPreviousData: true,
+            revalidateOnFocus: false,
+            revalidateOnReconnect: false,
         }
-    }, [eventsLoading, pageLoading]);
+    );
 
-    // Show loading state until all data is loaded
-    if (pageLoading) {
+    // Show skeleton only on initial load (when there's no cached data)
+    const showInitialLoading = 
+        (featuredEventsLoading && !featuredEventsData) || 
+        (activeEventsLoading && !activeEventsData);
+
+    if (showInitialLoading) {
         return (
             <div className="flex flex-col">
                 <main className="flex flex-col mt-0 w-full bg-white max-md:mt-0 gap-[24px]">
@@ -157,7 +163,6 @@ const EventsContent: React.FC = () => {
             </div>
         );
     }
-
 
     return (
         <section className="flex flex-col justify-center px-4 md:px-8 lg:px-16 py-6 max-md:px-5">

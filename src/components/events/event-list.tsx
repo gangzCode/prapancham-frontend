@@ -93,7 +93,12 @@ const EventList: React.FC<CalendarProps> = ({ year, month, day }) => {
 
     const { data, error, isLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API_URL}/event/active?page=${currentPage}&limit=${eventsPerPage}&year=${year || ''}&month=${month || ''}&day=${day || ''}`,
-        fetcher
+        fetcher,
+        {
+            keepPreviousData: true, // Show previous data while loading new data
+            revalidateOnFocus: false, // Don't revalidate when window gets focus
+            revalidateOnReconnect: false, // Don't revalidate on reconnect
+        }
     );
 
     // if (isLoading) return <div>Loading...</div>;

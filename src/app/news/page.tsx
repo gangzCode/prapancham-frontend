@@ -132,9 +132,6 @@ const NewsPageContent: React.FC = () => {
 
   const [activeCategory, setActiveCategory] = useState(categoryFromUrl || "all");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [dynamicAds, setDynamicAds] = useState<FeaturedAd[]>([]);
-  const [adsLoading, setAdsLoading] = useState(true);
-  const [pageLoading, setPageLoading] = useState(true);
 
   // Custom handler for category changes that updates URL
   const handleCategoryChange = (categoryId: string) => {
@@ -150,121 +147,82 @@ const NewsPageContent: React.FC = () => {
     router.push(url.pathname + url.search, { scroll: false });
   };
 
-  // Fetch dynamic ads
-  useEffect(() => {
-    const fetchAds = async () => {
-      try {
-        setAdsLoading(true);
+  // SWR fetcher with auth headers
+  const fetcherWithAuth = async (url: string) => {
+    const accessToken = localStorage.getItem('accessToken');
+    const response = await fetch(url, {
+      headers: {
+        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch');
+    }
+    return response.json();
+  };
 
-        // Get access token from localStorage
-        const accessToken = localStorage.getItem('accessToken');
+  // Fetch ad types to get Sidebar Banner type ID
+  const { data: adTypesData } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/advertistment/ad-type/active?page=1&limit=10`,
+    fetcherWithAuth,
+    {
+      keepPreviousData: true,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
 
-        // First, get the ad types to find the Sidebar Banner type
-        const adTypesResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/advertistment/ad-type/active?page=1&limit=10`,
-          {
-            headers: {
-              ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+  // Get the Sidebar Banner ad type ID
+  const sidebarAdType = adTypesData?.adTypes?.find(
+    (type: AdType) => type.type === 'Sidebar Banner'
+  );
 
-        if (!adTypesResponse.ok) {
-          throw new Error('Failed to fetch ad types');
-        }
+  // Fetch advertisements using SWR
+  const { data: adsData, isLoading: adsLoading } = useSWR(
+    sidebarAdType?._id 
+      ? `${process.env.NEXT_PUBLIC_API_URL}/advertistment/by-ad-type-ad-page?adType=${sidebarAdType._id}&adPageName=home`
+      : null,
+    fetcherWithAuth,
+    {
+      keepPreviousData: true,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
 
-        const adTypesData = await adTypesResponse.json();
-        const billboardAdType = adTypesData.adTypes.find(
-          (type: AdType) => type.type === 'Sidebar Banner'
-        );
-
-        if (!billboardAdType) {
-          console.error('Sidebar Banner ad type not found');
-          return;
-        }
-
-        // Now fetch the advertisements for home page and Sidebar Banner ad type
-        const adsResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/advertistment/by-ad-type-ad-page?adType=${billboardAdType._id}&adPageName=home`,
-          {
-            headers: {
-              ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-
-        if (!adsResponse.ok) {
-          throw new Error('Failed to fetch advertisements');
-        }
-
-        const adsData = await adsResponse.json();
-        const fetchedAds = Array.isArray(adsData) ? adsData : [];
-
-        // Format the ads to match FeaturedAd structure
-        const formattedAds: FeaturedAd[] = fetchedAds.slice(0, 5).map((ad: AdData, index: number) => ({
-          id: index + 1,
-          title: `Advertisement ${index + 1}`,
-          image: ad.image || "/images/Prapancham-logo.png",
-          label: `Advertisement ${index + 1}`,
-          link: ad.link
-        }));
-
-        setDynamicAds(formattedAds);
-
-      } catch (error) {
-        console.error('Error fetching advertisements:', error);
-        setDynamicAds([]);
-      } finally {
-        setAdsLoading(false);
-      }
-    };
-
-    fetchAds();
-  }, []);
+  // Format the ads data
+  const dynamicAds: FeaturedAd[] = adsData 
+    ? (Array.isArray(adsData) ? adsData : []).slice(0, 5).map((ad: AdData, index: number) => ({
+        id: index + 1,
+        title: `Advertisement ${index + 1}`,
+        image: ad.image || "/images/Prapancham-logo.png",
+        label: `Advertisement ${index + 1}`,
+        link: ad.link
+      }))
+    : [];
 
   const { data, error, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/news/news-category/active?page=1&limit=10`,
     fetcher,
     {
-      onSuccess: (data) => {
-      },
-      onError: (error) => {
-        console.error('News category API error:', error);
-      }
+      keepPreviousData: true, // Show previous data while loading new data
+      revalidateOnFocus: false, // Don't revalidate when window gets focus
+      revalidateOnReconnect: false, // Don't revalidate on reconnect
     }
   );
 
-  const { data: breakingNewsData, error: breakingNewsError } = useSWR(
+  const { data: breakingNewsData, error: breakingNewsError, isLoading: breakingNewsLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/news/breaking-news/10`,
     fetcher,
     {
-      onSuccess: (data) => {
-      },
-      onError: (error) => {
-        console.error('Breaking news API error:', error);
-      }
+      keepPreviousData: true, // Show previous data while loading new data
+      revalidateOnFocus: false, // Don't revalidate when window gets focus
+      revalidateOnReconnect: false, // Don't revalidate on reconnect
     }
   );
 
-  // Check if all data is loaded
-  useEffect(() => {
-    const allDataLoaded = (
-      !adsLoading &&
-      !isLoading &&
-      (breakingNewsData !== undefined || breakingNewsError) &&
-      (data !== undefined || error)
-    );
-
-    if (allDataLoaded && pageLoading) {
-      // Add a small delay to ensure smooth transition
-      const timer = setTimeout(() => {
-        setPageLoading(false);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [adsLoading, isLoading, breakingNewsData, breakingNewsError, data, error, pageLoading]);
+  // Remove the pageLoading logic - let SWR handle caching naturally
 
   // Update active category when URL parameter changes or data loads
   useEffect(() => {
@@ -338,8 +296,10 @@ const NewsPageContent: React.FC = () => {
     timeAgo: "N/A",
   };
 
-  // Show loading state until all data is loaded
-  if (pageLoading) {
+  // Show loading state only on initial load (when there's no cached data)
+  const showInitialLoading = (isLoading && !data) || (breakingNewsLoading && !breakingNewsData);
+
+  if (showInitialLoading) {
     return (
       <div className="flex flex-col">
         <main className="flex flex-col mt-0 w-full bg-white max-md:mt-0 gap-[24px]">

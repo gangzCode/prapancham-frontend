@@ -60,7 +60,11 @@ const DonationReceivableConfirmation: React.FC<DonationReceivableConfirmationPro
             warningTitle: "Important Note:",
             warningText: "Once enabled, donation information will be displayed on the memorial page. You can disable this feature at any time from your memorial settings.",
             backButton: "Back",
-            continueButton: "Continue"
+            continueButton: "Continue",
+            withNoExtraAddons: "with no extra addons",
+            with: "with",
+            addon: "addon",
+            addons: "addons"
         },
         tamil: {
             greeting: "வணக்கம் {username}, எங்கள் ஆழ்ந்த இரங்கல்கள்.",
@@ -80,7 +84,11 @@ const DonationReceivableConfirmation: React.FC<DonationReceivableConfirmationPro
             warningTitle: "முக்கியமான குறிப்பு:",
             warningText: "இயக்கப்பட்டவுடன், நன்கொடை தகவல் நினைவுச்சின்ன பக்கத்தில் காண்பிக்கப்படும். உங்கள் நினைவுச்சின்ன அமைப்புகளில் இருந்து எந்த நேரத்திலும் இந்த அம்சத்தை முடக்க முடியும்.",
             backButton: "பின்",
-            continueButton: "தொடர்"
+            continueButton: "தொடர்",
+            withNoExtraAddons: "கூடுதல் சேவைகள் இல்லாமல்",
+            with: "உடன்",
+            addon: "சேவை",
+            addons: "சேவைகள்"
         },
         sinhala: {
             greeting: "ආයුබෝවන් {username}, අපගේ ගැඹුරු සානුකම්පනාව.",
@@ -100,7 +108,11 @@ const DonationReceivableConfirmation: React.FC<DonationReceivableConfirmationPro
             warningTitle: "වැදගත් සටහන:",
             warningText: "සක්‍රිය කළ පසු, පරිත්‍යාග තොරතුරු ස්මාරක පිටුවේ ප්‍රදර්ශනය වේ. ඔබගේ ස්මාරක සැකසීම් වලින් ඕනෑම වේලාවක මෙම විශේෂාංගය අක්‍රිය කළ හැකිය.",
             backButton: "ආපසු",
-            continueButton: "ඉදිරියට"
+            continueButton: "ඉදිරියට",
+            withNoExtraAddons: "අමතර සේවා නොමැතිව",
+            with: "සමඟ",
+            addon: "සේවාව",
+            addons: "සේවා"
         }
     };
     
@@ -120,9 +132,15 @@ const DonationReceivableConfirmation: React.FC<DonationReceivableConfirmationPro
     // Get addon info
     const getAddonInfo = () => {
         if (!selectedAddon || selectedAddon.length === 0) {
-            return 'with no extra addons';
+            return t.withNoExtraAddons;
         }
-        return `with ${selectedAddon.map((addon: any) => addon.name).join(', ')} addon${selectedAddon.length > 1 ? 's' : ''}`;
+        const addonText = selectedAddon.length > 1 ? t.addons : t.addon;
+        const addonNames = selectedAddon.map((addon: any) => {
+            // Use the multilingual name from originalAddon
+            const localizedName = addon.originalAddon?.name?.[language]?.[0]?.value;
+            return localizedName || addon.name; // Fallback to addon.name if localized name not found
+        }).join(', ');
+        return `${t.with} ${addonNames} ${addonText}`;
     };
 
     const handleToggleChange = (checked: boolean) => {

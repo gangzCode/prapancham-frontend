@@ -95,7 +95,11 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
             removeDetails: "Remove Details",
             addMoreDetails: "Add More Contact Details ({current}/{max})",
             backButton: "Back",
-            nextButton: "Next"
+            nextButton: "Next",
+            withNoExtraAddons: "with no extra addons",
+            with: "with",
+            addon: "addon",
+            addons: "addons"
         },
         tamil: {
             greeting: "வணக்கம் {username}, எங்கள் ஆழ்ந்த இரங்கல்கள்.",
@@ -117,7 +121,11 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
             removeDetails: "விவரங்களை அகற்று",
             addMoreDetails: "மேலும் தொடர்பு விவரங்கள் சேர்க்கவும் ({current}/{max})",
             backButton: "பின்",
-            nextButton: "அடுத்து"
+            nextButton: "அடுத்து",
+            withNoExtraAddons: "கூடுதல் சேவைகள் இல்லாமல்",
+            with: "உடன்",
+            addon: "சேவை",
+            addons: "சேவைகள்"
         },
         sinhala: {
             greeting: "ආයුබෝවන් {username}, අපගේ ගැඹුරු සානුකම්පනාව.",
@@ -139,7 +147,11 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
             removeDetails: "විස්තර ඉවත් කරන්න",
             addMoreDetails: "තවත් සම්බන්ධතා විස්තර එකතු කරන්න ({current}/{max})",
             backButton: "ආපසු",
-            nextButton: "ඊළඟ"
+            nextButton: "ඊළඟ",
+            withNoExtraAddons: "අමතර සේවා නොමැතිව",
+            with: "සමඟ",
+            addon: "සේවාව",
+            addons: "සේවා"
         }
     };
     
@@ -171,9 +183,15 @@ const ContactDetailsForm: React.FC<ContactDetailProps> = ({
     // Get addon info
     const getAddonInfo = () => {
         if (!selectedAddon || selectedAddon.length === 0) {
-            return 'with no extra addons';
+            return t.withNoExtraAddons;
         }
-        return `with ${selectedAddon.map((addon: any) => addon.name).join(', ')} addon${selectedAddon.length > 1 ? 's' : ''}`;
+        const addonText = selectedAddon.length > 1 ? t.addons : t.addon;
+        const addonNames = selectedAddon.map((addon: any) => {
+            // Use the multilingual name from originalAddon
+            const localizedName = addon.originalAddon?.name?.[language]?.[0]?.value;
+            return localizedName || addon.name; // Fallback to addon.name if localized name not found
+        }).join(', ');
+        return `${t.with} ${addonNames} ${addonText}`;
     };
 
     // Validation function to check if at least one contact has required fields filled

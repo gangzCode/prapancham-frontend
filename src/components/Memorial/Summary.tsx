@@ -79,7 +79,16 @@ const translations = {
         continueToPay: "Continue to Pay",
         submitting: "Submitting...",
         totalAmountToPay: "Total amount to pay",
-        noImageSelected: "No image selected"
+        noImageSelected: "No image selected",
+        withNoExtraAddons: "with no extra addons",
+        with: "with",
+        addon: "addon",
+        addons: "addons",
+        greeting: "Hi {username}, Our deepest condolences.",
+        greetingAnonymous: "Hi there, Our deepest condolences.",
+        packageInfo: "You have selected a {duration} days '{planName}' package,",
+        summaryTitle: "Summary",
+        packageSummary: "{duration} Days {planName} + {addonCount} {addonText}"
     },
     tamil: {
         overview: "கண்ணோட்டம்",
@@ -135,7 +144,16 @@ const translations = {
         continueToPay: "பணம் செலுத்த தொடரவும்",
         submitting: "சமர்ப்பிக்கப்படுகிறது...",
         totalAmountToPay: "செலுத்த வேண்டிய மொத்த தொகை",
-        noImageSelected: "படம் தேர்ந்தெடுக்கப்படவில்லை"
+        noImageSelected: "படம் தேர்ந்தெடுக்கப்படவில்லை",
+        withNoExtraAddons: "கூடுதல் சேவைகள் இல்லாமல்",
+        with: "உடன்",
+        addon: "சேவை",
+        addons: "சேவைகள்",
+        greeting: "வணக்கம் {username}, எங்கள் ஆழ்ந்த இரங்கல்கள்.",
+        greetingAnonymous: "வணக்கம், எங்கள் ஆழ்ந்த இரங்கல்கள்.",
+        packageInfo: "நீங்கள் {duration} நாட்கள் '{planName}' தொகுப்பை தேர்ந்தெடுத்துள்ளீர்கள்,",
+        summaryTitle: "சுருக்கம்",
+        packageSummary: "{duration} நாட்கள் {planName} + {addonCount} {addonText}"
     },
     sinhala: {
         overview: "දළ විශ්ලේෂණය",
@@ -191,7 +209,16 @@ const translations = {
         continueToPay: "ගෙවීම සඳහා ඉදිරියට",
         submitting: "ඉදිරිපත් කරමින්...",
         totalAmountToPay: "ගෙවිය යුතු මුළු මුදල",
-        noImageSelected: "පින්තූරයක් තෝරා නැත"
+        noImageSelected: "පින්තූරයක් තෝරා නැත",
+        withNoExtraAddons: "අමතර සේවා නොමැතිව",
+        with: "සමඟ",
+        addon: "සේවාව",
+        addons: "සේවා",
+        greeting: "ආයුබෝවන් {username}, අපගේ ගැඹුරු සානුකම්පනාව.",
+        greetingAnonymous: "ආයුබෝවන්, අපගේ ගැඹුරු සානුකම්පනාව.",
+        packageInfo: "ඔබ දින {duration} ක '{planName}' පැකේජයක් තෝරාගෙන ඇත,",
+        summaryTitle: "සාරාංශය",
+        packageSummary: "දින {duration} {planName} + {addonCount} {addonText}"
     }
 };
 
@@ -284,9 +311,15 @@ const Summary: React.FC<SummaryProps> = ({
     // Get addon info
     const getAddonInfo = () => {
         if (!selectedAddon || selectedAddon.length === 0) {
-            return 'with no extra addons';
+            return t.withNoExtraAddons;
         }
-        return `with ${selectedAddon.map((addon: any) => addon.name).join(', ')} addon${selectedAddon.length > 1 ? 's' : ''}`;
+        const addonText = selectedAddon.length > 1 ? t.addons : t.addon;
+        const addonNames = selectedAddon.map((addon: any) => {
+            // Use the multilingual name from originalAddon
+            const localizedName = addon.originalAddon?.name?.[language]?.[0]?.value;
+            return localizedName || addon.name; // Fallback to addon.name if localized name not found
+        }).join(', ');
+        return `${t.with} ${addonNames} ${addonText}`;
     };
 
     // Get total price
@@ -336,7 +369,7 @@ const Summary: React.FC<SummaryProps> = ({
         if (selectedAddon && selectedAddon.length > 0) {
             selectedAddon.forEach((addon: any) => {
                 features.push({
-                    name: addon.name,
+                    name: addon.originalAddon?.name?.[language]?.[0]?.value ||addon.name,
                     price: addon.price || 0
                 });
             });
@@ -695,18 +728,29 @@ const Summary: React.FC<SummaryProps> = ({
             <form>
                 <div className="p-4 mb-6">
                     <h3 className="text-2xl md:text-4xl font-bold text-center mb-4 text-primary">
-                        Hi {profile?.username || 'there'}, Our deepest condolences.
+                        {profile?.username 
+                            ? t.greeting.replace('{username}', profile.username)
+                            : t.greetingAnonymous
+                        }
                     </h3>
                     <p className="text-center text-gray-500 mb-4 text-primary">
-                        You have selected a {getDuration()} days '{getPlanName()}' package, <span className='text-[#880002]'>{getAddonInfo()}</span>
+                        {t.packageInfo
+                            .replace('{duration}', getDuration().toString())
+                            .replace('{planName}', getPlanName())
+                        } <span className='text-[#880002]'>{getAddonInfo()}</span>
                     </p>
                 </div>
                 <div className="flex-shrink min-w-0 mb-8">
-                    <TitleWithUnderline text="Summary" underlineWidth={64} />
+                    <TitleWithUnderline text={t.summaryTitle} underlineWidth={64} />
                 </div>
                 <div className="p-4 border border-gray-500">
                     <h3 className="text-xl font-semibold text-center mb-4 text-primary">
-                        {getDuration()} Days {getPlanName()} + {selectedAddon?.length || 0} Addon{(selectedAddon?.length || 0) !== 1 ? 's' : ''}
+                        {t.packageSummary
+                            .replace('{duration}', getDuration().toString())
+                            .replace('{planName}', getPlanName())
+                            .replace('{addonCount}', (selectedAddon?.length || 0).toString())
+                            .replace('{addonText}', (selectedAddon?.length || 0) === 1 ? t.addon : t.addons)
+                        }
                     </h3>
                     <Separator />
                     {getPlanFeatures().map((feature, index) => (
@@ -734,7 +778,7 @@ const Summary: React.FC<SummaryProps> = ({
                     
                     {/* Background Color Selection */}
                     <div className="my-4">
-                        <p className="text-md text-gray-600 mb-2">{t.selectBackgroundColor}</p>
+                        <p className="text-lg text-gray-600 mb-2">{t.selectBackgroundColor}</p>
                         <div className="flex flex-wrap gap-2">
                             {(selectedPlan?.bgColors || [
                                 { _id: "", colorCode: "#ffffff" },
@@ -779,7 +823,7 @@ const Summary: React.FC<SummaryProps> = ({
 
                                         <div className="flex flex-col sm:flex-row justify-center items-center mb-6 gap-8 sm:gap-12 w-full">
                                             <div className="text-white text-center flex flex-col items-center">
-                                                <p className="text-sm uppercase tracking-wider text-white font-sans">
+                                                <p className="text-lg uppercase tracking-wider text-white font-sans">
                                                     Birth</p>
                                                 <p className="text-lg font-serif text-white mt-1">
                                                     {informationFormData?.dateofBirth ? new Date(informationFormData.dateofBirth).toLocaleDateString() : 'Birth date'}</p>
@@ -819,7 +863,7 @@ const Summary: React.FC<SummaryProps> = ({
                                             )}
 
                                             <div className="text-white text-center flex flex-col items-center">
-                                                <p className="text-sm uppercase tracking-wider text-white font-sans">
+                                                <p className="text-lg uppercase tracking-wider text-white font-sans">
                                                     Death</p>
                                                 <p className="text-lg font-serif text-white mt-1">
                                                     {informationFormData?.dateofDeath ? new Date(informationFormData.dateofDeath).toLocaleDateString() : 'Death date'}
@@ -1102,7 +1146,7 @@ const Summary: React.FC<SummaryProps> = ({
                                             <div>
                                                 <p>
                                                     <span className="text-gray-600 font-medium">{t.contactName} </span>
-                                                    <span className="text-[#880002]">{contact.name}</span>
+                                                    <span className="text-gray-700">{contact.name}</span>
                                                 </p>
                                                 <p>
                                                     <span className="text-gray-600 font-medium">{t.contactAddress} </span>
@@ -1146,11 +1190,26 @@ const Summary: React.FC<SummaryProps> = ({
                                     <TitleWithUnderline text={t.overview} underlineWidth={64} fontSize={3} />
                                 </div>
                                 <div className="space-y-2 mt-2 p-2">
-                                    <p className="text-gray-500">{t.name} {informationFormData?.title || ((informationFormData?.firstName && informationFormData?.lastName) ? `${informationFormData.nameTitle} ${informationFormData.firstName} ${informationFormData.lastName}` : `${informationFormData.nameTitle} ${informationFormData?.preferredName}`) || t.notProvided}</p>
-                                    <p className="text-gray-500">{t.birthDateLabel} {informationFormData?.dateofBirth ? new Date(informationFormData.dateofBirth).toLocaleDateString() : t.notProvided}</p>
-                                    <p className="text-gray-500">{t.deathDateLabel} {informationFormData?.dateofDeath ? new Date(informationFormData.dateofDeath).toLocaleDateString() : t.notProvided}</p>
-                                    <p className="text-gray-500">{t.age} {informationFormData?.dateofBirth && informationFormData?.dateofDeath ? calculateAge(informationFormData.dateofBirth, informationFormData.dateofDeath) : t.notProvided}</p>
-                                    <p>{t.address} {informationFormData?.address || t.notProvided}</p>
+                                    <p>
+                                        <span className="text-gray-600 font-medium">{t.name} </span>
+                                        <span className="text-gray-700">{informationFormData?.title || ((informationFormData?.firstName && informationFormData?.lastName) ? `${informationFormData.nameTitle} ${informationFormData.firstName} ${informationFormData.lastName}` : `${informationFormData.nameTitle} ${informationFormData?.preferredName}`) || t.notProvided}</span>
+                                    </p>
+                                    <p>
+                                        <span className="text-gray-600 font-medium">{t.birthDateLabel} </span>
+                                        <span className="text-gray-700">{informationFormData?.dateofBirth ? new Date(informationFormData.dateofBirth).toLocaleDateString() : t.notProvided}</span>
+                                    </p>
+                                    <p>
+                                        <span className="text-gray-600 font-medium">{t.deathDateLabel} </span>
+                                        <span className="text-gray-700">{informationFormData?.dateofDeath ? new Date(informationFormData.dateofDeath).toLocaleDateString() : t.notProvided}</span>
+                                    </p>
+                                    <p>
+                                        <span className="text-gray-600 font-medium">{t.age} </span>
+                                        <span className="text-gray-700">{informationFormData?.dateofBirth && informationFormData?.dateofDeath ? calculateAge(informationFormData.dateofBirth, informationFormData.dateofDeath) : t.notProvided}</span>
+                                    </p>
+                                    <p>
+                                        <span className="text-gray-600 font-medium">{t.address} </span>
+                                        <span className="text-gray-700">{informationFormData?.address || t.notProvided}</span>
+                                    </p>
                                 </div>
                                 <Separator className="mt-6 !w-full mb-8" />
                                 <div className="flex-shrink min-w-0 max-w-full mt-4">
@@ -1159,7 +1218,7 @@ const Summary: React.FC<SummaryProps> = ({
                                 <div className="space-y-2 mt-2 p-2">
                                     <p>
                                         <span className="text-gray-600 font-medium">{t.posterName} </span>
-                                        <span className="text-[#880002]">{profile?.username || t.nameNotProvided}</span>
+                                        <span className="text-gray-700">{profile?.username || t.nameNotProvided}</span>
                                     </p>
                                     <p>
                                         <span className="text-gray-600 font-medium">{t.posterAddress} </span>
@@ -1329,7 +1388,7 @@ const Summary: React.FC<SummaryProps> = ({
                     onClick={() => setShowSharePopup(false)}
                 >
                     <div
-                        className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 relative overflow-hidden"
+                        className="bg-white rounded-sm shadow-2xl max-w-md w-full mx-4 relative overflow-hidden"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header */}

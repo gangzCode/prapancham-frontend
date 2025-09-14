@@ -28,14 +28,42 @@ interface PodcastSectionProps {
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const PodcastSectionContent = ({
-  title = "Our Podcast",
+  title,
   showViewMore = true,
 }: PodcastSectionProps) => {
-  const [activeCategory, setActiveCategory] = useState("All");
   const { language } = useLanguage();
   const searchParams = useSearchParams();
 
   const langKey = language === "tamil" ? "ta" : language === "sinhala" ? "si" : "en";
+
+  // Localization object
+  type LanguageKey = 'en' | 'ta' | 'si';
+  const translations: Record<LanguageKey, { [key: string]: string }> = {
+    en: {
+      ourPodcast: "Our Podcast",
+      viewMore: "View more",
+      loading: "Loading...",
+      playPodcast: "Play podcast",
+      all: "All",
+    },
+    ta: {
+      ourPodcast: "எங்கள் போட்காஸ்ட்",
+      viewMore: "மேலும் பார்க்க",
+      loading: "ஏற்றுகிறது...",
+      playPodcast: "போட்காஸ்ட் இயக்கு",
+      all: "அனைத்தும்",
+    },
+    si: {
+      ourPodcast: "අපගේ පොඩ්කාස්ට්",
+      viewMore: "තවත් බලන්න",
+      loading: "පූරණය වෙමින්...",
+      playPodcast: "පොඩ්කාස්ට් වාදනය කරන්න",
+      all: "සියල්ල",
+    },
+  };
+
+  const t = translations[langKey];
+  const [activeCategory, setActiveCategory] = useState(t.all);
 
   // Handle URL parameter for podcast category
   useEffect(() => {
@@ -71,7 +99,7 @@ const PodcastSectionContent = ({
   );
 
   const categories = [
-    { en: "All", ta: "அனைத்தும்", si: "සියල්ල" },
+    { en: t.all, ta: t.all, si: t.all },
     ...(categoryData?.categories || []).map((category: any) => ({
       en: category.en[0]?.value,
       ta: category.ta[0]?.value,
@@ -83,7 +111,7 @@ const PodcastSectionContent = ({
     category.replace(/\s+/g, "").toLowerCase();
 
   const { data: podcastData } = useSWR(
-    activeCategory === "All"
+    activeCategory === t.all
       ? `${process.env.NEXT_PUBLIC_API_URL}/podcast`
       : `${process.env.NEXT_PUBLIC_API_URL}/podcast/${sanitizeCategory(categories.find((cat) => cat.en === activeCategory)?.en || "" )}`,
     fetcher
@@ -130,12 +158,12 @@ const PodcastSectionContent = ({
     <section id="podcast-section" className=" px-4 md:px-8 lg:px-16  space-y-8 py-8" data-section="podcast">
       <div className="flex justify-between items-center">
         <div className="flex-shrink min-w-0">
-          <TitleWithUnderline text={title} underlineWidth={64} />
+          <TitleWithUnderline text={title || t.ourPodcast} underlineWidth={64} />
         </div>
         {showViewMore && (
           <button className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors">
             <span className="text-sm sm:text-base md:text-heading-base">
-              {langKey === "ta" ? "மேலும் பார்க்க" : langKey === "si" ? "තවත් බලන්න" : "View more"}
+              {t.viewMore}
             </span>
             <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
@@ -204,7 +232,7 @@ const PodcastSectionContent = ({
                   <button
                     className="rounded-full bg-primary text-white p-2 hover:bg-primary/90 transition-colors"
                     onClick={() => handlePlayClick(podcast)}
-                    aria-label="Play podcast"
+                    aria-label={t.playPodcast}
                   >
                     <Play className="w-4 h-4" />
                   </button>
@@ -225,8 +253,17 @@ const PodcastSectionContent = ({
 };
 
 const PodcastSection = (props: PodcastSectionProps) => {
+  const { language } = useLanguage();
+  const langKey = language === "tamil" ? "ta" : language === "sinhala" ? "si" : "en";
+  
+  const translations: Record<'en' | 'ta' | 'si', { [key: string]: string }> = {
+    en: { loading: "Loading..." },
+    ta: { loading: "ஏற்றுகிறது..." },
+    si: { loading: "පූරණය වෙමින්..." },
+  };
+
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>{translations[langKey].loading}</div>}>
       <PodcastSectionContent {...props} />
     </Suspense>
   );

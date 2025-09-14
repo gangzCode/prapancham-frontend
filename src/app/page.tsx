@@ -92,16 +92,19 @@ const HomePage: React.FC = () => {
       wantToAdvertise: "Want to Advertise Here?",
       contactToPost: "Contact us to post your advertisements and reach thousands of viewers",
       clickToWhatsApp: "Click to message us on WhatsApp!",
+      advertisements: "Advertisements",
     },
     ta: {
       wantToAdvertise: "விளம்பரம் செய்ய விரும்புகிறீர்களா?",
       contactToPost: "உங்கள் விளம்பரங்களை இடுகையிட எங்களை தொடர்பு கொள்ளுங்கள்",
       clickToWhatsApp: "WhatsApp இல் செய்தி அனுப்ப கிளிக் செய்யவும்!",
+      advertisements: "விளம்பரங்கள்",
     },
     si: {
       wantToAdvertise: "ප්‍රචාරණය කිරීමට අවශ්‍යද?",
       contactToPost: "ඔබේ දැන්වීම් පළ කිරීමට අප හා සම්බන්ධ වන්න",
       clickToWhatsApp: "WhatsApp මගින් පණිවිඩ යැවීමට ක්ලික් කරන්න!",
+      advertisements: "දැන්වීම්",
     },
   };
   const t = translations[langKey];
@@ -218,7 +221,7 @@ const HomePage: React.FC = () => {
         <Separator />
         <HAdCarousel
           ads={adsLoading ? [] : dynamicAds}
-          title="Advertisements"
+          title={t.advertisements}
           className="px-4 md:px-8 lg:px-16   max-md:px-5"
           autoSlideInterval={6000}
         />

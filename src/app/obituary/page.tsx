@@ -10,6 +10,7 @@ import OrbituaryNavbar from "@/components/obituary/OrbituaryNavbar";
 import { FilterOptions } from "@/components/obituary/FilterObituary";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 import { set } from "date-fns";
+import useSWR from 'swr';
 
 type LanguageKey = "en" | "ta" | "si";
 
@@ -51,7 +52,7 @@ interface ApiResponse {
     };
 }
 
-const Obituary: React.FC = () => {
+function OrbituaryPage() {
     const { language } = useLanguage();
     let langKey: LanguageKey = "en";
     if (language === "tamil") langKey = "ta";
@@ -127,18 +128,54 @@ const Obituary: React.FC = () => {
     };
 
     const t = translations[langKey];
-    const [orders, setOrders] = useState<ApiOrder[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+
+    // State for UI controls
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [totalPages, setTotalPages] = useState<number>(1);
-    const [error, setError] = useState<string>("");
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const [isSearching, setIsSearching] = useState<boolean>(false);
     const [activeFilters, setActiveFilters] = useState<FilterOptions | null>(null);
-    const [isFiltering, setIsFiltering] = useState<boolean>(false);
     const [selectedCountryId, setSelectedCountryId] = useState<string | null>(null);
     const [selectedCountryName, setSelectedCountryName] = useState<string>("");
-    const [isFilteringByCountry, setIsFilteringByCountry] = useState<boolean>(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    // SWR fetcher function
+    const fetcher = (url: string) => fetch(url).then(res => {
+        if (!res.ok) {
+            throw new Error(`Failed to fetch: ${res.status}`);
+        }
+        return res.json();
+    });
+
+    // Construct API URL based on current state
+    const getApiUrl = () => {
+        let url = `${process.env.NEXT_PUBLIC_API_URL}/order/active-sorted?page=${currentPage}&limit=10`;
+        
+        if (searchTerm) {
+            url = `${process.env.NEXT_PUBLIC_API_URL}/order/search?query=${encodeURIComponent(searchTerm)}&page=${currentPage}&limit=10`;
+        } else if (activeFilters) {
+            const params = new URLSearchParams();
+            params.append('page', currentPage.toString());
+            params.append('limit', '10');
+            if (activeFilters.isPriority) params.append('isPriority', 'true');
+            if (activeFilters.isRemembarace) params.append('isRemembarace', 'true');
+            if (activeFilters.isObituary) params.append('isObituary', 'true');
+            if (activeFilters.isFeatured) params.append('isFeatured', 'true');
+            url = `${process.env.NEXT_PUBLIC_API_URL}/order/filter?${params.toString()}`;
+        } else if (selectedCountryId) {
+            url = `${process.env.NEXT_PUBLIC_API_URL}/order/country/${selectedCountryId}?page=${currentPage}&limit=10`;
+        }
+        
+        return url;
+    };
+
+    // SWR hook for data fetching with caching
+    const { data, error, isLoading } = useSWR<ApiResponse>(getApiUrl(), fetcher, {
+        keepPreviousData: true, // Show previous data while loading new data
+        revalidateOnFocus: false, // Don't revalidate when window gets focus
+        revalidateOnReconnect: false, // Don't revalidate on reconnect
+    });
+
+    const orders = data?.orders || [];
+    const totalPages = data?.pagination?.totalPages || 1;
 
     // Function to calculate time ago from createdAt
     const calculateTimeAgo = (createdAt: string): string => {
@@ -160,160 +197,6 @@ const Obituary: React.FC = () => {
         }
     };
 
-    // Function to fetch orders from API
-    const fetchOrders = async (page: number = 1, limit: number = 10) => {
-        try {
-            setLoading(true);
-            setError("");
-
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order/active-sorted?page=${page}&limit=${limit}`);
-
-            if (!response.ok) {
-                throw new Error(`${t.failedToFetch} ${response.status}`);
-            }
-
-            const data: ApiResponse = await response.json();
-
-            setOrders(data.orders);
-            setCurrentPage(data.pagination.currentPage);
-            setTotalPages(data.pagination.totalPages);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : t.errorOccurred);
-            console.error('Error fetching orders:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // Function to search orders from API
-    const searchOrders = async (title: string) => {
-        try {
-            setIsSearching(true);
-            setError("");
-
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order/search`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ title }),
-            });
-
-            if (!response.ok) {
-                setIsSearching(false);
-                setOrders([]);
-                setCurrentPage(1);
-                setTotalPages(1);
-                return; // Exit if the response is not ok
-            }
-
-            const data = await response.json();
-
-            // data is only an array of orders, not an object with pagination
-            // create a new object to match ApiResponse structure
-
-            const transformedData: ApiResponse = {
-                orders: data,
-                pagination: {
-                    currentPage: 1, // Since search results are not paginated, we set currentPage to 1
-                    totalPages: 1, // Also set totalPages to 1 for simplicity
-                    totalItems: data.length // Total items is the length of the search results
-                }
-            };
-
-            setOrders(transformedData.orders);
-            setCurrentPage(transformedData.pagination.currentPage);
-            setTotalPages(transformedData.pagination.totalPages);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : t.errorSearching);
-            console.error('Error searching orders:', err);
-        } finally {
-            setIsSearching(false);
-        }
-    };
-
-    // Function to filter orders from API
-    const filterOrders = async (filters: FilterOptions) => {
-        try {
-            setIsFiltering(true);
-            setError("");
-
-            // remove the attributes that have false values from filters
-            const filteredKeys = Object.keys(filters).reduce((acc, key) => {
-                if (filters[key as keyof FilterOptions] !== false && filters[key as keyof FilterOptions] !== null && filters[key as keyof FilterOptions] !== undefined) {
-                    acc[key] = filters[key as keyof FilterOptions];
-                }
-                return acc;
-            }, {} as { [key: string]: number | boolean });
-
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order/filter`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ...filteredKeys,
-                    page: currentPage, // Include current page in the request
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`${t.failedToFilter} ${response.status}`);
-            }
-
-            const data: ApiResponse = await response.json();
-
-            setOrders(data.orders);
-            setCurrentPage(data.pagination.currentPage);
-            setTotalPages(data.pagination.totalPages);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : t.errorFiltering);
-            console.error('Error filtering orders:', err);
-        } finally {
-            setIsFiltering(false);
-        }
-    };
-
-    // Function to fetch orders by selected country
-    const fetchOrdersByCountry = async (countryId: string, page: number = 1, limit: number = 10) => {
-        try {
-            setIsFilteringByCountry(true);
-            setError("");
-
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order/by-selected-country/${countryId}?page=${page}&limit=${limit}`);
-
-            if (!response.ok) {
-                throw new Error(`${t.failedToFetchCountry} ${response.status}`);
-            }
-
-            const data: ApiResponse = await response.json();
-
-            setOrders(data.orders);
-            setCurrentPage(data.pagination.currentPage);
-            setTotalPages(data.pagination.totalPages);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : t.errorCountryFetch);
-            console.error('Error fetching orders by country:', err);
-        } finally {
-            setIsFilteringByCountry(false);
-        }
-    };
-
-    // Effect to fetch data on component mount and page change
-    useEffect(() => {
-        if (searchTerm.trim()) {
-            searchOrders(searchTerm);
-        } else if (selectedCountryId) {
-            fetchOrdersByCountry(selectedCountryId, currentPage);
-        } else if (activeFilters && currentPage > 1) {
-            // Only apply filters for page changes, not initial filter application
-            const updatedFilters = { ...activeFilters, page: currentPage };
-            filterOrders(updatedFilters);
-        } else if (!searchTerm.trim() && !activeFilters && !selectedCountryId) {
-            fetchOrders(currentPage);
-        }
-    }, [currentPage, searchTerm, selectedCountryId]);
-
     // Function to handle search
     const handleSearch = (term: string) => {
         setSearchTerm(term);
@@ -330,7 +213,6 @@ const Obituary: React.FC = () => {
         setSelectedCountryId(null); // Clear country selection when filtering
         setSelectedCountryName("");
         setCurrentPage(1); // Reset to first page when filtering
-        filterOrders(filters);
     };
 
     // Function to handle reset filters
@@ -340,7 +222,6 @@ const Obituary: React.FC = () => {
         setSelectedCountryId(null); // Clear country selection when resetting
         setSelectedCountryName("");
         setCurrentPage(1); // Reset to first page when resetting
-        fetchOrders(1); // Fetch regular orders
     };
 
     // Function to handle country selection
@@ -350,13 +231,10 @@ const Obituary: React.FC = () => {
         setSearchTerm(""); // Clear search when selecting country
         setActiveFilters(null); // Clear filters when selecting country
         setCurrentPage(1); // Reset to first page when selecting country
-
-        // If "All" is selected (empty countryId), fetch all orders
+        
+        // If "All" is selected (empty countryId), clear the selection
         if (countryId === "" || countryId === "all") {
             setSelectedCountryId(null); // Set to null for "All" option
-            fetchOrders(1);
-        } else {
-            fetchOrdersByCountry(countryId, 1);
         }
     };
 
@@ -364,6 +242,14 @@ const Obituary: React.FC = () => {
     const handlePageChange = (page: number): void => {
         setCurrentPage(page);
     };
+
+    // Mobile detection useEffect
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window?.innerWidth < 878);
+        checkMobile();
+        window?.addEventListener("resize", checkMobile);
+        return () => window?.removeEventListener("resize", checkMobile);
+    }, []);
 
     // Transform API data to match TributeCard props
     const transformOrderToTributeData = (order: ApiOrder) => ({
@@ -407,7 +293,7 @@ const Obituary: React.FC = () => {
                 onSearch={handleSearch}
                 onFilter={handleFilter}
                 onReset={handleReset}
-                isLoading={isSearching || isFiltering || isFilteringByCountry}
+                isLoading={isLoading}
             />
             <CountrySection
                 onCountrySelect={handleCountrySelect}
@@ -417,13 +303,13 @@ const Obituary: React.FC = () => {
 
             {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    {error}
+                    {error.message || t.errorOccurred}
                 </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="md:col-span-2">
-                    {(loading || isSearching || isFiltering || isFilteringByCountry) ? (
+                    {isLoading && !data ? (
                         <div className="flex justify-center items-center h-64">
                             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#880002]"></div>
                         </div>
@@ -485,6 +371,6 @@ const Obituary: React.FC = () => {
             </div>
         </section>
     );
-};
+}
 
-export default Obituary;
+export default OrbituaryPage;

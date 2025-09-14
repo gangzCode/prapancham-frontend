@@ -46,13 +46,17 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
             removeImageButton: "✕",
             altText: "Preview",
             recommendedSizeLabel: "Recommended image size:",
-            recommendedSizeValue: "400x400 pixels (1:1 aspect ratio)",
+            recommendedSizeValue: "800x800 pixels (1:1 aspect ratio)",
             recommendedTypeLabel: "Recommended image type:",
             recommendedTypeValue: "JPEG, PNG, WebP, or HEIC",
             noteLabel: "Note:",
             noteValue: "You can upload only 1 primary image",
             backButton: "Back",
-            nextButton: "Next"
+            nextButton: "Next",
+            withNoExtraAddons: "with no extra addons",
+            with: "with",
+            addon: "addon",
+            addons: "addons"
         },
         tamil: {
             greeting: "வணக்கம் {username}, எங்கள் ஆழ்ந்த இரங்கல்கள்.",
@@ -64,13 +68,17 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
             removeImageButton: "✕",
             altText: "முன்னோட்டம்",
             recommendedSizeLabel: "பரிந்துரைக்கப்பட்ட படத்தின் அளவு:",
-            recommendedSizeValue: "400x400 பிக்சல்கள் (1:1 விகித அளவு)",
+            recommendedSizeValue: "800x800 பிக்சல்கள் (1:1 விகித அளவு)",
             recommendedTypeLabel: "பரிந்துரைக்கப்பட்ட படத்தின் வகை:",
             recommendedTypeValue: "JPEG, PNG, WebP, அல்லது HEIC",
             noteLabel: "குறிப்பு:",
             noteValue: "நீங்கள் 1 முதன்மை படத்தை மட்டுமே பதிவேற்ற முடியும்",
             backButton: "பின்",
-            nextButton: "அடுத்து"
+            nextButton: "அடுத்து",
+            withNoExtraAddons: "கூடுதல் துணை நிரல்கள் இல்லாமல்",
+            with: "உடன்",
+            addon: "துணை நிரல்",
+            addons: "துணை நிரல்கள்"
         },
         sinhala: {
             greeting: "ආයුබෝවන් {username}, අපගේ ගැඹුරු සානුකම්පනාව.",
@@ -82,13 +90,17 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
             removeImageButton: "✕",
             altText: "පෙරදසුන",
             recommendedSizeLabel: "නිර්දේශිත රූප ප්‍රමාණය:",
-            recommendedSizeValue: "400x400 පික්සල් (1:1 අනුපාත ප්‍රමාණය)",
+            recommendedSizeValue: "800x800 පික්සල් (1:1 අනුපාත ප්‍රමාණය)",
             recommendedTypeLabel: "නිර්දේශිත රූප වර්ගය:",
             recommendedTypeValue: "JPEG, PNG, WebP, හෝ HEIC",
             noteLabel: "සටහන:",
             noteValue: "ඔබට ප්‍රධාන රූප 1ක් පමණක් උඩුගත කළ හැකිය",
             backButton: "ආපසු",
-            nextButton: "ඊළඟ"
+            nextButton: "ඊළඟ",
+            withNoExtraAddons: "අමතර සේවා නොමැතිව",
+            with: "සමඟ",
+            addon: "සේවාව",
+            addons: "සේවා"
         }
     };
     
@@ -117,9 +129,15 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
     // Get addon info
     const getAddonInfo = () => {
         if (!selectedAddon || selectedAddon.length === 0) {
-            return 'with no extra addons';
+            return t.withNoExtraAddons;
         }
-        return `with ${selectedAddon.map((addon: any) => addon.name).join(', ')} addon${selectedAddon.length > 1 ? 's' : ''}`;
+        const addonText = selectedAddon.length > 1 ? t.addons : t.addon;
+        const addonNames = selectedAddon.map((addon: any) => {
+            // Use the multilingual name from originalAddon
+            const localizedName = addon.originalAddon?.name?.[language]?.[0]?.value;
+            return localizedName || addon.name; // Fallback to addon.name if localized name not found
+        }).join(', ');
+        return `${t.with} ${addonNames} ${addonText}`;
     };
 
     // Validation function to check if image is selected
