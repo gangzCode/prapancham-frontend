@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useLanguage } from "@/components/ui/LanguageProvider";
@@ -277,12 +278,12 @@ export default function Footer() {
                   
                   return (
                     <li key={category._id}>
-                      <a 
-                        href={`/news?category=${category._id}`} 
+                      <Link 
+                        href={`/news?category=${category._id}`}
                         className="hover:text-[#6ec1e4] transition-colors"
                       >
                         {categoryName}
-                      </a>
+                      </Link>
                     </li>
                   );
                 })
@@ -294,25 +295,24 @@ export default function Footer() {
             <h3 className="font-bold text-lg mb-6">{t.quickLink}</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="#" className="hover:text-[#6ec1e4] transition-colors">
+                <Link href="/privacy" className="hover:text-[#6ec1e4] transition-colors">
                   {t.privacyPolicy}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="terms" className="hover:text-[#6ec1e4] transition-colors">
+                <Link href="/terms" className="hover:text-[#6ec1e4] transition-colors">
                   {t.termsConditions}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-[#6ec1e4] transition-colors">
-
+                <Link href="/editorial" className="hover:text-[#6ec1e4] transition-colors">
                   {t.editorialPolicy}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-[#6ec1e4] transition-colors">
+                <Link href="/rss" className="hover:text-[#6ec1e4] transition-colors">
                   {t.rssFeeds}
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -345,21 +345,21 @@ export default function Footer() {
             {error && <span className="text-red-400 ml-2">{error}</span>}
 
             <div className="flex flex-wrap gap-6 text-sm">
-              <a href="/news" className="hover:text-[#6ec1e4] transition-colors">
+              <Link href="/news" className="hover:text-[#6ec1e4] transition-colors">
                 {t.newsNav}
-              </a>
+              </Link>
               <span className="text-gray-400">|</span>
-              <a href="/obituary" className="hover:text-[#6ec1e4] transition-colors">
+              <Link href="/obituary" className="hover:text-[#6ec1e4] transition-colors">
                 {t.obituary}
-              </a>
+              </Link>
               <span className="text-gray-400">|</span>
-              <a href="/about" className="hover:text-[#6ec1e4] transition-colors">
+              <Link href="/about" className="hover:text-[#6ec1e4] transition-colors">
                 {t.aboutUs}
-              </a>
+              </Link>
               <span className="text-gray-400">|</span>
-              <a href="/contact" className="hover:text-[#6ec1e4] transition-colors">
+              <Link href="/contact" className="hover:text-[#6ec1e4] transition-colors">
                 {t.contactUs}
-              </a>
+              </Link>
             </div>
           </div>
         </div>
