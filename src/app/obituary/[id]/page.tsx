@@ -852,7 +852,7 @@ const ObituaryDetail: React.FC = () => {
 
                                     <div className="flex flex-col sm:flex-row justify-center items-center mb-6 gap-8 sm:gap-12 w-full">
                                         <div className="text-white text-center flex flex-col items-center">
-                                            <p className="text-sm uppercase tracking-wider text-white font-sans">
+                                            <p className="text-lg uppercase tracking-wider text-white font-sans">
                                                 {t.birth}</p>
                                             <p className="text-lg font-serif text-white mt-1">
                                                 {obituaryData.information.dateofBirth ? new Date(obituaryData.information.dateofBirth).toLocaleDateString() : t.birthDate}</p>
@@ -892,7 +892,7 @@ const ObituaryDetail: React.FC = () => {
                                         )}
 
                                         <div className="text-white text-center flex flex-col items-center">
-                                            <p className="text-sm uppercase tracking-wider text-white font-sans">
+                                            <p className="text-lg uppercase tracking-wider text-white font-sans">
                                                 {t.death}</p>
                                             <p className="text-lg font-serif text-white mt-1">
                                                 {obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString() : t.deathDate}
@@ -1344,7 +1344,7 @@ const ObituaryDetail: React.FC = () => {
                                         <div>
                                             <p>
                                                 <span className="text-gray-600 font-medium">{t.contactName}</span>
-                                                <span className="text-[#880002]"> {contact.name}</span>
+                                                <span className="text-gray-700"> {contact.name}</span>
                                             </p>
                                             <p>
                                                 <span className="text-gray-600 font-medium">{t.contactAddress}</span>
@@ -1387,14 +1387,29 @@ const ObituaryDetail: React.FC = () => {
                                 <TitleWithUnderline text={t.overview} underlineWidth={64} fontSize={3} />
                             </div>
                             <div className="space-y-2 mt-2 p-2">
-                                <p className="text-gray-500">{t.name} {obituaryData.information.title
-                                    || ((obituaryData.information.firstName && obituaryData.information.lastName)
-                                        ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
-                                        : obituaryData.information.preferredName || t.notProvided)}</p>
-                                <p className="text-gray-500">{t.birthDateLabel} {obituaryData.information.dateofBirth ? new Date(obituaryData.information.dateofBirth).toLocaleDateString() : t.notProvided}</p>
-                                <p className="text-gray-500">{t.deathDateLabel} {obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString() : t.notProvided}</p>
-                                <p className="text-gray-500">{t.age} {obituaryData.information.dateofBirth && obituaryData.information.dateofDeath ? calculateAge(obituaryData.information.dateofBirth, obituaryData.information.dateofDeath) : t.notProvided}</p>
-                                <p>{t.address} {obituaryData.information.address || t.notProvided}</p>
+                                <p>
+                                    <span className="text-gray-600 font-medium">{t.name} </span>
+                                    <span className="text-gray-700">{obituaryData.information.title
+                                        || ((obituaryData.information.firstName && obituaryData.information.lastName)
+                                            ? `${obituaryData.information.firstName} ${obituaryData.information.lastName}`
+                                            : obituaryData.information.preferredName || t.notProvided)}</span>
+                                </p>
+                                <p>
+                                    <span className="text-gray-600 font-medium">{t.birthDateLabel} </span>
+                                    <span className="text-gray-700">{obituaryData.information.dateofBirth ? new Date(obituaryData.information.dateofBirth).toLocaleDateString() : t.notProvided}</span>
+                                </p>
+                                <p>
+                                    <span className="text-gray-600 font-medium">{t.deathDateLabel} </span>
+                                    <span className="text-gray-700">{obituaryData.information.dateofDeath ? new Date(obituaryData.information.dateofDeath).toLocaleDateString() : t.notProvided}</span>
+                                </p>
+                                <p>
+                                    <span className="text-gray-600 font-medium">{t.age} </span>
+                                    <span className="text-gray-700">{obituaryData.information.dateofBirth && obituaryData.information.dateofDeath ? calculateAge(obituaryData.information.dateofBirth, obituaryData.information.dateofDeath) : t.notProvided}</span>
+                                </p>
+                                <p>
+                                    <span className="text-gray-600 font-medium">{t.address} </span>
+                                    <span className="text-gray-700">{obituaryData.information.address || t.notProvided}</span>
+                                </p>
                             </div>
 
                             <Separator className="mt-6 !w-full mb-8" />
@@ -1406,7 +1421,7 @@ const ObituaryDetail: React.FC = () => {
                             <div className="space-y-2 mt-2 p-2">
                                 <p>
                                     <span className="text-gray-600 font-medium">{t.posterName} </span>
-                                    <span className="text-[#880002]">
+                                    <span className="text-gray-700">
                                         {obituaryData.contactDetails && obituaryData.contactDetails.length > 0
                                             ? obituaryData.contactDetails[0].name
                                             : obituaryData.username || t.nameNotProvided}
@@ -1541,7 +1556,7 @@ const ObituaryDetail: React.FC = () => {
                     onClick={() => setShowSharePopup(false)}
                 >
                     <div
-                        className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 relative overflow-hidden"
+                        className="bg-white rounded-sm shadow-2xl max-w-md w-full mx-4 relative overflow-hidden"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header */}
