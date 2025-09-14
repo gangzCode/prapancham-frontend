@@ -5,6 +5,7 @@ import FeaturedEvent from "./FeaturedEvent";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TitleWithUnderline } from "@/components/ui/title-with-underline";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 import useSWR from "swr";
 import { useLanguage } from "@/components/ui/LanguageProvider";
@@ -100,11 +101,9 @@ const UpcomingEvents: React.FC = () => {
                 : "Upcoming Events"
           } underlineWidth={64} />
         </div>
-        <button className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors"
-          onClick={() => {
-            window.location.href = "/events";
-          }
-          }
+        <Link 
+          href="/events"
+          className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors"
         >
           <span className="text-sm sm:text-base md:text-heading-base">
             {langKey === "ta"
@@ -114,7 +113,7 @@ const UpcomingEvents: React.FC = () => {
                 : "View more"}
           </span>
           <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
-        </button>
+        </Link>
       </header>
 
       <div className="flex-1 shrink rounded-2xl basis-4 min-w-60 max-md:max-w-full h-[600px]">
