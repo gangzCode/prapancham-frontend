@@ -55,7 +55,11 @@ const Frame: React.FC<FrameProps> = ({
             noFramesMessage: "No frames available for this plan.",
             frameInstruction: "Select a frame style in which you wish to display the primary image",
             backButton: "Back",
-            nextButton: "Next"
+            nextButton: "Next",
+            withNoExtraAddons: "with no extra addons",
+            with: "with",
+            addon: "addon",
+            addons: "addons"
         },
         tamil: {
             greeting: "வணக்கம் {username}, எங்கள் ஆழ்ந்த இரங்கல்கள்.",
@@ -67,7 +71,11 @@ const Frame: React.FC<FrameProps> = ({
             noFramesMessage: "இந்த திட்டத்திற்கு சட்டங்கள் எதுவும் கிடைக்கவில்லை.",
             frameInstruction: "முதன்மை படத்தை காட்ட விரும்பும் சட்ட பாணியை தேர்ந்தெடுக்கவும்",
             backButton: "பின்",
-            nextButton: "அடுத்து"
+            nextButton: "அடுத்து",
+            withNoExtraAddons: "கூடுதல் சேவைகள் இல்லாமல்",
+            with: "உடன்",
+            addon: "சேவை",
+            addons: "சேவைகள்"
         },
         sinhala: {
             greeting: "ආයුබෝවන් {username}, අපගේ ගැඹුරු සානුකම්පනාව.",
@@ -79,7 +87,11 @@ const Frame: React.FC<FrameProps> = ({
             noFramesMessage: "මෙම සැලැස්ම සඳහා රාමු නොමැත.",
             frameInstruction: "ප්‍රධාන රූපය ප්‍රදර්ශනය කිරීමට ඔබ කැමති රාමු ශෛලිය තෝරන්න",
             backButton: "ආපසු",
-            nextButton: "ඊළඟ"
+            nextButton: "ඊළඟ",
+            withNoExtraAddons: "අමතර සේවා නොමැතිව",
+            with: "සමඟ",
+            addon: "සේවාව",
+            addons: "සේවා"
         }
     };
     
@@ -105,9 +117,15 @@ const Frame: React.FC<FrameProps> = ({
     // Get addon info
     const getAddonInfo = () => {
         if (!selectedAddon || selectedAddon.length === 0) {
-            return 'with no extra addons';
+            return t.withNoExtraAddons;
         }
-        return `with ${selectedAddon.map((addon: any) => addon.name).join(', ')} addon${selectedAddon.length > 1 ? 's' : ''}`;
+        const addonText = selectedAddon.length > 1 ? t.addons : t.addon;
+        const addonNames = selectedAddon.map((addon: any) => {
+            // Use the multilingual name from originalAddon
+            const localizedName = addon.originalAddon?.name?.[language]?.[0]?.value;
+            return localizedName || addon.name; // Fallback to addon.name if localized name not found
+        }).join(', ');
+        return `${t.with} ${addonNames} ${addonText}`;
     };
 
     const handleSelectFrame = (frameId: string) => {

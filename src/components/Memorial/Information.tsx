@@ -81,7 +81,11 @@ const Information: React.FC<InformationProps> = ({
             tributeVideoPlaceholder: "Enter YouTube video URL",
             tributeVideoNote: "Create a tribute video and upload it to YouTube. Then copy and paste its link here to show it in your tribute.",
             backButton: "Back",
-            nextButton: "Next"
+            nextButton: "Next",
+            withNoExtraAddons: "with no extra addons",
+            with: "with",
+            addon: "addon",
+            addons: "addons"
         },
         tamil: {
             greeting: "வணக்கம் {username}, எங்கள் ஆழ்ந்த இரங்கல்கள்.",
@@ -109,7 +113,11 @@ const Information: React.FC<InformationProps> = ({
             tributeVideoPlaceholder: "YouTube வீடியோ URL ஐ உள்ளிடவும்",
             tributeVideoNote: "ஒரு நினைவு வீடியோவை உருவாக்கி YouTube இல் பதிவேற்றவும். பின்னர் அதன் இணைப்பை இங்கே நகலெடுத்து ஒட்டவும்.",
             backButton: "பின்",
-            nextButton: "அடுத்து"
+            nextButton: "அடுத்து",
+            withNoExtraAddons: "கூடுதல் சேவைகள் இல்லாமல்",
+            with: "உடன்",
+            addon: "சேவை",
+            addons: "சேவைகள்"
         },
         sinhala: {
             greeting: "ආයුබෝවන් {username}, අපගේ ගැඹුරු සානුකම්පනාව.",
@@ -137,7 +145,11 @@ const Information: React.FC<InformationProps> = ({
             tributeVideoPlaceholder: "YouTube වීඩියෝ URL එක ඇතුළත් කරන්න",
             tributeVideoNote: "ස්තුති වීඩියෝවක් සාදා YouTube වෙත උඩුගත කරන්න. ඉන්පසු එහි සබැඳිය මෙහි පිටපත් කර ඔබේ ස්තුතියේ පෙන්වන්න.",
             backButton: "ආපසු",
-            nextButton: "ඊළඟ"
+            nextButton: "ඊළඟ",
+            withNoExtraAddons: "අමතර සේවා නොමැතිව",
+            with: "සමඟ",
+            addon: "සේවාව",
+            addons: "සේවා"
         }
     };
 
@@ -198,12 +210,20 @@ const Information: React.FC<InformationProps> = ({
         return selectedPlan?.wordLimit || 2000;
     };
 
+    console.log('selectedAddon from info', selectedAddon);
+
     // Get addon info
     const getAddonInfo = () => {
         if (!selectedAddon || selectedAddon.length === 0) {
-            return 'with no extra addons';
+            return t.withNoExtraAddons;
         }
-        return `with ${selectedAddon.map((addon: any) => addon.name).join(', ')} addon${selectedAddon.length > 1 ? 's' : ''}`;
+        const addonText = selectedAddon.length > 1 ? t.addons : t.addon;
+        const addonNames = selectedAddon.map((addon: any) => {
+            // Use the multilingual name from originalAddon
+            const localizedName = addon.originalAddon?.name?.[language]?.[0]?.value;
+            return localizedName || addon.name; // Fallback to addon.name if localized name not found
+        }).join(', ');
+        return `${t.with} ${addonNames} ${addonText}`;
     };
 
     // Get description label based on package type

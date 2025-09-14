@@ -31,17 +31,20 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
     const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
     const router = useRouter();
 
+    // Debug: Log the selected plan structure
+    console.log('Selected Plan:', selectedPlan);
+
     const availableAddons = (selectedPlan?.addons || []).map((addon: any) => {
         const id = addon._id;
         const nameObj = addon.name?.[language]?.[0];
-        const priceObj = addon.priceList?.find((p: any) => p.country === selectedCountryId);        
+        const priceObj = addon.priceList?.find((p: any) => p.country === selectedCountryId);
         return {
             id: id,
             name: nameObj?.value || '',
             price: priceObj?.price || 0,
         };
     });
-    
+
     const addonsTotal = selectedAddon && Array.isArray(selectedAddon)
         ? selectedAddon.reduce((sum: number, addon: any) => {
             const addonPrice = typeof addon.price === 'number' ? addon.price : parseFloat(addon.price || '0');
@@ -61,18 +64,34 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
                 </h1>
                 <p className="text-primary my-2">
                     {' '}
-                    {language === 'en' && 'and'}
-                    {language === 'si' && 'සහ'}
-                    {language === 'ta' && 'மற்றும்'}
+                    {language === 'en' && 'and you have selected'}
+                    {language === 'si' && 'සහ ඔබ තෝරාගෙන ඇත'}
+                    {language === 'ta' && 'மற்றும் நீங்கள் தேர்ந்தெடுத்துள்ளீர்கள்'}
                     {' '}
-                    {selectedAddon && selectedAddon.length > 0 ? (
-                        selectedAddon.length
-                    ) : ' '}{' '}
-
+                    <span className='text-[#880002] font-semibold'>
+                        {selectedPlan.name?.[language]?.[0]?.value || selectedPlan.name || 'Plan'}
+                    </span>
+                    {' '}
                     <span className='text-[#880002]'>
-                        {language === 'en' && (selectedAddon && selectedAddon.length > 0 ? 'with additional addons' : 'with no extra addons')}
-                        {language === 'si' && (selectedAddon && selectedAddon.length > 0 ? 'අමතර සේවා සමඟ' : 'අමතර සේවා නොමැතිව')}
-                        {language === 'ta' && (selectedAddon && selectedAddon.length > 0 ? 'கூடுதல் சேவைகளுடன்' : 'கூடுதல் சேவைகள் இல்லாமல்')}
+                        {selectedAddon && selectedAddon.length > 0 ? (
+                            <>
+                                {language === 'en' && 'with '}
+                                {language === 'si' && 'සමඟ '}
+                                {language === 'ta' && 'உடன் '}
+                                {selectedAddon.map((addon: any, index: number) => (
+                                    <span key={index}>
+                                        {addon.originalAddon?.name?.[language]?.[0]?.value || addon.name}
+                                        {index < selectedAddon.length - 1 && ', '}
+                                    </span>
+                                ))}
+                            </>
+                        ) : (
+                            <>
+                                {language === 'en' && 'with no extra addons'}
+                                {language === 'si' && 'අමතර සේවා නොමැතිව'}
+                                {language === 'ta' && 'கூடුতल் சেவைகள் இல்லാமல்'}
+                            </>
+                        )}
                     </span>
                 </p>
             </div>
@@ -89,23 +108,23 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
                         <h1 className="text-xl font-bold">{selectedPlan.currency} {roundedTotalAmount.toFixed(2)}</h1>
                     </div>
                     <Separator />
-                    {selectedPlan.features.map((feature: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined, index: React.Key | null | undefined) => (
-                        <div key={index} className='flex justify-between items-center mt-2 mx-8'>
-                            <p>{feature}</p>
-                            <div className="w-6 h-6 rounded-full flex items-center justify-center border border-gray-500">
-                                <Check className="text-black w-4 h-4" />
-                            </div>
+                    <div className='flex justify-between items-center mt-2 mx-8'>
+                        <p>{selectedPlan.description?.[language]?.[0]?.value || selectedPlan.description?.value || selectedPlan.description}</p>
+                        <div className="w-6 h-6 rounded-full flex items-center justify-center border border-gray-500">
+                            <Check className="text-black w-4 h-4" />
                         </div>
-                    ))}
+                    </div>
                     {selectedAddon && selectedAddon.length > 0 && (
                         <>
                             {selectedAddon.map(
                                 (
-                                    addon: { name: string },
+                                    addon: { name: string; originalAddon?: any },
                                     idx: number
                                 ) => (
                                     <div key={`addon-${idx}`} className='flex justify-between items-center mt-2 mx-8'>
-                                        <p>{addon.name}</p>
+                                        <p>
+                                            {addon.originalAddon?.name?.[language]?.[0]?.value || addon.name}
+                                        </p>
                                         <div
                                             className="w-6 h-6 rounded-full flex items-center justify-center border border-red-500 cursor-pointer"
                                             onClick={() => {
@@ -155,7 +174,15 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
                                         <p>{selectedPlan.currency} {service.price}</p>
                                         <div
                                             className="w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#34C759] cursor-pointer"
-                                            onClick={() => setSelectedAddon([...(selectedAddon || []), service])}
+                                            onClick={() => {
+                                                // Find the original addon from selectedPlan to preserve multilingual data
+                                                const originalAddon = selectedPlan?.addons?.find((addon: any) => addon._id === service.id);
+                                                const addonWithMultilingualData = {
+                                                    ...service,
+                                                    originalAddon: originalAddon // Store original addon data for multilingual access
+                                                };
+                                                setSelectedAddon([...(selectedAddon || []), addonWithMultilingualData]);
+                                            }}
                                         >
                                             <Plus className="text-[#34C759] font-bold w-4 h-4" />
                                         </div>
@@ -186,7 +213,7 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
                     {language === 'ta' && 'நான் படித்து ஏற்றுக்கொண்டேன்'}
                     {language === 'si' && 'මම කියවා පිළිගත්තා'}
                     {' '}
-                    <span 
+                    <span
                         className='text-[#880002] underline cursor-pointer hover:text-[#660001] transition-colors'
                         onClick={() => setIsTermsModalOpen(true)}
                     >
@@ -223,11 +250,10 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
                     {language === 'ta' && 'பின்னுக்கு'}
                 </button>
                 <button
-                    className={`gap-2.5 self-stretch px-4 py-3 my-auto whitespace-nowrap rounded min-h-6 transition-all duration-200 ${
-                        !isChecked 
-                            ? 'bg-gray-400 text-gray-600 cursor-not-allowed opacity-60' 
+                    className={`gap-2.5 self-stretch px-4 py-3 my-auto whitespace-nowrap rounded min-h-6 transition-all duration-200 ${!isChecked
+                            ? 'bg-gray-400 text-gray-600 cursor-not-allowed opacity-60'
                             : 'bg-[#0D1322] text-white hover:bg-[#1a2540]'
-                    }`}
+                        }`}
                     onClick={(e) => {
                         e.preventDefault();
                         setActiveStep(3);
@@ -242,10 +268,10 @@ const PlanSummary: React.FC<PlanSummaryProps> = ({
             </div>
 
             {/* Terms Modal */}
-            <TermsModal 
-                isOpen={isTermsModalOpen} 
-                onClose={() => setIsTermsModalOpen(false)} 
-                language={language} 
+            <TermsModal
+                isOpen={isTermsModalOpen}
+                onClose={() => setIsTermsModalOpen(false)}
+                language={language}
             />
         </div>
     );

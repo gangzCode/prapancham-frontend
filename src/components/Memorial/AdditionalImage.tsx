@@ -52,13 +52,17 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
             dragDropText: "Drag & drop images here or click to browse",
             browseFilesButton: "Browse Files...",
             recommendedSizeLabel: "Recommended image size:",
-            recommendedSizeValue: "400x400 pixels (1:1 aspect ratio)",
+            recommendedSizeValue: "800x800 pixels (1:1 aspect ratio)",
             recommendedTypeLabel: "Recommended image type:",
             recommendedTypeValue: "JPEG, PNG, WebP, or HEIC",
             noteLabel: "Note:",
             noteValue: "You can upload up to {max} additional images",
             backButton: "Back",
-            nextButton: "Next"
+            nextButton: "Next",
+            withNoExtraAddons: "with no extra addons",
+            with: "with",
+            addon: "addon",
+            addons: "addons"
         },
         tamil: {
             greeting: "வணக்கம் {username}, எங்கள் ஆழ்ந்த இரங்கல்கள்.",
@@ -71,13 +75,17 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
             dragDropText: "படங்களை இங்கே இழுத்து விடவும் அல்லது உலாவ கிளிக் செய்யவும்",
             browseFilesButton: "கோப்புகளை உலாவு...",
             recommendedSizeLabel: "பரிந்துரைக்கப்பட்ட படத்தின் அளவு:",
-            recommendedSizeValue: "400x400 பிக்சல்கள் (1:1 விகித அளவு)",
+            recommendedSizeValue: "800x800 பிக்சல்கள் (1:1 விகித அளவு)",
             recommendedTypeLabel: "பரிந்துரைக்கப்பட்ட படத்தின் வகை:",
             recommendedTypeValue: "JPEG, PNG, WebP, அல்லது HEIC",
             noteLabel: "குறிப்பு:",
             noteValue: "நீங்கள் {max} கூடுதல் படங்கள் வரை பதிவேற்ற முடியும்",
             backButton: "பின்",
-            nextButton: "அடுத்து"
+            nextButton: "அடுத்து",
+            withNoExtraAddons: "கூடுதல் சேவைகள் இல்லாமல்",
+            with: "உடன்",
+            addon: "சேவை",
+            addons: "சேவைகள்"
         },
         sinhala: {
             greeting: "ආයුබෝවන් {username}, අපගේ ගැඹුරු සානුකම්පනාව.",
@@ -90,13 +98,17 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
             dragDropText: "රූප මෙහි ඇද දමන්න හෝ පිරික්සීමට ක්ලික් කරන්න",
             browseFilesButton: "ගොනු පිරික්සන්න...",
             recommendedSizeLabel: "නිර්දේශිත රූප ප්‍රමාණය:",
-            recommendedSizeValue: "400x400 පික්සල් (1:1 අනුපාත ප්‍රමාණය)",
+            recommendedSizeValue: "800x800 පික්සල් (1:1 අනුපාත ප්‍රමාණය)",
             recommendedTypeLabel: "නිර්දේශිත රූප වර්ගය:",
             recommendedTypeValue: "JPEG, PNG, WebP, හෝ HEIC",
             noteLabel: "සටහන:",
             noteValue: "ඔබට අමතර රූප {max}ක් දක්වා උඩුගත කළ හැකිය",
             backButton: "ආපසු",
-            nextButton: "ඊළඟ"
+            nextButton: "ඊළඟ",
+            withNoExtraAddons: "අමතර සේවා නොමැතිව",
+            with: "සමඟ",
+            addon: "සේවාව",
+            addons: "සේවා"
         }
     };
     
@@ -131,9 +143,15 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
     // Get addon info
     const getAddonInfo = () => {
         if (!selectedAddon || selectedAddon.length === 0) {
-            return 'with no extra addons';
+            return t.withNoExtraAddons;
         }
-        return `with ${selectedAddon.map((addon: any) => addon.name).join(', ')} addon${selectedAddon.length > 1 ? 's' : ''}`;
+        const addonText = selectedAddon.length > 1 ? t.addons : t.addon;
+        const addonNames = selectedAddon.map((addon: any) => {
+            // Use the multilingual name from originalAddon
+            const localizedName = addon.originalAddon?.name?.[language]?.[0]?.value;
+            return localizedName || addon.name; // Fallback to addon.name if localized name not found
+        }).join(', ');
+        return `${t.with} ${addonNames} ${addonText}`;
     };
 
     const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
