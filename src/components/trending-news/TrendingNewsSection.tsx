@@ -175,17 +175,15 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
           />
         </div>
         {!isNewsPage && (
-          <button className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors"
-            onClick={() => {
-              window.location.href = "/news";
-            }
-            }
+          <Link 
+            href="/news"
+            className="flex-shrink-0 flex items-center gap-2 text-red-800 hover:text-red-700 transition-colors"
           >
             <span className="text-sm sm:text-base md:text-heading-base">
               {langKey === "ta" ? "மேலும் பார்க்க" : langKey === "si" ? "තවත් බලන්න" : "View more"}
             </span>
             <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
-          </button>
+          </Link>
         )}
       </div>
 
@@ -208,12 +206,12 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
                   </Link>
                   <p className="text-sm text-gray-200 mb-2">
 
-                    <button
-                      onClick={() => window.location.href = `/news/${featuredNews.id}`}
+                    <Link
+                      href={`/news/${featuredNews.id}`}
                       className="text-[#ea384c] font-medium ml-1 hover:underline focus:outline-none"
                     >
                       {langKey === "ta" ? "மேலும் படிக்க" : langKey === "si" ? "තවත් කියවන්න" : "Read more"}
-                    </button>
+                    </Link>
 
                   </p>
                 </div>
@@ -288,12 +286,12 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
                       {news.title}
                     </h3>
                     <p className="text-xs text-gray-200 mb-1">
-                      <button
-                        onClick={() => window.location.href = `/news/${news.id}`}
+                      <Link
+                        href={`/news/${news.id}`}
                         className="text-[#ea384c] font-medium ml-1 hover:underline focus:outline-none"
                       >
                         {langKey === "ta" ? "மேலும் படிக்க" : langKey === "si" ? "තවත් කියවන්න" : "Read more"}
-                      </button>
+                      </Link>
                     </p>
                   </div>
                 </div>

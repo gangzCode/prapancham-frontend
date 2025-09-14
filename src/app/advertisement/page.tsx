@@ -197,22 +197,17 @@ const AdvertisementContent = () => {
         fetcher
     );
 
-    // Manage overall page loading state
+    // Manage initial page loading state only
     useEffect(() => {
         const allDataLoaded = !isLoading && !adsLoading;
         
         if (allDataLoaded && pageLoading) {
-            // Add a small delay for smooth transition
+            // Add a small delay for smooth transition on initial load only
             setTimeout(() => {
                 setPageLoading(false);
             }, 500);
         }
     }, [isLoading, adsLoading, pageLoading]);
-
-    // Reset page loading when category changes
-    useEffect(() => {
-        setPageLoading(true);
-    }, [selectedAdCategory]);
 
     // Update activeCountry when categories are loaded
     useEffect(() => {
@@ -223,8 +218,8 @@ const AdvertisementContent = () => {
         }
     }, [categoriesData, activeCountry, langKey, t.posts]);
 
-    // Show loading state until all data is loaded
-    if (pageLoading) {
+    // Show initial loading state only when no data is available yet
+    if (pageLoading && !categoriesData) {
         return (
             <div className="flex flex-col">
                 <main className="flex flex-col mt-0 w-full bg-white max-md:mt-0 gap-[24px]">
@@ -314,8 +309,8 @@ const AdvertisementContent = () => {
         window.open(whatsappUrl, '_blank');
     }
 
-    // Error state
-    if (adsError) {
+    // Error state - only show error if no cached data is available
+    if (adsError && !adsData) {
         return (
             <div className="mt-8 py-8 px-4 md:px-8 lg:px-16">
                 <div className="text-center text-red-500">{t.errorLoading}</div>
@@ -460,8 +455,45 @@ const AdvertisementContent = () => {
             </div>
 
             <div className="py-8 px-4 md:px-8 lg:px-16 space-y-4">
-                {/* First Full Width Ad */}
-                {categorizedAds['Full Width'] && categorizedAds['Full Width'].length > 0 && (
+                {/* Show skeleton loader when ads are being fetched and no cached data */}
+                {adsLoading && !adsData && (
+                    <div className="animate-pulse space-y-4">
+                        {/* Advertisement Grid Skeleton */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            {[...Array(8)].map((_, i) => (
+                                <div key={i} className="bg-gray-100 rounded-lg p-4">
+                                    <div className="w-full h-48 bg-gray-200 rounded mb-4"></div>
+                                    <div className="space-y-2">
+                                        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                                        <div className="h-3 bg-gray-200 rounded w-full"></div>
+                                        <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+                
+                {/* Show a smaller loading indicator when fetching new data but we have cached data */}
+                {adsLoading && adsData && (
+                    <div className="flex justify-center items-center py-2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary opacity-60"></div>
+                        <span className="ml-2 text-xs text-gray-500">Updating...</span>
+                    </div>
+                )}
+                
+                {/* Show error indicator when there's an error but we have cached data */}
+                {adsError && adsData && (
+                    <div className="flex justify-center items-center py-2">
+                        <span className="text-xs text-red-500 opacity-75">Failed to update. Showing cached content.</span>
+                    </div>
+                )}
+                
+                {/* Show content when we have data or when loading with cached data */}
+                {(adsData || (adsLoading && adsData)) && (
+                    <>
+                        {/* First Full Width Ad */}
+                        {categorizedAds['Full Width'] && categorizedAds['Full Width'].length > 0 && (
                     <div className="bg-slate-50 shadow-lg p-4">
                         <a href={categorizedAds['Full Width'][0].link} target="_blank" rel="noopener noreferrer">
                             <img
@@ -771,6 +803,8 @@ const AdvertisementContent = () => {
                             onPageChange={handlePageChange}
                         />
                     </div>
+                )}
+                    </>
                 )}
             </div>
         </div>
