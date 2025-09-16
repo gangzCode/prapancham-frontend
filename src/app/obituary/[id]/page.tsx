@@ -991,7 +991,7 @@ const ObituaryDetail: React.FC = () => {
                         <Separator className="mt-4 !w-full" />
 
                         {/* Tributes Section */}
-                        {obituaryData.tributeItems && obituaryData.tributeItems.length > 0 && (
+                        {obituaryData.tributeItems && (
                             <div className="mt-8">
                                 <div className="flex-shrink min-w-0 max-w-full mb-6">
                                     <TitleWithUnderline text={t.tributes} underlineWidth={64} fontSize={3} />
