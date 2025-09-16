@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import useSWR from 'swr';
 
 type LanguageKey = "en" | "ta" | "si";
 
@@ -75,39 +76,31 @@ const CountrySection = ({ onCountrySelect, selectedCountryId }: CountrySectionPr
     };
 
     const t = translations[langKey];
-    const [countries, setCountries] = useState<CountryData[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string>("");
+    
+    // SWR fetcher function
+    const fetcher = (url: string) => fetch(url).then(res => {
+        if (!res.ok) {
+            throw new Error(`${t.failedToFetchCountry} ${res.status}`);
+        }
+        return res.json();
+    });
+
+    // SWR hook for fetching country order counts
+    const { data: countries = [], error, isLoading } = useSWR<CountryData[]>(
+        `${process.env.NEXT_PUBLIC_API_URL}/order/country-order-count`,
+        fetcher,
+        {
+            revalidateOnFocus: false,
+            revalidateOnReconnect: false,
+            errorRetryCount: 3,
+            errorRetryInterval: 1000
+        }
+    );
+
     const [currentIndex, setCurrentIndex] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(6);
 
-    // Function to fetch country order counts from API
-    const fetchCountryOrderCounts = async () => {
-        try {
-            setLoading(true);
-            setError("");
-
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order/country-order-count`);
-
-            if (!response.ok) {
-                throw new Error(`${t.failedToFetchCountry} ${response.status}`);
-            }
-
-            const data: CountryData[] = await response.json();
-            setCountries(data);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : t.errorFetchingCountry);
-            console.error('Error fetching country data:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // Fetch data on component mount
-    useEffect(() => {
-        fetchCountryOrderCounts();
-    }, []);
-
+    // Responsive items per page effect
     useEffect(() => {
         const updateItemsPerPage = () => {
             setItemsPerPage(window.innerWidth <= 768 ? 1 : 6);
@@ -194,11 +187,11 @@ const CountrySection = ({ onCountrySelect, selectedCountryId }: CountrySectionPr
             <div>
                 {error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                        {error}
+                        {error instanceof Error ? error.message : t.errorFetchingCountry}
                     </div>
                 )}
 
-                {loading ? (
+                {isLoading ? (
                     <div className="bg-white p-6 shadow flex items-center justify-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#880002]"></div>
                         <span className="ml-2 text-gray-600">{t.loadingCountries}</span>
