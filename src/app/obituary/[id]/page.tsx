@@ -845,7 +845,7 @@ const ObituaryDetail: React.FC = () => {
                             <div className="bg-black w-full shadow-md flex justify-center">
                                 <div className="pt-4 pb-2 text-center w-full max-w-5xl px-4">
                                     <div className="w-full flex justify-center">
-                                        <h1 className="text-2xl md:text-3xl font-serif font-light text-white mb-8 leading-relaxed tracking-wide text-center max-w-3xl">
+                                        <h1 className="text-3xl md:text-5xl font-serif font-light text-white mb-8 leading-relaxed tracking-wide text-center max-w-3xl">
                                             {obituaryData.information.shortDescription || t.ourDeepestCondolences}
                                         </h1>
                                     </div>
@@ -925,7 +925,7 @@ const ObituaryDetail: React.FC = () => {
                         <div className="mt-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200">
                             <div className="flex items-start gap-4">
                                 <div className="flex-shrink-0">
-                                    <div className="w-1 h-16 bg-gradient-to-b from-teal-500 to-teal-700 rounded-full"></div>
+                                    <div className="w-1 h-16 bg-secondary rounded-full"></div>
                                 </div>
                                 <div className="flex-1">
                                     {obituaryData.information.description ? (
