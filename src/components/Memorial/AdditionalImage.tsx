@@ -5,7 +5,7 @@ import React, { useEffect, useState, DragEvent } from 'react';
 import Image from "next/image";
 import { CirclePlus } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageProvider';
-import { convertHeicToJpeg } from '@/lib/heicConverter';
+import { convertHeicToJpeg, convertHeicToJpegFile } from '@/lib/heicConverter';
 
 interface AdditionalImageProps {
     selectedPlan: any;
@@ -165,17 +165,25 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
             .filter(file => file.type.startsWith("image/") || file.type === "image/heic" || file.name.toLowerCase().endsWith('.heic'))
             .slice(0, availableSlots);
         
-        // Convert HEIC files to JPEG for preview
-        const newPreviews = await Promise.all(droppedFiles.map(file => convertHeicToJpeg(file)));
-        const updatedImages = [...images, ...droppedFiles];
-        const updatedPreviews = [...previews, ...newPreviews];
+        try {
+            // Convert HEIC files to JPEG files
+            const convertedFiles = await Promise.all(droppedFiles.map(file => convertHeicToJpegFile(file)));
+            // Create previews from converted files
+            const newPreviews = await Promise.all(convertedFiles.map(file => convertHeicToJpeg(file)));
+            
+            const updatedImages = [...images, ...convertedFiles];
+            const updatedPreviews = [...previews, ...newPreviews];
 
-        setImages(updatedImages);
-        setPreviews(updatedPreviews);
-        
-        // Notify parent component of images change
-        if (onImagesDataChange) {
-            onImagesDataChange(updatedImages);
+            setImages(updatedImages);
+            setPreviews(updatedPreviews);
+            
+            // Notify parent component of images change
+            if (onImagesDataChange) {
+                onImagesDataChange(updatedImages);
+            }
+        } catch (error) {
+            console.error('Image conversion failed:', error);
+            // Handle conversion error - you might want to show a toast message
         }
     };
 
@@ -189,17 +197,25 @@ const AdditionalImage: React.FC<AdditionalImageProps> = ({
             .filter(file => file.type.startsWith("image/") || file.type === "image/heic" || file.name.toLowerCase().endsWith('.heic'))
             .slice(0, availableSlots);
         
-        // Convert HEIC files to JPEG for preview
-        const newPreviews = await Promise.all(selectedFiles.map(file => convertHeicToJpeg(file)));
-        const updatedImages = [...images, ...selectedFiles];
-        const updatedPreviews = [...previews, ...newPreviews];
+        try {
+            // Convert HEIC files to JPEG files
+            const convertedFiles = await Promise.all(selectedFiles.map(file => convertHeicToJpegFile(file)));
+            // Create previews from converted files
+            const newPreviews = await Promise.all(convertedFiles.map(file => convertHeicToJpeg(file)));
+            
+            const updatedImages = [...images, ...convertedFiles];
+            const updatedPreviews = [...previews, ...newPreviews];
 
-        setImages(updatedImages);
-        setPreviews(updatedPreviews);
-        
-        // Notify parent component of images change
-        if (onImagesDataChange) {
-            onImagesDataChange(updatedImages);
+            setImages(updatedImages);
+            setPreviews(updatedPreviews);
+            
+            // Notify parent component of images change
+            if (onImagesDataChange) {
+                onImagesDataChange(updatedImages);
+            }
+        } catch (error) {
+            console.error('Image conversion failed:', error);
+            // Handle conversion error - you might want to show a toast message
         }
     };
 
