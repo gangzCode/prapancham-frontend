@@ -72,6 +72,50 @@ export const convertHeicToJpeg = async (file: File): Promise<string> => {
   });
 };
 
+// NEW FUNCTION: Convert HEIC file to actual JPEG File object
+export const convertHeicToJpegFile = async (file: File): Promise<File> => {
+  return new Promise(async (resolve, reject) => {
+    // Check if it's a HEIC file
+    const isHeic = file.type === "image/heic" || 
+                   file.type === "image/heif" || 
+                   file.name.toLowerCase().endsWith('.heic') || 
+                   file.name.toLowerCase().endsWith('.heif');
+
+    if (!isHeic) {
+      // If not HEIC, return the original file
+      resolve(file);
+      return;
+    }
+
+    // For HEIC files, try to convert using heic2any if available
+    try {
+      // Dynamic import to avoid bundle issues if package is not installed
+      const heic2any = await import('heic2any');
+      
+      const convertedBlob = await heic2any.default({
+        blob: file,
+        toType: "image/jpeg",
+        quality: 0.8
+      });
+      
+      const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+      
+      // Create a new File object from the converted blob
+      const jpegFileName = file.name.replace(/\.(heic|heif)$/i, '.jpg');
+      const jpegFile = new File([blob as Blob], jpegFileName, {
+        type: 'image/jpeg',
+        lastModified: file.lastModified
+      });
+      
+      resolve(jpegFile);
+      
+    } catch (error) {
+      console.error('HEIC conversion failed:', error);
+      reject(new Error('HEIC conversion not available or failed. Please use a different image format.'));
+    }
+  });
+};
+
 // Helper function to check if a file is HEIC
 export const isHeicFile = (file: File): boolean => {
   return file.type === "image/heic" || 

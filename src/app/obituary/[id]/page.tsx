@@ -845,7 +845,7 @@ const ObituaryDetail: React.FC = () => {
                             <div className="bg-black w-full shadow-md flex justify-center">
                                 <div className="pt-4 pb-2 text-center w-full max-w-5xl px-4">
                                     <div className="w-full flex justify-center">
-                                        <h1 className="text-2xl md:text-3xl font-serif font-light text-white mb-8 leading-relaxed tracking-wide text-center max-w-3xl">
+                                        <h1 className="text-3xl md:text-5xl font-serif font-light text-white mb-8 leading-relaxed tracking-wide text-center max-w-3xl">
                                             {obituaryData.information.shortDescription || t.ourDeepestCondolences}
                                         </h1>
                                     </div>
@@ -925,7 +925,7 @@ const ObituaryDetail: React.FC = () => {
                         <div className="mt-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200">
                             <div className="flex items-start gap-4">
                                 <div className="flex-shrink-0">
-                                    <div className="w-1 h-16 bg-gradient-to-b from-teal-500 to-teal-700 rounded-full"></div>
+                                    <div className="w-1 h-16 bg-secondary rounded-full"></div>
                                 </div>
                                 <div className="flex-1">
                                     {obituaryData.information.description ? (
@@ -948,42 +948,42 @@ const ObituaryDetail: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="flex justify-end gap-2 items-center self-stretch mt-6">
+                        <div className="flex flex-col sm:flex-row justify-end gap-2 items-stretch sm:items-center self-stretch mt-6">
                             {
                                 obituaryData.selectedPackage.isSocialSharing && (
                                     <button
-                                        className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold"
+                                        className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-4 sm:px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2 font-semibold text-sm sm:text-base"
                                         onClick={() => setShowSharePopup(!showSharePopup)}
                                     >
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                                         </svg>
-                                        {t.shareMemorial}
+                                        <span className="truncate">{t.shareMemorial}</span>
                                     </button>
                                 )
                             }
                             <button
-                                className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold"
+                                className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-4 sm:px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2 font-semibold text-sm sm:text-base"
                                 onClick={() =>
                                     setIsTributeModalOpen(true)
                                 }
                             >
-                                <svg className="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
-                                {t.postTribute}
+                                <span className="truncate">{t.postTribute}</span>
                             </button>
                             {isDonationEnabled() && (
                                 <button
                                     onClick={() => setIsModalOpen(true)}
-                                    className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 font-semibold"
+                                    className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 hover:border-gray-400 px-4 sm:px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2 font-semibold text-sm sm:text-base"
                                 >
-                                    <svg className="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0A1.5 1.5 0 013 18.546V19a1 1 0 001 1h16a1 1 0 001-1v-.454c0-.793-.644-1.546-1.5-1.546z" />
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12.054l-2.5-2.5L8 11.054l4 4 4-4-1.5-1.5-2.5 2.5z" />
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.054V12.054" />
                                     </svg>
-                                    {t.donate}
+                                    <span className="truncate">{t.donate}</span>
                                 </button>
                             )}
                         </div>
@@ -991,7 +991,7 @@ const ObituaryDetail: React.FC = () => {
                         <Separator className="mt-4 !w-full" />
 
                         {/* Tributes Section */}
-                        {obituaryData.tributeItems && obituaryData.tributeItems.length > 0 && (
+                        {obituaryData.tributeItems && (
                             <div className="mt-8">
                                 <div className="flex-shrink min-w-0 max-w-full mb-6">
                                     <TitleWithUnderline text={t.tributes} underlineWidth={64} fontSize={3} />

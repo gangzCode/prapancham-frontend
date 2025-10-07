@@ -4,7 +4,7 @@ import { TitleWithUnderline } from '@/components/ui/title-with-underline';
 import React, { useEffect, useState, DragEvent } from 'react';
 import Image from "next/image";
 import { useLanguage } from '@/components/ui/LanguageProvider';
-import { convertHeicToJpeg } from '@/lib/heicConverter';
+import { convertHeicToJpeg, convertHeicToJpegFile } from '@/lib/heicConverter';
 
 interface PrimaryImageProps {
     selectedPlan: any;
@@ -151,16 +151,24 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
             .find(file => file.type.startsWith("image/") || file.type === "image/heic" || file.name.toLowerCase().endsWith('.heic'));
 
         if (droppedFile) {
-            if (preview) URL.revokeObjectURL(preview);
-            setImage(droppedFile);
-            
-            // Convert HEIC to JPEG if needed and create preview
-            const previewUrl = await convertHeicToJpeg(droppedFile);
-            setPreview(previewUrl);
-            
-            // Notify parent component of image change
-            if (onImageDataChange) {
-                onImageDataChange(droppedFile);
+            try {
+                // Convert HEIC to JPEG file if needed
+                const convertedFile = await convertHeicToJpegFile(droppedFile);
+                
+                if (preview) URL.revokeObjectURL(preview);
+                setImage(convertedFile);
+                
+                // Create preview from the converted file
+                const previewUrl = await convertHeicToJpeg(convertedFile);
+                setPreview(previewUrl);
+                
+                // Notify parent component of image change
+                if (onImageDataChange) {
+                    onImageDataChange(convertedFile);
+                }
+            } catch (error) {
+                console.error('Image conversion failed:', error);
+                // Handle conversion error - you might want to show a toast message
             }
         }
     };
@@ -170,16 +178,24 @@ const PrimaryImage: React.FC<PrimaryImageProps> = ({
             .find(file => file.type.startsWith("image/") || file.type === "image/heic" || file.name.toLowerCase().endsWith('.heic'));
 
         if (selectedFile) {
-            if (preview) URL.revokeObjectURL(preview);
-            setImage(selectedFile);
-            
-            // Convert HEIC to JPEG if needed and create preview
-            const previewUrl = await convertHeicToJpeg(selectedFile);
-            setPreview(previewUrl);
-            
-            // Notify parent component of image change
-            if (onImageDataChange) {
-                onImageDataChange(selectedFile);
+            try {
+                // Convert HEIC to JPEG file if needed
+                const convertedFile = await convertHeicToJpegFile(selectedFile);
+                
+                if (preview) URL.revokeObjectURL(preview);
+                setImage(convertedFile);
+                
+                // Create preview from the converted file
+                const previewUrl = await convertHeicToJpeg(convertedFile);
+                setPreview(previewUrl);
+                
+                // Notify parent component of image change
+                if (onImageDataChange) {
+                    onImageDataChange(convertedFile);
+                }
+            } catch (error) {
+                console.error('Image conversion failed:', error);
+                // Handle conversion error - you might want to show a toast message
             }
         }
     };

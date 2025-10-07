@@ -138,19 +138,63 @@ function OrbituaryPage() {
     const [isMobile, setIsMobile] = useState(false);
 
     // SWR fetcher function
-    const fetcher = (url: string) => fetch(url).then(res => {
-        if (!res.ok) {
-            throw new Error(`Failed to fetch: ${res.status}`);
+    const fetcher = async (url: string) => {
+        // Check if this is a search request
+        if (searchTerm && url.includes('/order/search')) {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order/search`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: searchTerm  // Backend expects 'name', not 'query'
+                })
+            });
+            
+            if (!response.ok) {
+                if (response.status === 404) {
+                    // Return empty result for 404 (no matches found)
+                    return { orders: [], pagination: { currentPage: 1, totalPages: 1, totalItems: 0 } };
+                }
+                throw new Error(`Failed to search: ${response.status}`);
+            }
+            
+            const orders = await response.json();
+            
+            // Transform the simple array response to match our expected format
+            // Handle client-side pagination since backend doesn't support it
+            const itemsPerPage = 10;
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedOrders = orders.slice(startIndex, endIndex);
+            const totalPages = Math.ceil(orders.length / itemsPerPage);
+            
+            return {
+                orders: paginatedOrders,
+                pagination: {
+                    currentPage: currentPage,
+                    totalPages: totalPages,
+                    totalItems: orders.length
+                }
+            };
         }
-        return res.json();
-    });
+        
+        // For other requests, use GET method
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch: ${response.status}`);
+        }
+        return response.json();
+    };
 
     // Construct API URL based on current state
     const getApiUrl = () => {
         let url = `${process.env.NEXT_PUBLIC_API_URL}/order/active-sorted?page=${currentPage}&limit=10`;
         
         if (searchTerm) {
-            url = `${process.env.NEXT_PUBLIC_API_URL}/order/search?query=${encodeURIComponent(searchTerm)}&page=${currentPage}&limit=10`;
+            // For search, we'll use a special identifier that the fetcher can recognize
+            // Include currentPage and searchTerm in the URL to make SWR cache different pages
+            url = `${process.env.NEXT_PUBLIC_API_URL}/order/search?_post=true&page=${currentPage}&term=${encodeURIComponent(searchTerm)}`;
         } else if (activeFilters) {
             const params = new URLSearchParams();
             params.append('page', currentPage.toString());
