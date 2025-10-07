@@ -145,22 +145,22 @@ const About = () => {
         {
             description:t.offerparagraph2,
             imageSrc:
-                "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
+                "/images/samathi.png",
         },
         {
             description:t.offerparagraph3,
             imageSrc:
-                "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
+                "/images/wreath.png",
         },
         {
             description:t.offerparagraph4,
             imageSrc:
-                "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
+                "/images/digital.png",
         },
         {
             description:t.offerparagraph5,
             imageSrc:
-                "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
+                "/images/support.png",
         },
     ];
 
@@ -179,7 +179,7 @@ const About = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div>
                             <Image
-                                src="/images/event-1.png"
+                                src="/images/first.jpg"
                                 alt="About us"
                                 width={500}
                                 height={400}
@@ -233,7 +233,7 @@ const About = () => {
                         <div className="flex items-center mx-auto mr-10">
                             <div className="relative h-[280px] md:h-[400px] pr-8">
                                 <Image
-                                    src="/images/top-ad-1.png"
+                                    src="/images/workStyle.jpg"
                                     alt="Two boys smiling and hugging each other"
                                     width={400}
                                     height={400}
@@ -241,7 +241,7 @@ const About = () => {
                                     className=" aspect-[1/1] transform translate-x-20 w-64 md:w-96"
                                 />
                                 <Image
-                                    src="/images/top-ad-2.png"
+                                    src="/images/workStyle2.jpg"
                                     alt="A woman recording a podcast with a microphone and headphones"
                                     width={300}
                                     height={300}
@@ -319,7 +319,7 @@ const About = () => {
                         <div className="flex items-center mx-auto">
                             <div className="relative w-full h-[280px] md:h-[400px]">
                                 <Image
-                                    src="/images/top-ad-1.png"
+                                    src="/images/visionMission.jpg"
                                     alt="Two boys smiling and hugging each other"
                                     width={400}
                                     height={400}
@@ -328,7 +328,7 @@ const About = () => {
                                 />
                                 <div className="absolute bottom-0 left-0 p-4 bg-white transform translate-x-20 translate-y-8">
                                     <Image
-                                        src="/images/top-ad-2.png"
+                                        src="/images/visionMission2.jpg"
                                         alt="A woman recording a podcast with a microphone and headphones"
                                         width={300}
                                         height={300}
@@ -360,7 +360,7 @@ const About = () => {
                         <div className="flex items-center mx-auto">
                             <div className="relative w-full h-[280px] md:h-[400px]">
                                 <Image
-                                    src="/images/top-ad-1.png"
+                                    src="/images/visionMission.jpg"
                                     alt="Two boys smiling and hugging each other"
                                     width={400}
                                     height={400}
@@ -369,7 +369,7 @@ const About = () => {
                                 />
                                 <div className="absolute bottom-0 left-0 p-4 bg-white transform translate-x-20 translate-y-8">
                                     <Image
-                                        src="/images/top-ad-2.png"
+                                        src="/images/visionMission2.jpg"
                                         alt="A woman recording a podcast with a microphone and headphones"
                                         width={300}
                                         height={300}
