@@ -4,6 +4,7 @@ import { i18n } from "./next-i18next.config.js";
 const nextConfig: NextConfig = {
   i18n,
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -12,9 +13,9 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "prapancham-prod-assets.s3.us-east-1.amazonaws.com",
-        pathname: "/**",
-      },
+        hostname: "*.s3.us-east-1.amazonaws.com",
+        pathname: "/*",
+      }
     ],
   },
 };
