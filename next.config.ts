@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "prapanchamtest-asset.s3.eu-north-1.amazonaws.com",
+        hostname: "prapancham-prod-assets.s3.us-east-1.amazonaws.com",
         pathname: "/**",
       },
     ],
