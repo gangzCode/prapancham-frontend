@@ -497,7 +497,7 @@ const Summary: React.FC<SummaryProps> = ({
                     address: loggedInUser.address || '',
                     phoneNumber: loggedInUser.phone || '',
                     countryId: selectedCountryId,
-                    packageAmount: paymentIntentResult.amount || getTotalPrice(),
+                    packageAmount: getTotalPrice(), // Use frontend calculation for correct currency display
                     tempOrderId: paymentIntentResult.tempOrderId,
                     paymentIntentId: paymentIntentResult.paymentIntentId
                 };
