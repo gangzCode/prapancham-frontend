@@ -201,8 +201,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                 orderId: formData.orderId || null,
             };
 
-            console.log('Creating payment intent with data:', paymentIntentData);
-
             const paymentIntentResponse = await axios.post(
                 `${process.env.NEXT_PUBLIC_API_URL}/order/donation/create-payment-intent`,
                 paymentIntentData,
@@ -219,7 +217,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                 // Store paymentIntentId for later use in donation confirmation
                 const paymentIntentId = paymentIntentResponse.data.paymentIntentId;
                 setPaymentIntentId(paymentIntentId);
-                console.log('Payment intent created successfully, ID:', paymentIntentId);
                 
             } else {
                 throw new Error('No client secret received from payment intent creation');
