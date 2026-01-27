@@ -286,8 +286,8 @@ const HeroSection = () => {
               </div>
             </div>
           ) : (
-            <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[456px]">
-              <div className="overflow-hidden flex-1 shrink basis-0 min-w-60 pr-0 md:pr-4">
+            <ScrollArea className="flex flex-1 gap-2 justify-center mt-4 size-full h-[456px] pr-6 md:pr-4">
+              <div className="overflow-hidden flex-1 shrink basis-0 min-w-60">
                 {obituaryData.map((entry, index) => (
                   <div key={index} className={index > 0 ? "mt-2" : ""}>
                     <ObituaryCard entry={entry} />

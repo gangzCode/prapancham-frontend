@@ -129,7 +129,7 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className, categoryId
   const displayedNews = (activeTab === "recent" ? recentNews : importantNews).slice(0, activeTab === "recent" ? 5 : 10);
 
   return (
-    <div className={cn("px-4 md:px-8 lg:px-16 py-6", className)}>
+    <div className={cn("px-4 md:px-6 lg:px-12 py-6", className)}>
       <div className="flex flex-col md:flex-row w-full gap-6">
         {/* Left Column - News Tabs */}
         <div className="min-w-60 w-full">
