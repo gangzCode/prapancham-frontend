@@ -2,6 +2,7 @@
 
 import { useCallback, useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { TitleWithUnderline } from "../ui/title-with-underline";
 import { ObituaryEntry } from "./types";
 import BreakingNewsCard from "./BreakingNewsCard";
@@ -9,7 +10,7 @@ import ObituaryCard from "./ObituaryCard";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import useSWR from "swr";
 import { useLanguage } from "@/components/ui/LanguageProvider";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Link as LinkIcon } from "lucide-react";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -248,13 +249,15 @@ const HeroSection = () => {
       ) : currentNews ? (
         <article className="flex-1 shrink self-stretch my-auto basis-0 min-w-60 shadow-[0px_0px_12px_rgba(0,0,0,0.06)] max-md:max-w-full">
           <div className="flex relative flex-col justify-end w-full min-h-[516px] max-md:max-w-full">
-            <Image
-              src={currentNews.backgroundImage || "/images/Prapancham-logo.png"}
-              alt="News background"
-              width={700}
-              height={516}
-              className="object-cover absolute inset-0 size-full"
-            />
+            <Link href={`/news/${currentNews.id}`} className="absolute inset-0 z-0">
+              <Image
+                src={currentNews.backgroundImage || "/images/Prapancham-logo.png"}
+                alt="News background"
+                width={700}
+                height={516}
+                className="object-cover absolute inset-0 size-full"
+              />
+            </Link>
             <BreakingNewsCard
               {...currentNews}
               onPrevious={handlePrevious}
