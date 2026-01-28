@@ -1060,7 +1060,7 @@ const Summary: React.FC<SummaryProps> = ({
                             </div>
 
                             {/* YouTube Video and Additional Images Section */}
-                            {(informationFormData?.tributeVideo || (additionalPreviews && additionalPreviews.length > 0)) && (
+                            {(informationFormData?.tributeVideo || (additionalPreviews && additionalPreviews.length > 0 && selectedPlan.isSlideShow)) && (
                                 <div className="mt-8">
                                     <div className="flex-shrink min-w-0 max-w-full mb-6">
                                         <TitleWithUnderline text={t.mediaGallery} underlineWidth={64} fontSize={3} />
@@ -1089,7 +1089,7 @@ const Summary: React.FC<SummaryProps> = ({
                                         )}
 
                                         {/* Additional Images Carousel Section */}
-                                        {additionalPreviews && additionalPreviews.length > 0 && (
+                                        {additionalPreviews && additionalPreviews.length > 0 && selectedPlan.isSlideShow && (
                                             <div className={`${!informationFormData?.tributeVideo ? 'md:col-span-2 flex justify-center' : ''}`}>
                                                 <div className="bg-white p-4 shadow-md w-full">
                                                     <h3 className="text-lg font-semibold mb-4 text-center">{t.additionalImages}</h3>
@@ -1250,28 +1250,47 @@ const Summary: React.FC<SummaryProps> = ({
                                     <TitleWithUnderline text={t.pictures} underlineWidth={64} fontSize={3} />
                                 </div>
                                 <div className="p-2">
-                                    <div className="bg-white p-2 shadow-md">
-                                        {(thumbnailPreview || primaryPreview) ? (
-                                            <div className="grid grid-cols-2 gap-2 pb-4">
-                                                {thumbnailPreview && (
-                                                    <img
-                                                        alt="Thumbnail image"
-                                                        className="w-full shadow-md aspect-square object-cover"
-                                                        src={thumbnailPreview}
-                                                    />
-                                                )}
-                                                {primaryPreview && (
-                                                    <img
-                                                        alt="Primary image"
-                                                        className="w-full shadow-md aspect-square object-cover"
-                                                        src={primaryPreview}
-                                                    />
-                                                )}
-                                            </div>
+                                    <div className="overflow-y-auto max-h-[28rem]">
+                                        {selectedPlan.isSlideShow ? (
+                                            (thumbnailPreview || primaryPreview) ? (
+                                                <div className="grid grid-cols-2 gap-2 pb-4">
+                                                    {thumbnailPreview && (
+                                                        <img
+                                                            alt="Thumbnail image"
+                                                            className="w-full shadow-md aspect-square object-cover"
+                                                            src={thumbnailPreview}
+                                                        />
+                                                    )}
+                                                    {primaryPreview && (
+                                                        <img
+                                                            alt="Primary image"
+                                                            className="w-full shadow-md aspect-square object-cover"
+                                                            src={primaryPreview}
+                                                        />
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <div className="p-4 text-center text-gray-500">
+                                                    {t.noImagesUploaded}
+                                                </div>
+                                            )
                                         ) : (
-                                            <div className="p-4 text-center text-gray-500">
-                                                {t.noImagesUploaded}
-                                            </div>
+                                            (additionalPreviews && additionalPreviews.length > 0) ? (
+                                                <div className="grid grid-cols-2 gap-2 pb-4">
+                                                    {additionalPreviews.map((preview, index) => (
+                                                        <img
+                                                            key={index}
+                                                            alt={`Additional image ${index + 1}`}
+                                                            className="w-full shadow-md aspect-square object-cover"
+                                                            src={preview}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <div className="p-4 text-center text-gray-500">
+                                                    {t.noImagesUploaded}
+                                                </div>
+                                            )
                                         )}
                                     </div>
                                 </div>

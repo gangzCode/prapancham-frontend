@@ -1257,7 +1257,7 @@ const ObituaryDetail: React.FC = () => {
                         )}
 
                         {/* YouTube Video and Additional Images Section */}
-                        {(obituaryData.information.tributeVideo || (obituaryData.additionalImages && obituaryData.additionalImages.length > 0)) && (
+                        {(obituaryData.information.tributeVideo || (obituaryData.additionalImages && obituaryData.additionalImages.length > 0 && obituaryData.selectedPackage.isSlideShow)) && (
                             <div className="mt-8">
                                 <div className="flex-shrink min-w-0 max-w-full mb-6">
                                     <TitleWithUnderline text={t.mediaGallery} underlineWidth={64} fontSize={3} />
@@ -1460,22 +1460,47 @@ const ObituaryDetail: React.FC = () => {
                                 <TitleWithUnderline text={t.pictures} underlineWidth={64} fontSize={3} />
                             </div>
                             <div className="p-2">
-                                <div className="bg-white p-2 shadow-md">
-                                    {obituaryData.additionalImages && obituaryData.additionalImages.length > 0 ? (
-                                        <div className="grid grid-cols-2 gap-2 pb-4">
-                                            {obituaryData.additionalImages.map((imgUrl: string, idx: number) => (
-                                                <img
-                                                    key={idx}
-                                                    alt={`Additional image ${idx + 1}`}
-                                                    className="w-full shadow-md aspect-square object-cover"
-                                                    src={imgUrl}
-                                                />
-                                            ))}
-                                        </div>
+                                <div className="">
+                                    {obituaryData.selectedPackage.isSlideShow ? (
+                                        (obituaryData.thumbnailImage || obituaryData.primaryImage) ? (
+                                            <div className="grid grid-cols-2 gap-2 pb-4">
+                                                {obituaryData.thumbnailImage && (
+                                                    <img
+                                                        alt="Thumbnail image"
+                                                        className="w-full shadow-md aspect-square object-cover"
+                                                        src={obituaryData.thumbnailImage}
+                                                    />
+                                                )}
+                                                {obituaryData.primaryImage && (
+                                                    <img
+                                                        alt="Primary image"
+                                                        className="w-full shadow-md aspect-square object-cover"
+                                                        src={obituaryData.primaryImage}
+                                                    />
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <div className="p-4 text-center text-gray-500">
+                                                {t.noImagesUploaded}
+                                            </div>
+                                        )
                                     ) : (
-                                        <div className="p-4 text-center text-gray-500">
-                                            {t.noImagesUploaded}
-                                        </div>
+                                        (obituaryData.additionalImages && obituaryData.additionalImages.length > 0) ? (
+                                            <div className="grid grid-cols-2 gap-2 pb-4">
+                                                {obituaryData.additionalImages.map((imgUrl: string, idx: number) => (
+                                                    <img
+                                                        key={idx}
+                                                        alt={`Additional image ${idx + 1}`}
+                                                        className="w-full shadow-md aspect-square object-cover"
+                                                        src={imgUrl}
+                                                    />
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="p-4 text-center text-gray-500">
+                                                {t.noImagesUploaded}
+                                            </div>
+                                        )
                                     )}
                                 </div>
                             </div>
