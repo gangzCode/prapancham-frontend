@@ -91,9 +91,9 @@ const ObituaryCard: React.FC<ObituaryCardProps> = ({ entry }) => {
             className="object-contain shrink-0 my-auto  aspect-square w-[100px]"
           />
           <div className="flex flex-col flex-1 shrink justify-center basis-0">
-            <p className="text-body-sm text-secondary">{entry.name}</p>
+            <p className="text-body-sm text-secondary line-clamp-2 break-words max-w-[200px]">{entry.name}</p>
             <time className="mt-1 text-neutral-500 text-body-sm">{entry.date}</time>
-            <address className="mt-1 text-body-sm text-[#1A1D1F] not-italic">
+            <address className="mt-1 text-body-sm text-[#1A1D1F] not-italic line-clamp-2 break-words max-w-[200px]">
               {entry.address}
             </address>
           </div>
