@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import {
     Elements,
@@ -184,13 +184,31 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     const [paymentIntentId, setPaymentIntentId] = useState<string>('');
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string>('');
+    const isCreatingPaymentIntent = useRef(false);
+    const hasCreatedPaymentIntent = useRef(false);
 
     useEffect(() => {
+        // Prevent duplicate calls
+        if (hasCreatedPaymentIntent.current || isCreatingPaymentIntent.current) {
+            return;
+        }
+        
         createPaymentIntent();
+        
+        // Cleanup function for React 18 Strict Mode
+        return () => {
+            // Don't reset flags in cleanup to prevent re-execution
+        };
     }, []);
 
     const createPaymentIntent = async () => {
+        // Prevent duplicate calls
+        if (isCreatingPaymentIntent.current || hasCreatedPaymentIntent.current) {
+            return;
+        }
+
         try {
+            isCreatingPaymentIntent.current = true;
             setIsLoading(true);
             setError('');
 
@@ -218,6 +236,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                 const paymentIntentId = paymentIntentResponse.data.paymentIntentId;
                 setPaymentIntentId(paymentIntentId);
                 
+                hasCreatedPaymentIntent.current = true;
             } else {
                 throw new Error('No client secret received from payment intent creation');
             }
@@ -227,6 +246,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             onError(errorMessage);
         } finally {
             setIsLoading(false);
+            isCreatingPaymentIntent.current = false;
         }
     };
 
