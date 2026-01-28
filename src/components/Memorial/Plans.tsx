@@ -9,6 +9,7 @@ interface PlansProps {
     addons: string[];
     plan: any;
     isPremium: boolean;
+    isSlideShow: boolean;
     setActiveStep: (step: number) => void;
     setSelectedPlan: (plan: any) => void;
 
@@ -20,6 +21,7 @@ const Plans: React.FC<PlansProps> = ({
     features,
     addons,
     isPremium,
+    isSlideShow,
     setActiveStep,
     currency,
     language,
@@ -79,6 +81,18 @@ const Plans: React.FC<PlansProps> = ({
                             </ul>
                         </div>
                     </>
+                )}
+
+                {isSlideShow && (
+                    <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded">
+                        <p className="text-blue-800 text-sm text-center">
+                            {language === 'ta'
+                                ? 'சுருக்கப்படம் சேர்க்கப்பட்டுள்ளது'
+                                : language === 'si'
+                                    ? 'සංයුක්ත ප්‍රදර්ශනය ඇතුළත්යි'
+                                    : 'Slideshow Included'}
+                        </p>
+                    </div>
                 )}
                 <button
                     onClick={() => {

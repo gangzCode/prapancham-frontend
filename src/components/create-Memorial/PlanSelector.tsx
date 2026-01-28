@@ -65,6 +65,7 @@ const usePackages = (type: 'Obituary' | 'Rememberence', language: 'en' | 'ta' | 
                 isPremium: pkg.isPremium ?? false,
                 isObituary: pkg.isObituary ?? false,
                 isRemembarace: pkg.isRemembarace ?? false,
+                isSlideShow: pkg.isSlideShow ?? false,
             };
         });
     }, [data, language]);
@@ -139,6 +140,7 @@ const PlanSelector: React.FC<PlanSelectorProps> = ({
                                     features: string[];
                                     addonsFeatures?: string[];
                                     isPremium: any;
+                                    isSlideShow: any;
                                 },
                                 index: React.Key | null | undefined
                             ) => (
@@ -157,6 +159,7 @@ const PlanSelector: React.FC<PlanSelectorProps> = ({
                                     features={plan.features}
                                     addons={plan.addonsFeatures || []}
                                     isPremium={plan.isPremium ?? false}
+                                    isSlideShow={plan.isSlideShow ?? false}
                                     setActiveStep={setActiveStep}
                                     language={language}
                                     setSelectedPlan={setSelectedPlan}
