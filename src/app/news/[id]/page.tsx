@@ -213,7 +213,7 @@ const NewsIndividual: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-8">
-              {news.otherImages.map((image: string | undefined, index: number) => (
+              {news.otherImages.slice(0, 3).map((image: string | undefined, index: number) => (
                 <img
                   key={index}
                   src={image}
@@ -237,53 +237,18 @@ const NewsIndividual: React.FC = () => {
                 );
               })()}
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 my-8">
-              {data.relatedNews?.slice(0, 2).map((relatedNews: any, index: number) => {
-                const relatedTitle = relatedNews.title[langKey]?.[0]?.value || relatedNews.title.en[0]?.value;
-                const relatedDescription = relatedNews.description[langKey]?.[0]?.value || relatedNews.description.en[0]?.value;
-                const relatedCategory = relatedNews.newsCategory?.name[langKey]?.[0]?.value || relatedNews.newsCategory?.name.en[0]?.value;
-                
-                return (
-                  <Link
-                    key={relatedNews._id}
-                    href={`/news/${relatedNews._id}`}
-                    className="block group"
-                  >
-                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                      <div className="relative overflow-hidden">
-                        <img
-                          src={relatedNews.thumbnailImage}
-                          alt={relatedTitle}
-                          className="w-full h-[240px] object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        {relatedNews.isBreakingNews && (
-                          <span className="absolute top-2 left-2 bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                            {langKey === "ta" ? "அவசரச் செய்தி" : langKey === "si" ? "අවස්ථානුකූල පුවත්" : "Breaking News"}
-                          </span>
-                        )}
-                      </div>
-                      <div className="p-4">
-                        {relatedCategory && (
-                          <span className="text-xs font-semibold text-primary uppercase mb-2 block">
-                            {relatedCategory}
-                          </span>
-                        )}
-                        <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                          {relatedTitle}
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                          {relatedDescription}
-                        </p>
-                        <div className="flex items-center text-xs text-gray-500">
-                          <Clock className="w-3 h-3 mr-1" />
-                          <span>{getTimeAgo(relatedNews.createdAt)}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
+            {news.otherImages.length > 3 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 my-8">
+                {news.otherImages.slice(3).map((image: string | undefined, index: number) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`Image ${index + 4}`}
+                    className="w-full h-[320px] object-cover"
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
 
