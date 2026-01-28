@@ -9,6 +9,7 @@ import NewsCard, { NewsCardProps } from "./NewsCard";
 import ObituaryCard from "../hero/ObituaryCard";
 import { ObituaryEntry } from "../hero/types";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const tabNames = {
   en: { recent: "Recent News", important: "Important News" },
@@ -174,9 +175,10 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className, categoryId
                 </div>
               ) : (
                 displayedNews.map((news, id) => (
-                  <div
+                  <Link
                     key={id}
-                    className="relative group bg-white p-4 shadow-sm md:mr-5 hover:shadow-md"
+                    href={`/news/${news.id}`}
+                    className="relative group bg-white p-4 shadow-sm md:mr-5 hover:shadow-md block"
                   >
                     <div className="flex flex-col sm:flex-row gap-4">
                       <div className="w-full md:w-48">
@@ -191,12 +193,9 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className, categoryId
                           <h3 className="font-bold">{news.title}</h3>
                           <p className="text-gray-600 mt-2 text-sm line-clamp-3">
                             {news.description}
-                            <a
-                              href={`/news/${news.id}`}
-                              className="text-red-600 ml-1 hover:underline"
-                            >
+                            <span className="text-red-600 ml-1 hover:underline">
                               {localeText[langKey].ReadMore}
-                            </a>
+                            </span>
                           </p>
                         </div>
                         <div className="flex items-center justify-between mt-4 text-xs text-gray-500">
@@ -208,7 +207,7 @@ const NewsTabsSection: React.FC<NewsTabsSectionProps> = ({ className, categoryId
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))
               )}
             </div>

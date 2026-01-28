@@ -2,6 +2,7 @@ import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import Link from 'next/link';
 
 interface BreakingNewsCardProps {
   title: string;
@@ -50,8 +51,14 @@ const BreakingNewsHCard: React.FC<BreakingNewsCardProps> = ({
   const langKey =
     language === "tamil" ? "ta" : language === "sinhala" ? "si" : "en";
 
+  const handleButtonClick = (e: React.MouseEvent, callback: () => void) => {
+    e.preventDefault();
+    e.stopPropagation();
+    callback();
+  };
+
   return (
-    <div className={cn("relative bg-white shadow-sm", className)}>
+    <Link href={`/news/${id}`} className={cn("relative bg-white shadow-sm block", className)}>
       <div className="px-4 md:px-8 lg:px-16">
         <div className="flex items-center justify-between mb-2 pt-4">
           <div className="flex items-center">
@@ -66,7 +73,7 @@ const BreakingNewsHCard: React.FC<BreakingNewsCardProps> = ({
                 "p-1 bg-white rounded-full shadow-md",
                 hasPrevious ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"
               )}
-              onClick={onPrevious}
+              onClick={(e) => handleButtonClick(e, onPrevious)}
               disabled={!hasPrevious}
             >
               <ChevronLeft className="h-5 w-5" />
@@ -76,7 +83,7 @@ const BreakingNewsHCard: React.FC<BreakingNewsCardProps> = ({
                 "p-1 bg-white rounded-full shadow-md",
                 hasNext ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"
               )}
-              onClick={onNext}
+              onClick={(e) => handleButtonClick(e, onNext)}
               disabled={!hasNext}
             >
               <ChevronRight className="h-5 w-5" />
@@ -99,13 +106,13 @@ const BreakingNewsHCard: React.FC<BreakingNewsCardProps> = ({
             <h2 className="text-xl md:text-2xl font-bold leading-tight mb-2">{title}</h2>
             <p className="text-gray-700 mb-2">{summary}...</p>
             
-            <a href={`/news/${id}`} className="text-red-600 font-medium hover:underline">
+            <span className="text-red-600 font-medium hover:underline">
               {localizedText[langKey].readMore}
-            </a>
+            </span>
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
