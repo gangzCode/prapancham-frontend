@@ -189,7 +189,7 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 w-full">
         {featuredNews && (
-          <div className="md:col-span-6 relative group overflow-hidden p-2 shadow-md">
+          <Link href={`/news/${featuredNews.id}`} className="md:col-span-6 relative group overflow-hidden p-2 shadow-md block">
             <div className="relative h-[420px] overflow-hidden">
               <img
                 src={featuredNews.image}
@@ -198,21 +198,13 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent">
                 <div className="absolute bottom-0 p-6 text-white">
-                  <Link
-                    href={`/news/${featuredNews.id}`}>
-                    <h3 className="text-xl hover:text-[#ea384c] md:text-2xl font-bold leading-tight mb-2">
-                      {featuredNews.title}
-                    </h3>
-                  </Link>
+                  <h3 className="text-xl hover:text-[#ea384c] md:text-2xl font-bold leading-tight mb-2">
+                    {featuredNews.title}
+                  </h3>
                   <p className="text-sm text-gray-200 mb-2">
-
-                    <Link
-                      href={`/news/${featuredNews.id}`}
-                      className="text-[#ea384c] font-medium ml-1 hover:underline focus:outline-none"
-                    >
+                    <span className="text-[#ea384c] font-medium ml-1 hover:underline focus:outline-none">
                       {langKey === "ta" ? "மேலும் படிக்க" : langKey === "si" ? "තවත් කියවන්න" : "Read more"}
-                    </Link>
-
+                    </span>
                   </p>
                 </div>
               </div>
@@ -245,65 +237,60 @@ const TrendingNewsSection: React.FC<TrendingNewsSectionProps> = ({
                 </span>
               </div>
             </div>
-          </div>
+          </Link>
         )}
 
         <div className="md:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-2">
           {regularNews.map((news) => (
-            <div
+            <Link
               key={news.id}
-              className="relative group overflow-hidden bg-white shadow-sm flex flex-col p-2"
+              href={`/news/${news.id}`}
+              className="relative group overflow-hidden shadow-sm flex flex-col p-2 block"
             >
-              <div className="relative h-full overflow-hidden">
+              <div className="relative h-[200px] overflow-hidden">
                 <img
                   src={news.image}
                   alt={news.title}
-                  className="w-full h-full object-cover md:absolute inset-0 z-0"
+                  className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30 z-10">
-                  <div className="absolute top-2 left-2 bg-black/60 px-2 py-1 rounded-sm">
-                    <span className="text-white text-xs flex items-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-3 w-3 mr-1"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M12 16a4 4 0 0 1 4 4H8a4 4 0 0 1 4-4z" />
-                        <circle cx="12" cy="10" r="3" />
-                      </svg>
-                      {news.editorName}
-                    </span>
-                  </div>
-
-                  <div className="p-3 absolute bottom-0 left-0 right-0 text-white z-20">
-                    <h3 className="text-sm font-bold line-clamp-2 mb-2 group-hover:text-[#ea384c] transition-colors">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent">
+                  <div className="absolute bottom-0 p-3 text-white">
+                    <h3 className="text-sm font-bold line-clamp-2 mb-1 group-hover:text-[#ea384c] transition-colors">
                       {news.title}
                     </h3>
-                    <p className="text-xs text-gray-200 mb-1">
-                      <Link
-                        href={`/news/${news.id}`}
-                        className="text-[#ea384c] font-medium ml-1 hover:underline focus:outline-none"
-                      >
+                    <p className="text-xs text-gray-200">
+                      <span className="text-[#ea384c] font-medium hover:underline focus:outline-none">
                         {langKey === "ta" ? "மேலும் படிக்க" : langKey === "si" ? "තවත් කියවන්න" : "Read more"}
-                      </Link>
+                      </span>
                     </p>
                   </div>
                 </div>
               </div>
-              <div className="flex justify-between items-center mt-2">
-                <div className="flex items-center gap-2 text-xs">
+              <div className="flex items-center text-xs mt-2 justify-between">
+                <span className="flex items-center text-[#737373]">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-3 w-3 mr-1"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 16a4 4 0 0 1 4 4H8a4 4 0 0 1 4-4z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  {news.editorName}
+                </span>
+                <div className="flex item-center gap-2">
                   <span className="text-[#ea384c]">{news.category}</span>
-                  <span className="text-[#737373]">•</span>
+                  <span>•</span>
                   <span className="text-[#737373]">{news.duration}</span>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
